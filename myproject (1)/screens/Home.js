@@ -4,12 +4,15 @@ import { StyleSheet, View, Text, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
+import { TextInput } from "react-native-gesture-handler";
+import { TouchableWithoutFeedback } from 'react-native';
 
 const Home = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.home}>
+      
       <Image
         style={[styles.lightTexture22341Icon, styles.iconPosition1]}
         contentFit="cover"
@@ -42,9 +45,10 @@ const Home = () => {
           style={[styles.groupChild, styles.groupChildLayout2]}
           onPress={() => navigation.navigate("MaintenanceRecord")}
         />
-        <Text style={[styles.searchRecordAbc123, styles.text1Typo]}>
-          Search Record (ABC-123)
-        </Text>
+       <TextInput
+        style={[styles.searchRecordAbc123, styles.text1Typo]}
+        placeholder="Search Record"
+      />
         <Pressable
           style={styles.vector}
           onPress={() => navigation.navigate("MaintenanceRecord")}
@@ -61,6 +65,7 @@ const Home = () => {
         Vehicles Maintained
       </Text>
       <Text style={styles.text2}>009</Text>
+      {/* car , bike, auto.. */}
       <LinearGradient
         style={[styles.rectangleLineargradient, styles.homeChild1Layout]}
         locations={[0, 1]}
@@ -82,11 +87,7 @@ const Home = () => {
         locations={[0, 1]}
         colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
       />
-      <Image
-        style={[styles.pngwing1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/pngwing-1.png")}
-      />
+      
       <Text style={[styles.bike, styles.bikeLayout]}>Bike</Text>
       <Text style={[styles.truck, styles.autoTypo]}>Truck</Text>
       <Text style={[styles.auto, styles.autoTypo]}>Auto</Text>
@@ -122,9 +123,9 @@ const Home = () => {
         <View style={[styles.groupChild14, styles.childPosition]} />
       </View>
       <Image
-        style={[styles.groupIcon, styles.groupIconLayout]}
+        style={[styles.pngwing1Icon, styles.iconLayout]}
         contentFit="cover"
-        source={require("../assets/group-103.png")}
+        source={require("../assets/pngwing-1.png")}
       />
       <Image
         style={[styles.pngwing2Icon, styles.groupChildLayout2]}
@@ -153,6 +154,7 @@ const Home = () => {
       <Text style={[styles.addVehicle, styles.home1Typo]}>Add Vehicle</Text>
       <Text style={[styles.records, styles.home1Typo]}>Records</Text>
       <Text style={[styles.invoices, styles.home1Typo]}>Invoices</Text>
+      
       <Image
         style={[styles.ellipseIcon, styles.ellipseLayout]}
         contentFit="cover"
@@ -206,43 +208,37 @@ const Home = () => {
         source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
       />
       <Pressable
-        style={[styles.groupPressable, styles.homeChild6Layout]}
-        onPress={() => navigation.navigate("AddVehicle")}
-      >
-        <Image
-          style={styles.iconLayout2}
-          contentFit="cover"
-          source={require("../assets/group-111.png")}
-        />
-      </Pressable>
+      style={[styles.groupPressable]}
+      onPress={() => navigation.navigate("AddVehicle")}
+        >
       <Image
         style={[styles.homeChild6, styles.homeChild6Layout]}
         contentFit="cover"
         source={require("../assets/group-174.png")}
       />
+      </Pressable>
+     
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
       <View style={[styles.homeChild8, styles.childPosition]} />
+      {/* top face icon */}
       <Image
         style={styles.maskGroupIcon}
         contentFit="cover"
         source={require("../assets/mask-group.png")}
       />
+      {/* Dashboard */}
       <Text style={[styles.dashboard, styles.dashboardTypo]}>Dashboard</Text>
-      <Image
-        style={[styles.vectorIcon, styles.iconLayout1]}
-        contentFit="cover"
-        source={require("../assets/vector2.png")}
-      />
-      <Pressable
-        style={[styles.rectanglePressable, styles.groupIconLayout]}
-        onPress={() => navigation.navigate("OwnerInfo")}
-      >
-        <Image
-          style={styles.iconLayout2}
-          contentFit="cover"
-          source={require("../assets/rectangle-58.png")}
-        />
-      </Pressable>
+      {/* backicon top */}
+  
+<TouchableWithoutFeedback onPress={() => navigation.navigate("SwitchBusiness")}>
+  <Image
+    style={[styles.vectorIcon, styles.iconLayout1]}
+    resizeMode="cover"
+    source={require("../assets/vector2.png")}
+  />
+</TouchableWithoutFeedback>
+
+
       <Image
         style={[styles.record641Icon, styles.iconPosition]}
         contentFit="cover"
@@ -260,7 +256,8 @@ const styles = StyleSheet.create({
   },
   homeLayout: {
     width: 186,
-    top: 209,
+    top: 175,
+    
     backgroundColor: Color.steelblue_300,
     borderRadius: Border.br_5xs,
     position: "absolute",
@@ -273,12 +270,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   paymentDuesPosition: {
-    top: 324,
+    top: 295,
     fontSize: FontSize.size_base,
   },
   iconLayout3: {
     height: 25,
-    top: 257,
+    top: 232,
     width: 25,
     position: "absolute",
     overflow: "hidden",
@@ -315,13 +312,13 @@ const styles = StyleSheet.create({
   homeChild1Layout: {
     backgroundColor: "transparent",
     width: 83,
-    top: 677,
+    top: 620,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
   carTypo: {
     height: 19,
-    top: 723,
+    top: 713,
     textAlign: "center",
     color: Color.darkslateblue,
     fontSize: FontSize.size_base,
@@ -332,7 +329,7 @@ const styles = StyleSheet.create({
     width: 84,
     backgroundColor: "transparent",
     height: 79,
-    top: 677,
+    top: 620,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
@@ -347,7 +344,7 @@ const styles = StyleSheet.create({
   autoTypo: {
     width: 46,
     height: 19,
-    top: 723,
+    top: 713,
     textAlign: "center",
     color: Color.darkslateblue,
     fontSize: FontSize.size_base,
@@ -356,7 +353,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupPosition: {
-    left: 45,
+    left: 40,
     height: 1,
     width: 313,
     borderTopWidth: 1,
@@ -465,19 +462,20 @@ const styles = StyleSheet.create({
   },
   ellipseLayout: {
     height: 45,
-    top: 845,
+    top: 800,
     width: 45,
     position: "absolute",
   },
   iconPosition: {
-    top: 855,
+    top: 810,
     position: "absolute",
     overflow: "hidden",
   },
   homeChild6Layout: {
     height: 104,
     width: 104,
-    top: 777,
+    top: 720,
+    left:0,
     position: "absolute",
   },
   lightTexture22341Icon: {
@@ -497,7 +495,7 @@ const styles = StyleSheet.create({
     left: 94,
     textAlign: "left",
     fontSize: FontSize.size_lgi,
-    top: 293,
+    top: 265,
   },
   paymentDues: {
     left: 54,
@@ -523,7 +521,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     fontSize: FontSize.size_base,
-    top: 324,
+    top: 295,
   },
   text1: {
     textAlign: "left",
@@ -536,7 +534,7 @@ const styles = StyleSheet.create({
     left: 300,
     width: 37,
     height: 29,
-    top: 293,
+    top: 265,
     position: "absolute",
   },
   groupChild: {
@@ -570,28 +568,28 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleParent: {
-    top: 134,
+    top: 104,
     width: 392,
     height: 55,
-    left: 19,
+    left: 15,
   },
   homeInner: {
-    top: 411,
+    top: 375,
     width: 389,
     height: 215,
-    left: 20,
+    left: 15,
     backgroundColor: Color.steelblue_300,
     position: "absolute",
   },
   vehiclesMaintained: {
-    top: 430,
-    left: 38,
+    top: 390,
+    left: 28,
     width: 188,
     height: 26,
     textAlign: "left",
   },
   text2: {
-    top: 427,
+    top: 389,
     fontSize: 20,
     height: 32,
     width: 45,
@@ -612,7 +610,8 @@ const styles = StyleSheet.create({
   car: {
     left: 49,
     width: 30,
-    position: "absolute",
+    top:40
+    //position: "absolute",
   },
   homeChild1: {
     left: 122,
@@ -628,14 +627,14 @@ const styles = StyleSheet.create({
     left: 321,
   },
   pngwing1Icon: {
-    top: 674,
+    top: 655,
     left: 140,
     width: 48,
   },
   bike: {
     left: 146,
     height: 19,
-    top: 723,
+    top: 710,
     textAlign: "center",
     color: Color.darkslateblue,
     fontSize: FontSize.size_base,
@@ -824,8 +823,8 @@ const styles = StyleSheet.create({
     width: 8,
   },
   lineParent: {
-    top: 472,
-    left: 35,
+    top: 438,
+    left: 26,
     width: 358,
     height: 138,
     position: "absolute",
@@ -836,12 +835,12 @@ const styles = StyleSheet.create({
     width: 372,
   },
   pngwing2Icon: {
-    top: 670,
+    top: 655,
     width: 87,
     left: 221,
   },
   pngwing3Icon: {
-    top: 683,
+    top: 665,
     left: 23,
     width: 82,
     height: 34,
@@ -851,12 +850,12 @@ const styles = StyleSheet.create({
     left: 306,
   },
   pngegg1Icon: {
-    top: 673,
+    top: 658,
     left: 332,
     width: 56,
   },
   homeChild4: {
-    top: 830,
+    top: 785,
     height: 102,
     backgroundColor: Color.steelblue_300,
   },
@@ -870,27 +869,27 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   home1: {
-    top: 895,
+    top: 845,
     fontSize: FontSize.size_sm,
     left: 22,
   },
   vehicles: {
     left: 91,
-    top: 895,
+    top: 845,
     fontSize: FontSize.size_sm,
   },
   addVehicle: {
-    top: 867,
+    top: 835,
     left: 172,
   },
   records: {
     left: 271,
-    top: 895,
+    top: 845,
     fontSize: FontSize.size_sm,
   },
   invoices: {
-    left: 359,
-    top: 895,
+    left: 350,
+    top: 845,
     fontSize: FontSize.size_sm,
   },
   ellipseIcon: {
@@ -899,6 +898,7 @@ const styles = StyleSheet.create({
   iconLayout2: {
     height: "100%",
     width: "100%",
+    right:2
   },
   container: {
     left: 98,
@@ -908,8 +908,8 @@ const styles = StyleSheet.create({
     width: 25,
   },
   housefill: {
-    top: 852,
-    left: 31,
+    top: 808,
+    left: 30,
     alignItems: "center",
     justifyContent: "center",
     position: "absolute",
@@ -918,8 +918,8 @@ const styles = StyleSheet.create({
     left: 277,
   },
   carCitroenTopVehicleSvgrepIcon: {
-    top: 850,
-    left: 103,
+    top: 805,
+    left: 101,
     height: 36,
     overflow: "hidden",
   },
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
     left: 365,
   },
   invoiceWarrantyLineSvgrepoIcon: {
-    left: 375,
+    left: 373,
     width: 26,
     height: 26,
   },
@@ -948,21 +948,21 @@ const styles = StyleSheet.create({
     height: 50,
   },
   maskGroupIcon: {
-    top: 66,
+    top: 45,
     left: 372,
     width: 31,
     height: 31,
     position: "absolute",
   },
   dashboard: {
-    top: "7.51%",
+    top: "6.00%",
     left: "39.77%",
     textAlign: "center",
   },
   vectorIcon: {
     height: "2.29%",
     width: "5.09%",
-    top: "7.73%",
+    top: "6.50%",
     right: "89.8%",
     bottom: "89.99%",
     left: "5.12%",
