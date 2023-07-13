@@ -27,6 +27,9 @@ const SwitchBusiness = () => {
         contentFit="cover"
         source={require("../assets/group-26.png")}
       />
+      <Pressable
+      onPress={() => navigation.navigate("Home")}
+    >
       <View style={[styles.groupParent, styles.groupParentLayout]}>
         <View style={[styles.vectorParent, styles.groupParentLayout]}>
           <Image
@@ -47,9 +50,10 @@ const SwitchBusiness = () => {
           source={require("../assets/checkcirclesvgrepocom-1.png")}
         />
       </View>
+      </Pressable>
       <Pressable
         style={[styles.switchBusinessInner, styles.groupParentLayout]}
-        onPress={() => navigation.navigate("SwitchBusiness3")}
+        onPress={() => navigation.navigate("Home")}
       >
         <View style={[styles.vectorParent, styles.groupParentLayout]}>
           <Image
@@ -69,7 +73,7 @@ const SwitchBusiness = () => {
       </Pressable>
       <Pressable
         style={[styles.groupPressable, styles.groupParentLayout]}
-        onPress={() => navigation.navigate("SwitchBusiness1")}
+        onPress={() => navigation.navigate("Home")}
       >
         <View style={[styles.vectorParent, styles.groupParentLayout]}>
           <Image
@@ -89,7 +93,7 @@ const SwitchBusiness = () => {
       </Pressable>
       <Pressable
         style={[styles.switchBusinessInner1, styles.groupParentLayout]}
-        onPress={() => navigation.navigate("SwitchBusiness2")}
+        onPress={() => navigation.navigate("Home")}
       >
         <View style={[styles.vectorParent, styles.groupParentLayout]}>
           <Image
@@ -122,11 +126,7 @@ const SwitchBusiness = () => {
           Create New Business
         </Text>
       </Pressable>
-      <Image
-        style={styles.groupIcon}
-        contentFit="cover"
-        source={require("../assets/group-101.png")}
-      />
+      
     </View>
   );
 };
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   groupParent: {
     top: 271,
-    left: 18,
+    left: 10,
     width: 393,
   },
   abcBusiness1: {
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   switchBusinessInner: {
     top: 186,
-    left: 18,
+    left: 10,
     width: 393,
   },
   lastSignedIn1: {
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   groupPressable: {
     top: 356,
-    left: 18,
+    left: 10,
     width: 393,
   },
   lastSignedIn2: {
@@ -307,16 +307,16 @@ const styles = StyleSheet.create({
   },
   switchBusinessInner1: {
     top: 441,
-    left: 18,
+    left: 10,
     width: 393,
   },
   groupChild1: {
     borderRadius: Border.br_7xs,
-    left: 0,
-    top: 0,
+    left: -8,
+    top: -25,
   },
   createNewBusiness: {
-    top: 10,
+    top: -16,
     left: 113,
     color: Color.white,
     fontSize: FontSize.size_base,
