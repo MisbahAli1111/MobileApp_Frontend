@@ -233,7 +233,7 @@ const Home = () => {
 <TouchableWithoutFeedback onPress={() => navigation.navigate("SwitchBusiness")}>
   <Image
     style={[styles.vectorIcon, styles.iconLayout1]}
-    resizeMode="cover"
+    contentFit="cover"
     source={require("../assets/vector2.png")}
   />
 </TouchableWithoutFeedback>

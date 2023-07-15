@@ -1,11 +1,47 @@
 import * as React from "react";
+import { useState } from 'react';
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+
+import { StyleSheet, Text,TextInput, View, Pressable,TouchableOpacity, Alert, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
+import { TouchableHighlight } from "react-native-gesture-handler";
+
 
 const OwnerInfo = () => {
   const navigation = useNavigation();
+
+  const [name, setName] = useState('');
+  const [cnic, setcnic] = useState('');
+  const [email, setemail] = useState('');
+  const[Password,setPassword] = useState('');
+  const[ConfirmPassword,setConfirmPassword] = useState('');
+  const[countryCode,setCountryCode] = useState('');
+  const[phoneNumber,setPhonenumber] = useState('');
+  const[passwordVisible,setPasswordVisible] = useState(true);
+  const[ConfirmPasswordVisible,setConfirmPasswordVisible] = useState(true);
+
+  const [nameFocused, setNameFocused] = useState(false);
+  const [cnicFocused, setcnicFocused] = useState(false);
+  const [emailFocused, setemailFocused] = useState(false);
+  const [PasswordFocused, setPasswordFocused] = useState(false);
+  const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
+  const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
+  const [countryCodeFocused,setCountryCodeFocused] = useState(false);
+
+  const handleSignUp = () => {
+    if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
+    {
+      navigation.navigate('AddEmployee');
+    }
+    else if(Password !== ConfirmPassword)
+    {
+      Alert.alert('Password and Confirm Password Should be Same.')
+    }
+    else{
+      Alert.alert('Fill all Fields')
+    }
+  };
 
   return (
     <View style={styles.ownerInfo}>
@@ -14,15 +50,49 @@ const OwnerInfo = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <Text style={[styles.davidDaniel, styles.registerTypo1]}>
-        David Daniel
-      </Text>
-      <Text style={[styles.daviddaniel33outlookcom, styles.david1Typo]}>
-        daviddaniel33@outlook.com
-      </Text>
-      <Text style={[styles.david, styles.textTypo]}>1234david</Text>
-      <Text style={[styles.david1, styles.david1Typo]}>1234david</Text>
-      <Text style={[styles.text, styles.textTypo]}>0000-1234-4567-8912</Text>
+      <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
+      placeholder="Name"
+        value={name}
+        onFocus={() => setNameFocused(true)}
+        onBlur={() => setNameFocused(false)}
+        onChangeText={setName}
+      />
+      <TextInput style={[styles.daviddaniel33outlookcom, styles.david1Typo]}
+      placeholder="Email"
+        value={email}
+        onFocus={() => setemailFocused(true)}
+        onBlur={() => setemailFocused(false)}
+        onChangeText={setemail}
+
+      />
+        
+      
+      <TextInput style={[styles.david, styles.textTypo]}
+      placeholder="Password"
+        secureTextEntry={passwordVisible}
+        value={Password}
+        onFocus={() => setPasswordFocused(true)}
+        onBlur={() => setPasswordFocused(false)}
+        onChangeText={setPassword}
+        
+      />
+      <TextInput style={[styles.david1, styles.david1Typo]}
+      placeholder="Confirm Password"
+        secureTextEntry={ConfirmPasswordVisible}
+        value={ConfirmPassword}
+        onFocus={() => setConfirmPasswordFocused(true)}
+        onBlur={() => setConfirmPasswordFocused(false)}
+        onChangeText={setConfirmPassword}
+      />
+      <TextInput style={[styles.text, styles.textTypo]}
+        placeholder="CNIC Number"
+        value={cnic}
+        keyboardType="numeric"
+        maxLength={13}
+        onFocus={() => setcnicFocused(true)}
+        onBlur={() => setcnicFocused(false)}
+        onChangeText={setcnic}
+      />
       <Image
         style={[styles.ownerInfoChild, styles.ownerChildLayout]}
         contentFit="cover"
@@ -53,19 +123,28 @@ const OwnerInfo = () => {
         contentFit="cover"
         source={require("../assets/line-32.png")}
       />
-      <Text style={[styles.text1, styles.textPosition]}>
-        +92 (345) 123-3234
-      </Text>
-      <Text style={[styles.pk, styles.pkPosition]}>{`PK `}</Text>
+      <TextInput style={[styles.pk, styles.pkPosition]}
+      placeholder='PK'
+        value={countryCode}
+        maxLength={2}
+        onFocus={() => setCountryCodeFocused(true)}
+        onBlur={() => setCountryCodeFocused(false)}
+        onChangeText={setCountryCode}
+      />
       <Image
         style={[styles.vectorIcon, styles.vectorIconLayout]}
         contentFit="cover"
         source={require("../assets/vector-12.png")}
       />
-      <Text style={[styles.text2, styles.textPosition]}>
-        +92 (345) 123-3234
-      </Text>
-      <Text style={[styles.pk1, styles.pkPosition]}>{`PK `}</Text>
+      <TextInput style={[styles.text2, styles.textPosition]}
+      placeholder="Phone Number"
+        value={phoneNumber}
+        keyboardType="numeric"
+        maxLength={11}
+        onFocus={() => setPhoneNumberFocused(true)}
+        onBlur={() => setPhoneNumberFocused(false)}
+        onChangeText={setPhonenumber}
+      />
       <Image
         style={[styles.ownerInfoChild3, styles.vectorIconLayout]}
         contentFit="cover"
@@ -83,25 +162,48 @@ const OwnerInfo = () => {
       <Text style={[styles.letsLevelUp, styles.letsPosition]}>
         Let’s level up your business, together.
       </Text>
+
+     {/* show Password */}
+      <Pressable
+       onPress={
+        ()=> {setPasswordVisible((prev) => !prev);}
+        }>
       <Image
+        
         style={[styles.vectorIcon1, styles.vectorIconPosition]}
         contentFit="cover"
         source={require("../assets/vector9.png")}
       />
+      </Pressable>
+      <Pressable
+      onPress={
+        ()=> {setConfirmPasswordVisible((prev) => !prev);}
+        }
+      >
       <Image
         style={[styles.vectorIcon2, styles.vectorIconPosition]}
         contentFit="cover"
         source={require("../assets/vector10.png")}
       />
+      </Pressable>
+      
+      
       <View style={styles.rectangleView} />
+      <Pressable
+      
+    onPress={() => navigation.navigate('BusinessInfo')}
+      >
       <Image
         style={[styles.groupIcon, styles.iconPosition]}
         contentFit="cover"
         source={require("../assets/group-261.png")}
       />
+      </Pressable>
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
-        onPress={() => navigation.navigate("Home")}
+        onPress= {handleSignUp}
+        
+        
       >
         <Image
           style={[styles.groupChild, styles.groupLayout]}
@@ -125,16 +227,13 @@ const OwnerInfo = () => {
         contentFit="cover"
         source={require("../assets/key-1.png")}
       />
+      
       <Image
         style={[styles.user1Icon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/user-1.png")}
       />
-      <Image
-        style={styles.ownerInfoChild5}
-        contentFit="cover"
-        source={require("../assets/group-10.png")}
-      />
+      
     </View>
   );
 };
@@ -188,7 +287,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   pkPosition: {
-    width: "5.12%",
+    width: 33,
     top: "48.82%",
     height: "3%",
     textAlign: "left",
@@ -219,13 +318,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorIconPosition: {
-    left: "85.35%",
-    right: "9.07%",
-    width: "5.58%",
-    maxHeight: "100%",
-    maxWidth: "100%",
+    left: 360,
+    width: 20,
+    // maxHeight: "100%",
+    // maxWidth: "100%",
     position: "absolute",
-    overflow: "hidden",
+    // overflow: "hidden",
   },
   groupLayout: {
     height: 45,
@@ -337,14 +435,23 @@ const styles = StyleSheet.create({
     left: "4.65%",
   },
   vectorIcon1: {
-    height: "1.82%",
-    top: "63.52%",
-    bottom: "34.66%",
+    height: 15,
+    top: 590,
   },
+  touchableOpacity:{
+    position: 'absolute',
+    left: 360,
+    width: 20,
+    height: 20,
+    top: 590,
+    
+   
+  },
+   
   vectorIcon2: {
-    height: "1.93%",
-    top: "70.39%",
-    bottom: "27.68%",
+    height: 15,
+    top: 650,
+    
   },
   rectangleView: {
     top: 917,
@@ -373,20 +480,23 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   groupParent: {
-    top: 845,
-    left: 19,
+    top: 810,
+    left: 10,
   },
   atSign1Icon: {
-    top: 524,
+    top: 522,
   },
   phone1Icon: {
-    top: 455,
+    top: 458,
   },
   key1Icon: {
-    top: 591,
+    top: 585,
   },
+  // key2Icon: {
+  //   top: 650,
+  // },
   user1Icon: {
-    top: 333,
+    top: 332,
   },
   ownerInfoChild5: {
     top: 3,
@@ -401,6 +511,7 @@ const styles = StyleSheet.create({
     width: "100%",
     overflow: "hidden",
     height: 932,
+    position: 'absolute',
   },
 });
 

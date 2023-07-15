@@ -1,11 +1,39 @@
 import * as React from "react";
+import { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text,TextInput, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-
+import { Alert } from "react-native";
 const BusinessInfo = () => {
   const navigation = useNavigation();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [location, setlocation] = useState('');
+  const[city,setCity] = useState('');
+  const[country,setCountry] = useState('');
+  const[countryCode,setCountryCode] = useState('');
+  const[phoneNumber,setPhonenumber] = useState('');
+
+  const [nameFocused, setNameFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [locationFocused, setlocationFocused] = useState(false);
+  const [cityFocused, setCityFocused] = useState(false);
+  const [countryFocused, setCountryFocused] = useState(false);
+  const [countryCodeFocused,setCountryCodeFocused] = useState(false);
+  const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
+
+  const handleSignUp = () => {
+    if(name && email && location && city && country && countryCode && phoneNumber)
+    {
+      navigation.navigate('OwnerInfo');
+    }
+    else{
+      Alert.alert('Fill All fields');
+    }
+  };
+
 
   return (
     <View style={styles.businessInfo}>
@@ -14,12 +42,21 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <Text style={[styles.davidDaniel, styles.davidDanielTypo]}>
-        David Daniel
-      </Text>
-      <Text style={[styles.daviddaniel33outlookcom, styles.davidDanielTypo]}>
-        daviddaniel33@outlook.com
-      </Text>
+      <TextInput style={[styles.davidDaniel, styles.davidDanielTypo]}
+      placeholder="Name"
+        value={name}
+        onFocus={() => setNameFocused(true)}
+        onBlur={() => setNameFocused(false)}
+        onChangeText={setName}
+      />
+      <TextInput style={[styles.daviddaniel33outlookcom, styles.davidDanielTypo]}
+      placeholder="Email"
+        value={email}
+        onFocus={() => setEmailFocused(true)}
+        onBlur={() => setEmailFocused(false)}
+        onChangeText={setEmail}
+        
+      />
       <Image
         style={[styles.businessInfoChild, styles.businessChildLayout]}
         contentFit="cover"
@@ -35,14 +72,29 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/line-31.png")}
       />
-      <Text style={styles.text}>+92 (345) 123-3234</Text>
-      <Text style={[styles.pk, styles.pkPosition]}>{`PK `}</Text>
+      <TextInput style={styles.textInput}
+        placeholder="Phone Number"
+        value={phoneNumber}
+        keyboardType='numeric'
+        maxLength={11}
+        onFocus={() => setPhoneNumberFocused(true)}
+        onBlur={() => setPhoneNumberFocused(false)}
+        onChangeText={setPhonenumber}
+      />
+      <TextInput style={[styles.pk, styles.pkPosition]}
+      placeholder='PK'
+        value={countryCode}
+        maxLength={2}
+        onFocus={() => setCountryCodeFocused(true)}
+        onBlur={() => setCountryCodeFocused(false)}
+        onChangeText={setCountryCode}
+      />
       <Image
         style={styles.vectorIcon}
         contentFit="cover"
         source={require("../assets/vector-11.png")}
       />
-      <Text style={[styles.pk1, styles.pkPosition]}>{`PK `}</Text>
+      
       <Image
         style={styles.vectorIcon}
         contentFit="cover"
@@ -53,9 +105,14 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/line-31.png")}
       />
-      <Text style={[styles.h218GulshanKarachi, styles.davidDanielTypo]}>
-        1 H2/18 Gulshan karachi
-      </Text>
+      <TextInput style={[styles.h218GulshanKarachi, styles.davidDanielTypo]}
+      placeholder="location"
+        value={location}
+        onFocus={() => setlocationFocused(true)}
+        onBlur={() => setlocationFocused(false)}
+        onChangeText={setlocation}
+
+      />
       <Image
         style={[styles.businessInfoChild2, styles.businessChildLayout]}
         contentFit="cover"
@@ -66,13 +123,30 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/line-71.png")}
       />
-      <Text style={[styles.karachi, styles.karachiTypo]}>{`Karachi `}</Text>
+      <TextInput style={[styles.karachi, styles.karachiTypo]}
+
+placeholder="city"
+        
+        value={city}
+        onFocus={() => setCityFocused(true)}
+        onBlur={() => setCityFocused(false)}
+        onChangeText={setCity}
+      />
       <Image
         style={[styles.businessInfoChild4, styles.businessChildPosition]}
         contentFit="cover"
         source={require("../assets/vector-6.png")}
       />
-      <Text style={[styles.pakistan, styles.karachiTypo]}>{`Pakistan `}</Text>
+      <TextInput style={[styles.pakistan, styles.karachiTypo]}
+       
+        placeholder="country"
+        
+        value={country}
+        onFocus={() => setCountryFocused(true)}
+        onBlur={() => setCountryFocused(false)}
+        onChangeText={setCountry}
+
+      />
       <Image
         style={[styles.businessInfoChild5, styles.businessChildPosition]}
         contentFit="cover"
@@ -88,7 +162,7 @@ const BusinessInfo = () => {
       <View style={styles.rectangleView} />
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
-        onPress={() => navigation.navigate("OwnerInfo")}
+        onPress= {handleSignUp}
       >
         <Image
           style={[styles.groupChild, styles.groupLayout]}
@@ -117,11 +191,7 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/phone-1.png")}
       />
-      <Image
-        style={styles.groupIcon}
-        contentFit="cover"
-        source={require("../assets/group-102.png")}
-      />
+      
     </View>
   );
 };
@@ -147,7 +217,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   pkPosition: {
-    width: 22,
+    width: 30,
     height: 27,
     top: 586,
     textAlign: "left",
@@ -227,6 +297,15 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     position: "absolute",
+  },
+  textInput:
+  {
+    top: 585,
+    left: 110,
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: FontSize.size_base,
+
   },
   pk: {
     color: Color.textTxtPrimary,
@@ -309,8 +388,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   groupParent: {
-    top: 845,
-    left: 19,
+    top: 800,
+    left: 10,
   },
   mapPin1Icon: {
     top: 455,

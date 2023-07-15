@@ -1,9 +1,49 @@
 import * as React from "react";
+import { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput,View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { Alert } from "react-native";
 
 const AddEmployee = () => {
+  const navigation = useNavigation();
+
+  const [name, setName] = useState('');
+  const [cnic, setcnic] = useState('');
+  const [email, setemail] = useState('');
+  const[Password,setPassword] = useState('');
+  const[ConfirmPassword,setConfirmPassword] = useState('');
+  const[phoneNumber,setPhonenumber] = useState('');
+  const[passwordVisible,setPasswordVisible] = useState(true);
+  const[countryCode,setCountryCode] = useState('');
+  const[ConfirmPasswordVisible,setConfirmPasswordVisible] = useState(true);
+
+
+  const [nameFocused, setNameFocused] = useState(false);
+  const [cnicFocused, setcnicFocused] = useState(false);
+  const [emailFocused, setemailFocused] = useState(false);
+  const [PasswordFocused, setPasswordFocused] = useState(false);
+  const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
+  const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
+  const [countryCodeFocused,setCountryCodeFocused] = useState(false);
+
+  
+  const handleSignUp = () => {
+    if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
+    {
+      navigation.navigate('Home');
+    }
+    else if(Password !== ConfirmPassword)
+    {
+      Alert.alert('Password and Confirm Password should be same.')
+    }
+    else{
+      Alert.alert('Fill all Fields')
+    }
+  };
+
   return (
     <View style={styles.addEmployee}>
       <Image
@@ -11,17 +51,67 @@ const AddEmployee = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <Text style={[styles.daviddaniel33outlookcom, styles.passwordTypo]}>
-        daviddaniel33@outlook.com
-      </Text>
-      <Text style={[styles.name, styles.passwordTypo]}>Name</Text>
-      <Text style={[styles.password, styles.passwordTypo]}>Password</Text>
-      <Text style={[styles.confirmPassword, styles.passwordTypo]}>
-        Confirm Password
-      </Text>
-      <Text style={[styles.cnicNumber, styles.passwordTypo]}>CNIC Number</Text>
-      <Text style={[styles.text, styles.textPosition]}>+92 (345) 123-3234</Text>
-      <Text style={styles.pk}>{`PK `}</Text>
+      <TextInput style={[styles.daviddaniel33outlookcom, styles.passwordTypo]}
+      
+      placeholder="Email"
+        
+        value={email}
+        onFocus={() => setemailFocused(true)}
+        onBlur={() => setemailFocused(false)}
+        onChangeText={setemail}
+
+      />
+      
+      <TextInput style={[styles.name, styles.passwordTypo]}
+        placeholder="Name"
+        value={name}
+        onFocus={() => setNameFocused(true)}
+        onBlur={() => setNameFocused(false)}
+        onChangeText={setName}
+      />
+      <TextInput style={[styles.password, styles.passwordTypo]}
+      placeholder="Password"
+        secureTextEntry={passwordVisible}
+        value={Password}
+        onFocus={() => setPasswordFocused(true)}
+        onBlur={() => setPasswordFocused(false)}
+        onChangeText={setPassword}
+
+      />
+      <TextInput style={[styles.confirmPassword, styles.passwordTypo]}
+      placeholder="Confirm Password"
+        secureTextEntry={ConfirmPasswordVisible}
+        value={ConfirmPassword}
+        onFocus={() => setConfirmPasswordFocused(true)}
+        onBlur={() => setConfirmPasswordFocused(false)}
+        onChangeText={setConfirmPassword}
+       />
+      <TextInput style={[styles.cnicNumber, styles.passwordTypo]}
+        placeholder="CNIC Number"
+        keyboardType="numeric"
+        maxLength={13}
+        value={cnic}
+        onFocus={() => setcnicFocused(true)}
+        onBlur={() => setcnicFocused(false)}
+        onChangeText={setcnic}
+      />
+      <TextInput style={[styles.text, styles.textPosition]}
+        placeholder="Phone Number"
+        keyboardType="numeric"
+        maxLength={11}
+        value={phoneNumber}
+        onFocus={() => setPhoneNumberFocused(true)}
+        onBlur={() => setPhoneNumberFocused(false)}
+        onChangeText={setPhonenumber}
+      />
+      <TextInput style={styles.pk}
+        placeholder='PK'
+        maxLength={2}
+        value={countryCode}
+        onFocus={() => setCountryCodeFocused(true)}
+        onBlur={() => setCountryCodeFocused(false)}
+        onChangeText={setCountryCode}
+      />
       <Image
         style={styles.addEmployeeChild}
         contentFit="cover"
@@ -57,52 +147,71 @@ const AddEmployee = () => {
         contentFit="cover"
         source={require("../assets/line-3.png")}
       />
-      <Text style={[styles.text1, styles.textPosition]}>
-        +92 (345) 123-3234
-      </Text>
-      <Text style={styles.pk}>{`PK `}</Text>
+      
+      
       <Image
+        
         style={styles.addEmployeeChild}
         contentFit="cover"
         source={require("../assets/vector-2.png")}
       />
+      
+
+      
       <Image
         style={[styles.addEmployeeChild3, styles.addChildLayout]}
         contentFit="cover"
         source={require("../assets/line-3.png")}
       />
       <View style={[styles.groupParent, styles.groupLayout]}>
+      <Pressable
+        onPress={handleSignUp}  
+      >
         <Image
           style={[styles.groupChild, styles.groupLayout]}
           contentFit="cover"
           source={require("../assets/group-166.png")}
         />
         <Text style={[styles.register, styles.registerTypo]}>Register</Text>
+        </Pressable>
       </View>
+      
       <Text style={[styles.employeeInfo, styles.registerTypo]}>
         Employee Info
       </Text>
+      <Pressable
+      onPress={
+        ()=> {setPasswordVisible((prev) => !prev);}
+        }>
+      
       <Image
         style={[styles.vectorIcon1, styles.vectorIconPosition]}
         contentFit="cover"
         source={require("../assets/vector6.png")}
       />
+      </Pressable>
+      <Pressable
+      onPress={
+        ()=> {setConfirmPasswordVisible((prev) => !prev);}
+        }
+      >
       <Image
         style={[styles.vectorIcon2, styles.vectorIconPosition]}
         contentFit="cover"
         source={require("../assets/vector7.png")}
       />
+      </Pressable>
       <View style={styles.rectangleView} />
+      {/* Add going back functionality */}
+      <Pressable
+      onPress={() => navigation.navigate('OwnerInfo')}>
       <Image
         style={[styles.groupIcon, styles.iconPosition]}
         contentFit="cover"
         source={require("../assets/group-26.png")}
       />
-      <Image
-        style={styles.addEmployeeChild5}
-        contentFit="cover"
-        source={require("../assets/group-10.png")}
-      />
+      </Pressable>
+      
     </View>
   );
 };
@@ -148,13 +257,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorIconPosition: {
-    left: "85.58%",
-    right: "9.07%",
-    width: "5.35%",
-    maxHeight: "100%",
-    maxWidth: "100%",
+    left: 360,
+    width: 20,
+    // maxHeight: "100%",
+    // maxWidth: "100%",
     position: "absolute",
-    overflow: "hidden",
   },
   lightTexture22341Icon: {
     top: 0,
@@ -220,7 +327,7 @@ const styles = StyleSheet.create({
     color: Color.dimgray_100,
   },
   pk: {
-    width: "5.12%",
+    width:35,
     color: Color.textTxtPrimary,
     top: "35.52%",
     height: "2.9%",
@@ -285,8 +392,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   groupParent: {
-    top: 845,
-    left: 19,
+    top: 800,
+    left: 10,
     shadowColor: "rgba(0, 0, 0, 0.25)",
     shadowOffset: {
       width: 0,
@@ -298,22 +405,21 @@ const styles = StyleSheet.create({
   },
   employeeInfo: {
     height: "3.54%",
-    width: "37.21%",
+    width: 200,
     top: "14.27%",
-    left: "31.4%",
+    left: 105,
     fontSize: FontSize.size_3xl,
     textAlign: "center",
+    justifyContent: 'center',
     color: Color.darkslateblue,
   },
   vectorIcon1: {
-    height: "1.82%",
-    top: "50.11%",
-    bottom: "48.07%",
+    height: 15,
+    top: 465,
   },
   vectorIcon2: {
-    height: "1.93%",
-    top: "56.97%",
-    bottom: "41.09%",
+    height: 15,
+    top: 530,
   },
   rectangleView: {
     top: 917,
@@ -341,6 +447,7 @@ const styles = StyleSheet.create({
     width: "100%",
     overflow: "hidden",
     height: 932,
+    position: 'absolute',
   },
 });
 
