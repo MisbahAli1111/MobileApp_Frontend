@@ -1,12 +1,64 @@
+
 import * as React from "react";
+import { TouchableWithoutFeedback } from "react-native";
+import { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable,TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 const AddVehicle = () => {
   const navigation = useNavigation();
+  const [vehicleType, setvehicleType]=React.useState('');
+  const [vehicleModel, setvehicleModel]=React.useState('');
+  const [Registration, setRegistration]=React.useState('');
+  const [name,setName]=useState('');
+  const [Vehiclecolor,setvehiclecolor]=useState("");
+  const [phoneNumber, setphoneNumber]=useState('');
+  const [km, setKm]=useState('');
+ function saveVehicle()
+ {
+  if(vehicleModel && vehicleType && Registration && name && vehicleModel  && Vehiclecolor
+    && phoneNumber && km) 
+    {
+      navigation.navigate('Vehicles');
+    }
+    else
+    {
+      alert('Fill all Fields')
+    }
+ }
+ function handleInvoicePress()
+{
+  navigation.navigate("Invoices");
+}
+function handleHomePress() { 
+  navigation.navigate("Home");
+ }
 
+  function handleRecordPress()
+  {
+    navigation.navigate("MaintenanceRecord");
+  }
+  function handleVehiclePress()
+  {
+    navigation.navigate("AddVehicle");
+  }
+  const [fileUri, setFileUri] = useState(null);
+
+  const handleFileUpload = async () => {
+    try {
+      const response = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+
+      setFileUri(response.uri);
+      // Handle the uploaded file
+      console.log('Uploaded file:', response);
+    } catch (error) {
+      console.log('Error picking file:', error);
+    }
+  };
   return (
     <View style={styles.addVehicle}>
       <Image
@@ -59,11 +111,12 @@ const AddVehicle = () => {
         />
       </Pressable>
       <View style={styles.noImageFoundParent}>
-        <Text style={[styles.noImageFound, styles.vehicleTypo]}>
-          No image Found
-        </Text>
+       
         <View style={[styles.uploadParent, styles.uploadPosition]}>
-          <Text style={[styles.upload, styles.uploadPosition]}>Upload</Text>
+          <Text style={[styles.upload, styles.uploadPosition]} type="file" >Upload</Text>
+          {/* <TouchableOpacity onPress={handleFileUpload}>
+        <Text style={styles.uploadText}>{fileUri ? 'File Selected' : 'Upload File'}</Text>
+      </TouchableOpacity> */}
           <Image
             style={[styles.vectorIcon1, styles.vectorIconLayout]}
             contentFit="cover"
@@ -76,6 +129,7 @@ const AddVehicle = () => {
           <TextInput
             style={[styles.vehicleType, styles.vehicleTypo] }
             placeholder="Vehicle Type"
+            onChange={setvehicleType}
           ></TextInput>
           <View style={styles.carParent}>
           {/* <Text style={[styles.car, styles.vehicleTypo]}>{`Car `}</Text> */}
@@ -89,8 +143,9 @@ const AddVehicle = () => {
       </View>
       <View style={[styles.lineView, styles.childBorder]} />
       <View style={[styles.addVehicleChild1, styles.childBorder]} />
-      <TextInput style={[styles.vehicleModel, styles.vehicleTypo]}  placeholder="Modal ">
-      
+      <TextInput style={[styles.vehicleModel, styles.vehicleTypo]}    onChange={setvehicleModel} placeholder="Modal ">
+   
+
       </TextInput>
       {/* <Text style={[styles.text2, styles.vehicleTypo]}>{`2011 `}</Text> */}
       <Image
@@ -104,6 +159,7 @@ const AddVehicle = () => {
             <TextInput
               style={[styles.vehicleType, styles.vehicleTypo]}
             placeholder="Registration Number     "
+            onChange={setRegistration}
             ></TextInput>
           </View>
         </View>
@@ -111,7 +167,7 @@ const AddVehicle = () => {
         <View style={[styles.groupItem, styles.savePosition]} />
         <View style={styles.frameContainer}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]} placeholder="Vehicle Color     ">
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setvehiclecolor}  placeholder="Vehicle Color     ">
               
             </TextInput>
             <View style={styles.carParent}>
@@ -129,7 +185,7 @@ const AddVehicle = () => {
         <View style={[styles.groupInner, styles.groupInnerLayout]} />
         <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.davidDaniel, styles.vehicleTypo]} placeholder="Name">
+            <TextInput style={[styles.davidDaniel, styles.vehicleTypo]}    onChange={setName} placeholder="Name">
           
             </TextInput>
           </View>
@@ -139,31 +195,17 @@ const AddVehicle = () => {
         <View style={[styles.groupInner, styles.groupInnerLayout]} />
         <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]} placeholder="Km Driven   ">
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setKm} placeholder="Km Driven   ">
              
             </TextInput>
           </View>
         </View>
       </View>
-      <View style={[styles.lineContainer, styles.lineParentLayout]}>
-        <View style={[styles.groupInner, styles.groupInnerLayout]} />
-        <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <Text style={[styles.vehicleType, styles.vehicleTypo]}>
-              Owner Rating
-            </Text>
-          </View>
-        </View>
-      </View>
-      <Image
-        style={[styles.starIcon, styles.addChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/star-1.png")}
-      />
+      
       <View style={[styles.addVehicleChild3, styles.groupInnerLayout]} />
       <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
-          <TextInput style={[styles.vehicleType, styles.vehicleTypo]} placeholder="phone Number    ">
+          <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setphoneNumber} placeholder="phone Number    ">
            
           </TextInput>
         </View>
@@ -178,26 +220,7 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/materialsymbolspermcontactcalendaroutline2.png")}
       />
-      <Image
-        style={[styles.addVehicleChild4, styles.addChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/star-2.png")}
-      />
-      <Image
-        style={[styles.addVehicleChild5, styles.addChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/star-2.png")}
-      />
-      <Image
-        style={[styles.addVehicleChild6, styles.addChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/star-1.png")}
-      />
-      <Image
-        style={[styles.addVehicleChild7, styles.addChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/star-1.png")}
-      />
+   
       <Image
         style={styles.maskGroupIcon}
         contentFit="cover"
@@ -208,34 +231,31 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/odometersvgrepocom-1.png")}
       />
-      <Image
-        style={styles.rectangleIcon}
-        contentFit="cover"
-        source={require("../assets/rectangle-73.png")}
-      />
-      <Text style={[styles.save, styles.saveTypo]}>Save</Text>
-      <Image
-        style={[styles.groupIcon, styles.wrapperLayout]}
-        contentFit="cover"
-        source={require("../assets/group-10.png")}
-      />
-      <Image
-        style={styles.maskGroupIcon1}
-        contentFit="cover"
-        source={require("../assets/mask-group2.png")}
-      />
-      <Image
+      <Pressable
+        style={[styles.groupParent, styles.groupLayout]}
+        onPress= {saveVehicle}
+      >
+        <Image
+          style={[styles.groupChild, styles.groupLayout]}
+          contentFit="cover"
+          source={require("../assets/group-166.png")}
+        />
+        <Text style={[styles.savebutton, styles.saveTypo]}>Save</Text>
+      </Pressable>
+      
+      
+      {/* <Image
         style={[styles.addVehicleChild8, styles.addChildLayout1]}
         contentFit="cover"
         source={require("../assets/rectangle-622.png")}
       />
       <Image
-        style={[styles.addVehicleChild9, styles.addChildLayout1]}
+        style={[styles.addVehicleChild9, styles.addChildLaydaout1]}
         contentFit="cover"
         source={require("../assets/rectangle-74.png")}
       />
       <Text style={[styles.steeda, styles.text4Position]}>STEEDA</Text>
-      <Text style={[styles.text4, styles.text4Position]}>2023</Text>
+      <Text style={[styles.text4, styles.text4Position]}>2023</Text> */}
       <Image
         style={[styles.addVehicleChild10, styles.addChildLayout]}
         contentFit="cover"
@@ -246,50 +266,57 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/vector-8.png")}
       />
-      <View style={[styles.rectangleView, styles.iconLayout1]} />
+    <View style={[styles.rectangleView, styles.iconLayout1]} />
       <View style={styles.addVehicleChild12} />
       <Text style={[styles.home, styles.homeTypo]}>Home</Text>
       <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
       <Text style={[styles.addVehicle3, styles.homeTypo]}>Add Vehicle</Text>
       <Text style={[styles.records, styles.homeTypo]}>Records</Text>
       <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
+      <TouchableOpacity onPress={handleHomePress}>
       <Image
         style={[styles.ellipseIcon, styles.ellipseLayout]}
         contentFit="cover"
         source={require("../assets/ellipse-5.png")}
       />
+      </TouchableOpacity>
       <View style={[styles.housefill1, styles.text4Position]}>
+     <TouchableOpacity onPress={handleHomePress}>
         <Image
           style={styles.homeMutedIcon1}
           contentFit="cover"
           source={require("../assets/homemuted1.png")}
         />
+</TouchableOpacity>
       </View>
-      <Pressable
+      <TouchableOpacity
         style={[styles.frame, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
+        onPress={handleRecordPress}
       >
         <Image
           style={styles.icon}
           contentFit="cover"
           source={require("../assets/ellipse-8.png")}
         />
-      </Pressable>
-      <Pressable
+       </TouchableOpacity> 
+     
+      <TouchableOpacity
         style={[styles.ellipsePressable, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("Invoices")}
+        onPress={handleInvoicePress}
       >
         <Image
           style={styles.icon}
           contentFit="cover"
           source={require("../assets/ellipse-8.png")}
         />
-      </Pressable>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={handleInvoicePress}>
       <Image
         style={styles.invoiceWarrantyLineSvgrepoIcon}
         contentFit="cover"
         source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
       />
+      </TouchableOpacity>
       <Pressable
         style={[styles.groupPressable, styles.groupPressableLayout]}
         onPress={() => navigation.navigate("AddVehicle")}
@@ -305,26 +332,32 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/group-174.png")}
       />
-      <Pressable
+      <TouchableOpacity onPressIn={handleVehiclePress}
         style={[styles.wrapper1, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("Vehicles")}
+        onPress={handleVehiclePress}
       >
+
         <Image
           style={styles.icon}
           contentFit="cover"
           source={require("../assets/ellipse-7.png")}
         />
-      </Pressable>
+        </TouchableOpacity>
+      
+       <TouchableOpacity onPress={handleVehiclePress}>
       <Image
         style={styles.carCitroenTopVehicleSvgrepIcon}
         contentFit="cover"
         source={require("../assets/carcitroentopvehiclesvgrepocom-13.png")}
       />
-      <Image
-        style={styles.record641Icon}
-        contentFit="cover"
-        source={require("../assets/record64-1.png")}
-      />
+    </TouchableOpacity>
+      
+       <TouchableOpacity onPress={handleRecordPress}>
+        <Image
+          style={styles.record641Icon}
+          source={require('../assets/record64-1.png')}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -463,15 +496,15 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   ellipseLayout: {
-    width: 45,
-    top: 845,
     height: 45,
+    top: 800,
+    width: 45,
     position: "absolute",
   },
   groupPressableLayout: {
     height: 104,
     width: 104,
-    top: 777,
+    top: 735,
     position: "absolute",
   },
   lightTexture22341Icon: {
@@ -572,7 +605,7 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   upload: {
-    left: "36.96%",
+    left: "10.96%",
  //   textDecoration: "display",
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
@@ -586,7 +619,7 @@ const styles = StyleSheet.create({
     top: "16.67%",
     right: "73.91%",
     bottom: "16.67%",
-    left: "0%",
+    left: "-29%",
   },
   uploadParent: {
     height: "51.06%",
@@ -711,6 +744,7 @@ const styles = StyleSheet.create({
   },
   starIcon: {
     left: 338,
+    display:"none"
   },
   addVehicleChild3: {
     top: 610,
@@ -804,7 +838,7 @@ const styles = StyleSheet.create({
     left: 32,
   },
   rectangleView: {
-    top: 830,
+    top: 785,
     backgroundColor: Color.steelblue_300,
     shadowColor: "rgba(0, 0, 0, 0.03)",
     shadowOffset: {
@@ -814,7 +848,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 10,
     shadowOpacity: 1,
-    height: 102,
+    height: 98,
     position: "absolute",
   },
   addVehicleChild12: {
@@ -827,75 +861,78 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   home: {
-    left: 22,
-    top: 895,
+    left: 19,
+    top: 850,
     lineHeight: 18,
   },
   vehicles: {
-    left: 96,
-    top: 895,
+    left: 90,
+    top: 850,
     lineHeight: 18,
   },
   addVehicle3: {
-    top: 867,
-    left: 172,
+    top: 827,
+    left: 166,
   },
   records: {
-    left: 271,
-    top: 895,
+    left: 265,
+    top: 850,
     lineHeight: 18,
   },
   invoices: {
-    top: 895,
+    top: 850,
     lineHeight: 18,
-    left: 359,
+    left: 340,
   },
   ellipseIcon: {
-    left: 20,
+    left: 18,
   },
   homeMutedIcon1: {
     width: 25,
     height: 27,
+    left:-3
   },
   housefill1: {
-    top: 852,
+    top: 808,
     justifyContent: "center",
     alignItems: "center",
   },
   frame: {
-    left: 277,
+    left: 270,
   },
   ellipsePressable: {
-    left: 365,
+    left: 348,
   },
   invoiceWarrantyLineSvgrepoIcon: {
-    top: 855,
-    left: 375,
+    top: 810,
+    left: 360,
     width: 26,
     height: 26,
     position: "absolute",
     overflow: "hidden",
   },
   groupPressable: {
-    left: 163,
+   
+    left: 155,
   },
   addVehicleChild13: {
-    left: 164,
+    
+    left: 155,
   },
   wrapper1: {
-    left: 103,
+    left: 98,
   },
   carCitroenTopVehicleSvgrepIcon: {
-    top: 850,
-    left: 108,
+    top: 806,
+    left: 103,
     width: 36,
     height: 36,
     position: "absolute",
     overflow: "hidden",
   },
   record641Icon: {
-    top: 853,
-    left: 289,
+    top: 808,
+    left: 282,
     width: 27,
     height: 27,
     position: "absolute",
@@ -907,6 +944,37 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
+  },
+  groupParent: {
+    top: 700,
+    left: 14,
+    shadowColor: "rgba(0, 0, 0, 0.25)",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowRadius: 4,
+    elevation: 4,
+    shadowOpacity: 1,
+  },
+  groupLayout: {
+    height: 45,
+    width: 391,
+    position: "absolute",
+  },
+  savebutton: {
+    top: 11,
+    left: 174,
+    color: Color.white,
+    width: 41,
+    textAlign: "left",
+    fontWeight: "500",
+    fontSize: FontSize.size_base,
+  },
+  saveTypo: {
+    fontFamily: FontFamily.poppinsMedium,
+    fontWeight: "500",
+    position: "absolute",
   },
 });
 

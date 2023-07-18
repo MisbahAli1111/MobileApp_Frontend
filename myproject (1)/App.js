@@ -39,6 +39,7 @@ const App = () => {
   }
 
   return (
+    
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
@@ -62,29 +63,16 @@ const App = () => {
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               options={{ headerShown: false }}
-            /> */}
-            <Stack.Screen
-              name="BusinessInfo"
-              component={BusinessInfo}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="OwnerInfo"
-              component={OwnerInfo}
-              options={{ headerShown: false }}
-            />
+            /> 
+              */}
+            
             <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{ headerShown: false }}
-            />
-            
-            {/* <Stack.Screen
+           
+                        {/* <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               options={{ headerShown: false }}
@@ -113,18 +101,18 @@ const App = () => {
               name="OwnerInfo"
               component={OwnerInfo}
               options={{ headerShown: false }}
-            />
+            /> 
             <Stack.Screen
               name="CreateInvoice"
               component={CreateInvoice}
               options={{ headerShown: false }}
-            />
+            /> 
             <Stack.Screen
               name="Invoices"
               component={Invoices}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
+             <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               options={{ headerShown: false }}
@@ -133,12 +121,13 @@ const App = () => {
               name="Vehicles"
               component={Vehicles}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen 
+            /> 
+             <Stack.Screen 
               name="AddVehicle"
               component={AddVehicle}
               options={{ headerShown: false }}
-            /> */}
+            />   */}
+           
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
