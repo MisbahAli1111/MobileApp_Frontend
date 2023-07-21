@@ -49,9 +49,8 @@ const SwitchBusiness = () => {
         Switch Business
       </Text>
       <View style={styles.switchBusinessChild} />
-      {/* backicon  */}
       <Pressable
-      onPress={navigation.navigate('')}
+      // onPress={navigation.navigate('')}
       >
       <Image
         style={[styles.switchBusinessItem, styles.switchBusinessItemPosition]}
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flex: 1,
     flexWrap: "wrap",
-    marginTop: 180,
+    marginTop: 160,
     alignItems: 'flex-end',
     left: 6,
   },
@@ -132,6 +131,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     position: "absolute",
   },
+  
   groupParentLayout: {
     height: 65,
     width: 393,
@@ -139,8 +139,9 @@ const styles = StyleSheet.create({
     position: "relative",
     alignItems: 'flex-start',
     flexWrap: "wrap",
-    marginTop: 8,
+    marginTop: 15,
   },
+  
   abcPosition1: {
     top: "0%",
     fontSize: FontSize.size_base,
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     right: "89.47%",
     left: "2.04%",
     bottom: "15.38%",
-    top: "15.38%",
+    top: "33.58%",
     height: "69.23%",
     position: "absolute",
   },
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   checkCircleSvgrepoCom1Icon: {
-    top: 16,
+    top: 45,
     left: 342,
     width: 33,
     height: 33,
