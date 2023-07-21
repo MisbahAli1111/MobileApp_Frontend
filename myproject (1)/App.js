@@ -43,27 +43,24 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {/* <Stack.Screen
+           {/* <Stack.Screen
               name="Home"
               component={Home}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
+            /> */}
+            {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MaintenanceDetailView"
-              component={MaintenanceDetailView}
-              options={{ headerShown: false }}
-            />
+            /> */}
+             {/* 
+            
             <Stack.Screen
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               options={{ headerShown: false }}
             /> */}
-            <Stack.Screen
+            {/* <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               options={{ headerShown: false }}
@@ -82,13 +79,14 @@ const App = () => {
               name="Home"
               component={Home}
               options={{ headerShown: false }}
-            />
+            /> */}
             
-            {/* <Stack.Screen
+             <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               options={{ headerShown: false }}
             />
+            {/*
             <Stack.Screen
               name="SwitchBusiness1"
               component={SwitchBusiness1}
@@ -123,13 +121,18 @@ const App = () => {
               name="Invoices"
               component={Invoices}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
+            />*/}
+             {/* <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="MaintenanceDetailView"
+              component={MaintenanceDetailView}
+              options={{ headerShown: false }}
+            /> */}
+            {/*<Stack.Screen
               name="Vehicles"
               component={Vehicles}
               options={{ headerShown: false }}
@@ -138,7 +141,7 @@ const App = () => {
               name="AddVehicle"
               component={AddVehicle}
               options={{ headerShown: false }}
-            /> */}
+            />  */}
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>

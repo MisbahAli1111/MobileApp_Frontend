@@ -202,8 +202,6 @@ const OwnerInfo = () => {
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
         onPress= {handleSignUp}
-        
-        
       >
         <Image
           style={[styles.groupChild, styles.groupLayout]}

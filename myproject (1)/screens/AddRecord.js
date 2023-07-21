@@ -1,19 +1,59 @@
-import * as React from "react";
+import React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { TouchableWithoutFeedback, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-
+import { useState } from "react";
 const AddRecord = () => {
   const navigation = useNavigation();
 
+  
+  const [details, setDetails] = useState('');
+  const [carNumber, setCarNumber] = useState('');
+  const [Date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [driven, setDriven] = useState('');
+  const [user, setUser] = useState('');
+  const [service, setService] = useState('');
+
+  const [detailFocused, setDetailFocused] = useState(false);
+  const [carNumberFocused, setCarNumberFocused] = useState(false);
+  const [DateFocused, setDateFocused] = useState(false);
+  const [drivenFocused, setDrivenFocused] = useState(false);
+  const [UserFocused, setUserFocused] = useState(false);
+  const [TimeFocused, setTimeFocused] = useState(false);
+  const [ServiceFocused, setServiceFocused] = useState(false);
+
+
+
+  const handleSave = () => {
+
+    if (
+      details.trim() === '' ||
+      service.trim() === '' ||
+      carNumber.trim() === '' ||
+      Date.trim() === '' ||
+      time.trim() === '' ||
+      user.trim() === '' ||
+      driven.trim() === ''
+    ) {
+      alert('Please enter all input fields.');
+      return;
+    }
+    navigation.navigate("MaintenanceRecord");
+  };
+
+
+
   return (
     <View style={styles.addRecord}>
+
       <Image
         style={[styles.lightTexture22341Icon, styles.iconGroupLayout]}
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
+
       <Image
         style={[styles.image2Icon, styles.text1Position]}
         contentFit="cover"
@@ -31,57 +71,106 @@ const AddRecord = () => {
         <View style={styles.elementPosition}>
           <Text style={styles.textTypo}>\</Text>
         </View>
-        <View style={styles.addMaintenanceRecordParent}>
-          <Text style={styles.addMaintenanceRecord}>
-            Add Maintenance Record
-          </Text>
-          <Text style={[styles.text1, styles.textTypo]}>\</Text>
-        </View>
+
       </View>
       <Image
         style={[styles.addRecordChild, styles.text1Position]}
         contentFit="cover"
         source={require("../assets/rectangle-65.png")}
       />
-      <Text style={[styles.text2, styles.pmTypo]}>22 - 02 -1993</Text>
+
+
+        <TextInput style={[styles.text2, styles.pmTypo]}
+          placeholder="22 - 02 -1993"
+          value={Date}
+        onFocus={() => setTimeFocused(true)}
+        onBlur={() => setTimeFocused(false)}
+        onChangeText={setDate}
+        ></TextInput>
+      
+      
       <View style={[styles.addRecordItem, styles.addPosition]} />
       <View style={[styles.addRecordInner, styles.addPosition]} />
-      <Text style={[styles.pm, styles.pmTypo]}>06: 00pm</Text>
-      <Text style={[styles.loritaDaniel, styles.pmTypo]}>Lorita Daniel</Text>
-      <Text style={[styles.kmDriven, styles.pmTypo]}>KM Driven</Text>
-      <Text style={[styles.oilChange, styles.pmTypo]}>Oil Change</Text>
+      <TextInput style={[styles.pm, styles.pmTypo]}
+        placeholder="06: 00pm"
+        value={time}
+        onFocus={() => setTimeFocused(true)}
+        onBlur={() => setTimeFocused(false)}
+        onChangeText={setTime}
+      ></TextInput>
+      <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
+        placeholder="Lorita Daniel"
+        value={user}
+        onFocus={() => setUserFocused(true)}
+        onBlur={() => setUserFocused(false)}
+        onChangeText={setUser}
+      ></TextInput>
+      <TextInput style={[styles.kmDriven, styles.pmTypo]}
+        placeholder="KM Driven"
+        value={driven}
+        onFocus={() => setDrivenFocused(true)}
+        onBlur={() => setDrivenFocused(false)}
+        onChangeText={setDriven}
+      ></TextInput>
+      <TextInput style={[styles.oilChange, styles.pmTypo]}
+        placeholder="Oil Change"
+        value={service}
+        onFocus={() => setServiceFocused(true)}
+        onBlur={() => setServiceFocused(false)}
+        onChangeText={setService}
+      ></TextInput>
       <View style={[styles.lineView, styles.childLayout]} />
       <View style={[styles.addRecordChild1, styles.childLayout]} />
       <View style={[styles.addRecordChild2, styles.childLayout]} />
       <View style={[styles.addRecordChild3, styles.childLayout]} />
-      <Text style={[styles.jxc7789, styles.pmTypo]}>JXC - 7789</Text>
-      <Image
-        style={[styles.vectorIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector.png")}
-      />
+      <TextInput style={[styles.jxc7789, styles.pmTypo]}
+        placeholder="JXC - 7789"
+        value={carNumber}
+        onFocus={() => setCarNumberFocused(true)}
+        onBlur={() => setCarNumberFocused(false)}
+        onChangeText={setCarNumber}
+      >
+      </TextInput>
+      {/* this  */}
+
       <Image
         style={[styles.vectorIcon1, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/vector1.png")}
       />
+
       <Image
         style={[styles.groupIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/group-92.png")}
       />
+
+
       <Image
         style={[styles.date2SvgrepoCom11, styles.svgrepoIconLayout1]}
+
         contentFit="cover"
         source={require("../assets/date2svgrepocom-1-1.png")}
       />
+
+      
+
+
+
       <Image
         style={styles.licensePlateNumberSvgrepoCIcon}
         contentFit="cover"
         source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
       />
       <View style={styles.enterDetailParent}>
-        <Text style={[styles.enterDetail, styles.pmTypo]}>Enter Detail...</Text>
+        <TextInput style={[styles.enterDetail, styles.pmTypo]}
+          placeholder="Enter Detail..."
+          value={details}
+          onFocus={() => setDetailFocused(true)}
+          onBlur={() => setDetailFocused(false)}
+          onChangeText={setDetails}
+
+        ></TextInput>
         <View style={[styles.groupChild, styles.childLayout]} />
         <Image
           style={[styles.gallerySvgrepoCom1Icon, styles.svgrepoIconLayout1]}
@@ -94,24 +183,22 @@ const AddRecord = () => {
           source={require("../assets/camerasvgrepocom-6-1.png")}
         />
       </View>
+
       <Image
         style={[styles.timeOclockSvgrepoCom1Icon, styles.svgrepoIconLayout1]}
         contentFit="cover"
         source={require("../assets/timeoclocksvgrepocom-1.png")}
       />
-      <View style={[styles.vectorParent, styles.groupItemLayout]}>
-        <Image
-          style={[styles.groupItem, styles.groupItemLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-73.png")}
-        />
-        <Text style={styles.save}>Save</Text>
-      </View>
-      <Image
-        style={[styles.addRecordChild4, styles.addRecordChild4Layout]}
-        contentFit="cover"
-        source={require("../assets/group-171.png")}
-      />
+      <Pressable onPress={handleSave}>
+        <View style={[styles.vectorParent, styles.groupItemLayout]}>
+          <Image
+            style={[styles.groupItem, styles.groupItemLayout]}
+            resizeMode="cover"
+            source={require("../assets/rectangle-73.png")}
+          />
+          <Text style={styles.save}>Save</Text>
+        </View>
+      </Pressable>
       <View style={[styles.rectangleView, styles.iconGroupLayout]} />
       <View style={styles.addRecordChild5} />
       <Text style={[styles.home, styles.addTypo]}>Home</Text>
@@ -119,11 +206,26 @@ const AddRecord = () => {
       <Text style={[styles.addVehicle, styles.addTypo]}>Add Vehicle</Text>
       <Text style={[styles.records, styles.addTypo]}>Records</Text>
       <Text style={[styles.invoices, styles.addTypo]}>Invoices</Text>
-      <Image
-        style={[styles.ellipseIcon, styles.frameLayout]}
-        contentFit="cover"
-        source={require("../assets/ellipse-5.png")}
-      />
+      {/* //home eclipse */}
+      {/* homeicon */}
+      <Pressable
+        onPress={() => navigation.navigate("Home")}
+      >
+        <Image
+          style={[styles.ellipseIcon, styles.frameLayoutt]}
+          contentFit="cover"
+          source={require("../assets/ellipse-5.png")}
+        />
+        <View style={[styles.housefill1, styles.housefillFlexBox]}>
+          <Image
+            style={styles.homeMutedIcon1}
+            contentFit="cover"
+            source={require("../assets/homemuted1.png")}
+          />
+        </View>
+      </Pressable>
+
+      {/* man? */}
       <Pressable
         style={styles.wrapperPosition}
         onPress={() => navigation.navigate("Vehicles")}
@@ -134,13 +236,9 @@ const AddRecord = () => {
           source={require("../assets/ellipse-5.png")}
         />
       </Pressable>
-      <View style={[styles.housefill1, styles.housefillFlexBox]}>
-        <Image
-          style={styles.homeMutedIcon1}
-          contentFit="cover"
-          source={require("../assets/homemuted1.png")}
-        />
-      </View>
+
+
+      {/* bookicon */}
       <Pressable
         style={[styles.container, styles.frameLayout]}
         onPress={() => navigation.navigate("MaintenanceRecord")}
@@ -150,12 +248,20 @@ const AddRecord = () => {
           contentFit="cover"
           source={require("../assets/ellipse-7.png")}
         />
+        <Image
+          style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
+          contentFit="cover"
+          source={require("../assets/microphonesvgrepocom-1.png")}
+        />
       </Pressable>
+
+      {/* manicon */}
       <Image
         style={[styles.carCitroenTopVehicleSvgrepIcon, styles.wrapperPosition]}
         contentFit="cover"
         source={require("../assets/carcitroentopvehiclesvgrepocom-1.png")}
       />
+      {/* invoice */}
       <Pressable
         style={[styles.frame, styles.frameLayout]}
         onPress={() => navigation.navigate("Invoices")}
@@ -165,15 +271,18 @@ const AddRecord = () => {
           contentFit="cover"
           source={require("../assets/ellipse-8.png")}
         />
+        <Image
+          style={[
+            styles.invoiceWarrantyLineSvgrepoIcon,
+            styles.svgrepoIconLayout,
+          ]}
+          contentFit="cover"
+          source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
+        />
       </Pressable>
-      <Image
-        style={[
-          styles.invoiceWarrantyLineSvgrepoIcon,
-          styles.svgrepoIconLayout,
-        ]}
-        contentFit="cover"
-        source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-      />
+
+
+      {/* wheel */}
       <Pressable
         style={[styles.groupPressable, styles.groupPressableLayout]}
         onPress={() => navigation.navigate("AddVehicle")}
@@ -183,12 +292,26 @@ const AddRecord = () => {
           contentFit="cover"
           source={require("../assets/group-11.png")}
         />
+        <Image
+
+          contentFit="cover"
+          source={require("../assets/group-174.png")}
+        />
       </Pressable>
-      <Image
-        style={[styles.addRecordChild6, styles.groupPressableLayout]}
-        contentFit="cover"
-        source={require("../assets/group-174.png")}
-      />
+      <Pressable
+        onPress={() => navigation.navigate("AddVehicle")}
+
+      >
+        <Image
+          style={[styles.addRecordChild6, styles.groupPressableLayoutt]}
+          contentFit="cover"
+          source={require("../assets/group-174.png")}
+        />
+      </Pressable>
+
+
+
+      {/* addMaintenanceRecord */}
       <View style={[styles.vectorGroup, styles.iconGroupLayout]}>
         <Image
           style={[styles.groupInner, styles.iconGroupLayout]}
@@ -200,12 +323,21 @@ const AddRecord = () => {
           <Text style={[styles.addMaintenanceRecord1, styles.addTypo]}>
             Add Maintenance Record
           </Text>
+        </View>
+        <View style={styles.addMaintenanceRecordGroupp}>
+          <Text style={[styles.addMaintenanceRecord11, styles.addTypo]}>
+            Add Maintenance Record
+          </Text>
+        </View>
+        {/* backicon  */}
+        <TouchableWithoutFeedback onPress={() => navigation.navigate("SwitchBusiness")}>
+
           <Image
             style={[styles.vectorIcon2, styles.iconLayout]}
             contentFit="cover"
             source={require("../assets/vector2.png")}
           />
-        </View>
+        </TouchableWithoutFeedback>
         <Pressable
           style={[styles.rectanglePressable, styles.addRecordChild4Layout]}
           onPress={() => navigation.navigate("MaintenanceRecord")}
@@ -217,16 +349,14 @@ const AddRecord = () => {
           />
         </Pressable>
       </View>
+      {/* faceicon */}
       <Image
         style={styles.maskGroupIcon}
         contentFit="cover"
         source={require("../assets/mask-group.png")}
       />
-      <Image
-        style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
-        contentFit="cover"
-        source={require("../assets/microphonesvgrepocom-1.png")}
-      />
+
+
       <Image
         style={[styles.vectorIcon3, styles.iconLayout]}
         contentFit="cover"
@@ -281,11 +411,25 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     position: "absolute",
   },
+  // here 
   iconLayout: {
-    maxHeight: "100%",
+    maxHeight: "150%",
+    maxWidth: "100%",
+    position: "relative",
+    overflow: "hidden",
+
+  },
+  iconLayout1: {
+    maxHeight: "150%",
     maxWidth: "100%",
     position: "absolute",
     overflow: "hidden",
+
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   svgrepoIconLayout1: {
     height: 25,
@@ -311,18 +455,27 @@ const styles = StyleSheet.create({
   },
   frameLayout: {
     width: 45,
-    top: 845,
+    top: 797,
     height: 45,
     position: "absolute",
+
+  },
+  frameLayoutt: {
+    width: 45,
+    top: 747,
+    height: 45,
+    position: "absolute",
+
   },
   wrapperPosition: {
     left: 98,
     width: 45,
-    top: 845,
+    top: 798,
     height: 45,
     position: "absolute",
   },
   svgrepoIconLayout: {
+
     height: 26,
     width: 26,
     position: "absolute",
@@ -331,7 +484,13 @@ const styles = StyleSheet.create({
   groupPressableLayout: {
     height: 104,
     width: 104,
-    top: 777,
+    top: 732,
+    position: "absolute",
+  },
+  groupPressableLayoutt: {
+    height: 104,
+    width: 104,
+    top: 679,
     position: "absolute",
   },
   lightTexture22341Icon: {
@@ -352,7 +511,7 @@ const styles = StyleSheet.create({
   housefill: {
     width: 14,
     height: 20,
-    left: 0,
+    left: -2,
     top: 0,
   },
   elementPosition: {
@@ -379,10 +538,10 @@ const styles = StyleSheet.create({
     top: 0,
   },
   addMaintenanceRecordParent: {
-    left: 27,
+    left: 40,
     width: 93,
     height: 17,
-    top: 2,
+    top: -25,
     position: "absolute",
   },
   breadcrumbs: {
@@ -445,7 +604,7 @@ const styles = StyleSheet.create({
     left: 23,
   },
   jxc7789: {
-    top: 178,
+    top: 184,
     left: 24,
   },
   vectorIcon: {
@@ -457,22 +616,24 @@ const styles = StyleSheet.create({
     height: "2.68%",
     maxWidth: "100%",
   },
+  // this 
   vectorIcon1: {
     right: "6.98%",
-    left: "87.21%",
+    left: "89.50%",
     bottom: "66.63%",
-    top: "30.69%",
+    top: "30.50%",
     width: "5.81%",
     height: "2.68%",
     maxWidth: "100%",
+    position: "relative",
   },
   groupIcon: {
     height: "2.82%",
     width: "6.1%",
-    top: "36.59%",
+    top: "33.50%",
     right: "6.95%",
     bottom: "60.6%",
-    left: "86.95%",
+    left: "88.95%",
   },
   date2SvgrepoCom11: {
     left: 162,
@@ -481,7 +642,7 @@ const styles = StyleSheet.create({
   },
   licensePlateNumberSvgrepoCIcon: {
     top: 170,
-    left: 366,
+    left: 360,
     width: 40,
     height: 40,
     position: "absolute",
@@ -511,7 +672,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   timeOclockSvgrepoCom1Icon: {
-    left: 374,
+    left: 371,
     top: 231,
     height: 25,
   },
@@ -531,8 +692,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorParent: {
-    top: 737,
-    left: 25,
+    top: 630,
+    left: 18,
   },
   addRecordChild4: {
     top: 3,
@@ -540,7 +701,7 @@ const styles = StyleSheet.create({
     width: 372,
   },
   rectangleView: {
-    top: 830,
+    top: 785,
     backgroundColor: Color.steelblue_300,
     shadowColor: "rgba(0, 0, 0, 0.03)",
     shadowOffset: {
@@ -567,17 +728,17 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     textAlign: "center",
     fontSize: FontSize.size_sm,
-    top: 895,
+    top: 845,
   },
   vehicles: {
-    left: 99,
+    left: 92,
     lineHeight: 18,
     textAlign: "center",
     fontSize: FontSize.size_sm,
-    top: 895,
+    top: 845,
   },
   addVehicle: {
-    top: 867,
+    top: 825,
     left: 172,
     lineHeight: 18,
     textAlign: "center",
@@ -588,15 +749,16 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     textAlign: "center",
     fontSize: FontSize.size_sm,
-    top: 895,
+    top: 845,
   },
   invoices: {
-    left: 359,
+    left: 350,
     lineHeight: 18,
     textAlign: "center",
     fontSize: FontSize.size_sm,
-    top: 895,
+    top: 845,
   },
+  // dashboard and down
   ellipseIcon: {
     left: 20,
   },
@@ -608,10 +770,12 @@ const styles = StyleSheet.create({
     height: 27,
     width: 25,
   },
+  // dashboard
   housefill1: {
-    top: 852,
-    left: 31,
+    top: 755,
+    left: 30,
   },
+  // invoicecss
   container: {
     left: 277,
   },
@@ -619,16 +783,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   frame: {
-    left: 365,
+    left: 358,
   },
+  //invoiceicon
   invoiceWarrantyLineSvgrepoIcon: {
-    top: 855,
-    left: 375,
+    top: 9,
+    left: 11,
   },
+  // wheelcss
   groupPressable: {
     left: 163,
   },
   addRecordChild6: {
+
     left: 164,
   },
   groupInner: {
@@ -649,13 +816,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: FontSize.size_base,
   },
+  // here 
   vectorIcon2: {
-    height: "88.85%",
-    width: "7.47%",
-    top: "8.33%",
-    right: "92.53%",
+    height: "30.85%",
+    width: "4.70%",
+    top: "31.00%",
+    right: "42.53%",
     bottom: "2.82%",
-    left: "0%",
+    left: "4%",
+  },
+  addMaintenanceRecordGroupp: {
+    height: "38.1%",
+    width: "68.14%",
+    top: "132.16%",
+    right: "26.74%",
+    bottom: "31.75%",
+    left: "12.12%",
+    position: "absolute",
   },
   addMaintenanceRecordGroup: {
     height: "38.1%",
@@ -677,23 +854,23 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   maskGroupIcon: {
-    top: 63,
-    left: 386,
+    top: 58,
+    left: 372,
     width: 31,
     height: 31,
     position: "absolute",
   },
   microphoneSvgrepoCom1Icon: {
-    top: 854,
-    left: 287,
+    left: 12,
+    top: 8,
   },
   vectorIcon3: {
     height: "1.26%",
     width: "4.65%",
-    top: "43.35%",
+    top: "37.65%",
     right: "7.67%",
     bottom: "55.39%",
-    left: "87.67%",
+    left: "89.80%",
   },
   addRecord: {
     backgroundColor: Color.white,
@@ -701,6 +878,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
+    position: "absolute"
   },
 });
 
