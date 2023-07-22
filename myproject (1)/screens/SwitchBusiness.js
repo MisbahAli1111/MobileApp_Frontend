@@ -22,14 +22,18 @@ const SwitchBusiness = () => {
         Switch Business
       </Text>
       <View style={styles.switchBusinessChild} />
+      <Pressable
+      onPress={() => navigation.navigate("OwnerInfo")}
+      >
       <Image
         style={[styles.switchBusinessItem, styles.switchBusinessItemPosition]}
         contentFit="cover"
         source={require("../assets/group-26.png")}
       />
+      </Pressable>
       <Pressable
       onPress={() => navigation.navigate("Home")}
-    >
+      >
       <View style={[styles.groupParent, styles.groupParentLayout]}>
         <View style={[styles.vectorParent, styles.groupParentLayout]}>
           <Image
