@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, length, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
-
+import ModalDropdown from 'react-native-modal-dropdown';
 const MaintenanceRecord = () => {
   const navigation = useNavigation();
 
+
+  const options = ['Option 1', 'Option 2', 'Option 3'];
   const [search, setSearch] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  
+  const [selectedOption, setSelectedOption] = useState('');
   const records = [
     {
       maintainedOn: "sdbfgljb",
@@ -44,6 +46,19 @@ const MaintenanceRecord = () => {
     navigation.navigate("MaintenanceDetailView");
   };
 
+ 
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setIsDropdownVisible(false);
+  };
+
+
+  const dropdownOptions = selectedOption !== '' ? [selectedOption, ...options] : options;
+
+  
+  
 
   return (
     <View style={styles.maintenanceRecord}>
@@ -128,25 +143,38 @@ const MaintenanceRecord = () => {
           </View>
         </Pressable>
 
-        <View style={styles.materialSymbolsarrowRightAParent}>
-          <Image
-            style={[
-              styles.materialSymbolsarrowRightAIcon,
-              styles.materialIconLayout,
-            ]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolsarrowrightaltrounded.png")}
-          />
-          <Image
-            style={[
-              styles.materialSymbolsarrowRightAIcon1,
-              styles.materialIconLayout,
-            ]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolsarrowrightaltrounded1.png")}
-          />
-          <Text style={[styles.filter, styles.abc123Clr]}>Filter</Text>
-        </View>
+
+{/* here  */}
+<View style={styles.cont}>
+      <TouchableOpacity
+        style={styles.filterContainer}
+        onPress={() => this.dropdown.show()}
+      >
+        <Image
+          style={[styles.filterIcon]}
+          contentFit="cover"
+          source={require("../assets/materialsymbolsarrowrightaltrounded.png")}
+        />
+        <Image
+          style={[styles.filterIcon]}
+          contentFit="cover"
+          source={require("../assets/materialsymbolsarrowrightaltrounded1.png")}
+        />
+        <Text style={styles.filterText}>Filter</Text>
+      </TouchableOpacity>
+
+      <ModalDropdown
+        ref={(ref) => (this.dropdown = ref)}
+        options={dropdownOptions}
+        textStyle={styles.optionText}
+        dropdownStyle={styles.dropdown}
+        onSelect={handleOptionSelect}
+      />
+
+    </View>
+
+
+
       </View>
       {/* search */}
       <View style={[styles.rectangleContainer, styles.rectangleLayout]}>
@@ -1025,6 +1053,39 @@ const styles = StyleSheet.create({
   homeMutedIcon1: {
     width: 25,
     height: 27,
+  },
+  cont: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  
+  filterText: {
+    fontWeight: 'bold',
+  },
+  dropdown: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    elevation: 4,
+  },
+  optionText: {
+    padding: 10,
+  },
+  selectedOptionText: {
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   housefill1: {
     top: 812,

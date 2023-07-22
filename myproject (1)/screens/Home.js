@@ -52,7 +52,7 @@ const Home = () => {
         <Pressable
           style={styles.vector}
           onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
+         >
           <Image
             style={[styles.icon, styles.iconLayout1]}
             contentFit="cover"

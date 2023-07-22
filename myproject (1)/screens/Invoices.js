@@ -340,11 +340,7 @@ const Invoices = () => {
             />
           </Pressable>
         </View>
-        <Image
-          style={[styles.invoicesInner, styles.groupChild21Layout]}
-          contentFit="cover"
-          source={require("../assets/group-1712.png")}
-        />
+      
         <Image
           style={styles.maskGroupIcon}
           contentFit="cover"

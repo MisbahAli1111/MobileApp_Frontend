@@ -50,7 +50,7 @@ const SwitchBusiness = () => {
       </Text>
       <View style={styles.switchBusinessChild} />
       <Pressable
-      // onPress={navigation.navigate('')}
+      onPress={() => navigation.navigate("OwnerInfo")}
       >
       <Image
         style={[styles.switchBusinessItem, styles.switchBusinessItemPosition]}
@@ -58,6 +58,7 @@ const SwitchBusiness = () => {
         source={require("../assets/group-26.png")}
       />
       </Pressable>
+      
   
       <View style={styles.boxContianer}>
         {Business.map((BusinessB, index) => (
