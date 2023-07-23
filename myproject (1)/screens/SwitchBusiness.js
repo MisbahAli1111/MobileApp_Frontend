@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -6,6 +6,33 @@ import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 
 const SwitchBusiness = () => {
   const navigation = useNavigation();
+
+  const Business = [
+    {
+      Name: "Business ABC",
+      lastSigend : "2 hours ago",
+    },
+    {
+      Name: "Business XYZ",
+      lastSigend : "5 hours ago",
+    },
+    {
+      Name: "Business KLM",
+      lastSigend : "1 hours ago",
+    },
+    {
+      Name: "Business YES",
+      lastSigend : "1 hours ago",
+    },
+
+  ];
+
+  const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
+
+  const handlePress = (index) => {
+    setCurrentPressedIndex(index);
+     navigation.navigate("HOME");
+  };
 
   return (
     <View style={styles.switchBusiness}>
@@ -22,97 +49,53 @@ const SwitchBusiness = () => {
         Switch Business
       </Text>
       <View style={styles.switchBusinessChild} />
+      <Pressable
+      onPress={() => navigation.navigate("OwnerInfo")}
+      >
       <Image
         style={[styles.switchBusinessItem, styles.switchBusinessItemPosition]}
         contentFit="cover"
         source={require("../assets/group-26.png")}
       />
-      <Pressable
-      onPress={() => navigation.navigate("Home")}
-    >
-      <View style={[styles.groupParent, styles.groupParentLayout]}>
-        <View style={[styles.vectorParent, styles.groupParentLayout]}>
-          <Image
-            style={[styles.groupChild, styles.groupParentLayout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-69.png")}
-          />
-          <View style={styles.abcBusinessParent}>
-            <Text style={[styles.abcBusiness, styles.abcPosition1]}>
-              ABC Business
-            </Text>
-            <Text style={[styles.signedIn, styles.signedTypo]}>Signed in</Text>
-          </View>
-        </View>
-        <Image
-          style={styles.checkCircleSvgrepoCom1Icon}
-          contentFit="cover"
-          source={require("../assets/checkcirclesvgrepocom-1.png")}
-        />
-      </View>
       </Pressable>
-      <Pressable
-        style={[styles.switchBusinessInner, styles.groupParentLayout]}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <View style={[styles.vectorParent, styles.groupParentLayout]}>
-          <Image
-            style={[styles.groupChild, styles.groupParentLayout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-691.png")}
-          />
-          <View style={[styles.abcBusinessGroup, styles.abcPosition]}>
-            <Text style={[styles.abcBusiness1, styles.abcPosition1]}>
-              ABC Business
-            </Text>
-            <Text
-              style={[styles.lastSignedIn, styles.lastSignedInFlexBox]}
-            >{`Last Signed in 2 hours ago `}</Text>
-          </View>
-        </View>
-      </Pressable>
-      <Pressable
-        style={[styles.groupPressable, styles.groupParentLayout]}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <View style={[styles.vectorParent, styles.groupParentLayout]}>
-          <Image
-            style={[styles.groupChild, styles.groupParentLayout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-691.png")}
-          />
-          <View style={[styles.abcBusinessContainer, styles.abcPosition]}>
-            <Text style={[styles.abcBusiness1, styles.abcPosition1]}>
-              ABC Business
-            </Text>
-            <Text style={[styles.lastSignedIn1, styles.signedTypo]}>
-              Last Signed in 2 days ago
-            </Text>
-          </View>
-        </View>
-      </Pressable>
-      <Pressable
-        style={[styles.switchBusinessInner1, styles.groupParentLayout]}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <View style={[styles.vectorParent, styles.groupParentLayout]}>
-          <Image
-            style={[styles.groupChild, styles.groupParentLayout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-691.png")}
-          />
-          <View
-            style={[styles.lastSignedInMoreThanAWeeParent, styles.abcPosition]}
+      
+  
+      <View style={styles.boxContianer}>
+        {Business.map((BusinessB, index) => (
+          <Pressable
+            onPress={() => handlePress(index)}
           >
-            <Text style={[styles.lastSignedIn2, styles.signedTypo]}>
-              Last Signed in more than a week ago
-            </Text>
-            <Text style={[styles.abcBusiness1, styles.abcPosition1]}>
-              ABC Business
-            </Text>
-          </View>
-        </View>
-      </Pressable>
+            <View key={index} style={[styles.groupParent, styles.groupParentLayout]}>
+              <View style={[styles.vectorParent, styles.groupParentLayout]}>
+                <Image
+                  style={[styles.groupChild, styles.groupParentLayout]}
+                  contentFit="cover"
+                  source={
+                    currentPressedIndex === index ? require("../assets/rectangle-69.png"):require("../assets/rectangle-691.png") }
+                />
+                <View style={styles.abcBusinessParent}>
+                  <Text style={[
+                    currentPressedIndex === index ? styles.abcBusiness:styles.abcBusiness1 
+                    , styles.abcPosition1]}>
+                    {BusinessB.Name}
+                  </Text>
+                  <Text style={[
+                     currentPressedIndex === index ? styles.signedIn : styles.lastSignedIn2, styles.signedTypo]}>
+                    {
+                    currentPressedIndex === index ?  "Signed In": BusinessB.lastSigend}
+                    </Text>
+                </View>
+              </View>
+              <Image
+                style={styles.checkCircleSvgrepoCom1Icon}
+                contentFit="cover"
+                source={require("../assets/checkcirclesvgrepocom-1.png")}
+              />
+            </View>
+          </Pressable>
+        ))}
+      </View>
+      
       <Pressable
         style={[styles.vectorParent1, styles.groupChild1Layout]}
         onPress={() => navigation.navigate("BusinessInfo")}
@@ -126,7 +109,7 @@ const SwitchBusiness = () => {
           Create New Business
         </Text>
       </Pressable>
-      
+
     </View>
   );
 };
@@ -137,26 +120,42 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
   },
+  boxContianer: {
+    flexDirection: "column",
+    flex: 1,
+    flexWrap: "wrap",
+    marginTop: 160,
+    alignItems: 'flex-end',
+    left: 6,
+  },
   signedFlexBox: {
     textAlign: "center",
     position: "absolute",
   },
+  
   groupParentLayout: {
     height: 65,
     width: 393,
-    position: "absolute",
+    left: 5,
+    position: "relative",
+    alignItems: 'flex-start',
+    flexWrap: "wrap",
+    marginTop: 15,
   },
+  
   abcPosition1: {
     top: "0%",
     fontSize: FontSize.size_base,
     left: "0%",
     textAlign: "center",
     position: "absolute",
+    fontWeight:500,
   },
   signedTypo: {
     fontSize: FontSize.size_sm,
     top: "53.33%",
     fontFamily: FontFamily.poppinsRegular,
+    fontWeight:500,
   },
   abcPosition: {
     left: "2.8%",
@@ -222,6 +221,7 @@ const styles = StyleSheet.create({
     color: Color.aliceblue_200,
     fontSize: FontSize.size_base,
     left: "0%",
+
   },
   signedIn: {
     left: "2.68%",
@@ -231,11 +231,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   abcBusinessParent: {
-    width: "28.5%",
-    right: "69.47%",
+    width: "78.5%",
+    right: "89.47%",
     left: "2.04%",
     bottom: "15.38%",
-    top: "15.38%",
+    top: "33.58%",
     height: "69.23%",
     position: "absolute",
   },
@@ -244,18 +244,14 @@ const styles = StyleSheet.create({
     top: 0,
   },
   checkCircleSvgrepoCom1Icon: {
-    top: 16,
+    top: 45,
     left: 342,
     width: 33,
     height: 33,
     position: "absolute",
     overflow: "hidden",
   },
-  groupParent: {
-    top: 271,
-    left: 10,
-    width: 393,
-  },
+
   abcBusiness1: {
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
@@ -300,6 +296,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     position: "absolute",
     color: Color.darkslateblue,
+    
   },
   lastSignedInMoreThanAWeeParent: {
     width: "65.9%",

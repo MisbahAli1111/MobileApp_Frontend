@@ -1,11 +1,64 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
-
+import { TextInput } from "react-native-gesture-handler";
+import ModalDropdown from 'react-native-modal-dropdown';
 const MaintenanceRecord = () => {
   const navigation = useNavigation();
+
+
+  const options = ['Option 1', 'Option 2', 'Option 3'];
+  const [search, setSearch] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+  const records = [
+    {
+      maintainedOn: "sdbfgljb",
+      maintainedBy: "Waleed Ali",
+      mileage: "137,000",
+      service: "Service Details 1",
+
+    },
+    {
+      maintainedOn: "2nd January 2023",
+      maintainedBy: "John Doe",
+      mileage: "150,000",
+      service: "Service Details 2",
+
+    },
+    {
+      maintainedOn: "2nd January 2023",
+      maintainedBy: "John Doe",
+      mileage: "150,000",
+      service: "Service Details 2",
+
+    },
+   
+  ];
+
+  const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
+
+  const handlePress = (index) => {
+    setCurrentPressedIndex(index);
+   
+    navigation.navigate("MaintenanceDetailView");
+  };
+
+ 
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setIsDropdownVisible(false);
+  };
+
+
+  const dropdownOptions = selectedOption !== '' ? [selectedOption, ...options] : options;
+
+  
+  
 
   return (
     <View style={styles.maintenanceRecord}>
@@ -22,13 +75,18 @@ const MaintenanceRecord = () => {
       <View style={styles.rectangleParent}>
         <View style={[styles.groupChild, styles.groupInnerShadowBox]} />
         <View style={styles.groupItem} />
+
         <View style={styles.recordParent}>
           <Text style={styles.record}>Record</Text>
-          <Image
-            style={[styles.vectorIcon, styles.iconLayout1]}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
+          {/* backicon  */}
+          <TouchableWithoutFeedback onPress={() => navigation.navigate("Home")}>
+
+            <Image
+              style={[styles.vectorIcon, styles.iconLayout1]}
+              contentFit="cover"
+              source={require("../assets/vector2.png")}
+            />
+          </TouchableWithoutFeedback>
         </View>
         <Pressable
           style={[styles.wrapper, styles.wrapperLayout]}
@@ -62,7 +120,9 @@ const MaintenanceRecord = () => {
               <Text style={styles.search}>Search</Text>
             </View>
             <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
-              <Text style={[styles.abc123, styles.abc123Clr]}>ABC-123</Text>
+              <Text style={[styles.abc123, styles.abc123Clr]}>
+                {search}
+                </Text>
             </View>
           </View>
         </View>
@@ -82,32 +142,55 @@ const MaintenanceRecord = () => {
             </View>
           </View>
         </Pressable>
-        <View style={styles.materialSymbolsarrowRightAParent}>
-          <Image
-            style={[
-              styles.materialSymbolsarrowRightAIcon,
-              styles.materialIconLayout,
-            ]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolsarrowrightaltrounded.png")}
-          />
-          <Image
-            style={[
-              styles.materialSymbolsarrowRightAIcon1,
-              styles.materialIconLayout,
-            ]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolsarrowrightaltrounded1.png")}
-          />
-          <Text style={[styles.filter, styles.abc123Clr]}>Filter</Text>
-        </View>
+
+
+{/* here  */}
+<View style={styles.cont}>
+      <TouchableOpacity
+        style={styles.filterContainer}
+        onPress={() => this.dropdown.show()}
+      >
+        <Image
+          style={[styles.filterIcon]}
+          contentFit="cover"
+          source={require("../assets/materialsymbolsarrowrightaltrounded.png")}
+        />
+        <Image
+          style={[styles.filterIcon]}
+          contentFit="cover"
+          source={require("../assets/materialsymbolsarrowrightaltrounded1.png")}
+        />
+        <Text style={styles.filterText}>Filter</Text>
+      </TouchableOpacity>
+
+      <ModalDropdown
+        ref={(ref) => (this.dropdown = ref)}
+        options={dropdownOptions}
+        textStyle={styles.optionText}
+        dropdownStyle={styles.dropdown}
+        onSelect={handleOptionSelect}
+      />
+
+    </View>
+
+
+
       </View>
+      {/* search */}
       <View style={[styles.rectangleContainer, styles.rectangleLayout]}>
         <Pressable
           style={[styles.rectanglePressable, styles.rectanglePosition]}
           onPress={() => navigation.navigate("MaintenanceRecord")}
         />
-        <Text style={[styles.davidDaniel, styles.davidTypo]}>David Daniel</Text>
+        <TextInput style={[styles.davidDaniel, styles.davidTypo]}
+        placeholder="David "
+        value={search}
+        onFocus={() => setSearchFocused(true)}
+        onBlur={() => setSearchFocused(false)}
+        onChangeText={setSearch}
+        >
+          
+        </TextInput>
         <Pressable
           style={styles.vector}
           onPress={() => navigation.navigate("MaintenanceRecord")}
@@ -119,321 +202,14 @@ const MaintenanceRecord = () => {
           />
         </Pressable>
       </View>
-      <View style={[styles.groupContainer, styles.groupParentLayout]}>
-        <View style={[styles.groupFrame, styles.groupParentLayout]}>
-          <Pressable
-            style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => navigation.navigate("MaintenanceDetailView")}
-          >
-            <Image
-              style={[styles.rectangleIcon, styles.groupParentLayout]}
-              contentFit="cover"
-              source={require("../assets/rectangle-54.png")}
-            />
-            <View style={[styles.frameParent, styles.frameParentLayout]}>
-              <View
-                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
-              >
-                <Text
-                  style={[styles.maintainedOn, styles.davidTypo]}
-                >{`Maintained On `}</Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  1st January 2023
-                </Text>
-              </View>
-              <View
-                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
-              >
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Maintained By
-                </Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  Waleed Ali
-                </Text>
-              </View>
-              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Mileage
-                </Text>
-              </View>
-              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Service
-                </Text>
-              </View>
-            </View>
-            <Image
-              style={[styles.groupIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/group-80.png")}
-            />
-            <Image
-              style={[
-                styles.vehicleServicesSvgrepoCom1Icon,
-                styles.vehicleIconLayout,
-              ]}
-              contentFit="cover"
-              source={require("../assets/vehicleservicessvgrepocom-1.png")}
-            />
-          </Pressable>
-        </View>
-        <Text style={[styles.carWash, styles.carPosition]}>Car Wash</Text>
-        <Text style={[styles.text2, styles.textPosition]}>137,000</Text>
-      </View>
-      <View style={[styles.groupView, styles.groupParentLayout]}>
-        <View style={[styles.groupFrame, styles.groupParentLayout]}>
-          <Pressable
-            style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => navigation.navigate("MaintenanceDetailView")}
-          >
-            <Image
-              style={[styles.rectangleIcon, styles.groupParentLayout]}
-              contentFit="cover"
-              source={require("../assets/rectangle-54.png")}
-            />
-            <View style={[styles.frameParent, styles.frameParentLayout]}>
-              <View
-                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
-              >
-                <Text
-                  style={[styles.maintainedOn, styles.davidTypo]}
-                >{`Maintained On `}</Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  1st January 2023
-                </Text>
-              </View>
-              <View
-                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
-              >
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Maintained By
-                </Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  Waleed Ali
-                </Text>
-              </View>
-              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Mileage
-                </Text>
-              </View>
-              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Service
-                </Text>
-              </View>
-            </View>
-            <Image
-              style={[styles.groupIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/group-80.png")}
-            />
-            <Image
-              style={[
-                styles.vehicleServicesSvgrepoCom1Icon,
-                styles.vehicleIconLayout,
-              ]}
-              contentFit="cover"
-              source={require("../assets/vehicleservicessvgrepocom-11.png")}
-            />
-          </Pressable>
-        </View>
-        <Text style={[styles.carWash, styles.carPosition]}>Car Wash</Text>
-        <Text style={[styles.text2, styles.textPosition]}>137,000</Text>
-      </View>
-      <View style={[styles.groupParent1, styles.groupParentLayout]}>
-        <View style={[styles.groupFrame, styles.groupParentLayout]}>
-          <Pressable
-            style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => navigation.navigate("MaintenanceDetailView")}
-          >
-            <Image
-              style={[styles.rectangleIcon, styles.groupParentLayout]}
-              contentFit="cover"
-              source={require("../assets/rectangle-541.png")}
-            />
-            <View style={[styles.frameParent, styles.frameParentLayout]}>
-              <View
-                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
-              >
-                <Text
-                  style={[styles.maintainedOn2, styles.davidTypo]}
-                >{`Maintained On `}</Text>
-                <Text style={[styles.stJanuary20232, styles.text4Typo]}>
-                  1st January 2023
-                </Text>
-              </View>
-              <View
-                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
-              >
-                <Text style={[styles.maintainedOn2, styles.davidTypo]}>
-                  Maintained By
-                </Text>
-                <Text style={[styles.davidDaniel1, styles.davidTypo]}>
-                  David Daniel
-                </Text>
-              </View>
-              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn2, styles.davidTypo]}>
-                  Mileage
-                </Text>
-              </View>
-              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn2, styles.davidTypo]}>
-                  Service
-                </Text>
-              </View>
-            </View>
-            <Image
-              style={[styles.groupIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/group-801.png")}
-            />
-            <Image
-              style={[
-                styles.vehicleServicesSvgrepoCom1Icon,
-                styles.vehicleIconLayout,
-              ]}
-              contentFit="cover"
-              source={require("../assets/vehicleservicessvgrepocom-12.png")}
-            />
-          </Pressable>
-        </View>
-        <Text style={[styles.carWash2, styles.text4Typo]}>Car Wash</Text>
-        <Text style={[styles.text4, styles.text4Typo]}>137,000</Text>
-      </View>
-      <View style={[styles.groupParent2, styles.groupParentLayout]}>
-        <View style={[styles.groupFrame, styles.groupParentLayout]}>
-          <Pressable
-            style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => navigation.navigate("MaintenanceDetailView")}
-          >
-            <Image
-              style={[styles.rectangleIcon, styles.groupParentLayout]}
-              contentFit="cover"
-              source={require("../assets/rectangle-54.png")}
-            />
-            <View style={[styles.frameParent, styles.frameParentLayout]}>
-              <View
-                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
-              >
-                <Text
-                  style={[styles.maintainedOn, styles.davidTypo]}
-                >{`Maintained On `}</Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  1st January 2023
-                </Text>
-              </View>
-              <View
-                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
-              >
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Maintained By
-                </Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  Waleed Ali
-                </Text>
-              </View>
-              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Mileage
-                </Text>
-              </View>
-              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Service
-                </Text>
-              </View>
-            </View>
-            <Image
-              style={[styles.groupIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/group-80.png")}
-            />
-            <Image
-              style={[
-                styles.vehicleServicesSvgrepoCom1Icon,
-                styles.vehicleIconLayout,
-              ]}
-              contentFit="cover"
-              source={require("../assets/vehicleservicessvgrepocom-11.png")}
-            />
-          </Pressable>
-        </View>
-        <Text style={[styles.carWash, styles.carPosition]}>Car Wash</Text>
-        <Text style={[styles.text2, styles.textPosition]}>137,000</Text>
-      </View>
-      <View style={[styles.groupParent3, styles.groupParentLayout]}>
-        <View style={[styles.groupFrame, styles.groupParentLayout]}>
-          <Pressable
-            style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => navigation.navigate("MaintenanceDetailView")}
-          >
-            <Image
-              style={[styles.rectangleIcon, styles.groupParentLayout]}
-              contentFit="cover"
-              source={require("../assets/rectangle-542.png")}
-            />
-            <View style={[styles.frameParent, styles.frameParentLayout]}>
-              <View
-                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
-              >
-                <Text
-                  style={[styles.maintainedOn, styles.davidTypo]}
-                >{`Maintained On `}</Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  1st January 2023
-                </Text>
-              </View>
-              <View
-                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
-              >
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Maintained By
-                </Text>
-                <Text style={[styles.stJanuary2023, styles.text2Typo]}>
-                  Waleed Ali
-                </Text>
-              </View>
-              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Mileage
-                </Text>
-              </View>
-              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
-                <Text style={[styles.maintainedOn, styles.davidTypo]}>
-                  Service
-                </Text>
-              </View>
-            </View>
-            <Image
-              style={[styles.groupIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/group-80.png")}
-            />
-            <Image
-              style={[
-                styles.vehicleServicesSvgrepoCom1Icon4,
-                styles.vehicleIconLayout,
-              ]}
-              contentFit="cover"
-              source={require("../assets/vehicleservicessvgrepocom-11.png")}
-            />
-          </Pressable>
-        </View>
-        <Text style={[styles.carWash, styles.carPosition]}>Car Wash</Text>
-        <Text style={[styles.text2, styles.textPosition]}>137,000</Text>
-      </View>
-      <Image
-        style={[styles.maintenanceRecordChild, styles.wrapperLayout]}
-        contentFit="cover"
-        source={require("../assets/group-1711.png")}
-      />
+      
+      {/* face icon  */}
       <Image
         style={styles.maskGroupIcon}
         contentFit="cover"
         source={require("../assets/mask-group.png")}
       />
+
       <View style={[styles.maintenanceRecordItem, styles.frameParentLayout]} />
       <View
         style={[styles.maintenanceRecordInner, styles.groupInnerShadowBox]}
@@ -444,11 +220,25 @@ const MaintenanceRecord = () => {
       <Text style={[styles.addVehicle, styles.addTypo]}>Add Vehicle</Text>
       <Text style={[styles.records, styles.homeTypo]}>Records</Text>
       <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
-      <Image
-        style={[styles.ellipseIcon, styles.ellipseLayout]}
-        contentFit="cover"
-        source={require("../assets/ellipse-5.png")}
-      />
+      {/* home eclipse */}
+      <Pressable
+        onPress={() => navigation.navigate("Home")}
+      >
+        <Image
+          style={[styles.ellipseIcon, styles.ellipseLayout]}
+          contentFit="cover"
+          source={require("../assets/ellipse-5.png")}
+        />
+        <View style={[styles.housefill1, styles.housefillFlexBox]}>
+          <Image
+            style={styles.homeMutedIcon1}
+            contentFit="cover"
+            source={require("../assets/homemuted1.png")}
+          />
+        </View>
+      </Pressable>
+
+      {/* car eclipse  */}
       <Pressable
         style={[styles.container, styles.containerPosition]}
         onPress={() => navigation.navigate("Vehicles")}
@@ -458,14 +248,22 @@ const MaintenanceRecord = () => {
           contentFit="cover"
           source={require("../assets/ellipse-5.png")}
         />
+
       </Pressable>
-      <View style={[styles.housefill1, styles.housefillFlexBox]}>
+      <Pressable
+        onPress={() => navigation.navigate("Vehicles")}
+      >
         <Image
-          style={styles.homeMutedIcon1}
+          style={[
+            styles.carCitroenTopVehicleSvgrepIcon,
+            styles.containerPosition,
+          ]}
           contentFit="cover"
-          source={require("../assets/homemuted1.png")}
+          source={require("../assets/carcitroentopvehiclesvgrepocom-12.png")}
         />
-      </View>
+      </Pressable>
+
+      {/* book eclipse  */}
       <Pressable
         style={[styles.frame, styles.ellipseLayout]}
         onPress={() => navigation.navigate("MaintenanceRecord")}
@@ -476,14 +274,8 @@ const MaintenanceRecord = () => {
           source={require("../assets/ellipse-7.png")}
         />
       </Pressable>
-      <Image
-        style={[
-          styles.carCitroenTopVehicleSvgrepIcon,
-          styles.containerPosition,
-        ]}
-        contentFit="cover"
-        source={require("../assets/carcitroentopvehiclesvgrepocom-12.png")}
-      />
+
+      {/* invoice eclipse  */}
       <Pressable
         style={[styles.ellipsePressable, styles.ellipseLayout]}
         onPress={() => navigation.navigate("Invoices")}
@@ -493,15 +285,22 @@ const MaintenanceRecord = () => {
           contentFit="cover"
           source={require("../assets/ellipse-8.png")}
         />
+
       </Pressable>
-      <Image
-        style={[
-          styles.invoiceWarrantyLineSvgrepoIcon,
-          styles.svgrepoIconLayout,
-        ]}
-        contentFit="cover"
-        source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-      />
+      <Pressable
+        onPress={() => navigation.navigate("Invoices")}
+      >
+        <Image
+          style={[
+            styles.invoiceWarrantyLineSvgrepoIcon,
+            styles.svgrepoIconLayout,
+          ]}
+          contentFit="cover"
+          source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
+        />
+      </Pressable>
+
+
       <Pressable
         style={[styles.wrapper1, styles.wrapper1Layout]}
         onPress={() => navigation.navigate("AddVehicle")}
@@ -511,18 +310,127 @@ const MaintenanceRecord = () => {
           contentFit="cover"
           source={require("../assets/group-111.png")}
         />
+
       </Pressable>
-      <Image
-        style={[styles.maintenanceRecordChild1, styles.wrapper1Layout]}
-        contentFit="cover"
-        source={require("../assets/group-174.png")}
-      />
-      <Image
-        style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
-        contentFit="cover"
-        source={require("../assets/microphonesvgrepocom-1.png")}
-      />
+      <Pressable
+        onPress={() => navigation.navigate("AddVehicle")}
+      >
+        <Image
+          style={[styles.maintenanceRecordChild1, styles.wrapper1Layout]}
+          contentFit="cover"
+          source={require("../assets/group-174.png")}
+        />
+      </Pressable>
+      <Pressable
+        onPress={() => navigation.navigate("MaintenanceRecord")}
+      >
+        <Image
+          style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
+          contentFit="cover"
+          source={require("../assets/microphonesvgrepocom-1.png")}
+        />
+      </Pressable>
+
+    
+    <View style={styles.boxContianer}>
+    <ScrollView>
+        {records.map((record, index) => (
+          <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
+            <View style={[styles.groupFrame]}>
+              <Pressable
+                style={[styles.groupFrame, styles.groupParentLayout]}
+                onPress={() => handlePress(index)}
+              >
+                {/* Image */}
+                <Image
+                  style={[
+                    styles.rectangleIcon,
+                    styles.groupParentLayout,
+                    currentPressedIndex === index ? styles.pressedImageStyle : styles.defaultImageStyle,
+                  ]}
+                  contentFit="cover"
+                  source={currentPressedIndex === index ? require("../assets/rectangle-541.png") : require("../assets/rectangle-54.png")}
+                />
+                <View style={[styles.frameParent, styles.frameParentLayout]}>
+                  <View
+                    style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
+                  >
+                    <Text
+                      style={[
+                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                        styles.davidTypo,
+                      ]}>
+                      {`Maintained On `}</Text>
+
+                    <Text style={[
+                      styles.stJanuary2023,
+                      currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
+                    ]}>
+                      {record.maintainedOn}
+                    </Text>
+                  </View>
+                  <View
+                    style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
+                  >
+                    <Text style={[
+                      currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                      styles.davidTypo,
+                    ]}>
+                      Maintained By
+                    </Text>
+                    <Text style={[
+                      styles.stJanuary2023,
+                      currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
+                    ]}>
+                      {record.maintainedBy}
+                    </Text>
+                  </View>
+                  <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
+                    <Text style={[
+                      currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                      styles.davidTypo,
+                    ]}>
+                      Mileage
+                    </Text>
+                  </View>
+                  <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
+                    <Text style={[
+                      currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                      styles.davidTypo,
+                    ]}>
+                      Service
+                    </Text>
+                  </View>
+                </View>
+                <Image
+                  style={[styles.groupIcon, styles.iconLayout1]}
+                  contentFit="cover"
+                  source={currentPressedIndex === index ? require("../assets/group-801.png") : require("../assets/group-80.png")}
+                />
+                <Image
+                  style={[
+                    styles.vehicleServicesSvgrepoCom1Icon,
+                    styles.vehicleIconLayout,
+                  ]}
+                  contentFit="cover"
+                  source={
+                    currentPressedIndex === index ? require("../assets/vehicleservicessvgrepocom-12.png") : require("../assets/vehicleservicessvgrepocom-11.png")}
+                />
+                <Text style={[
+                   currentPressedIndex === index ? styles.carWashW :styles.carWash, styles.carPosition]}>Car Wash</Text>
+                <Text style={[
+                  currentPressedIndex === index ? styles.text2W: styles.text2, styles.textPosition]}>137,000</Text>
+
+              </Pressable>
+            </View>
+          </View>
+        ))}
+         </ScrollView>
+      </View>
+     
+
     </View>
+
   );
 };
 
@@ -534,6 +442,17 @@ const styles = StyleSheet.create({
       height: 4,
     },
     left: 0,
+  },
+  
+
+  boxContianer :{
+    flexDirection:"column",
+    flex:1,
+    flexWrap:"wrap",
+    marginTop:230,
+    marginRight: 20,
+    alignItems: 'flex-end', 
+    
   },
   iconLayout1: {
     maxHeight: "100%",
@@ -611,7 +530,11 @@ const styles = StyleSheet.create({
   groupParentLayout: {
     height: 132,
     width: 392,
-    position: "absolute",
+    left:5,
+    position: "relative",
+    alignItems: 'flex-start',
+    flexWrap:"wrap",
+    marginTop:5,
   },
   frameParentLayout: {
     height: 104,
@@ -619,6 +542,13 @@ const styles = StyleSheet.create({
   },
   text2Typo: {
     color: Color.gray_300,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  text2TypoW: {
+    color: Color.white,
     fontSize: FontSize.size_smi,
     textAlign: "left",
     fontFamily: FontFamily.caption2Regular,
@@ -654,7 +584,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   homeTypo: {
-    top: 895,
+    top: 850,
     lineHeight: 18,
     fontSize: FontSize.size_sm,
     textAlign: "center",
@@ -666,10 +596,10 @@ const styles = StyleSheet.create({
   ellipseLayout: {
     height: 45,
     width: 45,
-    top: 845,
+    top: 805,
   },
   containerPosition: {
-    left: 98,
+    left: 96,
     position: "absolute",
   },
   svgrepoIconLayout: {
@@ -679,8 +609,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   wrapper1Layout: {
-    width: 104,
-    top: 777,
+    width: 106,
+    top: 745,
     height: 104,
     position: "absolute",
   },
@@ -737,7 +667,7 @@ const styles = StyleSheet.create({
     top: "8.33%",
     right: "90.01%",
     bottom: "2.82%",
-    left: "0%",
+    left: "-2%",
     position: "absolute",
   },
   recordParent: {
@@ -755,7 +685,7 @@ const styles = StyleSheet.create({
     left: 19,
   },
   rectangleParent: {
-    top: 47,
+    top: 35,
     height: 63,
     width: 430,
     left: 0,
@@ -800,7 +730,7 @@ const styles = StyleSheet.create({
   },
   surface: {
     left: 27,
-    top: 10,
+    top: 2,
     flexDirection: "row",
     justifyContent: "center",
   },
@@ -811,7 +741,7 @@ const styles = StyleSheet.create({
   },
   surface1: {
     left: 90,
-    top: 10,
+    top: 2,
     flexDirection: "row",
     justifyContent: "center",
   },
@@ -865,7 +795,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupWrapper: {
-    left: 273,
+    left: 270,
     position: "absolute",
   },
   materialSymbolsarrowRightAIcon: {
@@ -893,7 +823,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupParent: {
-    top: 130,
+    top: 100,
     height: 33,
     width: 392,
     left: 19,
@@ -908,10 +838,10 @@ const styles = StyleSheet.create({
   davidDaniel: {
     top: 14,
     left: 21,
-    color: "rgba(115, 115, 115, 0.9)",
     fontFamily: FontFamily.caption2Regular,
-    fontWeight: "500",
+    fontWeight: "800",
     position: "absolute",
+    color:'black',
   },
   icon1: {
     maxHeight: "100%",
@@ -928,8 +858,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleContainer: {
-    top: 183,
-    left: 19,
+    top: 145,
+    left: 14,
   },
   rectangleIcon: {
     borderRadius: Border.br_5xs,
@@ -940,6 +870,12 @@ const styles = StyleSheet.create({
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
   },
+
+  maintainedOnW: {
+    color: Color.white,
+    fontFamily: FontFamily.poppinsRegular,
+  },
+
   stJanuary2023: {
     marginLeft: 5,
   },
@@ -975,12 +911,16 @@ const styles = StyleSheet.create({
     top: 97,
     left: 15,
   },
-  groupFrame: {
-    left: 0,
-    top: 0,
-  },
+
   carWash: {
     color: Color.gray_300,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  carWashW: {
+    color: Color.white,
     fontSize: FontSize.size_smi,
     textAlign: "left",
     fontFamily: FontFamily.caption2Regular,
@@ -993,14 +933,18 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "500",
   },
+  text2W: {
+    color: Color.white,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
   groupContainer: {
-    top: 258,
-    left: 19,
+    top: 230,
+    left: 12,
   },
-  groupView: {
-    top: 410,
-    left: 19,
-  },
+ 
   maintainedOn2: {
     color: Color.white,
     fontFamily: FontFamily.poppinsRegular,
@@ -1024,13 +968,13 @@ const styles = StyleSheet.create({
     top: 73,
     position: "absolute",
   },
-  groupParent1: {
-    top: 562,
-    left: 19,
-  },
+  // groupParent1: {
+  //   top: 512,
+  //   left: 12,
+  // },
   groupParent2: {
-    top: 714,
-    left: 19,
+    top: 655,
+    left: 12,
   },
   vehicleServicesSvgrepoCom1Icon4: {
     top: 963,
@@ -1046,8 +990,8 @@ const styles = StyleSheet.create({
     left: 29,
   },
   maskGroupIcon: {
-    top: 63,
-    left: 386,
+    top: 50,
+    left: 375,
     width: 31,
     height: 31,
     position: "absolute",
@@ -1059,7 +1003,7 @@ const styles = StyleSheet.create({
     width: 430,
   },
   maintenanceRecordInner: {
-    top: 830,
+    top: 800,
     height: 102,
     backgroundColor: Color.steelblue_300,
     elevation: 10,
@@ -1081,38 +1025,71 @@ const styles = StyleSheet.create({
     height: 6,
   },
   home: {
-    left: 22,
+    left: 18,
   },
   vehicles: {
-    left: 99,
+    left: 89,
   },
   addVehicle: {
-    top: 867,
+    top: 835,
     left: 172,
     fontSize: FontSize.size_sm,
   },
   records: {
-    left: 271,
+    left: 272,
   },
   invoices: {
-    left: 359,
+    left: 352,
   },
   ellipseIcon: {
-    left: 20,
+    left: 15,
     position: "absolute",
   },
   container: {
     height: 45,
     width: 45,
-    top: 845,
+    top: 805,
   },
   homeMutedIcon1: {
     width: 25,
     height: 27,
   },
+  cont: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 4,
+  },
+  
+  filterText: {
+    fontWeight: 'bold',
+  },
+  dropdown: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    elevation: 4,
+  },
+  optionText: {
+    padding: 10,
+  },
+  selectedOptionText: {
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   housefill1: {
-    top: 852,
-    left: 31,
+    top: 812,
+    left: 25,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1121,18 +1098,18 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   carCitroenTopVehicleSvgrepIcon: {
-    top: 846,
+    top: 806,
     width: 44,
     height: 44,
     overflow: "hidden",
   },
   ellipsePressable: {
-    left: 365,
+    left: 360,
     position: "absolute",
   },
   invoiceWarrantyLineSvgrepoIcon: {
-    top: 855,
-    left: 375,
+    top: 815,
+    left: 372,
   },
   wrapper1: {
     left: 163,
@@ -1141,7 +1118,7 @@ const styles = StyleSheet.create({
     left: 164,
   },
   microphoneSvgrepoCom1Icon: {
-    top: 854,
+    top: 812,
     left: 289,
   },
   maintenanceRecord: {
