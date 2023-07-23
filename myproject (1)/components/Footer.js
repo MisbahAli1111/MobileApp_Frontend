@@ -7,12 +7,16 @@ import { StyleSheet, View, Text, Pressable,TouchableOpacity } from "react-native
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
-function Footer() {
-  const navigation = useNavigation();
+import Invoices from "../screens/Invoices";
 
+function Footer({data}) {
+  const navigation = useNavigation();
+  
     function handleInvoicePress()
 {
-  navigation.navigate("Invoices");
+  navigation.navigate("Invoices" , {invoices:data});
+
+
 }
 function handleHomePress() { 
   navigation.navigate("Home");

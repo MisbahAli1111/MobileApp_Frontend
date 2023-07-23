@@ -1,11 +1,13 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
 import { Border, FontFamily, Color, FontSize, Padding } from "../GlobalStyles";
+import Footer from "../components/Footer";
+import { TextInput } from "react-native-gesture-handler";
 
-const Invoices = () => {
+const Invoices = ({route}) => {
   const [groupContainer38Visible, setGroupContainer38Visible] = useState(false);
   const navigation = useNavigation();
 
@@ -16,8 +18,17 @@ const Invoices = () => {
   const closeGroupContainer38 = useCallback(() => {
     setGroupContainer38Visible(false);
   }, []);
-
-  return (
+  const [search,setSearch]=useState('');
+  useEffect(()=>{
+    
+  },[search])
+ const {invoices}=route.params;
+ const [name,itemName, status,date, rate, total,quantity,amount,taxRate,disRateper]=invoices;
+ function searchFunction()
+ {
+  
+ } 
+ return (
     <>
       <View style={styles.invoices}>
         <Image
@@ -36,7 +47,7 @@ const Invoices = () => {
               source={require("../assets/rectangle-692.png")}
             />
             <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
+              {name}
             </Text>
             <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
               <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
@@ -45,14 +56,29 @@ const Invoices = () => {
               </Text>
               <Text style={[styles.text, styles.textPosition]}>-</Text>
             </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.frameWrapper, styles.frameWrapperPosition]}>
-              <View style={[styles.paidWrapper, styles.paidWrapperPosition]}>
-                <Text style={[styles.paid, styles.paidTypo]}>Paid</Text>
-              </View>
+            <Text style={[styles.rs3000, styles.rs3000Typo]}>{total}</Text>
+                {
+                  
+                status.toUpperCase()==='PAID'? 
+                <View style={[styles.frameWrapper, styles.frameWrapperPosition]}>
+                <View style={[styles.paidWrapper, styles.paidWrapperPosition]}>
+              
+                    <Text style={[styles.paid, styles.paidTypo]}>{status}</Text>
+                    
+                    </View>
             </View>
+                  :
+                  
+                  <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
+              <View style={[styles.groupInner, styles.groupChildLayout]} />
+              <Text style={[styles.due, styles.paidTypo]}>{status}</Text>
+            </View>
+                  
+                }
+               
+             
           </Pressable>
-          <Pressable
+          {/* <Pressable
             style={[styles.rectangleParent, styles.parentLayout]}
             onPress={() => navigation.navigate("InvoiceDetailView")}
           >
@@ -72,8 +98,8 @@ const Invoices = () => {
               <View style={[styles.groupInner, styles.groupChildLayout]} />
               <Text style={[styles.due, styles.paidTypo]}>Due</Text>
             </View>
-          </Pressable>
-          <Pressable
+          </Pressable> */}
+          {/* <Pressable
             style={[styles.rectangleContainer, styles.parentLayout]}
             onPress={() => navigation.navigate("InvoiceDetailView")}
           >
@@ -240,8 +266,8 @@ const Invoices = () => {
               <View style={[styles.groupChild7, styles.groupChildLayout]} />
               <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
             </View>
-          </Pressable>
-          <Pressable
+          </Pressable> */}
+          {/* <Pressable
             style={[styles.rectangleParent14, styles.parentLayout]}
             onPress={() => navigation.navigate("InvoiceDetailView")}
           >
@@ -282,7 +308,7 @@ const Invoices = () => {
               <View style={[styles.groupChild7, styles.groupChildLayout]} />
               <Text style={[styles.due, styles.paidTypo]}>Due</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
         </View>
         <Image
           style={[styles.image2Icon, styles.iconChildPosition]}
@@ -322,16 +348,16 @@ const Invoices = () => {
           source={require("../assets/line-15.png")}
         />
         <View style={[styles.rectangleParent18, styles.rectangleLayout]}>
-          <Pressable
+           <View
             style={[styles.rectanglePressable, styles.rectangleLayout]}
-            onPress={() => navigation.navigate("MaintenanceRecord")}
-          />
-          <Text style={[styles.searchInvoice, styles.paidTypo]}>
-            Search Invoice
-          </Text>
+           
+          /> 
+           <TextInput style={[styles.searchInvoice, styles.paidTypo]} placeholder=" Search Invoice" onChangeText={setSearch}>
+           
+          </TextInput> 
           <Pressable
             style={styles.vector}
-            onPress={() => navigation.navigate("MaintenanceRecord")}
+            onPress={searchFunction}
           >
             <Image
               style={[styles.icon, styles.iconLayout1]}
@@ -346,79 +372,7 @@ const Invoices = () => {
           contentFit="cover"
           source={require("../assets/mask-group.png")}
         />
-        <View style={[styles.invoicesChild1, styles.iconChildPosition]} />
-        <View style={[styles.invoicesChild2, styles.invoicesChild2ShadowBox]} />
-        <View style={[styles.invoicesChild3, styles.invoicesChild3Layout]} />
-        <Text style={[styles.home, styles.homeTypo]}>Home</Text>
-        <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
-        <Text style={[styles.addVehicle, styles.homeTypo]}>Add Vehicle</Text>
-        <Text style={[styles.records, styles.homeTypo]}>Records</Text>
-        <Text style={[styles.invoices2, styles.homeTypo]}>Invoices</Text>
-        <Image
-          style={[styles.ellipseIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/ellipse-5.png")}
-        />
-        <View style={[styles.housefill, styles.housefillFlexBox]}>
-          <Image
-            style={styles.homeMutedIcon}
-            contentFit="cover"
-            source={require("../assets/homemuted1.png")}
-          />
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.iconLayout]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={styles.iconLayout1}
-            contentFit="cover"
-            source={require("../assets/ellipse-8.png")}
-          />
-        </Pressable>
-        <Image
-          style={[styles.groupIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/group-183.png")}
-        />
-        <Image
-          style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
-          contentFit="cover"
-          source={require("../assets/microphonesvgrepocom-11.png")}
-        />
-        <Pressable
-          style={[styles.container, styles.iconLayout]}
-          onPress={() => navigation.navigate("Invoices")}
-        >
-          <Image
-            style={styles.iconLayout1}
-            contentFit="cover"
-            source={require("../assets/ellipse-7.png")}
-          />
-        </Pressable>
-        <Image
-          style={[
-            styles.invoiceWarrantyLineSvgrepoIcon,
-            styles.svgrepoIconLayout,
-          ]}
-          contentFit="cover"
-          source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-        />
-        <Pressable
-          style={[styles.frame, styles.frameLayout]}
-          onPress={() => navigation.navigate("AddVehicle")}
-        >
-          <Image
-            style={styles.iconLayout1}
-            contentFit="cover"
-            source={require("../assets/group-111.png")}
-          />
-        </Pressable>
-        <Image
-          style={[styles.invoicesChild4, styles.frameLayout]}
-          contentFit="cover"
-          source={require("../assets/group-174.png")}
-        />
+        
         <View style={styles.breadcrumbsParent}>
           <View style={[styles.breadcrumbs, styles.housefill1Position]}>
             <View style={[styles.housefill1, styles.housefill1Position]}>
@@ -443,6 +397,7 @@ const Invoices = () => {
             </Text>
           </Pressable>
         </View>
+          <Footer data={invoices} /> 
       </View>
 
       <Modal animationType="fade" transparent visible={groupContainer38Visible}>
@@ -454,6 +409,7 @@ const Invoices = () => {
           <FrameComponent onClose={closeGroupContainer38} />
         </View>
       </Modal>
+    
     </>
   );
 };
@@ -503,7 +459,7 @@ const styles = StyleSheet.create({
     top: 1,
   },
   rs3000Typo: {
-    left: 311,
+    left: 285,
     textAlign: "left",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
@@ -539,7 +495,7 @@ const styles = StyleSheet.create({
   },
   iconChildPosition: {
     width: 430,
-    left: 0,
+    left: -10,
     position: "absolute",
   },
   iconLayout2: {
@@ -675,7 +631,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   frameWrapper: {
-    width: 52,
+    width: 60,
     height: 23,
     position: "absolute",
   },
@@ -792,7 +748,7 @@ const styles = StyleSheet.create({
   groupParent: {
     top: 257,
     width: 393,
-    left: 19,
+    left: 10,
     position: "absolute",
     height: 932,
   },
@@ -905,6 +861,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontSize: FontSize.size_base,
     position: "absolute",
+    width:300,
   },
   icon: {
     maxHeight: "100%",
@@ -922,7 +879,7 @@ const styles = StyleSheet.create({
   },
   rectangleParent18: {
     top: 182,
-    left: 19,
+    left: 10,
   },
   invoicesInner: {
     top: 3,
@@ -931,7 +888,7 @@ const styles = StyleSheet.create({
   },
   maskGroupIcon: {
     top: 63,
-    left: 380,
+    left: 368,
     width: 31,
     height: 31,
     position: "absolute",
@@ -1097,7 +1054,7 @@ const styles = StyleSheet.create({
     top: 130,
     width: 390,
     height: 32,
-    left: 19,
+    left: 10,
     position: "absolute",
   },
   invoices: {

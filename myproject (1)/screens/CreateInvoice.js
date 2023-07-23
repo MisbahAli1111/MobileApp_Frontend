@@ -14,7 +14,7 @@ const CreateInvoice = () => {
 
   const [name, setName]=useState('');
   const [regNumber, setregNumber]=useState('');
-  //const [date, setDate]=useState("");
+  const [date, setDate]=useState("");
   const [status, setStatus]=useState('');
   const [itemName,setItemName]=useState('');
   const [rate,setRate]=useState('');
@@ -28,7 +28,7 @@ const CreateInvoice = () => {
   const [total, setTotal]=useState('');
   const [calculation, setCalculation]=useState(0);
   
- const invoiceData=[name,itemName, status, rate, total,quantity,amount,taxRate,disRateper];
+ const invoiceData=[name,itemName, status,date, rate, total,quantity,amount,taxRate,disRateper];
  useEffect(()=>{
  setAmount(quantity*rate);
  },[quantity,rate])
@@ -132,7 +132,7 @@ const CreateInvoice = () => {
         source={require("../assets/group-141.png")}
       />
       <View style={styles.parent}>
-        <Text style={[styles.text1, styles.text1Typo]}>22 - 02 -2023</Text>
+        <TextInput style={[styles.text1, styles.text1Typo]} placeholder="DD-MM-YYYY" onChangeText={setDate}></TextInput>
         <View style={[styles.groupInner, styles.lineViewPosition]} />
         <View style={[styles.lineView, styles.lineViewPosition]} />
         <TextInput style={[styles.statusPaiddue, styles.text1Typo]} onChangeText={setStatus} placeholder="Status">
@@ -286,7 +286,7 @@ const CreateInvoice = () => {
           source={require("../assets/mask-group.png")}
         />
 
-      <Footer />
+      <Footer data={invoiceData} />
     </View>
     
   );
@@ -357,6 +357,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     textAlign: "left",
     position: "absolute",
+    width:150,
   },
   lineViewPosition: {
     top: 34,
