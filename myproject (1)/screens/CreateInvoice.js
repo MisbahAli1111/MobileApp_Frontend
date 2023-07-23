@@ -1,17 +1,67 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useState, useEffect } from "react";
+
+import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
+import InvoiceDetailView from "./InvoiceDetailView";
 
 const CreateInvoice = () => {
- 
   const navigation = useNavigation();
 
+  const [name, setName]=useState('');
+  const [regNumber, setregNumber]=useState('');
+  //const [date, setDate]=useState("");
+  const [status, setStatus]=useState('');
+  const [itemName,setItemName]=useState('');
+  const [rate,setRate]=useState('');
+  const [amount,setAmount]=useState(0);
+  const [quantity,setQuantity]=useState('');
+  const [taxName,setTaxName]=useState('');
+  const [taxRate,setTaxRate]=useState(0);
+
+  const [disName,setDisName]=useState('');
+  const [disRateper,setdisRateper]=useState(0);
+  const [total, setTotal]=useState('');
+  const [calculation, setCalculation]=useState(0);
+  
+ const invoiceData=[name,itemName, status, rate, total,quantity,amount,taxRate,disRateper];
+ useEffect(()=>{
+ setAmount(quantity*rate);
+ },[quantity,rate])
+ useEffect(() => {
+  // Convert the input values to numbers
+  const amountValue = parseFloat(amount);
+  const taxRateValue = parseFloat(taxRate);
+  const disRateperValue = parseFloat(disRateper);
+
+  // Perform the calculation whenever any of the input values change
+  const calculation = amountValue + (amountValue * (taxRateValue / 100)) - (amountValue * (disRateperValue / 100));
+  
+  // Set the calculation result and the total
+  setCalculation(calculation);
+  setTotal("Rs. " + calculation);
+}, [amount, taxRate, disRateper]);
+ function createInvoiceFunction()
+ {
+  navigation.navigate("InvoiceDetailView", { data: invoiceData });
+ }
+  function addService() { 
+
+   }
+   function addDiscounts()
+   {
+
+   }
+   function addTaxes()
+   {
+    
+   }
   return (
-<View>
+<View style={styles.createInvoice}>
  <Image
         style={[styles.createInvoiceChild, styles.createChildLayout3]}
         contentFit="cover"
@@ -75,7 +125,7 @@ const CreateInvoice = () => {
         source={require("../assets/rectangle-65.png")}
       />
       <View style={[styles.createInvoiceInner, styles.createLayout]} />
-      <TextInput style={[styles.regNumber, styles.text5Clr]}>Reg Number</TextInput> 
+      <TextInput style={[styles.regNumber, styles.text5Clr]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput> 
       <Image
         style={[styles.groupIcon, styles.iconLayout]}
         contentFit="cover"
@@ -85,9 +135,9 @@ const CreateInvoice = () => {
         <Text style={[styles.text1, styles.text1Typo]}>22 - 02 -2023</Text>
         <View style={[styles.groupInner, styles.lineViewPosition]} />
         <View style={[styles.lineView, styles.lineViewPosition]} />
-        <Text style={[styles.statusPaiddue, styles.text1Typo]}>
-          Status (Paid/Due)
-        </Text>
+        <TextInput style={[styles.statusPaiddue, styles.text1Typo]} onChangeText={setStatus} placeholder="Status">
+         
+        </TextInput>
         <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
@@ -108,17 +158,17 @@ const CreateInvoice = () => {
           <View style={[styles.rectangleView, styles.rectangleViewBg]} />
         </View>
          <Text style={[styles.description, styles.rateTypo]}>DESCRIPTION</Text>
-        <TextInput style={[styles.addItem, styles.taxTypo1]} placeholder="Add Item"></TextInput>
+        <TextInput style={[styles.addItem, styles.taxTypo1]} onChangeText={setItemName} placeholder="Add Item"></TextInput>
         <TextInput style={styles.addItem1} placeholder="Add Item"></TextInput>
         <Text style={[styles.rate, styles.rateTypo]}>RATE</Text>
-        <TextInput style={[styles.addRate, styles.addTypo1]} placeholder="Add Rate"></TextInput>
+        <TextInput style={[styles.addRate, styles.addTypo1]} onChangeText={setRate} placeholder="Add Rate"></TextInput>
         <TextInput style={[styles.addRate1, styles.addTypo1]} placeholder="Add Rate"></TextInput>
         <Text style={[styles.qty, styles.rateTypo]}>QTY</Text>
-        <TextInput style={[styles.text3, styles.textTypo]} placeholder="Add QTY">  </TextInput>
-        <TextInput style={[styles.text4, styles.textTypo]}placeholder="Add QTY"> </TextInput>
+        <TextInput style={[styles.text3, styles.textTypo]} onChangeText={setQuantity} placeholder="QTY  "></TextInput>
+        <TextInput style={[styles.text4, styles.textTypo]}placeholder="QTY"></TextInput>
         <Text style={[styles.amount, styles.rateTypo]}>Amount</Text>
-        <TextInput style={[styles.addAmount, styles.addTypo]} placeholder="Add Amount"></TextInput>
-        <TextInput style={[styles.addAmount1, styles.addTypo]} placeholder="Add Amount"></TextInput>
+        <Text style={[styles.addAmount, styles.addTypo]} >{amount}</Text>
+        <TextInput style={[styles.addAmount1, styles.addTypo]} placeholder="-"></TextInput>
         <View style={[styles.groupChild1, styles.groupChildLayout]} />
         <View style={[styles.groupChild2, styles.groupChildLayout]} /> 
        </View>
@@ -127,7 +177,9 @@ const CreateInvoice = () => {
         contentFit="cover"
         source={require("../assets/rectangle-621.png")}
       />
+       
 <View style={[styles.createInvoiceChild2, styles.rectangleViewBg]} />
+<TouchableOpacity onPress={addTaxes}>
       <View style={[styles.rectangleParent, styles.rectangleShadowBox]}>
         <View style={styles.groupChildShadowBox} />
         <Image
@@ -136,14 +188,21 @@ const CreateInvoice = () => {
           source={require("../assets/vector11.png")}
         />
       </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={addService}>
       <View style={[styles.rectangleGroup, styles.rectangleShadowBox]}>
         <View style={styles.groupChildShadowBox} />
+     
         <Image
           style={[styles.vectorIcon1, styles.iconLayout]}
           contentFit="cover"
           source={require("../assets/vector11.png")}
         />
+        
       </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={addDiscounts}>
+      
       <View style={[styles.rectangleContainer, styles.rectangleShadowBox]}>
         <View style={styles.groupChildShadowBox} />
         <Image
@@ -151,16 +210,18 @@ const CreateInvoice = () => {
           contentFit="cover"
           source={require("../assets/vector11.png")}
         />
+      
       </View>
+      </TouchableOpacity>
       <View style={[styles.taxesParent, styles.rateParentLayout]}>
         <Text style={[styles.taxes, styles.rateTypo]}>Taxes  </Text>
-        <Text style={[styles.taxName, styles.taxLayout2]}>Tax name</Text>
-        <Text style={[styles.taxName1, styles.taxLayout2]}>Tax name</Text>
+        <TextInput style={[styles.taxName, styles.taxLayout2]} onChangeText={setTaxName}  placeholder="Tax Name"></TextInput>
+        <TextInput style={[styles.taxName1, styles.taxLayout2]}  placeholder="Tax Name"></TextInput>
       </View>
       <View style={[styles.taxRateParent, styles.taxLayout1]}>
         <Text style={[styles.taxRate, styles.taxLayout1]}>Tax Rate(%)</Text>
-        <Text style={[styles.taxRate1, styles.taxLayout]}>Tax Rate</Text>
-        <Text style={[styles.taxRate2, styles.taxLayout]}>Tax Rate</Text>
+        <TextInput style={[styles.taxRate1, styles.taxLayout]} onChangeText={setTaxRate} placeholder="Tax Rate"></TextInput>
+        <TextInput style={[styles.taxRate2, styles.taxLayout]}  placeholder="Tax Rate"></TextInput>
       </View>
       <View style={[styles.createInvoiceChild3, styles.createChildLayout1]} />
       <View style={[styles.createInvoiceChild4, styles.createChildPosition]} />
@@ -173,12 +234,12 @@ const CreateInvoice = () => {
         <Text style={[styles.discounts, styles.discountsLayout]}>
           Discounts
         </Text>
-        <TextInput style={[styles.name, styles.nameTypo]} placeholder="Name" ></TextInput>
+        <TextInput style={[styles.name, styles.nameTypo]} onChangeText={setDisName} placeholder="Name" ></TextInput>
         <TextInput style={[styles.name1, styles.nameTypo]} placeholder="Name"></TextInput>
       </View>
       <View style={[styles.rateParent, styles.taxLayout]}>
         <Text style={styles.rate1}>Rate(%)</Text>
-        <TextInput style={[styles.taxRate3, styles.taxLayout]} placeholder="Tax Rate"></TextInput>
+        <TextInput style={[styles.taxRate3, styles.taxLayout]} onChangeText={setdisRateper} placeholder="Tax Rate"></TextInput>
         <TextInput style={[styles.taxRate4, styles.taxLayout]} placeholder="Tax Rate"></TextInput>
       </View>
       <View style={[styles.createInvoiceChild6, styles.createChildLayout1]} />
@@ -186,7 +247,7 @@ const CreateInvoice = () => {
       <View style={[styles.createInvoiceChild8, styles.createLayout]} />
       <View style={styles.frameView}>
        <View style={styles.loritaWrapper}>
-          {/* <TextInput style={[styles.lorita, styles.text5Clr]} placeholder="Name"></TextInput> */}
+          <TextInput style={[styles.lorita, styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
         </View> 
       </View> 
       <Image
@@ -197,7 +258,7 @@ const CreateInvoice = () => {
       <View style={styles.group}>
         <Text style={[styles.text5, styles.text5Clr]}>-</Text>
         <Text style={[styles.total, styles.totalTypo]}>Total</Text>
-        <Text style={[styles.rs3050, styles.text5Clr]}>Rs. 3,050</Text>
+        <Text style={[styles.rs3050, styles.text5Clr]}>{total}</Text>
       </View>
       <Image
         style={styles.ellipseIcon}
@@ -205,15 +266,25 @@ const CreateInvoice = () => {
         source={require("../assets/ellipse-101.png")}
       />
        <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
+        <TouchableOpacity onPress={createInvoiceFunction}>
         <Image
           style={[styles.groupChild6, styles.groupChild6Layout]}
           contentFit="cover"
           source={require("../assets/rectangle-73.png")}
         />
-         <Text style={[styles.createInvoice3, styles.totalTypo]}>
+        <TouchableOpacity onPress={createInvoiceFunction}>
+          <Text style={[styles.createInvoice3, styles.totalTypo]}>
           Create Invoice
-        </Text> 
+        </Text>
+        </TouchableOpacity>
+        </TouchableOpacity> 
+
       </View> 
+      <Image
+          style={styles.maskGroupIcon}
+          contentFit="cover"
+          source={require("../assets/mask-group.png")}
+        />
 
       <Footer />
     </View>
@@ -222,6 +293,9 @@ const CreateInvoice = () => {
 };
 
 const styles = StyleSheet.create({
+  // container:{
+  //  // marginLeft:0,
+  // },
   createChildLayout3: {
     height: 126,
     top: 501,
@@ -271,8 +345,8 @@ const styles = StyleSheet.create({
     width: 188,
     position: "absolute",
   },
-  text5Clr: {
-    top:0,
+  text5ClrName: {
+    top:5,
     color: Color.dimgray_100,
     textAlign: "left",
   },
@@ -316,7 +390,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   addTypo1: {
-    left: 120,
+    left: 132,
     width: 64,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
@@ -325,8 +399,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   textTypo: {
-    width: 5,
-    left: 230,
+    width: 30,
+    left: 222,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
@@ -335,7 +409,7 @@ const styles = StyleSheet.create({
   },
   addTypo: {
     width: 88,
-    left: 275,
+    left: 290,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
@@ -376,7 +450,7 @@ const styles = StyleSheet.create({
     top: 473,
   },
   taxLayout2: {
-    width: 69,
+    width: 80,
     position: "absolute",
   },
   taxLayout1: {
@@ -410,7 +484,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   nameTypo: {
-    width: 42,
+    width: 65,
     left: 12,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
@@ -570,7 +644,7 @@ const styles = StyleSheet.create({
     left: 224,
   },
   regNumber: {
-    top: 178,
+    top: 175,
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
@@ -580,10 +654,11 @@ const styles = StyleSheet.create({
   groupIcon: {
     height: "2.25%",
     width: "9.3%",
-    top: "31.57%",
+    top: "300.57%",
     right: "4.42%",
     bottom: "79.19%",
     left: "86.28%",
+    position:"absolute",
   },
   text1: {
     left: 5,
@@ -911,16 +986,17 @@ const styles = StyleSheet.create({
   frameView: {
     top: 171,
     left: 24,
-    position: "relative",
+    position: "absolute",
+    width:180 ,
   },
   vectorIcon4: {
     height: "2.68%",
     width: "5.81%",
-    top: "20.27%",
+    top: "200.27%",
     right: "52.79%",
     bottom: "79.08%",
     left: "41.4%",
-    position:"relative",
+    position:"absolute",
   },
   text5: {
     left: 47,
@@ -1064,7 +1140,7 @@ const styles = StyleSheet.create({
   },
   maskGroupIcon: {
     top: 63,
-    left: 386,
+    left: 377,
     width: 31,
     height: 31,
     position: "absolute",
@@ -1074,12 +1150,13 @@ const styles = StyleSheet.create({
     left: 287,
   },
   createInvoice: {
-    backgroundColor: Color.white,
-    flex: 1,
-    overflow: "hidden",
-    height: 932,
-    width: "100%",
-    left:-8,
+  //   backgroundColor: Color.white,
+  //    //flex: 6,
+  //   //overflow: "hidden",
+  //    height: 1000,
+  //    width: "100%",
+      left:-8,
+  // position:"absolute",
   },
 });
 

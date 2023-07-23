@@ -4,9 +4,13 @@ import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
-import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
+import Footer from "../components/Footer";
+import CreateInvoice from "./CreateInvoice";
 
-const InvoiceDetailView = () => {
+import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+function InvoiceDetailView({route}) {
   const [groupContainer10Visible, setGroupContainer10Visible] = useState(false);
   const navigation = useNavigation();
 
@@ -17,10 +21,16 @@ const InvoiceDetailView = () => {
   const closeGroupContainer10 = useCallback(() => {
     setGroupContainer10Visible(false);
   }, []);
+  const { data } = route.params;
 
+  const [name,itemName, status, rate, total,quantity,amount,taxRate,disRateper] = data;
+function  editInvoiceFunction (){ 
+navigation.navigate("CreateInvoice");
+ }
   return (
     <>
       <View style={styles.invoiceDetailView}>
+        
         <Image
           style={styles.lightTexture22341Icon}
           contentFit="cover"
@@ -49,11 +59,28 @@ const InvoiceDetailView = () => {
             </View>
             <Text style={[styles.invoice, styles.dueTypo]}>Invoice</Text>
           </View>
+          {/* <TouchableOpacity onPress={editInvoiceFunction}>
           <View style={[styles.editInvoiceWrapper, styles.invoiceShadowBox]}>
             <Text style={[styles.editInvoice, styles.invoiceTypo1]}>
               Edit Invoice
             </Text>
           </View>
+          </TouchableOpacity> */}
+          <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
+        <TouchableOpacity onPress={editInvoiceFunction}>
+        {/* <Image
+          style={[styles.groupChild6, styles.groupChild6Layout]}
+          contentFit="cover"
+          source={require("../assets/rectangle-73.png")}
+        /> */}
+        <Pressable onPress={editInvoiceFunction}>
+          <Text style={[styles.editInvoice2, styles.totalTypo]}>
+          Edit Invoice
+        </Text>
+        </Pressable>
+        </TouchableOpacity> 
+      </View> 
+
         </View>
         <View style={styles.rectangleView} />
         <View style={[styles.groupParent, styles.parentLayout]}>
@@ -68,27 +95,17 @@ const InvoiceDetailView = () => {
           <Text style={[styles.description, styles.changePosition]}>
             DESCRIPTION
           </Text>
-          <Text style={[styles.oilChange, styles.textTypo4]}>Oil Change</Text>
-          <Text style={[styles.tuning, styles.textTypo4]}>Tuning</Text>
-          <Text style={[styles.filterChange, styles.textTypo4]}>
-            Filter Change
-          </Text>
-          <Text style={[styles.sparkPlug, styles.textTypo3]}>Spark Plug</Text>
+          <Text style={[styles.oilChange, styles.textTypo4]}>{itemName}</Text>
+          
           <Text style={[styles.rate, styles.qtyTypo]}>RATE</Text>
-          <Text style={[styles.text1, styles.textTypo2]}>2,000</Text>
-          <Text style={[styles.text2, styles.textTypo4]}>1,000</Text>
-          <Text style={[styles.text3, styles.textLayout1]}>350</Text>
-          <Text style={[styles.text4, styles.textLayout1]}>200</Text>
+          <Text style={[styles.text1, styles.textTypo2]}>{rate}</Text>
+  
           <Text style={[styles.qty, styles.qtyTypo]}>QTY</Text>
-          <Text style={[styles.text5, styles.textTypo1]}>1</Text>
-          <Text style={[styles.text6, styles.textTypo1]}>1</Text>
-          <Text style={[styles.text7, styles.textTypo1]}>1</Text>
-          <Text style={[styles.text8, styles.textLayout]}>3</Text>
+          <Text style={[styles.text5, styles.textTypo1]}>{quantity}</Text>
+         
           <Text style={[styles.amount, styles.textPosition1]}>Amount</Text>
-          <Text style={[styles.text9, styles.textPosition1]}>2,000</Text>
-          <Text style={[styles.text10, styles.textPosition1]}>1,000</Text>
-          <Text style={[styles.text11, styles.textPosition1]}>350</Text>
-          <Text style={[styles.text12, styles.textPosition1]}>200</Text>
+          <Text style={[styles.text9, styles.textPosition1]}>{amount}</Text>
+
           <View style={[styles.groupInner, styles.groupLayout1]} />
           <View style={[styles.lineView, styles.groupLayout1]} />
           <View style={[styles.groupChild1, styles.inv0001Position]} />
@@ -102,6 +119,7 @@ const InvoiceDetailView = () => {
           locations={[0, 1]}
           colors={["rgba(7, 132, 199, 0.16)", "rgba(217, 217, 217, 0)"]}
         />
+        <View style={styles.setstyle}>
         <Text style={[styles.corollaGli2016, styles.dueTypo]}>
           COROLLA GLI 2016 (ABC-123)
         </Text>
@@ -111,38 +129,39 @@ const InvoiceDetailView = () => {
             contentFit="cover"
             source={require("../assets/ellipse-10.png")}
           />
-          <Text style={styles.paid}>Paid</Text>
+          <Text style={styles.paid}>{status}</Text>
         </View>
-        <Text style={[styles.loritaDaniel, styles.dueTypo]}>Lorita Daniel</Text>
+        <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
         <View style={[styles.dateParent, styles.parentLayout1]}>
           <Text style={[styles.date, styles.dueTypo]}>DATE</Text>
-          <Text style={[styles.jan2023, styles.rs3000Typo]}>01/Jan/2023</Text>
+          <Text style={[styles.jan2023, styles.rs3000Typo]}>12/jan/2023</Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
         <View style={[styles.dueParent, styles.parentLayout1]}>
-          <Text style={[styles.due, styles.textLayout1]}>Due</Text>
+          <Text style={[styles.due, styles.textLayout1]}>Due </Text>
           <Text style={[styles.onReceipt, styles.rs3000Typo]}>On Receipt</Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
         <View style={[styles.balanceParent, styles.parentLayout1]}>
           <Text style={[styles.date, styles.dueTypo]}>Balance</Text>
-          <Text style={styles.rs3000Typo}>Rs. 3000</Text>
+          <Text style={styles.rs3000Typo}>{total} </Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
         <Text style={[styles.inv00011, styles.invoiceTypo]}>#INV0001</Text>
         <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
         <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
+        </View>
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>
             <Text style={[styles.text17, styles.textTypo]}>-</Text>
             <Text style={[styles.text18, styles.rs0Position]}>-</Text>
             <Text style={[styles.subtotal, styles.tax0Typo]}>Subtotal</Text>
-            <Text style={[styles.tax0, styles.tax0Typo]}>Tax (0%)</Text>
-            <Text style={[styles.rs3550, styles.rs0Typo]}>Rs. 3,550</Text>
-            <Text style={[styles.rs0, styles.rs0Typo]}>Rs 0</Text>
+            <Text style={[styles.tax0, styles.tax0Typo]}>Tax (%)</Text>
+            <Text style={[styles.rs3550, styles.rs0Typo]}>{amount}</Text>
+            <Text style={[styles.rs0, styles.rs0Typo]}>{taxRate}</Text>
             <Text style={[styles.text19, styles.textPosition]}>-</Text>
             <Text style={[styles.discount, styles.textPosition]}>Discount</Text>
-            <Text style={[styles.text20, styles.textPosition]}>10%</Text>
+            <Text style={[styles.text20, styles.textPosition]}>{disRateper}</Text>
             <View style={styles.group}>
               <Text style={[styles.text17, styles.textTypo]}>-</Text>
               <Text style={[styles.text18, styles.rs0Position]}>-</Text>
@@ -150,43 +169,20 @@ const InvoiceDetailView = () => {
               <Text style={[styles.balanceDue, styles.rs0Position]}>
                 Balance Due
               </Text>
-              <Text style={[styles.rs3550, styles.rs0Typo]}>Rs. 3,050</Text>
-              <Text style={[styles.rs0, styles.rs0Typo]}>Rs. 3,050</Text>
+              <Text style={[styles.rs3550, styles.rs0Typo]}>{total}</Text>
+              <Text style={[styles.rs0, styles.rs0Typo]}>{total}</Text>
             </View>
           </View>
           <View style={[styles.groupChild2, styles.groupLayout]} />
         </View>
-        <Image
+        {/* <Image
           style={[styles.groupIcon, styles.groupIconLayout]}
           contentFit="cover"
           source={require("../assets/group-1712.png")}
-        />
-        <View
-          style={[styles.invoiceDetailViewChild1, styles.groupItemPosition]}
-        />
-        <View style={[styles.invoiceDetailViewChild2, styles.invoiceLayout]} />
-        <Text style={[styles.home, styles.homeTypo]}>Home</Text>
-        <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
-        <Text style={[styles.addVehicle, styles.invoiceTypo1]}>
-          Add Vehicle
-        </Text>
-        <Text style={[styles.records, styles.homeTypo]}>Records</Text>
-        <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
-        <Image
-          style={[styles.invoiceDetailViewChild3, styles.invoiceViewLayout]}
-          contentFit="cover"
-          source={require("../assets/ellipse-5.png")}
-        />
-        <View style={[styles.housefill1, styles.housefillFlexBox]}>
-          <Image
-            style={styles.homeMutedIcon1}
-            contentFit="cover"
-            source={require("../assets/homemuted1.png")}
-          />
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.invoiceViewLayout]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
+        /> */}
+        
+                <Pressable
+          style={[styles.container, styles.framePosition]}//printer button
         >
           <Image
             style={styles.icon}
@@ -195,8 +191,8 @@ const InvoiceDetailView = () => {
           />
         </Pressable>
         <Pressable
-          style={[styles.container, styles.framePosition]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
+          style={[styles.frame, styles.framePosition]}//share button
+          
         >
           <Image
             style={styles.icon}
@@ -204,56 +200,9 @@ const InvoiceDetailView = () => {
             source={require("../assets/ellipse-8.png")}
           />
         </Pressable>
-        <Pressable
-          style={[styles.frame, styles.framePosition]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/ellipse-8.png")}
-          />
-        </Pressable>
-        <Image
-          style={[styles.invoiceDetailViewChild4, styles.invoiceViewLayout]}
-          contentFit="cover"
-          source={require("../assets/group-183.png")}
-        />
-        <Image
-          style={styles.microphoneSvgrepoCom1Icon}
-          contentFit="cover"
-          source={require("../assets/microphonesvgrepocom-11.png")}
-        />
-        <Pressable
-          style={[styles.ellipsePressable, styles.invoiceViewLayout]}
-          onPress={() => navigation.navigate("Invoices")}
-        >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/ellipse-7.png")}
-          />
-        </Pressable>
-        <Image
-          style={styles.invoiceWarrantyLineSvgrepoIcon}
-          contentFit="cover"
-          source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-        />
-        <Pressable
-          style={[styles.groupPressable, styles.groupPressableLayout]}
-          onPress={() => navigation.navigate("AddVehicle")}
-        >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/group-111.png")}
-          />
-        </Pressable>
-        <Image
-          style={[styles.invoiceDetailViewChild5, styles.groupPressableLayout]}
-          contentFit="cover"
-          source={require("../assets/group-174.png")}
-        />
+      
+        
+        
         <Image
           style={[styles.printer2Icon, styles.iconLayout]}
           contentFit="cover"
@@ -300,9 +249,8 @@ const InvoiceDetailView = () => {
           contentFit="cover"
           source={require("../assets/mask-group.png")}
         />
-      </View>
 
-      <Modal animationType="fade" transparent visible={groupContainer10Visible}>
+       <Modal animationType="fade" transparent visible={groupContainer10Visible}>
         <View style={styles.groupContainer10Overlay}>
           <Pressable
             style={styles.groupContainer10Bg}
@@ -310,12 +258,47 @@ const InvoiceDetailView = () => {
           />
           <FrameComponent onClose={closeGroupContainer10} />
         </View>
-      </Modal>
+      </Modal> 
+      <Footer />
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  editInvoice2: {
+    color: Color.white,
+    lineHeight: 18,
+   // textAlign: "center",
+    fontSize: FontSize.caption2Regular_size,
+    width:120,
+    left:10,
+
+  },
+  groupChild6: {
+    borderRadius: Border.br_7xs,
+    left: 0,
+    top: 0,
+  },
+  groupChild6Layout: {
+    height: 30,
+    width: 150,
+    position: "absolute",
+  },
+  vectorContainer: {
+
+    top: -8,
+    left: 230,
+    backgroundColor: Color.darkslateblue,
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    shadowRadius: 20,
+    // elevation: 20,
+    flexDirection: "row",
+    paddingHorizontal: Padding.p_11xl,
+    paddingVertical: Padding.p_6xs,
+    borderRadius: Border.br_11xl,
+    // borderRadius:20,
+  },
   parentLayout1: {
     height: 0,
     position: "absolute",
@@ -334,6 +317,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 0,
     },
+  },
+  setstyle:{
+
   },
   invoiceTypo1: {
     textAlign: "center",
@@ -383,11 +369,11 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   textLayout1: {
-    width: 26,
+    width: 30,
     color: Color.darkslateblue,
   },
   textTypo1: {
-    width: 5,
+    width:30,
     left: 238,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
@@ -415,7 +401,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   inv0001Position: {
-    top: 141,
+    top: 130,
     position: "absolute",
   },
   ellipseLayout: {
@@ -423,7 +409,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rs3000Typo: {
-    left: 81,
+    left: 75,
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,
     fontFamily: FontFamily.poppinsSemibold,
@@ -589,12 +575,12 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   invoice: {
-    top: 10,
+    top: 0,
     left: 27,
     color: Color.steelblue_100,
     fontSize: FontSize.size_sm,
     textAlign: "left",
-    position: "absolute",
+    position: "relative",
   },
   breadcrumbs: {
     top: 2,
@@ -610,16 +596,16 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption2Regular_size,
   },
   editInvoiceWrapper: {
-    left: 263,
+    left: 230,
     backgroundColor: Color.darkslateblue,
     shadowColor: "rgba(0, 0, 0, 0.05)",
     shadowRadius: 20,
-    elevation: 20,
+    // elevation: 20,
     flexDirection: "row",
     paddingHorizontal: Padding.p_11xl,
     paddingVertical: Padding.p_6xs,
     borderRadius: Border.br_11xl,
-    position: "absolute",
+    position: "relative",
     top: 0,
   },
   breadcrumbsParent: {
@@ -805,7 +791,7 @@ const styles = StyleSheet.create({
   },
   groupParent: {
     top: 337,
-    left: 19,
+    left: 11,
   },
   element2: {
     top: 130,
@@ -826,13 +812,13 @@ const styles = StyleSheet.create({
     width: 391,
     height: 97,
     backgroundColor: "transparent",
-    left: 20,
+    left: 11,
     position: "absolute",
   },
   corollaGli2016: {
     top: 273,
-    left: 221,
-    width: 186,
+    left: 205,
+    width: 200,
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,
     textAlign: "left",
@@ -840,11 +826,11 @@ const styles = StyleSheet.create({
   },
   ellipseIcon: {
     width: 10,
-    left: 0,
-    top: 0,
+    left: -15,
+    top: 9,
   },
   paid: {
-    left: 13,
+    left: 0,
     color: Color.darkolivegreen,
     top: 5,
     fontFamily: FontFamily.poppinsSemibold,
@@ -870,7 +856,7 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,
     textAlign: "left",
-    left: 0,
+    left: -9,
     top: 0,
     position: "absolute",
   },
@@ -878,11 +864,11 @@ const styles = StyleSheet.create({
     width: 82,
   },
   text14: {
-    left: 58,
+    left: 50,
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     fontSize: FontSize.caption2Regular_size,
-    top: 0,
+    top: 2,
   },
   dateParent: {
     top: 263,
@@ -894,12 +880,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     textAlign: "left",
-    left: 0,
+    left: -9,
     top: 0,
     position: "absolute",
   },
   onReceipt: {
-    width: 72,
+    width: 90,
   },
   dueParent: {
     top: 281,
@@ -919,10 +905,10 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsSemibold,
     textAlign: "left",
     fontWeight: "600",
-    left: 35,
+    left: 25,
   },
   invoiceTo: {
-    left: 323,
+    left: 310,
     top: 237,
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
@@ -1086,10 +1072,10 @@ const styles = StyleSheet.create({
     left: 277,
   },
   container: {
-    top: 748,
+    top: 730,
   },
   frame: {
-    top: 693,
+    top: 680,
   },
   invoiceDetailViewChild4: {
     left: 105,
@@ -1120,10 +1106,10 @@ const styles = StyleSheet.create({
     left: 164,
   },
   printer2Icon: {
-    top: 759,
+    top: 743,
   },
   icbaselineShareIcon: {
-    top: 704,
+    top: 693,
   },
   rectangleIcon: {
     top: -6,
@@ -1190,12 +1176,12 @@ const styles = StyleSheet.create({
     top: 47,
     height: 63,
     width: 430,
-    left: 0,
+    left: -7,
     position: "absolute",
   },
   maskGroupIcon: {
     top: 62,
-    left: 386,
+    left: 370,
     width: 31,
     height: 31,
     position: "absolute",
@@ -1206,6 +1192,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
+    
   },
 });
 

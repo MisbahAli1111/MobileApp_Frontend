@@ -31,17 +31,19 @@ const AddEmployee = () => {
 
   
   const handleSignUp = () => {
-    if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
-    {
-      navigation.navigate('Home');
-    }
-    else if(Password !== ConfirmPassword)
-    {
-      Alert.alert('Password and Confirm Password should be same.')
-    }
-    else{
-      Alert.alert('Fill all Fields')
-    }
+    console.warn(name);
+    // if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
+    // {
+    
+    //   navigation.navigate('Home');
+    // }
+    // else if(Password !== ConfirmPassword)
+    // {
+    //   Alert.alert('Password and Confirm Password should be same.')
+    // }
+    // else{
+    //   Alert.alert('Fill all Fields')
+    // }
   };
 
   return (

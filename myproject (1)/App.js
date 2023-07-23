@@ -58,20 +58,20 @@ const App = () => {
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
+        />*/}
+              <Stack.Screen
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               options={{ headerShown: false }}
-            /> 
-              */}
+            />     
+               
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
               options={{ headerShown: false }}
             />
-           
+            */}
                         {/* <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
@@ -101,18 +101,19 @@ const App = () => {
               name="OwnerInfo"
               component={OwnerInfo}
               options={{ headerShown: false }}
-            /> 
+          /> */}
             <Stack.Screen
               name="CreateInvoice"
               component={CreateInvoice}
               options={{ headerShown: false }}
             /> 
+            
             <Stack.Screen
               name="Invoices"
               component={Invoices}
               options={{ headerShown: false }}
             />
-             <Stack.Screen
+           {/* <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               options={{ headerShown: false }}

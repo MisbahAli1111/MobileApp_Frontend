@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 function Footer() {
+  const navigation = useNavigation();
+
     function handleInvoicePress()
 {
   navigation.navigate("Invoices");

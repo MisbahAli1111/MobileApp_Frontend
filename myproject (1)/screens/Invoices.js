@@ -1061,7 +1061,7 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   invoices3: {
-    top: 11,
+    top: 0,
     left: 27,
     fontFamily: FontFamily.poppinsSemibold,
     color: Color.darkslateblue,
