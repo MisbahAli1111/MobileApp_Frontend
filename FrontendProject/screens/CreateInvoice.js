@@ -2,19 +2,30 @@ import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 
-import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Pressable, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
 import InvoiceDetailView from "./InvoiceDetailView";
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+
+
+
+
+
 
 const CreateInvoice = () => {
+
+
+
   const navigation = useNavigation();
 
   const [name, setName]=useState('');
   const [regNumber, setregNumber]=useState('');
-  const [date, setDate]=useState("");
+  const [date, setDate]=useState(new  Date());
+  const[showPicker,setShowPicker] = useState(false);
   const [status, setStatus]=useState('');
   const [itemName,setItemName]=useState('');
   const [rate,setRate]=useState('');
@@ -28,7 +39,22 @@ const CreateInvoice = () => {
   const [total, setTotal]=useState('');
   const [calculation, setCalculation]=useState(0);
   
- const invoiceData=[name,itemName, status,date, rate, total,quantity,amount,taxRate,disRateper];
+  const [showDatePicker, setShowDatePicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+ 
+  
+    const handleDateChange = (event, date) => {
+      setShowDatePicker(false);
+      if (date) {
+        setSelectedDate(date);
+      }
+    };
+  
+    const openDatePicker = () => {
+      setShowDatePicker(true);
+    };
+
+ const invoiceData=[name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper];
  useEffect(()=>{
  setAmount(quantity*rate);
  },[quantity,rate])
@@ -60,6 +86,14 @@ const CreateInvoice = () => {
    {
     
    }
+
+
+//Date Functions
+
+
+   
+  
+
   return (
 <View style={styles.createInvoice}>
  <Image
@@ -132,17 +166,34 @@ const CreateInvoice = () => {
         source={require("../assets/group-141.png")}
       />
       <View style={styles.parent}>
-        <TextInput style={[styles.text1, styles.text1Typo]} placeholder="DD-MM-YYYY" onChangeText={setDate}></TextInput>
+      
+        <TextInput 
+        style={[styles.text1, styles.text1Typo]}
+        value={selectedDate ? selectedDate.toDateString() : ''}
+        placeholder="Select a date"
+        editable={false}></TextInput>
         <View style={[styles.groupInner, styles.lineViewPosition]} />
         <View style={[styles.lineView, styles.lineViewPosition]} />
         <TextInput style={[styles.statusPaiddue, styles.text1Typo]} onChangeText={setStatus} placeholder="Status">
          
         </TextInput>
+        <Pressable
+        onPress={openDatePicker}
+        >
         <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
           source={require("../assets/date2svgrepocom-1-11.png")}
         />
+        </Pressable>
+        {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+        )}
       </View>
       <View style={[styles.element2, styles.elementFlexBox]}>
         <Text style={styles.text}>\</Text>
@@ -161,11 +212,11 @@ const CreateInvoice = () => {
         <TextInput style={[styles.addItem, styles.taxTypo1]} onChangeText={setItemName} placeholder="Add Item"></TextInput>
         <TextInput style={styles.addItem1} placeholder="Add Item"></TextInput>
         <Text style={[styles.rate, styles.rateTypo]}>RATE</Text>
-        <TextInput style={[styles.addRate, styles.addTypo1]} onChangeText={setRate} placeholder="Add Rate"></TextInput>
-        <TextInput style={[styles.addRate1, styles.addTypo1]} placeholder="Add Rate"></TextInput>
+        <TextInput style={[styles.addRate, styles.addTypo1]} onChangeText={setRate} placeholder="Add Rate" keyboardType="numeric"></TextInput>
+        <TextInput style={[styles.addRate1, styles.addTypo1]} placeholder="Add Rate" keyboardType="numeric"></TextInput>
         <Text style={[styles.qty, styles.rateTypo]}>QTY</Text>
-        <TextInput style={[styles.text3, styles.textTypo]} onChangeText={setQuantity} placeholder="QTY  "></TextInput>
-        <TextInput style={[styles.text4, styles.textTypo]}placeholder="QTY"></TextInput>
+        <TextInput style={[styles.text3, styles.textTypo]} onChangeText={setQuantity} placeholder="QTY  " keyboardType="numeric"></TextInput>
+        <TextInput style={[styles.text4, styles.textTypo]}placeholder="QTY" keyboardType="numeric"></TextInput>
         <Text style={[styles.amount, styles.rateTypo]}>Amount</Text>
         <Text style={[styles.addAmount, styles.addTypo]} >{amount}</Text>
         <TextInput style={[styles.addAmount1, styles.addTypo]} placeholder="-"></TextInput>
@@ -220,8 +271,8 @@ const CreateInvoice = () => {
       </View>
       <View style={[styles.taxRateParent, styles.taxLayout1]}>
         <Text style={[styles.taxRate, styles.taxLayout1]}>Tax Rate(%)</Text>
-        <TextInput style={[styles.taxRate1, styles.taxLayout]} onChangeText={setTaxRate} placeholder="Tax Rate"></TextInput>
-        <TextInput style={[styles.taxRate2, styles.taxLayout]}  placeholder="Tax Rate"></TextInput>
+        <TextInput style={[styles.taxRate1, styles.taxLayout]} onChangeText={setTaxRate} placeholder="Tax Rate" keyboardType="numeric"></TextInput>
+        <TextInput style={[styles.taxRate2, styles.taxLayout]}  placeholder="Tax Rate" keyboardType="numeric"></TextInput>
       </View>
       <View style={[styles.createInvoiceChild3, styles.createChildLayout1]} />
       <View style={[styles.createInvoiceChild4, styles.createChildPosition]} />
@@ -239,8 +290,8 @@ const CreateInvoice = () => {
       </View>
       <View style={[styles.rateParent, styles.taxLayout]}>
         <Text style={styles.rate1}>Rate(%)</Text>
-        <TextInput style={[styles.taxRate3, styles.taxLayout]} onChangeText={setdisRateper} placeholder="Tax Rate"></TextInput>
-        <TextInput style={[styles.taxRate4, styles.taxLayout]} placeholder="Tax Rate"></TextInput>
+        <TextInput style={[styles.taxRate3, styles.taxLayout]} onChangeText={setdisRateper} placeholder="Tax Rate" keyboardType="numeric"></TextInput>
+        <TextInput style={[styles.taxRate4, styles.taxLayout]} placeholder="Tax Rate" keyboardType="numeric"></TextInput>
       </View>
       <View style={[styles.createInvoiceChild6, styles.createChildLayout1]} />
       <View style={[styles.createInvoiceChild7, styles.createChildPosition]} />
