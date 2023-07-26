@@ -44,21 +44,21 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-           {/* <Stack.Screen
+           <Stack.Screen
               name="Home"
               component={Home}
               options={{ headerShown: false }}
-            /> */}
+            />
             {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               options={{ headerShown: false }}
-            />
+            />*/}
             <Stack.Screen
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               options={{ headerShown: false }}
-        />*/}
+        />
               
                
             
@@ -69,11 +69,11 @@ const App = () => {
             />
 
             */}
-                        {/* <Stack.Screen
+                        <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               options={{ headerShown: false }}
-            /> */}
+            />
             {/*
             <Stack.Screen
               name="SwitchBusiness1"
@@ -105,7 +105,7 @@ const App = () => {
               component={Invoices}
               options={{ headerShown: false }}
             /> */}
-            <Stack.Screen
+            {/* <Stack.Screen
               name="CreateInvoice"
               component={CreateInvoice}
               options={{ headerShown: false }}
@@ -116,12 +116,12 @@ const App = () => {
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               options={{ headerShown: false }}
-            />     
-             {/* <Stack.Screen
+            />      */}
+             <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               options={{ headerShown: false }}
-            /> */}
+            />
              {/*
             <Stack.Screen
               name="MaintenanceDetailView"

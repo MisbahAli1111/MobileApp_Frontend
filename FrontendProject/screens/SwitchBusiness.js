@@ -3,36 +3,9 @@ import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
-
+import BusinessList from "../components/BusinessList";
 const SwitchBusiness = () => {
   const navigation = useNavigation();
-
-  const Business = [
-    {
-      Name: "Business ABC",
-      lastSigend : "2 hours ago",
-    },
-    {
-      Name: "Business XYZ",
-      lastSigend : "5 hours ago",
-    },
-    {
-      Name: "Business KLM",
-      lastSigend : "1 hours ago",
-    },
-    {
-      Name: "Business YES",
-      lastSigend : "1 hours ago",
-    },
-
-  ];
-
-  const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-
-  const handlePress = (index) => {
-    setCurrentPressedIndex(index);
-     navigation.navigate("HOME");
-  };
 
   return (
     <View style={styles.switchBusiness}>
@@ -61,39 +34,7 @@ const SwitchBusiness = () => {
       
   
       <View style={styles.boxContianer}>
-        {Business.map((BusinessB, index) => (
-          <Pressable
-            onPress={() => handlePress(index)}
-          >
-            <View key={index} style={[styles.groupParent, styles.groupParentLayout]}>
-              <View style={[styles.vectorParent, styles.groupParentLayout]}>
-                <Image
-                  style={[styles.groupChild, styles.groupParentLayout]}
-                  contentFit="cover"
-                  source={
-                    currentPressedIndex === index ? require("../assets/rectangle-69.png"):require("../assets/rectangle-691.png") }
-                />
-                <View style={styles.abcBusinessParent}>
-                  <Text style={[
-                    currentPressedIndex === index ? styles.abcBusiness:styles.abcBusiness1 
-                    , styles.abcPosition1]}>
-                    {BusinessB.Name}
-                  </Text>
-                  <Text style={[
-                     currentPressedIndex === index ? styles.signedIn : styles.lastSignedIn2, styles.signedTypo]}>
-                    {
-                    currentPressedIndex === index ?  "Signed In": BusinessB.lastSigend}
-                    </Text>
-                </View>
-              </View>
-              <Image
-                style={styles.checkCircleSvgrepoCom1Icon}
-                contentFit="cover"
-                source={require("../assets/checkcirclesvgrepocom-1.png")}
-              />
-            </View>
-          </Pressable>
-        ))}
+        <BusinessList />
       </View>
       
       <Pressable
