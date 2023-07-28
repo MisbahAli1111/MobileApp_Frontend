@@ -1,94 +1,111 @@
 import * as React from "react";
+import { TouchableWithoutFeedback } from "react-native";
+import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import Footer from "../components/Footer";
-import RecordDetails from "../components/RecordDetails";
-import { useRoute } from "@react-navigation/native";
-const MaintenanceDetailView = () => {
+import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
+import { TextInput } from "react-native-gesture-handler";
+
+function RecordDetails() {
+
+
   const navigation = useNavigation();
-  const route = useRoute();
 
-  // contains the record id details
-  const recordId = route.params?.recordId;
-  // console.warn(recordId);
-  
-  
   return (
-    <View style={styles.maintenanceDetailView}>
-      <Image
-        style={[styles.lightTexture22341Icon, styles.childViewPosition]}
-        contentFit="cover"
-        source={require("../assets/light-texture2234-1.png")}
-      />
-      {/* header  */}
-      <View style={[styles.vectorParent, styles.childViewPosition]}>
-        <Image
-          style={[styles.groupChild, styles.childViewPosition]}
-          contentFit="cover"
-          source={require("../assets/rectangle-571.png")}
-        />
-        <View style={styles.groupItem} />
-        
-        {/* back icon  */}
-        <View style={styles.maintenanceRecordParent}>
-          <Text style={styles.maintenanceRecord}>Maintenance Record</Text>
-          <Pressable
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-          style={[styles.vectorIcon]} 
-          >
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
-          </Pressable>
-        </View>
-        <Image
-          style={[styles.groupInner, styles.groupInnerLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-58.png")}
-        />
+    <View>
+
+      {/* details  */}
+
+      <View style={styles.detailsParent}>
+        <Text style={[styles.details, styles.abc123Clr]}>Details</Text>
+        <Text style={[styles.carWasMaintained, styles.jan2023Position]}>
+          Car was maintained on 01 January 2023 by Waleed Ali. he changed spark
+          plugs and tuned car also changed oil and oil filter. The car was fully
+          maintained.
+        </Text>
       </View>
 
-    {/* home  */}
+      {/* blue div  */}
 
-      <View style={styles.breadcrumbsParent}>
-        <View style={styles.breadcrumbs}>
-          <View style={[styles.housefill, styles.housefillFlexBox]}>
-            <Image
-              style={styles.homeMutedIcon}
-              contentFit="cover"
-              source={require("../assets/homemuted2.png")}
-            />
+      <View style={[styles.vectorGroup, styles.vectorGroupLayout]}>
+        <Image
+          style={[styles.rectangleIcon, styles.vectorGroupLayout]}
+          contentFit="cover"
+          source={require("../assets/rectangle-66.png")}
+        />
+        <View style={[styles.frameParent, styles.frameParentPosition]}>
+          <View style={styles.frameWrapper}>
+            <View style={styles.mileageWrapper}>
+              <Text style={styles.dateTypo}>Mileage</Text>
+            </View>
           </View>
-          <Text style={[styles.text, styles.textFlexBox]}>\</Text>
+          <View style={[styles.kmWrapper, styles.jan2023Position]}>
+            <Text style={[styles.km, styles.kmTypo]}>137,000 km</Text>
+          </View>
         </View>
-        <Text style={[styles.abc123, styles.abc123Clr]}>ABC-123</Text>
-        <View style={[styles.element, styles.housefillFlexBox]}>
-          <Text style={[styles.text1, styles.textFlexBox]}>\</Text>
+        <View style={[styles.frameContainer, styles.waleedAliPosition]}>
+          <View />
         </View>
-        <Text style={[styles.record, styles.kmTypo]}>Record</Text>
+        <Text
+          style={[styles.registrationNumber, styles.dateTypo]}>{`Registration Number `}</Text>
+        <Text style={[styles.abc1231, styles.kmTypo]}>ABC-123</Text>
+        <Text style={[styles.maintainedBy, styles.dateTypo]}>
+          Maintained By
+        </Text>
+        <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
+          Waleed Ali
+        </Text>
+        <View style={[styles.jan2023Parent, styles.parentPosition]}>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>
+            01/Jan/2023
+          </Text>
+          <Text style={[styles.date, styles.dateTypo]}>Date</Text>
+        </View>
+        <View style={styles.carWashParent}>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>Car Wash</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Service</Text>
+        </View>
+        <View style={[styles.pmParent, styles.parentPosition]}>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>3:00 PM</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Time</Text>
+        </View>
+        <View style={[styles.carWrapper, styles.typePosition]}>
+          <Text style={[styles.km, styles.kmTypo]}>{`Car `}</Text>
+        </View>
+        <Text style={[styles.type, styles.typePosition]}>{`Type `}</Text>
       </View>
 
-      <RecordDetails />
-
-      {/* face icon  */}
-     <Image
-        style={styles.maskGroupIcon}
+      {/* car image  */}
+      <Image
+        style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
         contentFit="cover"
-        source={require("../assets/mask-group.png")}
+        source={require("../assets/group-114.png")}
       />
-      
-      <View style={[styles.cont]}>
-      <Footer  prop={"Home"} />
-        </View>
+
+
+      <Image
+        style={styles.maintenanceDetailViewChild3}
+        contentFit="cover"
+        source={require("../assets/group-83.png")}
+      />
+      <Image
+        style={[styles.vectorIcon1, styles.vectorIconLayout]}
+        contentFit="cover"
+        source={require("../assets/vector4.png")}
+      />
+      <Image
+        style={[styles.vectorIcon2, styles.vectorIconLayout]}
+        contentFit="cover"
+        source={require("../assets/vector5.png")}
+      />
+
+
     </View>
   );
-};
-
+}
 const styles = StyleSheet.create({
+
   childViewPosition: {
     width: 430,
     left: -6.5,
@@ -571,6 +588,7 @@ const styles = StyleSheet.create({
     height: 932,
     width: "100%",
   },
+
 });
 
-export default MaintenanceDetailView;
+export default RecordDetails;

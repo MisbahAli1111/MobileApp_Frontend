@@ -16,7 +16,6 @@ function Footer(props) {
 
   useEffect(() => {
     setActiveScreen(props.prop);
-    // console.warn(activeScreen);
   }, [props.prop]);
 
   function handleInvoicePress() {

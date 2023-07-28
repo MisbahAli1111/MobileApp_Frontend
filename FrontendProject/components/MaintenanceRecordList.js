@@ -17,13 +17,14 @@ const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
 const records = [
   {
+    id:"erwecs",
     maintainedOn: "sdbfgljb",
-    maintainedBy: "yes",
+    maintainedBy: "yess",
     mileage: "137,000",
     service: "Service Details 1",
-
   },
   {
+    id:"cnaojos",
     maintainedOn: "2nd January 2023",
     maintainedBy: "ggggg",
     mileage: "150,000",
@@ -31,6 +32,7 @@ const records = [
 
   },
   {
+    id:"wsncds",
     maintainedOn: "2nd January 2023",
     maintainedBy: "no",
     mileage: "150,000",
@@ -42,9 +44,9 @@ const records = [
 
 const displayedRecords = search ? data : records;
 
-const handlePress = (index) => {
+const handlePress = (index,recordId) => {
   setCurrentPressedIndex(index);
-  navigation.navigate("MaintenanceDetailView");
+  navigation.navigate("MaintenanceDetailView",{recordId:recordId});
 };
 
 useEffect(() => {
@@ -63,7 +65,7 @@ displayedRecords.map((record, index) => (
         <View style={[styles.groupFrame]}>
           <Pressable
             style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => handlePress(index)}
+            onPress={() => handlePress(index,record.id)}
           >
             {/* Image */}
             <Image
