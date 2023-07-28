@@ -5,6 +5,8 @@ import { StyleSheet, Text,TextInput, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
+
+
 const BusinessInfo = () => {
   const navigation = useNavigation();
 

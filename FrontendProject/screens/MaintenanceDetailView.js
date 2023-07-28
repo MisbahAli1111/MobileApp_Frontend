@@ -3,10 +3,18 @@ import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-
+import Footer from "../components/Footer";
+import RecordDetails from "../components/RecordDetails";
+import { useRoute } from "@react-navigation/native";
 const MaintenanceDetailView = () => {
   const navigation = useNavigation();
+  const route = useRoute();
 
+  // contains the record id details
+  const recordId = route.params?.recordId;
+  // console.warn(recordId);
+  
+  
   return (
     <View style={styles.maintenanceDetailView}>
       <Image
@@ -14,6 +22,7 @@ const MaintenanceDetailView = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
+      {/* header  */}
       <View style={[styles.vectorParent, styles.childViewPosition]}>
         <Image
           style={[styles.groupChild, styles.childViewPosition]}
@@ -21,13 +30,20 @@ const MaintenanceDetailView = () => {
           source={require("../assets/rectangle-571.png")}
         />
         <View style={styles.groupItem} />
+        
+        {/* back icon  */}
         <View style={styles.maintenanceRecordParent}>
           <Text style={styles.maintenanceRecord}>Maintenance Record</Text>
+          <Pressable
+          onPress={() => navigation.navigate("MaintenanceRecord")}
+          style={[styles.vectorIcon]} 
+          >
           <Image
             style={styles.vectorIcon}
             contentFit="cover"
             source={require("../assets/vector2.png")}
           />
+          </Pressable>
         </View>
         <Image
           style={[styles.groupInner, styles.groupInnerLayout]}
@@ -35,6 +51,9 @@ const MaintenanceDetailView = () => {
           source={require("../assets/rectangle-58.png")}
         />
       </View>
+
+    {/* home  */}
+
       <View style={styles.breadcrumbsParent}>
         <View style={styles.breadcrumbs}>
           <View style={[styles.housefill, styles.housefillFlexBox]}>
@@ -52,169 +71,19 @@ const MaintenanceDetailView = () => {
         </View>
         <Text style={[styles.record, styles.kmTypo]}>Record</Text>
       </View>
-      <Text style={[styles.text2, styles.text2Typo]}>{`
 
-`}</Text>
-      <View style={[styles.vectorGroup, styles.vectorGroupLayout]}>
-        <Image
-          style={[styles.rectangleIcon, styles.vectorGroupLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-66.png")}
-        />
-        <View style={[styles.frameParent, styles.frameParentPosition]}>
-          <View style={styles.frameWrapper}>
-            <View style={styles.mileageWrapper}>
-              <Text style={styles.dateTypo}>Mileage</Text>
-            </View>
-          </View>
-          <View style={[styles.kmWrapper, styles.jan2023Position]}>
-            <Text style={[styles.km, styles.kmTypo]}>137,000 km</Text>
-          </View>
-        </View>
-        <View style={[styles.frameContainer, styles.waleedAliPosition]}>
-          <View />
-        </View>
-        <Text
-          style={[styles.registrationNumber, styles.dateTypo]}
-        >{`Registration Number `}</Text>
-        <Text style={[styles.abc1231, styles.kmTypo]}>ABC-123</Text>
-        <Text style={[styles.maintainedBy, styles.dateTypo]}>
-          Maintained By
-        </Text>
-        <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
-          Waleed Ali
-        </Text>
-        <View style={[styles.jan2023Parent, styles.parentPosition]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>
-            01/Jan/2023
-          </Text>
-          <Text style={[styles.date, styles.dateTypo]}>Date</Text>
-        </View>
-        <View style={styles.carWashParent}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>Car Wash</Text>
-          <Text style={[styles.date, styles.dateTypo]}>Service</Text>
-        </View>
-        <View style={[styles.pmParent, styles.parentPosition]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>3:00 PM</Text>
-          <Text style={[styles.date, styles.dateTypo]}>Time</Text>
-        </View>
-        <View style={[styles.carWrapper, styles.typePosition]}>
-          <Text style={[styles.km, styles.kmTypo]}>{`Car `}</Text>
-        </View>
-        <Text style={[styles.type, styles.typePosition]}>{`Type `}</Text>
-      </View>
-      <View style={styles.detailsParent}>
-        <Text style={[styles.details, styles.abc123Clr]}>Details</Text>
-        <Text style={[styles.carWasMaintained, styles.jan2023Position]}>
-          Car was maintained on 01 January 2023 by Waleed Ali. he changed spark
-          plugs and tuned car also changed oil and oil filter. The car was fully
-          maintained.
-        </Text>
-      </View>
-      <Image
-        style={[styles.maintenanceDetailViewChild, styles.groupInnerLayout]}
-        contentFit="cover"
-        source={require("../assets/group-1711.png")}
-      />
-      <View
-        style={[styles.maintenanceDetailViewItem, styles.childViewPosition]}
-      />
-      <View style={styles.maintenanceDetailViewInner} />
-      <Text style={[styles.home, styles.homeTypo]}>Home</Text>
-      <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
-      <Text style={[styles.addVehicle, styles.homeTypo]}>Add Vehicle</Text>
-      <Text style={[styles.records, styles.homeTypo]}>Records</Text>
-      <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
-      <Image
-        style={[styles.ellipseIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/ellipse-5.png")}
-      />
-      <View style={[styles.housefill1, styles.housefillFlexBox]}>
-        <Image
-          style={styles.homeMutedIcon1}
-          contentFit="cover"
-          source={require("../assets/homemuted1.png")}
-        />
-      </View>
-      <Pressable
-        style={[styles.wrapper, styles.iconLayout]}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-      </Pressable>
-      <Image
-        style={[styles.groupIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/group-180.png")}
-      />
-      <Pressable
-        style={[styles.container, styles.iconLayout]}
-        onPress={() => navigation.navigate("Invoices")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-      </Pressable>
-      <Image
-        style={[
-          styles.invoiceWarrantyLineSvgrepoIcon,
-          styles.svgrepoIconLayout,
-        ]}
-        contentFit="cover"
-        source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-      />
-      <Pressable
-        style={[styles.frame, styles.frameLayout]}
-        onPress={() => navigation.navigate("AddVehicle")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/group-111.png")}
-        />
-      </Pressable>
-      <Image
-        style={[styles.maintenanceDetailViewChild1, styles.frameLayout]}
-        contentFit="cover"
-        source={require("../assets/group-174.png")}
-      />
-      <Image
+      <RecordDetails />
+
+      {/* face icon  */}
+     <Image
         style={styles.maskGroupIcon}
         contentFit="cover"
         source={require("../assets/mask-group.png")}
       />
-      <Image
-        style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
-        contentFit="cover"
-        source={require("../assets/microphonesvgrepocom-1.png")}
-      />
-      <Image
-        style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
-        contentFit="cover"
-        source={require("../assets/group-114.png")}
-      />
-      <Image
-        style={styles.maintenanceDetailViewChild3}
-        contentFit="cover"
-        source={require("../assets/group-83.png")}
-      />
-      <Image
-        style={[styles.vectorIcon1, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector4.png")}
-      />
-      <Image
-        style={[styles.vectorIcon2, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector5.png")}
-      />
+      
+      <View style={[styles.cont]}>
+      <Footer  prop={"Home"} />
+        </View>
     </View>
   );
 };
@@ -222,8 +91,14 @@ const MaintenanceDetailView = () => {
 const styles = StyleSheet.create({
   childViewPosition: {
     width: 430,
-    left: 0,
+    left: -6.5,
     position: "absolute",
+  },
+  cont:{
+    padding:6,
+    top:-14,
+    right:5,
+    zIndex:999,
   },
   groupInnerLayout: {
     height: 43,
@@ -248,7 +123,7 @@ const styles = StyleSheet.create({
   },
   text2Typo: {
     fontFamily: FontFamily.poppinsSemibold,
-    fontWeight: "600",
+    fontWeight: "700",
   },
   vectorGroupLayout: {
     height: 301,
@@ -273,6 +148,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     fontSize: FontSize.size_base,
+    fontWeight:700,
   },
   parentPosition: {
     top: 167,
@@ -289,7 +165,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: Color.textTxtPrimary,
     fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
+    fontWeight: "700",
     position: "absolute",
   },
   iconLayout: {
@@ -342,18 +218,18 @@ const styles = StyleSheet.create({
     left: "38.69%",
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
+    fontWeight: "700",
     color: Color.textTxtPrimary,
     fontSize: FontSize.size_base,
     position: "absolute",
   },
   vectorIcon: {
-    height: "88.85%",
-    width: "7.98%",
-    top: "8.33%",
+    height: "94.85%",
+    width: "28.98%",
+    top: "1.33%",
     right: "92.02%",
     bottom: "2.82%",
-    left: "0%",
+    left: "1%",
     maxHeight: "100%",
     maxWidth: "100%",
     position: "absolute",
@@ -362,7 +238,7 @@ const styles = StyleSheet.create({
   maintenanceRecordParent: {
     height: "38.1%",
     width: "63.72%",
-    top: "30.16%",
+    top: "25.16%",
     right: "31.16%",
     bottom: "31.75%",
     left: "5.12%",
@@ -374,7 +250,7 @@ const styles = StyleSheet.create({
     left: 19,
   },
   vectorParent: {
-    top: 47,
+    top: 40,
     height: 63,
   },
   homeMutedIcon: {
@@ -407,11 +283,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   abc123: {
-    left: 89,
+    left: 92,
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     fontSize: FontSize.size_sm,
-    top: 11,
+    top: 2,
   },
   text1: {
     fontFamily: FontFamily.caption2Regular,
@@ -429,11 +305,11 @@ const styles = StyleSheet.create({
     left: 27,
     color: Color.steelblue_100,
     fontSize: FontSize.size_sm,
-    top: 11,
+    top: 2,
     position: "absolute",
   },
   breadcrumbsParent: {
-    top: 130,
+    top: 115,
     width: 149,
     height: 20,
     left: 19,
@@ -501,8 +377,9 @@ const styles = StyleSheet.create({
     left: 25,
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
-    color: Color.textTxtPrimary,
+    color: Color.Black,
     fontSize: FontSize.size_base,
+    
   },
   jan2023: {
     fontFamily: FontFamily.poppinsRegular,
@@ -544,15 +421,15 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   vectorGroup: {
-    top: 535,
-    left: 18,
+    top: 480,
+    left: 10,
   },
   details: {
     fontWeight: "700",
     fontFamily: FontFamily.poppinsBold,
     width: 72,
     fontSize: FontSize.size_base,
-    color: Color.darkslateblue,
+    color: Color.Black,
     left: 0,
     top: 0,
   },
@@ -562,11 +439,12 @@ const styles = StyleSheet.create({
     top: 26,
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
-    color: Color.textTxtPrimary,
+    color: Color.Black,
     fontSize: FontSize.size_base,
+    fontWeight:700,
   },
   detailsParent: {
-    top: 403,
+    top: 385,
     width: 393,
     height: 122,
     left: 20,
@@ -658,8 +536,8 @@ const styles = StyleSheet.create({
     left: 164,
   },
   maskGroupIcon: {
-    top: 63,
-    left: 380,
+    top: 48,
+    left: 372,
     width: 31,
     height: 31,
     position: "absolute",
@@ -668,11 +546,11 @@ const styles = StyleSheet.create({
     left: 287,
   },
   maintenanceDetailViewChild2: {
-    top: 170,
+    top: 150,
     height: 223,
   },
   maintenanceDetailViewChild3: {
-    top: 399,
+    top: 378,
     left: 182,
     width: 55,
     height: 9,

@@ -6,11 +6,14 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
-
+import Footer from "../components/Footer";
 const Home = () => {
   const navigation = useNavigation();
-data=[];
-  return (
+//data=[];
+//const invoices=null;
+//const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
+   
+return (
     <View style={styles.home}>
       
       <Image
@@ -147,76 +150,7 @@ data=[];
         contentFit="cover"
         source={require("../assets/pngegg-1.png")}
       />
-      <View style={[styles.homeChild4, styles.homeChildShadowBox]} />
-      <View style={styles.homeChild5} />
-      <Text style={[styles.home1, styles.home1Typo]}>Home</Text>
-      <Text style={[styles.vehicles, styles.home1Typo]}>Vehicles</Text>
-      <Text style={[styles.addVehicle, styles.home1Typo]}>Add Vehicle</Text>
-      <Text style={[styles.records, styles.home1Typo]}>Records</Text>
-      <Text style={[styles.invoices, styles.home1Typo]}>Invoices</Text>
       
-      <Image
-        style={[styles.ellipseIcon, styles.ellipseLayout]}
-        contentFit="cover"
-        source={require("../assets/ellipse-7.png")}
-      />
-      <Pressable
-        style={[styles.container, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("Vehicles")}
-      >
-        <Image
-          style={styles.iconLayout2}
-          contentFit="cover"
-          source={require("../assets/ellipse-5.png")}
-        />
-      </Pressable>
-      <View style={styles.housefill}>
-        <Image
-          style={styles.homeMutedIcon}
-          contentFit="cover"
-          source={require("../assets/homemuted1.png")}
-        />
-      </View>
-      <Pressable
-        style={[styles.frame, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
-      >
-        <Image
-          style={styles.iconLayout2}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-      </Pressable>
-      <Image
-        style={[styles.carCitroenTopVehicleSvgrepIcon, styles.bikeLayout]}
-        contentFit="cover"
-        source={require("../assets/carcitroentopvehiclesvgrepocom-11.png")}
-      />
-      <Pressable
-        style={[styles.ellipsePressable, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("Invoices",{ invoices: data })}
-      >
-        <Image
-          style={styles.iconLayout2}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-      </Pressable>
-      <Image
-        style={[styles.invoiceWarrantyLineSvgrepoIcon, styles.iconPosition]}
-        contentFit="cover"
-        source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-      />
-      <Pressable
-      style={[styles.groupPressable]}
-      onPress={() => navigation.navigate("AddVehicle")}
-        >
-      <Image
-        style={[styles.homeChild6, styles.homeChild6Layout]}
-        contentFit="cover"
-        source={require("../assets/group-174.png")}
-      />
-      </Pressable>
      
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
       <View style={[styles.homeChild8, styles.childPosition]} />
@@ -230,7 +164,7 @@ data=[];
       <Text style={[styles.dashboard, styles.dashboardTypo]}>Dashboard</Text>
       {/* backicon top */}
   
-<TouchableWithoutFeedback onPress={() => navigation.navigate("SwitchBusiness")}>
+<TouchableWithoutFeedback onPressIn={() => navigation.navigate("SwitchBusiness")}>
   <Image
     style={[styles.vectorIcon, styles.iconLayout1]}
     contentFit="cover"
@@ -238,14 +172,11 @@ data=[];
   />
 </TouchableWithoutFeedback>
 
-
-      <Image
-        style={[styles.record641Icon, styles.iconPosition]}
-        contentFit="cover"
-        source={require("../assets/record64-1.png")}
-      />
+<View style={[styles.cont]}>
+<Footer  prop={"Home"} data={invoices} />
+  </View>
     </View>
-  );
+      );
 };
 
 const styles = StyleSheet.create({
@@ -409,6 +340,12 @@ const styles = StyleSheet.create({
     top: 61,
     width: 8,
     position: "absolute",
+  },
+
+  cont:{
+    padding:6,
+    top:-35,
+    right:5,
   },
   groupChildPosition2: {
     height: 63,
@@ -857,7 +794,7 @@ const styles = StyleSheet.create({
   homeChild4: {
     top: 785,
     height: 102,
-    backgroundColor: Color.steelblue_300,
+    backgroundColor: 'red',
   },
   homeChild5: {
     top: 917,

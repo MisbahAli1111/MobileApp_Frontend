@@ -44,26 +44,26 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-             <Stack.Screen
+           <Stack.Screen
               name="Home"
               component={Home}
               options={{ headerShown: false }}
-            />  
-           <Stack.Screen
+            />
+            {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               options={{ headerShown: false }}
-            />
+            />*/}
             <Stack.Screen
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               options={{ headerShown: false }}
         />
-              <Stack.Screen
-              name="InvoiceDetailView"
-              component={InvoiceDetailView}
+            <Stack.Screen
+              name="Invoices"
+              component={Invoices}
               options={{ headerShown: false }}
-            />      
+        />  
                
             
             <Stack.Screen
@@ -73,12 +73,12 @@ const App = () => {
             />
 
             
-                         <Stack.Screen
+                        <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               options={{ headerShown: false }}
             />
-            
+          
             <Stack.Screen
               name="SwitchBusiness1"
               component={SwitchBusiness1}
@@ -110,9 +110,10 @@ const App = () => {
               options={{ headerShown: false }}
             /> 
             
+            
             <Stack.Screen
-              name="Invoices"
-              component={Invoices}
+              name="InvoiceDetailView"
+              component={InvoiceDetailView}
               options={{ headerShown: false }}
             />
             

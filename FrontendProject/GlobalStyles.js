@@ -45,6 +45,7 @@ export const Color = {
   crimson: "#d62828",
   goldenrod: "#fcbf49",
   gold: "#f2cc00",
+  Black:"#000000",
 };
 /* Paddings */
 export const Padding = {

@@ -23,8 +23,9 @@ function InvoiceDetailView({route}) {
   }, []);
   const { data } = route.params;
 
-  const [name,itemName, status,date, rate, total,quantity,amount,taxRate,disRateper] = data;
-function  editInvoiceFunction (){ 
+  const [name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper] = data;
+  const invoiceDetail=[name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper];
+  function  editInvoiceFunction (){ 
 navigation.navigate("CreateInvoice");
  }
   return (
@@ -134,7 +135,7 @@ navigation.navigate("CreateInvoice");
         <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
         <View style={[styles.dateParent, styles.parentLayout1]}>
           <Text style={[styles.date, styles.dueTypo]}>DATE</Text>
-          <Text style={[styles.jan2023, styles.rs3000Typo]}>{date}</Text>
+          <Text style={[styles.jan2023, styles.rs3000Typo]}>{selectedDate.toDateString()}</Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
         <View style={[styles.dueParent, styles.parentLayout1]}>
@@ -259,7 +260,7 @@ navigation.navigate("CreateInvoice");
           <FrameComponent onClose={closeGroupContainer10} />
         </View>
       </Modal> 
-      <Footer />
+      <Footer data={invoiceDetail}/>
       </View>
     </>
   );
