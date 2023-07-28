@@ -9,7 +9,7 @@ import { TouchableWithoutFeedback } from 'react-native';
 
 const Home = () => {
   const navigation = useNavigation();
-
+data=[];
   return (
     <View style={styles.home}>
       
@@ -194,7 +194,7 @@ const Home = () => {
       />
       <Pressable
         style={[styles.ellipsePressable, styles.ellipseLayout]}
-        onPress={() => navigation.navigate("Invoices")}
+        onPress={() => navigation.navigate("Invoices",{ invoices: data })}
       >
         <Image
           style={styles.iconLayout2}

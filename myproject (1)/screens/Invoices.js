@@ -5,12 +5,20 @@ import { useNavigation } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
 import { Border, FontFamily, Color, FontSize, Padding } from "../GlobalStyles";
 import Footer from "../components/Footer";
+import Home from "./Home";
 import { TextInput } from "react-native-gesture-handler";
 
 const Invoices = ({route}) => {
   const [groupContainer38Visible, setGroupContainer38Visible] = useState(false);
   const navigation = useNavigation();
-
+  if (data === null || data === undefined) {
+    navigation.navigate('Home');
+    return null;
+  } if (status === null || status === undefined) {
+    navigation.navigate('Home');
+    
+    return null;
+  }
   const openGroupContainer38 = useCallback(() => {
     setGroupContainer38Visible(true);
   }, []);
@@ -310,6 +318,7 @@ const Invoices = ({route}) => {
             </View>
           </Pressable> */}
         </View>
+        <View style={styles.nodatastyle}>  
         <Image
           style={[styles.image2Icon, styles.iconChildPosition]}
           contentFit="cover"
@@ -399,7 +408,7 @@ const Invoices = ({route}) => {
         </View>
           <Footer data={invoices} /> 
       </View>
-
+</View>
       <Modal animationType="fade" transparent visible={groupContainer38Visible}>
         <View style={styles.groupContainer38Overlay}>
           <Pressable
@@ -409,13 +418,14 @@ const Invoices = ({route}) => {
           <FrameComponent onClose={closeGroupContainer38} />
         </View>
       </Modal>
-    
     </>
   );
 };
 
+
 const styles = StyleSheet.create({
-  invPosition: {
+
+ invPosition: {
     left: 0,
     top: 0,
   },

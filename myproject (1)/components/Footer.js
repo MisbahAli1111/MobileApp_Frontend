@@ -10,27 +10,26 @@ import { TextInput } from "react-native-gesture-handler";
 import Invoices from "../screens/Invoices";
 
 function Footer({data}) {
-  const navigation = useNavigation();
   
-    function handleInvoicePress()
-{
-  navigation.navigate("Invoices" , {invoices:data});
+  const navigation = useNavigation();
 
+  const handleInvoicePress = () => {
+    //every time invoices will be fetched and will be send through var data
+    navigation.navigate('Invoices', { invoices: data });
+  };
 
-}
-function handleHomePress() { 
-  navigation.navigate("Home");
- }
+  const handleHomePress = () => {
+    navigation.navigate('Home');
+  };
 
-  function handleRecordPress()
-  {
-    navigation.navigate("MaintenanceRecord");
-  }
-  function handleVehiclePress()
-  {
-    navigation.navigate("AddVehicle");
-  }
-return(
+  const handleRecordPress = () => {
+    navigation.navigate('MaintenanceRecord');
+  };
+
+  const handleVehiclePress = () => {
+    navigation.navigate('AddVehicle');
+  };
+  return(
     <View>
 
             <View style={[styles.rectangleView, styles.iconLayout1]} />
