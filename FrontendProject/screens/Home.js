@@ -10,7 +10,7 @@ import Footer from "../components/Footer";
 const Home = () => {
   const navigation = useNavigation();
 //data=[];
-//const invoices=null;
+const invoices=null;
 //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
    
 return (
