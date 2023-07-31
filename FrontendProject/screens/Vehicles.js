@@ -1,14 +1,30 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useState, useEffect } from "react";
+import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Text, TextInput, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-
+import VehicleRecords from "../components/VehicleRecords";
+import Footer from "../components/Footer";
 const Vehicles = () => {
   const navigation = useNavigation();
+  const [search, setSearch] = useState('');
+
+  const handleQuery = (query) => {
+    setSearch(query);
+
+  }
+
+  const handlePress = () => {
+    navigation.navigate('Home');
+  };
 
   return (
     <View style={styles.vehicles}>
+
+
+
+
       <Image
         style={styles.lightTexture22341Icon}
         contentFit="cover"
@@ -19,16 +35,21 @@ const Vehicles = () => {
         contentFit="cover"
         source={require("../assets/image-2.png")}
       />
+      
+
+      {/* head back icon */}
       <View style={[styles.rectangleParent, styles.image2IconPosition]}>
         <View style={[styles.groupChild, styles.image2IconPosition]} />
         <View style={styles.groupItem} />
         <View style={styles.vehiclesParent}>
           <Text style={[styles.vehicles1, styles.filterTypo]}>Vehicles</Text>
-          <Image
-            style={[styles.vectorIcon, styles.iconLayout3]}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
+          <TouchableWithoutFeedback onPress={handlePress}>
+            <Image
+              style={[styles.vectorIcon, styles.iconLayout3]}
+              contentFit="cover"
+              source={require("../assets/vector2.png")}
+            />
+          </TouchableWithoutFeedback>
         </View>
         <Pressable
           style={styles.wrapper}
@@ -40,221 +61,21 @@ const Vehicles = () => {
             source={require("../assets/rectangle-58.png")}
           />
         </Pressable>
-      </View>
-      <View style={[styles.vehiclesChild, styles.vehiclesChildPosition]} />
-      <Text style={[styles.text, styles.textClr]}>{` `}</Text>
-      <View style={[styles.groupParent, styles.groupParentLayout]}>
-        <View style={[styles.frameParent, styles.frameParentLayout]}>
-          <View style={[styles.nameParent, styles.parentFlexBox]}>
-            <Text style={[styles.name, styles.nameTypo]}>Name</Text>
-            <Text style={[styles.shahzoreAsif, styles.text1Typo]}>
-              Shahzore Asif
-            </Text>
-          </View>
-          <Image
-            style={[styles.frameIcon, styles.frameIconPosition]}
-            contentFit="cover"
-            source={require("../assets/frame.png")}
-          />
-        </View>
-        <View
-          style={[
-            styles.materialSymbolspermContactParent,
-            styles.groupContainerPosition,
-          ]}
-        >
-          <Image
-            style={[styles.frameIcon, styles.frameIconPosition]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolspermcontactcalendaroutline.png")}
-          />
-          <View style={[styles.contactParent, styles.filterPosition]}>
-            <Text style={[styles.name, styles.nameTypo]}>Contact</Text>
-            <Text style={styles.text1Typo}>+92 (345) 123-3234</Text>
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupPosition]}>
-          <View
-            style={[styles.registrationNumberParent, styles.groupIconPosition]}
-          >
-            <Text style={[styles.name, styles.nameTypo]}>
-              Registration Number
-            </Text>
-            <Text style={[styles.sa2002, styles.text1Typo]}>SA-2002</Text>
-          </View>
-          <Image
-            style={[
-              styles.licensePlateNumberSvgrepoCIcon,
-              styles.frameGroupPosition,
-            ]}
-            contentFit="cover"
-            source={require("../assets/licenseplatenumbersvgrepocom-11.png")}
-          />
+        <View style={[styles.cont]}>
+          <Footer prop={"Vehicles"} />
         </View>
       </View>
-      <View style={[styles.vehiclesItem, styles.innerLayout]} />
-      <View style={[styles.civicX2020Parent, styles.groupParentPosition]}>
-        <Text style={[styles.civicX2020, styles.name1Clr]}>Civic X 2020</Text>
-        <View style={[styles.groupContainer, styles.groupContainerPosition]}>
-          <View style={[styles.frameParent, styles.frameParentLayout]}>
-            <View style={[styles.nameParent, styles.parentFlexBox]}>
-              <Text style={[styles.name1, styles.name1Clr]}>Name</Text>
-              <Text style={[styles.tahaMir, styles.text2Typo]}>Taha Mir</Text>
-            </View>
-            <Image
-              style={[styles.frameIcon, styles.frameIconPosition]}
-              contentFit="cover"
-              source={require("../assets/frame1.png")}
-            />
-          </View>
-          <View
-            style={[
-              styles.materialSymbolspermContactParent,
-              styles.groupContainerPosition,
-            ]}
-          >
-            <Image
-              style={[styles.frameIcon, styles.frameIconPosition]}
-              contentFit="cover"
-              source={require("../assets/materialsymbolspermcontactcalendaroutline1.png")}
-            />
-            <View style={[styles.contactParent, styles.filterPosition]}>
-              <Text style={[styles.name1, styles.name1Clr]}>Contact</Text>
-              <Text style={styles.text2Typo}>+92 (345) 123-3234</Text>
-            </View>
-          </View>
-          <View style={[styles.frameGroup, styles.frameGroupPosition]}>
-            <View
-              style={[
-                styles.registrationNumberParent,
-                styles.groupIconPosition,
-              ]}
-            >
-              <Text style={[styles.name1, styles.name1Clr]}>
-                Registration Number
-              </Text>
-              <Text style={[styles.sa20021, styles.text2Typo]}>SA-2002</Text>
-            </View>
-            <Image
-              style={[
-                styles.licensePlateNumberSvgrepoCIcon,
-                styles.frameGroupPosition,
-              ]}
-              contentFit="cover"
-              source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
-            />
-          </View>
-        </View>
+
+      
+
+      {/* 3rd  */}
+      <View style={styles.contView}>
+        <VehicleRecords dsearch={search} />
       </View>
-      <View style={[styles.vehiclesInner, styles.innerLayout]} />
-      <Text style={[styles.landCruiserV8, styles.name1Clr]}>
-        Land Cruiser V8 2021
-      </Text>
-      <View style={[styles.groupParent1, styles.groupParentLayout]}>
-        <View style={[styles.frameParent1, styles.frameParentLayout]}>
-          <View style={[styles.nameParent, styles.parentFlexBox]}>
-            <Text style={[styles.name1, styles.name1Clr]}>Name</Text>
-            <Text style={styles.text2Typo}>Umar Chaanda</Text>
-          </View>
-          <Image
-            style={[styles.frameIcon, styles.frameIconPosition]}
-            contentFit="cover"
-            source={require("../assets/frame2.png")}
-          />
-        </View>
-        <View
-          style={[
-            styles.materialSymbolspermContactParent,
-            styles.groupContainerPosition,
-          ]}
-        >
-          <Image
-            style={[styles.frameIcon, styles.frameIconPosition]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolspermcontactcalendaroutline1.png")}
-          />
-          <View style={[styles.contactParent, styles.filterPosition]}>
-            <Text style={[styles.name1, styles.name1Clr]}>Contact</Text>
-            <Text style={styles.text2Typo}>+92 (345) 123-3234</Text>
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupPosition]}>
-          <View
-            style={[styles.registrationNumberParent, styles.groupIconPosition]}
-          >
-            <Text style={[styles.name1, styles.name1Clr]}>
-              Registration Number
-            </Text>
-            <Text style={[styles.sa20021, styles.text2Typo]}>SA-2002</Text>
-          </View>
-          <Image
-            style={[
-              styles.licensePlateNumberSvgrepoCIcon,
-              styles.frameGroupPosition,
-            ]}
-            contentFit="cover"
-            source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
-          />
-        </View>
-      </View>
-      <Image
-        style={[styles.rectangleIcon, styles.iconPosition]}
-        contentFit="cover"
-        source={require("../assets/rectangle-64.png")}
-      />
-      <Text style={[styles.image, styles.imageTypo]}>Image</Text>
-      <View style={[styles.rectangleView, styles.innerLayout]} />
-      <Text style={[styles.suzukiMehranVxr, styles.name1Clr]}>
-        Suzuki Mehran VXR 2012
-      </Text>
-      <View style={[styles.groupParent2, styles.groupParentLayout]}>
-        <View style={[styles.frameParent1, styles.frameParentLayout]}>
-          <View style={[styles.nameParent, styles.parentFlexBox]}>
-            <Text style={[styles.name1, styles.name1Clr]}>Name</Text>
-            <Text style={styles.text2Typo}>Muhammad Ali</Text>
-          </View>
-          <Image
-            style={[styles.frameIcon, styles.frameIconPosition]}
-            contentFit="cover"
-            source={require("../assets/frame2.png")}
-          />
-        </View>
-        <View
-          style={[
-            styles.materialSymbolspermContactParent,
-            styles.groupContainerPosition,
-          ]}
-        >
-          <Image
-            style={[styles.frameIcon, styles.frameIconPosition]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolspermcontactcalendaroutline1.png")}
-          />
-          <View style={[styles.contactParent, styles.filterPosition]}>
-            <Text style={[styles.name1, styles.name1Clr]}>Contact</Text>
-            <Text style={styles.text2Typo}>+92 (345) 123-3234</Text>
-          </View>
-        </View>
-        <View style={[styles.frameGroup, styles.frameGroupPosition]}>
-          <View
-            style={[styles.registrationNumberParent, styles.groupIconPosition]}
-          >
-            <Text style={[styles.name1, styles.name1Clr]}>
-              Registration Number
-            </Text>
-            <Text style={[styles.sa20021, styles.text2Typo]}>SA-2002</Text>
-          </View>
-          <Image
-            style={[
-              styles.licensePlateNumberSvgrepoCIcon,
-              styles.frameGroupPosition,
-            ]}
-            contentFit="cover"
-            source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
-          />
-        </View>
-      </View>
-      <Text style={[styles.image1, styles.imageTypo]}>Image</Text>
+
+
+
+      {/* filter  */}
       <View style={[styles.breadcrumbsParent, styles.frameParentLayout]}>
         <View style={[styles.breadcrumbs, styles.frameIconPosition]}>
           <View style={styles.housefill}>
@@ -276,7 +97,10 @@ const Vehicles = () => {
             styles.frameParentLayout,
           ]}
         >
-          <Image
+          <View
+            style={styles.filt}
+          >
+            {/* <Image
             style={[
               styles.materialSymbolsarrowRightAIcon,
               styles.materialIconLayout,
@@ -291,72 +115,60 @@ const Vehicles = () => {
             ]}
             contentFit="cover"
             source={require("../assets/materialsymbolsarrowrightaltrounded1.png")}
-          />
-          <Text style={[styles.filter, styles.text5Typo]}>Filter</Text>
+          /> */}
+            <Text style={[styles.filter, styles.text5Typo]}>Filter</Text>
+          </View>
         </View>
       </View>
+
+      {/* search gli  */}
       <View style={[styles.rectangleGroup, styles.vehiclesChildPosition]}>
-        <Pressable
+        <View
           style={[styles.groupInner, styles.innerLayout]}
           onPress={() => navigation.navigate("MaintenanceRecord")}
         />
-        <Text style={[styles.corollaGli2015, styles.corollaTypo]}>
-          Corolla Gli 2015
-        </Text>
-        <Pressable
-          style={styles.vector}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={[styles.icon1, styles.iconLayout2]}
-            contentFit="cover"
-            source={require("../assets/vector15.png")}
-          />
-        </Pressable>
-        <Text style={[styles.corollaGli20151, styles.textClr]}>
-          Corolla Gli 2015
-        </Text>
+        <TextInput style={[styles.corollaGli2015, styles.corollaTypo]}
+          placeholder="Civic 2022"
+          clearButtonMode="always"
+          value={search}
+          onChangeText={(query) => handleQuery(query)}
+        />
+
+
+        <Image
+          style={[styles.icon1, styles.iconLayout2]}
+          contentFit="cover"
+          source={require("../assets/vector15.png")}
+        />
       </View>
-      <Image
-        style={[styles.groupIcon, styles.groupIconPosition]}
-        contentFit="cover"
-        source={require("../assets/group-10.png")}
-      />
+
+
+
+      {/* face icon  */}
       <Image
         style={styles.maskGroupIcon}
         contentFit="cover"
         source={require("../assets/mask-group.png")}
       />
-      <Image
-        style={styles.maskGroupIcon1}
-        contentFit="cover"
-        source={require("../assets/mask-group1.png")}
-      />
-      <Image
-        style={styles.vehiclesChild1}
-        contentFit="cover"
-        source={require("../assets/group-831.png")}
-      />
-      <Image
-        style={[styles.image3Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/image-3.png")}
-      />
-      <Image
-        style={[styles.image4Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/image-4.png")}
-      />
-      <Image
-        style={[styles.ellipseIcon, styles.iconPosition]}
-        contentFit="cover"
-        source={require("../assets/ellipse-18.png")}
-      />
-      <Image
-        style={styles.hondaCivicTurbo21Icon}
-        contentFit="cover"
-        source={require("../assets/2016hondacivicturbo2-1.png")}
-      />
+      <View>
+      <Pressable
+        style={[styles.groupWrapper, styles.groupLayoutt]}
+        onPress={() => navigation.navigate("AddVehicle")}
+      >
+        <View style={styles.rectangleGroupp}>
+          <View style={[styles.groupInnerr, styles.groupInnerLayout]} />
+          <View style={styles.addRecordParent}>
+            <Text style={[styles.addRecord, styles.addTypo]}>Add Vehicle</Text>
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require("../assets/vector14.png")}
+            />
+          </View>
+        </View>
+      </Pressable>
+      </View>
+
     </View>
   );
 };
@@ -364,13 +176,29 @@ const Vehicles = () => {
 const styles = StyleSheet.create({
   image2IconPosition: {
     width: 430,
-    left: 0,
+    left: -5,
     position: "absolute",
   },
+  cont: {
+    padding: 6,
+    top: -50,
+    right: 5,
+  },
+  contView: {
+    top: 250,
+    left: 5,
+  },
+
+
   filterTypo: {
     fontFamily: FontFamily.poppinsMedium,
     color: Color.darkslateblue,
   },
+  filt: {
+    top: 2,
+    left: -6,
+  },
+
   iconLayout3: {
     maxHeight: "100%",
     maxWidth: "100%",
@@ -378,13 +206,14 @@ const styles = StyleSheet.create({
   },
   vehiclesChildPosition: {
     width: 392,
-    left: 19,
+    left: 12,
     position: "absolute",
   },
   textClr: {
     color: Color.white,
     textAlign: "left",
   },
+
   groupParentLayout: {
     height: 84,
     width: 229,
@@ -397,6 +226,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     left: 28,
   },
+  groupLayoutt: {
+    height: 30,
+    width: 120,
+    left: 280,
+    top: -350,
+
+  },
+  groupInnerLayout: {
+
+  },
+
   nameTypo: {
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_smi,
@@ -418,6 +258,10 @@ const styles = StyleSheet.create({
     top: 29,
     left: 0,
     position: "absolute",
+  },
+  addTypo: {
+    left: 20,
+    top: -25,
   },
   filterPosition: {
     top: 2,
@@ -484,10 +328,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: FontSize.size_base,
     position: "absolute",
+    width: 500,
   },
   iconLayout2: {
-    height: "100%",
-    width: "100%",
+    height: "19%",
+    width: "6%",
   },
   iconLayout: {
     height: 153,
@@ -562,7 +407,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleParent: {
-    top: 47,
+    top: 35,
     height: 63,
   },
   vehiclesChild: {
@@ -734,7 +579,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   elementPosition: {
-    left: 18,
+    left: 22,
     justifyContent: "center",
     height: 20,
     top: 0,
@@ -746,8 +591,8 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   vehicles2: {
-    top: 11,
-    left: 27,
+    top: 0,
+    left: 32,
     fontSize: FontSize.size_sm,
     fontWeight: "600",
     fontFamily: FontFamily.poppinsSemibold,
@@ -770,9 +615,9 @@ const styles = StyleSheet.create({
   filter: {
     top: 2,
     position: "absolute",
-    color: Color.darkslateblue,
+    color: Color.Black,
     fontFamily: FontFamily.poppinsMedium,
-    left: 0,
+    left: -110,
   },
   materialSymbolsarrowRightAParent: {
     left: 342,
@@ -780,7 +625,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   breadcrumbsParent: {
-    top: 130,
+    top: 110,
     width: 390,
     left: 19,
   },
@@ -789,6 +634,22 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
   },
+  groupInnerr: {
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    shadowRadius: 20,
+    elevation: 20,
+    backgroundColor: Color.steelblue_300,
+    width: 119,
+    height: 33,
+    top: 0,
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    left: 0,
+    borderRadius: Border.br_11xl,
+  },
   corollaGli2015: {
     top: 14,
     left: 21,
@@ -796,9 +657,11 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
   },
   icon1: {
-    maxHeight: "100%",
+    maxHeight: "80%",
     maxWidth: "100%",
     overflow: "hidden",
+    top: 15,
+    left: 350,
   },
   vector: {
     left: "86.39%",
@@ -820,8 +683,14 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleGroup: {
-    top: 172,
+    top: 152,
     height: 111,
+  },
+  rectangleGroupp: {
+    top: -2,
+    height: 35,
+    left: 0,
+
   },
   groupIcon: {
     width: 372,
@@ -829,7 +698,7 @@ const styles = StyleSheet.create({
     height: 43,
   },
   maskGroupIcon: {
-    top: 63,
+    top: 47,
     left: 372,
     width: 31,
     height: 31,

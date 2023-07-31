@@ -38,7 +38,10 @@ function Footer(props) {
     navigation.navigate("MaintenanceRecord");
   }
   function handleVehiclePress() {
-    navigation.navigate("AddVehicle");
+    navigation.navigate("Vehicles");
+  }
+  function handleAddRecord() {
+    navigation.navigate("AddRecord");
   }
   return (
     <View>
@@ -47,7 +50,7 @@ function Footer(props) {
       <View style={styles.addVehicleChild12} />
       <Text style={[styles.home, styles.homeTypo]}>Home</Text>
       <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
-      <Text style={[styles.addVehicle3, styles.homeTypo]}>Add Vehicle</Text>
+      <Text style={[styles.addVehicle3, styles.homeTypo]}>Add Record</Text>
       <Text style={[styles.records, styles.homeTypo]}>Records</Text>
       <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
       <TouchableOpacity onPress={handleHomePress}>
@@ -110,11 +113,15 @@ function Footer(props) {
           source={require("../assets/group-111.png")}
         />
       </Pressable>
+      <TouchableWithoutFeedback
+      onPress={handleAddRecord}
+      >
       <Image
         style={[styles.addVehicleChild13, styles.groupPressableLayout]}
         contentFit="cover"
         source={require("../assets/group-174.png")}
       />
+      </TouchableWithoutFeedback>
       <TouchableOpacity onPressIn={handleVehiclePress}
         style={[styles.wrapper1, styles.ellipseLayout]}
         onPress={handleVehiclePress}
@@ -124,7 +131,7 @@ function Footer(props) {
           style={styles.icon}
           contentFit="cover"
           source={
-            activeScreen === "AddVehicle" ?  require("../assets/ellipse-7.png") : require("../assets/ellipse-8.png")}
+            activeScreen === "Vehicles" ?  require("../assets/ellipse-7.png") : require("../assets/ellipse-8.png")}
         />
       </TouchableOpacity>
 
