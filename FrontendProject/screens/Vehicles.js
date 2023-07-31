@@ -1,14 +1,18 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Text, TextInput, Pressable } from "react-native";
+import { StyleSheet, View, ScrollView,TouchableOpacity, TouchableWithoutFeedback, Text, TextInput, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import VehicleRecords from "../components/VehicleRecords";
 import Footer from "../components/Footer";
+import { useRoute } from "@react-navigation/native";
 const Vehicles = () => {
+  const route = useRoute();
+  const type = route.params?.type;
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
+  // console.warn(type);
 
   const handleQuery = (query) => {
     setSearch(query);
@@ -69,9 +73,10 @@ const Vehicles = () => {
       
 
       {/* 3rd  */}
-      <View style={styles.contView}>
-        <VehicleRecords dsearch={search} />
-      </View>
+      
+      <View contentContainerStyle={styles.contView}>
+      <VehicleRecords dsearch={search} type={type} />
+    </View>
 
 
 
@@ -100,22 +105,7 @@ const Vehicles = () => {
           <View
             style={styles.filt}
           >
-            {/* <Image
-            style={[
-              styles.materialSymbolsarrowRightAIcon,
-              styles.materialIconLayout,
-            ]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolsarrowrightaltrounded.png")}
-          />
-          <Image
-            style={[
-              styles.materialSymbolsarrowRightAIcon1,
-              styles.materialIconLayout,
-            ]}
-            contentFit="cover"
-            source={require("../assets/materialsymbolsarrowrightaltrounded1.png")}
-          /> */}
+            
             <Text style={[styles.filter, styles.text5Typo]}>Filter</Text>
           </View>
         </View>
@@ -151,6 +141,7 @@ const Vehicles = () => {
         source={require("../assets/mask-group.png")}
       />
       <View>
+
       <Pressable
         style={[styles.groupWrapper, styles.groupLayoutt]}
         onPress={() => navigation.navigate("AddVehicle")}
@@ -183,10 +174,14 @@ const styles = StyleSheet.create({
     padding: 6,
     top: -50,
     right: 5,
+    
   },
   contView: {
     top: 250,
     left: 5,
+    flex:1,
+    backgroundColor:'red',
+
   },
 
 
@@ -230,7 +225,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 120,
     left: 280,
-    top: -350,
+    top: -672,
 
   },
   groupInnerLayout: {

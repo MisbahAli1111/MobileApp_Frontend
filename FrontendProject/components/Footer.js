@@ -38,7 +38,7 @@ function Footer(props) {
     navigation.navigate("MaintenanceRecord");
   }
   function handleVehiclePress() {
-    navigation.navigate("Vehicles");
+    navigation.navigate("Vehicles",{type:'default'});
   }
   function handleAddRecord() {
     navigation.navigate("AddRecord");

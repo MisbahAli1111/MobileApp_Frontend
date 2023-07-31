@@ -1,15 +1,17 @@
 import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, View, Text, ScrollView,TouchableOpacity, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 
-function VehicleRecords({dsearch}) {
+function VehicleRecords({dsearch,type}) {
     const navigation = useNavigation();
     const [search, setSearch] = useState('');
+    const [VehicleType, setVehicleType] = useState('');
+    
     const [data, setData] = useState([]);
     const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
     
@@ -20,6 +22,7 @@ function VehicleRecords({dsearch}) {
             ownerName: "Ali",
             contact: "+9223213515",
             registrationNumber: "SDs5454",
+            type:"Car",
         },
         {
             id: "sf52sdf",
@@ -27,6 +30,7 @@ function VehicleRecords({dsearch}) {
             ownerName: "Maaz",
             contact: "+9223213515",
             registrationNumber: "f524sdf",
+            type:"Bike",
         },
         {
             id: "s6df4s6",
@@ -34,27 +38,91 @@ function VehicleRecords({dsearch}) {
             ownerName: "Maaz",
             contact: "+9223213515",
             registrationNumber: "sdf52f",
+            type:"Car",
+        },
+        {
+            id: "as52ds74",
+            vehicleName: "TRUCK 2023",
+            ownerName: "Khan",
+            contact: "+9223213515",
+            registrationNumber: "sd52sfds",
+            type:"Truck",
+        },
+        {
+            id: "as52ds74",
+            vehicleName: "TRUCK 2023",
+            ownerName: "Khan",
+            contact: "+9223213515",
+            registrationNumber: "sd52sfds",
+            type:"Truck",
+        },
+        {
+            id: "as52ds74",
+            vehicleName: "TRUCK 2023",
+            ownerName: "Khan",
+            contact: "+9223213515",
+            registrationNumber: "sd52sfds",
+            type:"Truck",
+        },
+        {
+            id: "as52ds74",
+            vehicleName: "TRUCK 2023",
+            ownerName: "Khan",
+            contact: "+9223213515",
+            registrationNumber: "sd52sfds",
+            type:"Truck",
         },
     ];
 
-    const displayedVehicles = search ? data : vehicles;
+    const displayedVehicles = useMemo(() => {
+        if (search) {
+          return data;
+        } else {
+          if (VehicleType!='default') {
+            return vehicles.filter((vehicle) => vehicle.type === VehicleType);
+          } else {
+            return vehicles;
+          }
+        }
+      }, [search, data, vehicles, VehicleType]);
+
 
     const handlePress = (index, vehicleId) => {
         setCurrentPressedIndex(index);
         //   navigation.navigate("MaintenanceDetailView",{recordId:recordId});
     };
+
     useEffect(() => {
         setSearch(dsearch);
         const formattedQuery = dsearch.trim().toUpperCase();
-        const maintained=vehicles.filter((list) => list.vehicleName.includes(formattedQuery))
-        setData(maintained);
-      }, [dsearch]);
+      
+        if (VehicleType === "default") {
+          const maintained = vehicles.filter(
+            (vehicle) =>
+              vehicle.vehicleName.includes(formattedQuery) &&
+              (vehicle.type === "Car" || vehicle.type === "Bike" ||  vehicle.type === "Truck" ||vehicle.type === "Auto")
+          );
+          setData(maintained);
+        } else {
+          const maintained = vehicles.filter(
+            (vehicle) =>
+              vehicle.vehicleName.includes(formattedQuery) &&
+              vehicle.type === VehicleType
+          );
+          setData(maintained);
+        }
+      }, [dsearch, VehicleType]);
+      
+
+      useEffect(() => {
+        setVehicleType(type);
+        
+      }, [type]);
 
     return (
 
-        <ScrollView>
+        <ScrollView style={styles.scroll}>
             {displayedVehicles.map((vehicle, index) => (
-
                 <Pressable
                 style={[styles.groupFrame, styles.groupParentLayout]}
                     onPress={() => handlePress(index, vehicle.id)}
@@ -148,7 +216,11 @@ function VehicleRecords({dsearch}) {
 }
 const styles = StyleSheet.create({
 
-
+    scroll:{
+        marginTop:240,
+        height:538,
+       
+    },
     image2IconPosition: {
         width: 430,
         left: -5,

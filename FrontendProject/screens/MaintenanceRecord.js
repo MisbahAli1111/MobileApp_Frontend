@@ -136,15 +136,15 @@ const MaintenanceRecord = () => {
       />
 
  
-      <View>
+  <View style={styles.cont}>
       <Footer  prop={"MaintenanceRecord"} />
-      </View>     
+      </View>
 
     <View style={styles.boxContianer}>
     <MaintenanceRecordList dsearch={search} />
       </View>
-     
- 
+      
+      
     </View>
     
 
@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
     },
     left: 0,
   },
-
 
 
   boxContianer :{

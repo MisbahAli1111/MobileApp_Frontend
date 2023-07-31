@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View,Button, Text, Pressable, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
@@ -69,31 +69,78 @@ return (
       </Text>
       <Text style={styles.text2}>009</Text>
       {/* car , bike, auto.. */}
+      
+      {/* car  */}
+      <TouchableOpacity
+      onPress={() =>navigation.navigate('Vehicles',{type:'Car'})}
+      activeOpacity={0.5}
+      >
       <LinearGradient
         style={[styles.rectangleLineargradient, styles.homeChild1Layout]}
         locations={[0, 1]}
         colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
       />
       <Text style={[styles.car, styles.carTypo]}>Car</Text>
+      <Image
+        style={styles.pngwing3Icon}
+        contentFit="cover"
+        source={require("../assets/pngwing-3.png")}
+      />
+      </TouchableOpacity>
+      
+      {/* bike  */}
+      <TouchableOpacity
+      onPress={() =>navigation.navigate('Vehicles',{type:'Bike'})}
+      activeOpacity={0.5}
+      >
+      <Image
+        style={[styles.pngwing1Icon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/pngwing-1.png")}
+      />
       <LinearGradient
-        style={[styles.homeChild1, styles.homeChild1Layout]}
+        style={[styles.homeChild1, styles.homeChild1Layoutt]}
         locations={[0, 1]}
         colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
       />
+       <Text style={[styles.bike, styles.bikeLayout]}>Bike</Text>
+     </TouchableOpacity>
+
+      {/* truck  */}
+      <TouchableOpacity
+      onPress={() =>navigation.navigate('Vehicles',{type:'Truck'})}
+      activeOpacity={0.5}
+      >
       <LinearGradient
         style={[styles.homeChild2, styles.homeChildLayout]}
         locations={[0, 1]}
         colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
       />
+<Text style={[styles.truck, styles.autoTypo]}>Truck</Text>
+<Image
+        style={[styles.pngwing2Icon, styles.groupChildLayout2]}
+        contentFit="cover"
+        source={require("../assets/pngwing-2.png")}
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>navigation.navigate('Vehicles',{type:'Auto'})}
+      activeOpacity={0.5}
+      >
+      {/* auto  */}
       <LinearGradient
         style={[styles.homeChild3, styles.homeChildLayout]}
         locations={[0, 1]}
         colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
       />
-      
-      <Text style={[styles.bike, styles.bikeLayout]}>Bike</Text>
-      <Text style={[styles.truck, styles.autoTypo]}>Truck</Text>
       <Text style={[styles.auto, styles.autoTypo]}>Auto</Text>
+      <Image
+        style={[styles.pngegg1Icon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/pngegg-1.png")}
+      />
+      </TouchableOpacity>
       <View style={styles.lineParent}>
         <View style={styles.groupItem} />
         <View style={[styles.groupInner, styles.groupPosition]} />
@@ -125,31 +172,15 @@ return (
         <View style={[styles.groupChild13, styles.groupChildPosition6]} />
         <View style={[styles.groupChild14, styles.childPosition]} />
       </View>
-      <Image
-        style={[styles.pngwing1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/pngwing-1.png")}
-      />
-      <Image
-        style={[styles.pngwing2Icon, styles.groupChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/pngwing-2.png")}
-      />
-      <Image
-        style={styles.pngwing3Icon}
-        contentFit="cover"
-        source={require("../assets/pngwing-3.png")}
-      />
+      
+      
+      
       <Image
         style={[styles.users1Icon, styles.iconLayout3]}
         contentFit="cover"
         source={require("../assets/users-1.png")}
       />
-      <Image
-        style={[styles.pngegg1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/pngegg-1.png")}
-      />
+      
       
      
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
@@ -247,9 +278,17 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
+  homeChild1Layoutt: {
+    backgroundColor: "transparent",
+    width: 83,
+    top: 600,
+    borderRadius: Border.br_5xs,
+    position: "absolute",
+  },
+
   carTypo: {
     height: 19,
-    top: 713,
+    top: 710,
     textAlign: "center",
     color: Color.darkslateblue,
     fontSize: FontSize.size_base,
@@ -260,7 +299,7 @@ const styles = StyleSheet.create({
     width: 84,
     backgroundColor: "transparent",
     height: 79,
-    top: 620,
+    top: 600,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
@@ -275,7 +314,7 @@ const styles = StyleSheet.create({
   autoTypo: {
     width: 46,
     height: 19,
-    top: 713,
+    top: 690,
     textAlign: "center",
     color: Color.darkslateblue,
     fontSize: FontSize.size_base,
@@ -547,7 +586,6 @@ const styles = StyleSheet.create({
   car: {
     left: 49,
     width: 30,
-    top:40
     //position: "absolute",
   },
   homeChild1: {
@@ -564,14 +602,14 @@ const styles = StyleSheet.create({
     left: 321,
   },
   pngwing1Icon: {
-    top: 655,
+    top: 635,
     left: 140,
     width: 48,
   },
   bike: {
     left: 146,
     height: 19,
-    top: 710,
+    top: 690,
     textAlign: "center",
     color: Color.darkslateblue,
     fontSize: FontSize.size_base,
@@ -772,12 +810,12 @@ const styles = StyleSheet.create({
     width: 372,
   },
   pngwing2Icon: {
-    top: 655,
+    top: 635,
     width: 87,
     left: 221,
   },
   pngwing3Icon: {
-    top: 665,
+    top: 662,
     left: 23,
     width: 82,
     height: 34,
@@ -787,7 +825,7 @@ const styles = StyleSheet.create({
     left: 306,
   },
   pngegg1Icon: {
-    top: 658,
+    top: 635,
     left: 332,
     width: 56,
   },
