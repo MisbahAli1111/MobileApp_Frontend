@@ -5,6 +5,7 @@ import { StyleSheet, Text,TextInput, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 
 const BusinessInfo = () => {
@@ -21,9 +22,6 @@ const BusinessInfo = () => {
   const [nameFocused, setNameFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [locationFocused, setlocationFocused] = useState(false);
-  const [cityFocused, setCityFocused] = useState(false);
-  const [countryFocused, setCountryFocused] = useState(false);
-  const [countryCodeFocused,setCountryCodeFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
 
   const handleSignUp = () => {
@@ -35,6 +33,40 @@ const BusinessInfo = () => {
       Alert.alert('Fill All fields');
     }
   };
+
+  const [countryShowDropdown, setCountryShowDropdown] = useState(false);
+  const [cityShowDropdown, setCityShowDropdown] = useState(false);
+  const [codeShowDropdown, setCodeShowDropdown] = useState(false);
+  const countries = ['Pakistan' , 'India' ,'China' ,'USA' ,'England'];
+    const countryCodes = ['PK', 'IN', 'CH', 'US', 'UK'];
+    const cities = ['Karachi', 'Lahore', 'Islamabad', 'Mumbai', 'Dehli', 'Bejing','Faisalabad','Miami','Washington','London','New York','Bristol'];
+  
+    const toggleCountryDropdown = () => {
+      setCountryShowDropdown(!countryShowDropdown);
+    };
+
+    const toggleCityDropdown = () => {
+      setCityShowDropdown(!cityShowDropdown);
+    };
+
+    const toggleCodeDropdown = () => {
+      setCodeShowDropdown(!codeShowDropdown);
+    };
+  
+    const handleCountrySelect = (code) => {
+      setCountry(code);
+      setCountryShowDropdown(false);
+    };
+
+    const handleCodeSelect = (code) => {
+      setCountryCode(code);
+      setCodeShowDropdown(false);
+    };
+
+    const handleCitySelect = (code) => {
+      setCity(code);
+      setCityShowDropdown(false);
+    };
 
 
   return (
@@ -86,22 +118,37 @@ const BusinessInfo = () => {
       <TextInput style={[styles.pk, styles.pkPosition]}
       placeholder='PK'
         value={countryCode}
-        maxLength={2}
-        onFocus={() => setCountryCodeFocused(true)}
-        onBlur={() => setCountryCodeFocused(false)}
-        onChangeText={setCountryCode}
+        editable={false}
       />
-      <Image
-        style={styles.vectorIcon}
-        contentFit="cover"
-        source={require("../assets/vector-11.png")}
-      />
+      <Pressable
+      // style={styles.vectorIcon}
+      onPress = {toggleCodeDropdown}>
       
       <Image
         style={styles.vectorIcon}
         contentFit="cover"
         source={require("../assets/vector-21.png")}
       />
+      
+      </Pressable>
+
+      { (
+        <View style={styles.codeClick} >
+        <Picker
+          selectedValue={countryCode}
+          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+        >
+          <Picker.Item   label="Select Country Code" value="PK" />
+          {countryCodes.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
+
+
+
       <Image
         style={[styles.businessInfoInner, styles.businessChildLayout]}
         contentFit="cover"
@@ -120,40 +167,79 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/line-4.png")}
       />
+
+      
       <Image
         style={[styles.businessInfoChild3, styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-71.png")}
       />
+      
       <TextInput style={[styles.karachi, styles.karachiTypo]}
-
-placeholder="city"
-        
-        value={city}
-        onFocus={() => setCityFocused(true)}
-        onBlur={() => setCityFocused(false)}
-        onChangeText={setCity}
+      placeholder="city"
+      value={city}
+      editable={false}
       />
+      
+      <Pressable
+      
+      >
       <Image
         style={[styles.businessInfoChild4, styles.businessChildPosition]}
         contentFit="cover"
         source={require("../assets/vector-6.png")}
       />
+      </Pressable>
+    
+      { 
+        <View  style={styles.CityClick}>
+        <Picker
+          selectedValue={city}
+          onValueChange={(itemValue) => handleCitySelect(itemValue)}
+        >
+          <Picker.Item    label="Select City" value="Karachi" />
+          {cities.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      }
+
+
+
+      
       <TextInput style={[styles.pakistan, styles.karachiTypo]}
        
         placeholder="country"
         
         value={country}
-        onFocus={() => setCountryFocused(true)}
-        onBlur={() => setCountryFocused(false)}
-        onChangeText={setCountry}
-
+       editable={false}
       />
+      <Pressable
+       
+      onPress={toggleCountryDropdown}>
       <Image
-        style={[styles.businessInfoChild5, styles.businessChildPosition]}
+        style={[styles.businessInfoChild5, styles.businnessChildPosition]}
         contentFit="cover"
         source={require("../assets/vector-7.png")}
       />
+      </Pressable>
+      {(
+        <View style={styles.CountryClick} >
+        <Picker
+          selectedValue={country}
+          onValueChange={(itemValue) => handleCountrySelect(itemValue)}
+        >
+          <Picker.Item  label="Select Country " value="Pakistan" />
+          {countries.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
+
+
       <Text style={[styles.businessInfo1, styles.nextTypo]}>Business Info</Text>
       <Text
         style={[styles.letsRegister, styles.letsPosition]}
@@ -237,8 +323,20 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     position: "absolute",
   },
+  cityTouch:{
+    top: 500,
+    height: 10,
+    width: 16,
+    position: "absolute",
+  },
   businessChildPosition: {
-    top: 528,
+    top: 445,
+    height: 10,
+    width: 16,
+    position: "absolute",
+  },
+  businnessChildPosition: {
+    top: 393,
     height: 10,
     width: 16,
     position: "absolute",
@@ -312,12 +410,20 @@ const styles = StyleSheet.create({
   pk: {
     color: Color.textTxtPrimary,
   },
+  PkPress: {
+    top: 570,
+    left: 87,
+    height: 20,
+    width: 16,
+    position: "absolute",
+  },
   vectorIcon: {
-    top: 595,
+    top: 566,
     left: 83,
     height: 10,
     width: 16,
     position: "absolute",
+    overflow:"hidden",
   },
   pk1: {
     color: Color.darkslateblue,
@@ -333,19 +439,36 @@ const styles = StyleSheet.create({
     top: 560,
   },
   karachi: {
-    width: 71,
-    left: 56,
+    width: 100,
+    left: 30,
     top: 519,
   },
   businessInfoChild4: {
     left: 131,
+    position:'absolute',
   },
   pakistan: {
     left: 165,
-    width: 78,
+    width: 120,
   },
   businessInfoChild5: {
-    left: 247,
+    left: 290,
+  },
+  CountryClick: {
+    right: -242,
+    top: 372,
+    width:80
+  
+  },
+  CityClick: {
+    right: 248,
+    top: 425,
+    
+  },
+  codeClick:{
+    top: 545,
+    right:297
+
   },
   businessInfo1: {
     top: 281,

@@ -4,14 +4,20 @@ import { TouchableWithoutFeedback, TouchableOpacity, StyleSheet, View, Text, Pre
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from "@react-native-picker/picker";
+
+
+
+
 const AddRecord = () => {
   const navigation = useNavigation();
 
   
   const [details, setDetails] = useState('');
   const [carNumber, setCarNumber] = useState('');
-  const [Date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [date, setDate] = useState(new  Date());
+  const [time, setTime] = useState(new Date());
   const [driven, setDriven] = useState('');
   const [user, setUser] = useState('');
   const [service, setService] = useState('');
@@ -23,6 +29,46 @@ const AddRecord = () => {
   const [UserFocused, setUserFocused] = useState(false);
   const [TimeFocused, setTimeFocused] = useState(false);
   const [ServiceFocused, setServiceFocused] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedCode, setSelectedCode] = useState('');
+  const services = ['Oil and Coolant Level', 'Air Filter', 'Tire Pressure', 'Lights', 'Oil and Filter Change','Rotate tires','Wax Vechile','Transmission Fluid','Spark Plugs','Serpentine Belt','Winshield Wipers','Battery Checkup'];
+
+    const handleDateChange = (event, date) => {
+      setShowDatePicker(false);
+      if (date) {
+        setSelectedDate(date);
+      }
+    };
+  
+    const openDatePicker = () => {
+      setShowDatePicker(true);
+    };
+
+    const handleTimeChange = (event, time) => {
+      setShowTimePicker(false);
+      if (time) {
+        setSelectedTime(time);
+      }
+    };
+  
+    const openTimePicker = () => {
+      setShowTimePicker(true);
+    };
+
+   
+  
+    const toggleDropdown = () => {
+      setShowDropdown(!showDropdown);
+    };
+  
+    const handleCodeSelect = (code) => {
+      setSelectedCode(code);
+      setShowDropdown(false);
+    };
 
 
 
@@ -81,23 +127,21 @@ const AddRecord = () => {
 
 
         <TextInput style={[styles.text2, styles.pmTypo]}
-          placeholder="22 - 02 -1993"
-          value={Date}
-        onFocus={() => setTimeFocused(true)}
-        onBlur={() => setTimeFocused(false)}
-        onChangeText={setDate}
+          value={selectedDate ? selectedDate.toDateString() : ''}
+        placeholder="Select a date"
+        editable={false}
         ></TextInput>
       
       
       <View style={[styles.addRecordItem, styles.addPosition]} />
       <View style={[styles.addRecordInner, styles.addPosition]} />
+
       <TextInput style={[styles.pm, styles.pmTypo]}
         placeholder="06: 00pm"
-        value={time}
-        onFocus={() => setTimeFocused(true)}
-        onBlur={() => setTimeFocused(false)}
-        onChangeText={setTime}
+        value={selectedTime ? selectedTime.toLocaleTimeString() : ''}
+        editable={false}
       ></TextInput>
+      
       <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
         placeholder="Lorita Daniel"
         value={user}
@@ -107,6 +151,7 @@ const AddRecord = () => {
       ></TextInput>
       <TextInput style={[styles.kmDriven, styles.pmTypo]}
         placeholder="KM Driven"
+        keyboardType="numeric"
         value={driven}
         onFocus={() => setDrivenFocused(true)}
         onBlur={() => setDrivenFocused(false)}
@@ -114,10 +159,8 @@ const AddRecord = () => {
       ></TextInput>
       <TextInput style={[styles.oilChange, styles.pmTypo]}
         placeholder="Oil Change"
-        value={service}
-        onFocus={() => setServiceFocused(true)}
-        onBlur={() => setServiceFocused(false)}
-        onChangeText={setService}
+        value={selectedCode}
+        editable={false}
       ></TextInput>
       <View style={[styles.lineView, styles.childLayout]} />
       <View style={[styles.addRecordChild1, styles.childLayout]} />
@@ -145,13 +188,25 @@ const AddRecord = () => {
         source={require("../assets/group-92.png")}
       />
 
-
+      <Pressable
+        onPress={openDatePicker}
+        >
       <Image
         style={[styles.date2SvgrepoCom11, styles.svgrepoIconLayout1]}
 
         contentFit="cover"
         source={require("../assets/date2svgrepocom-1-1.png")}
       />
+      </Pressable>
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+        )}
+        
 
       
 
@@ -183,17 +238,29 @@ const AddRecord = () => {
           source={require("../assets/camerasvgrepocom-6-1.png")}
         />
       </View>
-
+<Pressable
+onPress={openTimePicker}>
       <Image
         style={[styles.timeOclockSvgrepoCom1Icon, styles.svgrepoIconLayout1]}
         contentFit="cover"
         source={require("../assets/timeoclocksvgrepocom-1.png")}
       />
+</Pressable>
+{showTimePicker && (
+        <DateTimePicker
+          value={selectedTime || new Date()}
+          mode="time"
+          display="default"
+          onChange={handleTimeChange}
+        />
+        )}
+
+
       <Pressable onPress={handleSave}>
         <View style={[styles.vectorParent, styles.groupItemLayout]}>
           <Image
             style={[styles.groupItem, styles.groupItemLayout]}
-            resizeMode="cover"
+            contentFit="cover"
             source={require("../assets/rectangle-73.png")}
           />
           <Text style={styles.save}>Save</Text>
@@ -356,12 +423,29 @@ const AddRecord = () => {
         source={require("../assets/mask-group.png")}
       />
 
-
+      
       <Image
         style={[styles.vectorIcon3, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/vector3.png")}
       />
+      
+      
+      { (
+        <View style={styles.servicesClick} >
+        <Picker
+          selectedValue={selectedCode}
+          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+        >
+          <Picker.Item  label="Select Country Code" value="" />
+          {services.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
+
     </View>
   );
 };
@@ -394,6 +478,7 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
     textAlign: "left",
     position: "absolute",
+    width: 200
   },
   addPosition: {
     height: 2,
@@ -424,6 +509,13 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     position: "absolute",
     overflow: "hidden",
+
+  },
+  servicesClick:{
+    top: 320,
+    width: 590,
+    right: 185
+
 
   },
   container: {
@@ -637,7 +729,7 @@ const styles = StyleSheet.create({
   },
   date2SvgrepoCom11: {
     left: 162,
-    top: 231,
+    top: 180,
     height: 25,
   },
   licensePlateNumberSvgrepoCIcon: {
@@ -673,7 +765,7 @@ const styles = StyleSheet.create({
   },
   timeOclockSvgrepoCom1Icon: {
     left: 371,
-    top: 231,
+    top: 180,
     height: 25,
   },
   groupItem: {

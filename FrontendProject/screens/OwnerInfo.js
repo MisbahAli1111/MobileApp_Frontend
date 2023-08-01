@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from 'react';
 import { Image } from "expo-image";
-
+import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, Text,TextInput, View, Pressable,TouchableOpacity, Alert, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
@@ -28,6 +28,18 @@ const OwnerInfo = () => {
   const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [countryCodeFocused,setCountryCodeFocused] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+    const [selectedCode, setSelectedCode] = useState('');
+    const countryCodes = ['PK', 'IN', 'CH', 'US', 'UK'];
+  
+    const toggleDropdown = () => {
+      setShowDropdown(!showDropdown);
+    };
+  
+    const handleCodeSelect = (code) => {
+      setSelectedCode(code);
+      setShowDropdown(false);
+    };
 
   const handleSignUp = () => {
     if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
@@ -125,17 +137,35 @@ const OwnerInfo = () => {
       />
       <TextInput style={[styles.pk, styles.pkPosition]}
       placeholder='PK'
-        value={countryCode}
-        maxLength={2}
-        onFocus={() => setCountryCodeFocused(true)}
-        onBlur={() => setCountryCodeFocused(false)}
-        onChangeText={setCountryCode}
+        value={selectedCode}
+        editable={false}
       />
+      <Pressable
+      style={styles.countryCode}
+       onPress={toggleDropdown}
+      >
       <Image
         style={[styles.vectorIcon, styles.vectorIconLayout]}
         contentFit="cover"
         source={require("../assets/vector-12.png")}
       />
+      </Pressable>
+
+
+      { (
+        <View style={styles.code} >
+        <Picker
+          selectedValue={selectedCode}
+          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+        >
+          <Picker.Item  label="Select Country Code" value="" />
+          {countryCodes.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
       <TextInput style={[styles.text2, styles.textPosition]}
       placeholder="Phone Number"
         value={phoneNumber}
@@ -255,6 +285,13 @@ const styles = StyleSheet.create({
     left: "12.79%",
     position: "absolute",
   },
+  code:
+  {
+    width:80,
+    top:445,
+    left:31.5,
+
+  },
   textTypo: {
     height: "2.9%",
     textAlign: "left",
@@ -299,6 +336,18 @@ const styles = StyleSheet.create({
     top: "49.81%",
     width: "3.81%",
     height: "0.98%",
+    maxHeight: "100%",
+    maxWidth: "100%",
+    position: "absolute",
+    overflow: "hidden",
+  },
+  countryCode: {
+    height: "20%",
+    width: "20%",
+    top: "36.51%",
+    right: "85.19%",
+    bottom: "62.51%",
+    left: "11.23%",
     maxHeight: "100%",
     maxWidth: "100%",
     position: "absolute",
@@ -434,7 +483,7 @@ const styles = StyleSheet.create({
   },
   vectorIcon1: {
     height: 15,
-    top: 590,
+    top: 537,
   },
   touchableOpacity:{
     position: 'absolute',
@@ -448,7 +497,7 @@ const styles = StyleSheet.create({
    
   vectorIcon2: {
     height: 15,
-    top: 650,
+    top: 605,
     
   },
   rectangleView: {
@@ -461,7 +510,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupIcon: {
-    top: 44,
+    top: 0,
     height: 80,
   },
   groupChild: {

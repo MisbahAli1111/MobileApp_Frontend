@@ -1,11 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
 import { Image } from "expo-image";
-import { Pressable, StyleSheet, Text, TextInput,View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput,View} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { Alert } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const AddEmployee = () => {
   const navigation = useNavigation();
@@ -17,9 +18,7 @@ const AddEmployee = () => {
   const[ConfirmPassword,setConfirmPassword] = useState('');
   const[phoneNumber,setPhonenumber] = useState('');
   const[passwordVisible,setPasswordVisible] = useState(true);
-  const[countryCode,setCountryCode] = useState('');
   const[ConfirmPasswordVisible,setConfirmPasswordVisible] = useState(true);
-
 
   const [nameFocused, setNameFocused] = useState(false);
   const [cnicFocused, setcnicFocused] = useState(false);
@@ -27,24 +26,38 @@ const AddEmployee = () => {
   const [PasswordFocused, setPasswordFocused] = useState(false);
   const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
-  const [countryCodeFocused,setCountryCodeFocused] = useState(false);
 
   
   const handleSignUp = () => {
-    console.warn(name);
-    // if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
-    // {
+    // console.warn(name);
+    if(name && cnic && email && Password && ConfirmPassword && phoneNumber && selectedCode && Password === ConfirmPassword)
+    {
     
-    //   navigation.navigate('Home');
-    // }
-    // else if(Password !== ConfirmPassword)
-    // {
-    //   Alert.alert('Password and Confirm Password should be same.')
-    // }
-    // else{
-    //   Alert.alert('Fill all Fields')
-    // }
+      navigation.navigate('Home');
+    }
+    else if(Password !== ConfirmPassword)
+    {
+      Alert.alert('Password and Confirm Password should be same.')
+    }
+    else{
+      Alert.alert('Fill all Fields')
+    }
   };
+
+   //Country Code
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [selectedCode, setSelectedCode] = useState('');
+    const countryCodes = ['PK', 'IN', 'SA', 'US', 'UK'];
+  
+    const toggleDropdown = () => {
+      setShowDropdown(!showDropdown);
+    };
+  
+    const handleCodeSelect = (code) => {
+      setSelectedCode(code);
+      setShowDropdown(false);
+    };
+
 
   return (
     <View style={styles.addEmployee}>
@@ -108,11 +121,8 @@ const AddEmployee = () => {
       />
       <TextInput style={styles.pk}
         placeholder='PK'
-        maxLength={2}
-        value={countryCode}
-        onFocus={() => setCountryCodeFocused(true)}
-        onBlur={() => setCountryCodeFocused(false)}
-        onChangeText={setCountryCode}
+        value={selectedCode}
+        editable={false}
       />
       <Image
         style={styles.addEmployeeChild}
@@ -150,14 +160,33 @@ const AddEmployee = () => {
         source={require("../assets/line-3.png")}
       />
       
-      
+      <Pressable 
+      style={styles.countryCode}
+      onPress={toggleDropdown}
+      >
       <Image
         
         style={styles.addEmployeeChild}
         contentFit="cover"
         source={require("../assets/vector-2.png")}
       />
+      </Pressable>
       
+      {showDropdown && (
+        <View style={styles.addEmployeeChild} >
+        <Picker
+          selectedValue={selectedCode}
+          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+        >
+          <Picker.Item style={styles.addEmployeeChild} label="Select Country Code" value="" />
+          {countryCodes.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
+
 
       
       <Image
@@ -342,6 +371,18 @@ const styles = StyleSheet.create({
   addEmployeeChild: {
     height: "0.98%",
     width: "3.58%",
+    top: "36.51%",
+    right: "85.19%",
+    bottom: "62.51%",
+    left: "11.23%",
+    maxHeight: "100%",
+    maxWidth: "100%",
+    position: "absolute",
+    overflow: "hidden",
+  },
+  countryCode: {
+    height: "20%",
+    width: "20%",
     top: "36.51%",
     right: "85.19%",
     bottom: "62.51%",

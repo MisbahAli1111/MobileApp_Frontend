@@ -1,21 +1,35 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View,Button, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Button, Text, Pressable, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
 import Footer from "../components/Footer";
+// import { BarChart } from 'react-native-chart-kit';
+
+import DashboardGraph from "../components/DashboardGraph";
 const Home = () => {
   const navigation = useNavigation();
-//data=[];
-const invoices=null;
-//const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
-   
-return (
+  //data=[];
+  const invoices = null;
+  //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
+
+  const data = {
+    labels: ["January", "February", "March", "April", "May", "June"],
+    datasets: [
+      {
+        data: [20, 45, 28, 80, 99, 43]
+      }
+    ]
+  };
+
+
+
+  return (
     <View style={styles.home}>
-      
+
       <Image
         style={[styles.lightTexture22341Icon, styles.iconPosition1]}
         contentFit="cover"
@@ -48,14 +62,14 @@ return (
           style={[styles.groupChild, styles.groupChildLayout2]}
           onPress={() => navigation.navigate("MaintenanceRecord")}
         />
-       <TextInput
-        style={[styles.searchRecordAbc123, styles.text1Typo]}
-        placeholder="Search Record"
-      />
+        <TextInput
+          style={[styles.searchRecordAbc123, styles.text1Typo]}
+          placeholder="Search Record"
+        />
         <Pressable
           style={styles.vector}
           onPress={() => navigation.navigate("MaintenanceRecord")}
-         >
+        >
           <Image
             style={[styles.icon, styles.iconLayout1]}
             contentFit="cover"
@@ -64,125 +78,121 @@ return (
         </Pressable>
       </View>
       <View style={[styles.homeInner, styles.homeInnerLayout]} />
-      <Text style={[styles.vehiclesMaintained, styles.dashboardTypo]}>
-        Vehicles Maintained
-      </Text>
-      <Text style={styles.text2}>009</Text>
+
+      <View style={styles.lineParent}>
+      {/* <BarChart
+        data={data}
+        width={300}
+        height={220}
+        chartConfig={{
+          backgroundGradientFrom: '#1E2923',
+          backgroundGradientFromOpacity: 0,
+          backgroundGradientTo: '#08130D',
+          backgroundGradientToOpacity: 0.5,
+          color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+          strokeWidth: 2, // optional, default 3
+          barPercentage: 0.5,
+          useShadowColorFromDataset: false // optional
+        }}
+        /> */}
+      </View>
+
+
       {/* car , bike, auto.. */}
-      
+
       {/* car  */}
       <TouchableOpacity
-      onPress={() =>navigation.navigate('Vehicles',{type:'Car'})}
-      activeOpacity={0.5}
+        onPress={() => navigation.navigate('Vehicles', { type: 'Car' })}
+        activeOpacity={0.5}
       >
-      <LinearGradient
-        style={[styles.rectangleLineargradient, styles.homeChild1Layout]}
-        locations={[0, 1]}
-        colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-      />
-      <Text style={[styles.car, styles.carTypo]}>Car</Text>
-      <Image
-        style={styles.pngwing3Icon}
-        contentFit="cover"
-        source={require("../assets/pngwing-3.png")}
-      />
+        <LinearGradient
+          style={[styles.rectangleLineargradient, styles.homeChild1Layout]}
+          locations={[0, 1]}
+          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
+        />
+        <Text style={[styles.car, styles.carTypo]}>Car</Text>
+        <Image
+          style={styles.pngwing3Icon}
+          contentFit="cover"
+          source={require("../assets/pngwing-3.png")}
+        />
       </TouchableOpacity>
-      
+
       {/* bike  */}
       <TouchableOpacity
-      onPress={() =>navigation.navigate('Vehicles',{type:'Bike'})}
-      activeOpacity={0.5}
+        onPress={() => navigation.navigate('Vehicles', { type: 'Bike' })}
+        activeOpacity={0.5}
       >
-      <Image
-        style={[styles.pngwing1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/pngwing-1.png")}
-      />
-      <LinearGradient
-        style={[styles.homeChild1, styles.homeChild1Layoutt]}
-        locations={[0, 1]}
-        colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-      />
-       <Text style={[styles.bike, styles.bikeLayout]}>Bike</Text>
-     </TouchableOpacity>
+        <Image
+          style={[styles.pngwing1Icon, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/pngwing-1.png")}
+        />
+        <LinearGradient
+          style={[styles.homeChild1, styles.homeChild1Layoutt]}
+          locations={[0, 1]}
+          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
+        />
+        <Text style={[styles.bike, styles.bikeLayout]}>Bike</Text>
+      </TouchableOpacity>
 
       {/* truck  */}
       <TouchableOpacity
-      onPress={() =>navigation.navigate('Vehicles',{type:'Truck'})}
-      activeOpacity={0.5}
+        onPress={() => navigation.navigate('Vehicles', { type: 'Truck' })}
+        activeOpacity={0.5}
       >
-      <LinearGradient
-        style={[styles.homeChild2, styles.homeChildLayout]}
-        locations={[0, 1]}
-        colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-      />
-<Text style={[styles.truck, styles.autoTypo]}>Truck</Text>
-<Image
-        style={[styles.pngwing2Icon, styles.groupChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/pngwing-2.png")}
-      />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>navigation.navigate('Vehicles',{type:'Auto'})}
-      activeOpacity={0.5}
-      >
-      {/* auto  */}
-      <LinearGradient
-        style={[styles.homeChild3, styles.homeChildLayout]}
-        locations={[0, 1]}
-        colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-      />
-      <Text style={[styles.auto, styles.autoTypo]}>Auto</Text>
-      <Image
-        style={[styles.pngegg1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/pngegg-1.png")}
-      />
+        <LinearGradient
+          style={[styles.homeChild2, styles.homeChildLayout]}
+          locations={[0, 1]}
+          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
+        />
+        <Text style={[styles.truck, styles.autoTypo]}>Truck</Text>
+        <Image
+          style={[styles.pngwing2Icon, styles.groupChildLayout2]}
+          contentFit="cover"
+          source={require("../assets/pngwing-2.png")}
+        />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Vehicles', { type: 'Auto' })}
+        activeOpacity={0.5}
+      >
+        {/* auto  */}
+        <LinearGradient
+          style={[styles.homeChild3, styles.homeChildLayout]}
+          locations={[0, 1]}
+          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
+        />
+        <Text style={[styles.auto, styles.autoTypo]}>Auto</Text>
+        <Image
+          style={[styles.pngegg1Icon, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/pngegg-1.png")}
+        />
+      </TouchableOpacity>
+
+      {/* // graph */}
+      {/* <Text style={[styles.vehiclesMaintained, styles.dashboardTypo]}>
+        Vehicles Maintained
+      </Text>
+      <Text style={styles.text2}>009</Text> */}
+
       <View style={styles.lineParent}>
-        <View style={styles.groupItem} />
-        <View style={[styles.groupInner, styles.groupPosition]} />
-        <View style={[styles.lineView, styles.groupPosition]} />
-        <View style={[styles.groupChild1, styles.groupPosition]} />
-        <Text style={[styles.m, styles.mTypo]}>M</Text>
-        <Text style={[styles.t, styles.groupChildLayout1]}>T</Text>
-        <Text style={[styles.w, styles.mTypo]}>W</Text>
-        <Text style={[styles.t1, styles.mTypo]}>T</Text>
-        <Text style={[styles.f, styles.mTypo]}>F</Text>
-        <Text style={[styles.s, styles.mTypo]}>S</Text>
-        <Text style={[styles.s1, styles.groupChildPosition7]}>S</Text>
-        <Text style={[styles.text3, styles.textTypo]}>300</Text>
-        <Text style={[styles.text4, styles.textTypo]}>200</Text>
-        <Text style={[styles.text5, styles.textTypo]}>200</Text>
-        <Text style={styles.text6}>0</Text>
-        <View style={[styles.rectangleView, styles.groupChildPosition6]} />
-        <View style={[styles.groupChild2, styles.groupChildPosition6]} />
-        <View style={[styles.groupChild3, styles.groupChildPosition4]} />
-        <View style={[styles.groupChild4, styles.groupChildPosition3]} />
-        <View style={[styles.groupChild5, styles.groupChildPosition6]} />
-        <View style={[styles.groupChild6, styles.groupChildLayout]} />
-        <View style={[styles.groupChild7, styles.groupChildPosition2]} />
-        <View style={[styles.groupChild8, styles.groupChildPosition1]} />
-        <View style={[styles.groupChild9, styles.groupChildPosition]} />
-        <View style={[styles.groupChild10, styles.groupChildPosition]} />
-        <View style={[styles.groupChild11, styles.groupChildPosition2]} />
-        <View style={[styles.groupChild12, styles.groupChildPosition1]} />
-        <View style={[styles.groupChild13, styles.groupChildPosition6]} />
-        <View style={[styles.groupChild14, styles.childPosition]} />
+
+
       </View>
-      
-      
-      
+
+
+
       <Image
         style={[styles.users1Icon, styles.iconLayout3]}
         contentFit="cover"
         source={require("../assets/users-1.png")}
       />
-      
-      
-     
+
+
+
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
       <View style={[styles.homeChild8, styles.childPosition]} />
       {/* top face icon */}
@@ -194,20 +204,20 @@ return (
       {/* Dashboard */}
       <Text style={[styles.dashboard, styles.dashboardTypo]}>Dashboard</Text>
       {/* backicon top */}
-  
-<TouchableWithoutFeedback onPressIn={() => navigation.navigate("SwitchBusiness")}>
-  <Image
-    style={[styles.vectorIcon, styles.iconLayout1]}
-    contentFit="cover"
-    source={require("../assets/vector2.png")}
-  />
-</TouchableWithoutFeedback>
 
-<View style={[styles.cont]}>
-<Footer  prop={"Home"} data={invoices} />
-  </View>
+      <TouchableWithoutFeedback onPressIn={() => navigation.navigate("SwitchBusiness")}>
+        <Image
+          style={[styles.vectorIcon, styles.iconLayout1]}
+          contentFit="cover"
+          source={require("../assets/vector2.png")}
+        />
+      </TouchableWithoutFeedback>
+
+      <View style={[styles.cont]}>
+        <Footer prop={"Home"} data={invoices} />
+      </View>
     </View>
-      );
+  );
 };
 
 const styles = StyleSheet.create({
@@ -219,10 +229,15 @@ const styles = StyleSheet.create({
   homeLayout: {
     width: 186,
     top: 175,
-    
+
     backgroundColor: Color.steelblue_300,
     borderRadius: Border.br_5xs,
     position: "absolute",
+  },
+
+  dashboardd: {
+
+
   },
   textTypo1: {
     color: Color.steelblue_100,
@@ -381,10 +396,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-  cont:{
-    padding:6,
-    top:-35,
-    right:5,
+  cont: {
+    padding: 6,
+    top: -35,
+    right: 5,
   },
   groupChildPosition2: {
     height: 63,
@@ -451,7 +466,7 @@ const styles = StyleSheet.create({
     height: 104,
     width: 104,
     top: 720,
-    left:0,
+    left: 0,
     position: "absolute",
   },
   lightTexture22341Icon: {
@@ -803,6 +818,11 @@ const styles = StyleSheet.create({
     width: 358,
     height: 138,
     position: "absolute",
+    flex: 1,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+
   },
   groupIcon: {
     top: 3,
@@ -873,7 +893,7 @@ const styles = StyleSheet.create({
   iconLayout2: {
     height: "100%",
     width: "100%",
-    right:2
+    right: 2
   },
   container: {
     left: 98,
