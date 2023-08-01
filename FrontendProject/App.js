@@ -49,11 +49,11 @@ const App = () => {
               component={Home}
               options={{ headerShown: false }}
             />
-            {/* <Stack.Screen
+            <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               options={{ headerShown: false }}
-            />*/}
+            />
             <Stack.Screen
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}

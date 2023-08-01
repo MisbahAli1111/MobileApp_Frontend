@@ -76,10 +76,10 @@ const AddRecord = () => {
 
     if (
       details.trim() === '' ||
-      service.trim() === '' ||
+      selectedCode.trim() === '' ||
       carNumber.trim() === '' ||
-      Date.trim() === '' ||
-      time.trim() === '' ||
+      selectedDate.toDateString().trim() === '' ||
+      selectedTime.toLocaleTimeString().trim() === '' ||
       user.trim() === '' ||
       driven.trim() === ''
     ) {
