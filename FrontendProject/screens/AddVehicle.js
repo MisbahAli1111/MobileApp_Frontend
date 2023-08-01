@@ -7,6 +7,10 @@ import { StyleSheet, View, Text, Pressable,TouchableOpacity } from "react-native
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
+import { Picker } from "@react-native-picker/picker";
+
+
+
 const AddVehicle = () => {
   const navigation = useNavigation();
   const [vehicleType, setvehicleType]=React.useState('');
@@ -16,6 +20,33 @@ const AddVehicle = () => {
   const [Vehiclecolor,setvehiclecolor]=useState("");
   const [phoneNumber, setphoneNumber]=useState('');
   const [km, setKm]=useState('');
+
+  //const [showDropdown, setShowDropdown] = useState(false);
+    const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
+    const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
+    const colorCategories = [
+      "Black", "White", "Silver", "Gray", "Red", "Blue", "Green", "Yellow",
+      "Orange", "Brown", "Purple", "Pink", "Gold", "Beige", "Teal", "Navy"
+    ];
+  
+    
+  
+    const handleVechileTypeSelect = (code) => {
+      setvehicleType(code);
+      
+    };
+
+    const handleVechileModelSelect = (code) => {
+      setvehicleModel(code);
+      
+    };
+
+    const handleVechileColorSelect = (code) => {
+      setvehiclecolor(code);
+      
+    };
+
+
  function saveVehicle()
  {
   if(vehicleModel && vehicleType && Registration && name && vehicleModel  && Vehiclecolor
@@ -72,11 +103,14 @@ function handleHomePress() {
         source={require("../assets/image-2.png")}
       />
       <View style={[styles.housefill, styles.housefillFlexBox]}>
+      <Pressable
+      onPress={() => navigation.navigate("Home")}>
         <Image
           style={styles.homeMutedIcon}
           contentFit="cover"
           source={require("../assets/homemuted.png")}
         />
+        </Pressable>
       </View>
       <View style={styles.elementPosition} />
       <View style={styles.elementPosition}>
@@ -88,11 +122,14 @@ function handleHomePress() {
         </Text>
         <Text style={[styles.text1, styles.textTypo]}>\</Text>
       </View>
+      <Pressable
+      onPress={() => navigation.navigate("Vehicles") }>
       <Image
         style={[styles.addVehicleChild, styles.iconLayout1]}
         contentFit="cover"
         source={require("../assets/rectangle-57.png")}
       />
+      </Pressable>
       <View style={styles.addVehicleItem} />
       <Text style={[styles.addVehicle2, styles.uploadTypo]}>Add Vehicle</Text>
       <Image
@@ -128,31 +165,64 @@ function handleHomePress() {
         <View style={styles.vehicleTypeParent}>
           <TextInput
             style={[styles.vehicleType, styles.vehicleTypo] }
-            placeholder="Vehicle Type"
-            onChange={setvehicleType}
+            placeholder="Vehicle Type   "
+            
+        value={vehicleType}
+        editable={false}
           ></TextInput>
           <View style={styles.carParent}>
-          {/* <Text style={[styles.car, styles.vehicleTypo]}>{`Car `}</Text> */}
+          
             <Image
               style={[styles.frameChild, styles.childLayout]}
               contentFit="cover"
               source={require("../assets/vector-61.png")}
             />
+          
+            { (
+        <View  style={styles.vechilePicker}>
+        <Picker
+          selectedValue={vehicleType}
+          onValueChange={(itemValue) =>handleVechileTypeSelect(itemValue)}
+        >
+          <Picker.Item label="Select Vehicle Type" value="" />
+          {vehicleCategories.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
+
           </View>
         </View>
       </View>
       <View style={[styles.lineView, styles.childBorder]} />
       <View style={[styles.addVehicleChild1, styles.childBorder]} />
-      <TextInput style={[styles.vehicleModel, styles.vehicleTypo]}    onChange={setvehicleModel} placeholder="Modal ">
-   
-
-      </TextInput>
+      <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
+      placeholder="Modal "
+      value={vehicleModel}
+      editable={false}  
+        />
       {/* <Text style={[styles.text2, styles.vehicleTypo]}>{`2011 `}</Text> */}
       <Image
         style={[styles.addVehicleChild2, styles.childLayout]}
         contentFit="cover"
         source={require("../assets/vector-61.png")}
       />
+      {(
+      <View  style={styles.vehicleModelPicker}>
+        <Picker
+          selectedValue={vehicleModel}
+          onValueChange={(itemValue) =>handleVechileModelSelect(itemValue)}
+        >
+          <Picker.Item label="Select Vehicle Model" value="" />
+          {modelCategories.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
       <View style={[styles.frameParent, styles.lineParentLayout]}>
         <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
@@ -167,16 +237,37 @@ function handleHomePress() {
         <View style={[styles.groupItem, styles.savePosition]} />
         <View style={styles.frameContainer}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setvehiclecolor}  placeholder="Vehicle Color     ">
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
+              placeholder="Vehicle Color   " 
+              value={Vehiclecolor}
+              editable={false}
+
+
+              />
               
-            </TextInput>
-            <View style={styles.carParent}>
+            
+            <View style={styles.carParent1}>
               {/* <Text style={[styles.car, styles.vehicleTypo]}>Black</Text> */}
               <Image
                 style={[styles.frameChild, styles.childLayout]}
                 contentFit="cover"
                 source={require("../assets/vector-61.png")}
               />
+              
+             {( <View  style={styles.vechileColor}>
+        <Picker
+          selectedValue={Vehiclecolor}
+          onValueChange={(itemValue) =>handleVechileColorSelect(itemValue)}
+        >
+          <Picker.Item label="Select Vehicle Colour" value="" />
+          {colorCategories.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+
+
             </View>
           </View>
         </View>
@@ -195,7 +286,8 @@ function handleHomePress() {
         <View style={[styles.groupInner, styles.groupInnerLayout]} />
         <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setKm} placeholder="Km Driven   ">
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setKm} placeholder="Km Driven   "
+            keyboardType="numeric">
              
             </TextInput>
           </View>
@@ -205,7 +297,10 @@ function handleHomePress() {
       <View style={[styles.addVehicleChild3, styles.groupInnerLayout]} />
       <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
-          <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setphoneNumber} placeholder="phone Number    ">
+          <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    
+          onChange={setphoneNumber} placeholder="Phone Number    "
+          keyboardType="numeric"
+          maxLength={11}>
            
           </TextInput>
         </View>
@@ -275,7 +370,7 @@ function handleHomePress() {
       <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
       <TouchableOpacity onPress={handleHomePress}>
       <Image
-        style={[styles.ellipseIcon, styles.ellipseLayout]}
+        style={[styles.ellipseIcon, styles.ellipseLayout1]}
         contentFit="cover"
         source={require("../assets/ellipse-5.png")}
       />
@@ -367,6 +462,14 @@ const styles = StyleSheet.create({
     width: 430,
     left: 0,
   },
+ vehicleModelPicker:{
+  top:400,
+  width: 60,
+  left: 359
+ },
+ vehicleColorPicker:{
+  
+ },
   text1Position: {
     display: "none",
     position: "absolute",
@@ -420,6 +523,7 @@ const styles = StyleSheet.create({
   childLayout: {
     height: 9,
     width: 14,
+    
   },
   childBorder: {
     height: 2,
@@ -501,6 +605,12 @@ const styles = StyleSheet.create({
     width: 45,
     position: "absolute",
   },
+  ellipseLayout1: {
+    height: 45,
+    top: 748,
+    width: 45,
+    position: "absolute",
+  },
   groupPressableLayout: {
     height: 104,
     width: 104,
@@ -524,7 +634,7 @@ const styles = StyleSheet.create({
   },
   housefill: {
     height: 20,
-    width: 14,
+    width: 13,
     top: 130,
     justifyContent: "center",
     left: 19,
@@ -644,10 +754,25 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   frameChild: {
-    marginLeft: 4,
+    marginLeft: 38,
+  },
+  vechilePicker: {
+    left: -12,
+    width: 30,
+    bottom:-1
+  },
+  vechileColor: {
+    left: -12,
+    width: 30,
+    bottom:-1
   },
   carParent: {
     marginLeft: 16,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  carParent1: {
+    marginLeft: 24,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -655,7 +780,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   addVehicleInner: {
-    top: 413,
+    top: 400,
   },
   lineView: {
     width: 167,
@@ -718,7 +843,7 @@ const styles = StyleSheet.create({
   },
   frameContainer: {
     left: 197,
-    top: 0,
+    top: -12,
     position: "absolute",
   },
   frameParent: {
@@ -904,7 +1029,7 @@ const styles = StyleSheet.create({
     left: 348,
   },
   invoiceWarrantyLineSvgrepoIcon: {
-    top: 810,
+    top: 755,
     left: 360,
     width: 26,
     height: 26,
@@ -923,7 +1048,7 @@ const styles = StyleSheet.create({
     left: 98,
   },
   carCitroenTopVehicleSvgrepIcon: {
-    top: 806,
+    top: 750,
     left: 103,
     width: 36,
     height: 36,
@@ -931,7 +1056,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   record641Icon: {
-    top: 808,
+    top: 755,
     left: 282,
     width: 27,
     height: 27,
@@ -944,6 +1069,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
+    position:"absolute"
   },
   groupParent: {
     top: 700,
