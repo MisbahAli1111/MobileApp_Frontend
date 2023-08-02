@@ -7,31 +7,22 @@ import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
 import Footer from "../components/Footer";
-// import {
-//   LineChart,
-//   BarChart,
-//   PieChart,
-//   ProgressChart,
-//   ContributionGraph,
-//   StackedBarChart
-// } from "react-native-chart-kit";
-
-import DashboardGraph from "../components/DashboardGraph";
+import { BarChart } from "react-native-gifted-charts";
 const Home = () => {
   const navigation = useNavigation();
   //data=[];
   const invoices = null;
   //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
 
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43]
-      }
-    ]
-  };
-
+  const barData = [
+    {value: 250, label: 'M'},
+    {value: 500, label: 'T', frontColor: '#177AD5'},
+    {value: 745, label: 'W', frontColor: '#177AD5'},
+    {value: 320, label: 'T'},
+    {value: 600, label: 'F', frontColor: '#177AD5'},
+    {value: 256, label: 'S'},
+    {value: 300, label: 'S'},
+];
 
 
   return (
@@ -86,51 +77,9 @@ const Home = () => {
       </View>
       <View style={[styles.homeInner, styles.homeInnerLayout]} />
 
-      {/* <View style={styles.lineParent}>
-      <LineChart
-    data={{
-      labels: ["January", "February", "March", "April", "May", "June"],
-      datasets: [
-        {
-          data: [
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100,
-            Math.random() * 100
-          ]
-        }
-      ]
-    }}
-    width={220} // from react-native
-    height={220}
-    yAxisLabel="$"
-    yAxisSuffix="k"
-    yAxisInterval={1} // optional, defaults to 1
-    chartConfig={{
-      backgroundColor: "#e26a00",
-      backgroundGradientFrom: "#fb8c00",
-      backgroundGradientTo: "#ffa726",
-      decimalPlaces: 2, // optional, defaults to 2dp
-      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      style: {
-        borderRadius: 16
-      },
-      propsForDots: {
-        r: "6",
-        strokeWidth: "2",
-        stroke: "#ffa726"
-      }
-    }}
-    bezier
-    style={{
-      marginVertical: 8,
-      borderRadius: 16
-    }}
-  />
-      </View> */}
+      <View style={styles.lineParent}>
+   
+      </View>
 
 
       {/* car , bike, auto.. */}
@@ -214,9 +163,18 @@ const Home = () => {
       <Text style={styles.text2}>009</Text> */}
 
       <View style={styles.lineParent}>
-
-
+      {/* <BarChart
+                barWidth={22}
+                noOfSections={3}
+                barBorderRadius={4}
+                frontColor="lightgray"
+                data={barData}
+                yAxisThickness={0}
+                xAxisThickness={0}
+            /> */}
       </View>
+
+    
 
 
 

@@ -18,7 +18,8 @@ import Invoices from "./screens/Invoices";
 import MaintenanceRecord from "./screens/MaintenanceRecord";
 import Vehicles from "./screens/Vehicles";
 import AddVehicle from "./screens/AddVehicle";
-
+import Login from "./screens/Login";
+import VehicleDetails from  "./screens/VehiclesDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
@@ -44,6 +45,11 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
+           {/* <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            /> */}
            <Stack.Screen
               name="Home"
               component={Home}
@@ -134,6 +140,12 @@ const App = () => {
               component={AddVehicle}
               options={{ headerShown: false }}
             />  
+             <Stack.Screen 
+              name="VehicleDetails"
+              component={VehicleDetails}
+              options={{ headerShown: false }}
+            />  
+            
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>

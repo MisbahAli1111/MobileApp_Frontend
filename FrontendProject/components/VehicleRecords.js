@@ -89,7 +89,7 @@ function VehicleRecords({dsearch,type}) {
 
     const handlePress = (index, vehicleId) => {
         setCurrentPressedIndex(index);
-        //   navigation.navigate("MaintenanceDetailView",{recordId:recordId});
+          navigation.navigate("VehicleDetails");
     };
 
     useEffect(() => {
