@@ -7,22 +7,21 @@ import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
 import Footer from "../components/Footer";
-import { BarChart } from "react-native-gifted-charts";
+import * as Svg from 'react-native-svg';
+import { LineChart } from "react-native-chart-kit";
+
+import ProfilePopDown from "../components/ProfilePopDown";
+
+import DashboardGraph from "../components/DashboardGraph";
+
 const Home = () => {
   const navigation = useNavigation();
   //data=[];
   const invoices = null;
   //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
 
-  const barData = [
-    {value: 250, label: 'M'},
-    {value: 500, label: 'T', frontColor: '#177AD5'},
-    {value: 745, label: 'W', frontColor: '#177AD5'},
-    {value: 320, label: 'T'},
-    {value: 600, label: 'F', frontColor: '#177AD5'},
-    {value: 256, label: 'S'},
-    {value: 300, label: 'S'},
-];
+  const data = [10, 20, 5, 25, 15, 30, 12];
+
 
 
   return (
@@ -33,11 +32,7 @@ const Home = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <Image
-        style={[styles.image2Icon, styles.iconPosition1]}
-        contentFit="cover"
-        source={require("../assets/image-2.png")}
-      />
+      
       <View style={[styles.homeChild, styles.homeLayout]} />
       <Text style={[styles.text, styles.textTypo1]}>009</Text>
       <Text style={[styles.paymentDues, styles.paymentDuesPosition]}>
@@ -75,10 +70,10 @@ const Home = () => {
           />
         </Pressable>
       </View>
-      <View style={[styles.homeInner, styles.homeInnerLayout]} />
+      {/* <View style={[styles.homeInner, styles.homeInnerLayout]} /> */}
 
       <View style={styles.lineParent}>
-   
+      <DashboardGraph/>
       </View>
 
 
@@ -163,18 +158,9 @@ const Home = () => {
       <Text style={styles.text2}>009</Text> */}
 
       <View style={styles.lineParent}>
-      {/* <BarChart
-                barWidth={22}
-                noOfSections={3}
-                barBorderRadius={4}
-                frontColor="lightgray"
-                data={barData}
-                yAxisThickness={0}
-                xAxisThickness={0}
-            /> */}
-      </View>
 
-    
+
+      </View>
 
 
 
@@ -187,27 +173,18 @@ const Home = () => {
 
 
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
-      <View style={[styles.homeChild8, styles.childPosition]} />
+      <View style={[styles.homeChild8, styles.childPosition]} >
       {/* top face icon */}
-      <Image
-        style={styles.maskGroupIcon}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
+      <ProfilePopDown style={styles.maskGroupIcon}/>
       {/* Dashboard */}
       <Text style={[styles.dashboard, styles.dashboardTypo]}>Dashboard</Text>
       {/* backicon top */}
+      </View>
 
-      <TouchableWithoutFeedback onPressIn={() => navigation.navigate("SwitchBusiness")}>
-        <Image
-          style={[styles.vectorIcon, styles.iconLayout1]}
-          contentFit="cover"
-          source={require("../assets/vector2.png")}
-        />
-      </TouchableWithoutFeedback>
+      
 
       <View style={[styles.cont]}>
-        <Footer prop={"Home"} data={invoices} />
+        <Footer prop={"Home"} data={invoices}  />
       </View>
     </View>
   );
@@ -233,7 +210,7 @@ const styles = StyleSheet.create({
 
   },
   textTypo1: {
-    color: Color.steelblue_100,
+    
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     textAlign: "left",
@@ -473,7 +450,7 @@ const styles = StyleSheet.create({
   },
   homeChild: {
     height: 183,
-    left: 19,
+    left: 15,
   },
   text: {
     left: 94,
@@ -485,7 +462,7 @@ const styles = StyleSheet.create({
     left: 54,
     fontSize: FontSize.size_base,
     textAlign: "left",
-    color: Color.steelblue_100,
+    
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     position: "absolute",
@@ -494,7 +471,7 @@ const styles = StyleSheet.create({
     left: 100,
   },
   homeItem: {
-    left: 225,
+    left: 215,
     height: 182,
   },
   totalEmployees: {

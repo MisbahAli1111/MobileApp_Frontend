@@ -6,6 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import FrameComponent from "../components/FrameComponent";
 import Footer from "../components/Footer";
 import CreateInvoice from "./CreateInvoice";
+import {printToFileAsync} from 'expo-print';
+import {shareAsync} from 'expo-sharing';
 
 import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -23,11 +25,121 @@ function InvoiceDetailView({route}) {
   }, []);
   const { data } = route.params;
 
-  const [name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper] = data;
-  const invoiceDetail=[name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper];
+  const html = `
+  <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .header {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .details label {
+      font-weight: bold;
+    }
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .items-table th, .items-table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    .items-table th {
+      background-color: #f2f2f2;
+    }
+    .total {
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">Invoice</div>
+    <div class="details">
+      <div>
+        <p>Invoice ID: INV1234</p>
+        <p>Date: 2023-08-01</p>
+        <p>Due Date: 2023-08-15</p>
+        <p>Balance Due: $100.00</p>
+      </div>
+      <div>
+        <p>Name: John Doe</p>
+        <p>Registration Number: ABC123</p>
+        <p>Status: Paid</p>
+      </div>
+    </div>
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Item 1</td>
+          <td>$20.00</td>
+          <td>2</td>
+          <td>$40.00</td>
+        </tr>
+        <tr>
+          <td>Item 2</td>
+          <td>$15.00</td>
+          <td>3</td>
+          <td>$45.00</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="total">
+      <p>Subtotal: ${subtotal}</p>
+      <p>Tax: $5.00</p>
+      <p>Discount: $0.00</p>
+      <p>Total: $90.00</p>
+    </div>
+  </div>
+</body>
+</html> `;
+
+const generatePDF = async () => {
+const file = await printToFileAsync({
+  html: html,
+  base64:false
+});
+await shareAsync(file.uri);
+
+};
+
+  const [name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper,regNumber] = data;
+  const invoiceDetail=[name,itemName, status,selectedDate,regNumber,rate, total,quantity,amount,taxRate,disRateper];
   function  editInvoiceFunction (){ 
 navigation.navigate("CreateInvoice");
  }
+ const [invoiceNumber,setinvoiceNumber] =useState('');
   return (
     <>
       <View style={styles.invoiceDetailView}>
@@ -122,7 +234,7 @@ navigation.navigate("CreateInvoice");
         />
         <View style={styles.setstyle}>
         <Text style={[styles.corollaGli2016, styles.dueTypo]}>
-          COROLLA GLI 2016 (ABC-123)
+          {regNumber}
         </Text>
         <View style={[styles.ellipseParent, styles.ellipseLayout]}>
           <Image
@@ -148,9 +260,9 @@ navigation.navigate("CreateInvoice");
           <Text style={styles.rs3000Typo}>{total} </Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
-        <Text style={[styles.inv00011, styles.invoiceTypo]}>#INV0001</Text>
+        <Text style={[styles.inv00011, styles.invoiceTypo]}>{invoiceNumber}</Text>
         <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
-        <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
+        
         </View>
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>
@@ -193,6 +305,7 @@ navigation.navigate("CreateInvoice");
         </Pressable>
         <Pressable
           style={[styles.frame, styles.framePosition]}//share button
+          onPress={generatePDF}
           
         >
           <Image
@@ -221,29 +334,21 @@ navigation.navigate("CreateInvoice");
             source={require("../assets/rectangle-57.png")}
           />
           <View style={styles.groupChild3} />
-          <Pressable
-            style={styles.invoiceDetailParent}
-            onPress={openGroupContainer10}
-          >
+          
             <Text style={[styles.invoiceDetail, styles.invoiceTypo]}>
               Invoice Detail
             </Text>
+            <Pressable
+            style={styles.invoiceDetailParent}
+            onPress={() => navigation.navigate("Invoices")}
+          >
             <Image
               style={styles.vectorIcon}
               contentFit="cover"
               source={require("../assets/vector2.png")}
             />
           </Pressable>
-          <Pressable
-            style={[styles.rectanglePressable, styles.groupIconLayout]}
-            onPress={() => navigation.navigate("Invoices")}
-          >
-            <Image
-              style={styles.icon}
-              contentFit="cover"
-              source={require("../assets/rectangle-58.png")}
-            />
-          </Pressable>
+          
         </View>
         <Image
           style={styles.maskGroupIcon}
@@ -410,7 +515,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rs3000Typo: {
-    left: 75,
+    left: 70,
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,
     fontFamily: FontFamily.poppinsSemibold,
@@ -501,7 +606,7 @@ const styles = StyleSheet.create({
   },
   iconLayout: {
     width: 24,
-    left: 375,
+    left: 365,
     height: 24,
     position: "absolute",
     overflow: "hidden",
@@ -817,9 +922,9 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   corollaGli2016: {
-    top: 273,
-    left: 205,
-    width: 200,
+    top: 280,
+    left: 343,
+    width: 100,
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,
     textAlign: "left",
@@ -827,7 +932,7 @@ const styles = StyleSheet.create({
   },
   ellipseIcon: {
     width: 10,
-    left: -15,
+    left: -23,
     top: 9,
   },
   paid: {
@@ -846,8 +951,9 @@ const styles = StyleSheet.create({
     left: 365,
   },
   loritaDaniel: {
-    top: 255,
-    left: 316,
+    top: 260,
+    left: 260,
+    width: 180,
     fontSize: FontSize.size_sm,
     color: Color.textTxtPrimary,
     textAlign: "left",
@@ -862,7 +968,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   jan2023: {
-    width: 82,
+    width: 160,
   },
   text14: {
     left: 50,
@@ -909,7 +1015,7 @@ const styles = StyleSheet.create({
     left: 25,
   },
   invoiceTo: {
-    left: 310,
+    left: 315,
     top: 237,
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
@@ -995,7 +1101,7 @@ const styles = StyleSheet.create({
     height: 96,
     width: 189,
     top: 5,
-    left: 0,
+    left: -10,
     position: "absolute",
   },
   groupChild2: {
@@ -1068,6 +1174,8 @@ const styles = StyleSheet.create({
   icon: {
     height: "100%",
     width: "100%",
+    right:10,
+    
   },
   wrapper: {
     left: 277,
@@ -1110,7 +1218,7 @@ const styles = StyleSheet.create({
     top: 743,
   },
   icbaselineShareIcon: {
-    top: 693,
+    top: 691,
   },
   rectangleIcon: {
     top: -6,
@@ -1140,8 +1248,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   invoiceDetail: {
-    top: "0%",
-    left: "55.51%",
+    top: "30%",
+    left: "39.51%",
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
