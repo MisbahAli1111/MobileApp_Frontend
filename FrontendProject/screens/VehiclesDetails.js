@@ -6,6 +6,7 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import VehicleDetails from "../components/VehicleDetail";
 import { useRoute } from "@react-navigation/native";
+import ProfileDropdown from "../components/ProfilePopDown";
 const MaintenanceDetailView = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -29,7 +30,8 @@ const MaintenanceDetailView = () => {
           contentFit="cover"
           source={require("../assets/rectangle-571.png")}
         />
-        <View style={styles.groupItem} />
+        {/* profile icon  */}
+        <View style={styles.groupItem} ><ProfileDropdown /></View>
         
         {/* back icon  */}
         <View style={styles.maintenanceRecordParent}>
@@ -75,11 +77,9 @@ const MaintenanceDetailView = () => {
       <VehicleDetails />
 
       {/* face icon  */}
-     <Image
-        style={styles.maskGroupIcon}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
+      
+
+     
       
       <View style={[styles.cont]}>
       <Footer  prop={"Vehicles"} />
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     left: -6.5,
     position: "absolute",
   },
+  
   cont:{
     padding:6,
     top:-35,
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
   },
   groupItem: {
     top: 13,
-    left: 43,
+    left: 50,
     width: 340,
     height: 50,
     position: "absolute",
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     left: "50.0%",
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "700",
+    fontWeight: "500",
     color: Color.textTxtPrimary,
     fontSize: FontSize.size_base,
     position: "absolute",

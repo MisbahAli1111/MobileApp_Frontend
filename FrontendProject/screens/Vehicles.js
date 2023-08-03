@@ -7,6 +7,9 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import VehicleRecords from "../components/VehicleRecords";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
+import ProfileDropdown from "../components/ProfilePopDown";
+
+
 const Vehicles = () => {
   const route = useRoute();
   const type = route.params?.type;
@@ -44,7 +47,7 @@ const Vehicles = () => {
       {/* head back icon */}
       <View style={[styles.rectangleParent, styles.image2IconPosition]}>
         <View style={[styles.groupChild, styles.image2IconPosition]} />
-        <View style={styles.groupItem} />
+        <View style={styles.groupItem} ><ProfileDropdown/></View>
         <View style={styles.vehiclesParent}>
           <Text style={[styles.vehicles1, styles.filterTypo]}>Vehicles</Text>
           <TouchableWithoutFeedback onPress={handlePress}>
@@ -134,12 +137,7 @@ const Vehicles = () => {
 
 
 
-      {/* face icon  */}
-      <Image
-        style={styles.maskGroupIcon}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
+      
       <View>
 
       <Pressable

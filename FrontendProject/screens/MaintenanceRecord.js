@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from  "../components/MaintenanceRecordList";
+import ProfileDropdown from "../components/ProfilePopDown";
 const MaintenanceRecord = () => {
   const navigation = useNavigation();
 
@@ -29,7 +30,9 @@ const MaintenanceRecord = () => {
       />
       <View style={styles.rectangleParent}>
         <View style={[styles.groupChild, styles.groupInnerShadowBox]} />
-        <View style={styles.groupItem} />
+        <View style={styles.groupItem} >
+        <ProfileDropdown/>
+        </View>
 
         <View style={styles.recordParent}>
           <Text style={styles.record}>Record</Text>
@@ -128,12 +131,7 @@ const MaintenanceRecord = () => {
       </View>
 
       
-      {/* face icon  */}
-      <Image
-        style={styles.maskGroupIcon}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
+      
 
  
   <View style={styles.cont}>

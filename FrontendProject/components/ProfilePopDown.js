@@ -20,7 +20,7 @@ const ProfileDropdown = () => {
       {isDropdownOpen && (
         <View style={styles.dropdown}>
           <View style={styles.item}>
-            <Text style={styles.text}> Shayan Hassan Shayan@example.com</Text>
+            <Text style={styles.text}>Shayan Hassan Shayan@example.com</Text>
           </View>
           <TouchableOpacity style={styles.item1}>
             <Text style={styles.text}>Edit Profile</Text>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   dropdown: {
     width: 180,
     position: 'absolute',
-    top: 60,
+    top: 25,
     right: 5,
     backgroundColor: '#fff',
     borderRadius: 10,

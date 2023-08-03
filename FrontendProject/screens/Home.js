@@ -70,11 +70,13 @@ const Home = () => {
           />
         </Pressable>
       </View>
-      {/* <View style={[styles.homeInner, styles.homeInnerLayout]} /> */}
-
-      <View style={styles.lineParent}>
+      <View style={[styles.homeInner, styles.homeInnerLayout]} >
       <DashboardGraph/>
       </View>
+
+      {/* <View style={styles.lineParent}>
+      
+      </View> */}
 
 
       {/* car , bike, auto.. */}
@@ -151,16 +153,7 @@ const Home = () => {
         />
       </TouchableOpacity>
 
-      {/* // graph */}
-      {/* <Text style={[styles.vehiclesMaintained, styles.dashboardTypo]}>
-        Vehicles Maintained
-      </Text>
-      <Text style={styles.text2}>009</Text> */}
-
-      <View style={styles.lineParent}>
-
-
-      </View>
+     
 
 
 
@@ -175,7 +168,7 @@ const Home = () => {
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
       <View style={[styles.homeChild8, styles.childPosition]} >
       {/* top face icon */}
-      <ProfilePopDown style={styles.maskGroupIcon}/>
+      <ProfilePopDown />
       {/* Dashboard */}
       <Text style={[styles.dashboard, styles.dashboardTypo]}>Dashboard</Text>
       {/* backicon top */}

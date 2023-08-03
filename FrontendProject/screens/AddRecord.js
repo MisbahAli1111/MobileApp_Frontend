@@ -6,6 +6,7 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
+import ProfileDropdown from "../components/ProfilePopDown";
 
 
 
@@ -380,19 +381,20 @@ onPress={openTimePicker}>
 
       {/* addMaintenanceRecord */}
       <View style={[styles.vectorGroup, styles.iconGroupLayout]}>
+      
         <Image
           style={[styles.groupInner, styles.iconGroupLayout]}
           contentFit="cover"
           source={require("../assets/rectangle-57.png")}
         />
-        <View style={styles.groupChild1} />
+        <View style={styles.groupChild1} ><ProfileDropdown/></View>
         <View style={styles.addMaintenanceRecordGroup}>
           <Text style={[styles.addMaintenanceRecord1, styles.addTypo]}>
             Add Maintenance Record
           </Text>
         </View>
         <View style={styles.addMaintenanceRecordGroupp}>
-          <Text style={[styles.addMaintenanceRecord11, styles.addTypo]}>
+          <Text style={ styles.addTypo}>
             Add Maintenance Record
           </Text>
         </View>
@@ -416,12 +418,7 @@ onPress={openTimePicker}>
           />
         </Pressable>
       </View>
-      {/* faceicon */}
-      <Image
-        style={styles.maskGroupIcon}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
+     
 
       
       <Image
@@ -903,7 +900,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   addMaintenanceRecord1: {
-    top: "0%",
+    top: -5,
     left: "30.03%",
     textAlign: "center",
     fontSize: FontSize.size_base,
@@ -912,7 +909,7 @@ const styles = StyleSheet.create({
   vectorIcon2: {
     height: "30.85%",
     width: "4.70%",
-    top: "31.00%",
+    top: 17,
     right: "42.53%",
     bottom: "2.82%",
     left: "4%",

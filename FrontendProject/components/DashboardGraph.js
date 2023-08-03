@@ -1,13 +1,16 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet,Text } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
 const chartConfig = {
-  backgroundGradientFrom: '#B2DEED', // Use the steelblue_300 color for background
-  backgroundGradientTo: '#B2DEED',   // Use the steelblue_300 color for background
+  backgroundGradientFrom: '#c5e9f7', // Use the steelblue_300 color for background
+  backgroundGradientTo: '#c5e9f7',   // Use the steelblue_300 color for background
   decimalPlaces: 0,
   color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  propsForBackgroundLines: {
+    translateX: 30
+  }
  
 
   
@@ -26,6 +29,9 @@ const DashboardGraph = () => {
 
   return (
     <View style={styles.container}>
+    
+        <Text style={styles.vehiclesText}>Vehicles Maintained</Text>
+      
       <BarChart
         data={{
           labels: data.map((item) => item.timestamp),
@@ -36,13 +42,14 @@ const DashboardGraph = () => {
           ],
         }}
         width={387} // Decreased the width to make the chart smaller
-        height={200}
+        height={180}
         chartConfig={chartConfig}
         style={{
-          borderRadius: 10,         // Set border radius to 10
-          paddingLeft: -30,        // Move values on Y-axis more to the left
+          borderRadius: 10, 
+          alignSelf:"center"        // Set border radius to 10      // Move values on Y-axis more to the left
         }}
         fromZero
+
 
         
       />
@@ -52,12 +59,17 @@ const DashboardGraph = () => {
 
 const styles = StyleSheet.create({
   container: {
-    top: -25,
+    top: -10,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    left: 4, 
+    left: 1, 
   },
-});
+  vehiclesText:{
+    fontSize:20,
+    top:6
 
+  },
+ 
+});
 export default DashboardGraph;
