@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
-
+import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, View, Text, Pressable, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
@@ -9,6 +9,7 @@ import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
 import InvoiceDetailView from "./InvoiceDetailView";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useRef } from "react";
 
 
 
@@ -41,8 +42,18 @@ const CreateInvoice = () => {
   
   const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+    const invoiceStatus =['Paid' ,'Due'];
+    
  
-  
+    const handleSave = () => {
+      if (!name || !regNumber || !status || !itemName ||!selectedDate || !rate || !quantity || !taxName || !taxRate || !disName || !disRateper) {
+        Alert.alert('Please fill all fields.');
+      } else {
+        navigation.navigate("InvoiceDetailView")
+      }
+    };
+
+
     const handleDateChange = (event, date) => {
       setShowDatePicker(false);
       if (date) {
@@ -54,7 +65,14 @@ const CreateInvoice = () => {
       setShowDatePicker(true);
     };
 
- const invoiceData=[name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper];
+    const handleInvoiceStatusSelect = (code) => {
+      setStatus(code);
+      
+    };
+
+    
+
+ const invoiceData=[name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper,regNumber];
  useEffect(()=>{
  setAmount(quantity*rate);
  },[quantity,rate])
@@ -69,7 +87,7 @@ const CreateInvoice = () => {
   
   // Set the calculation result and the total
   setCalculation(calculation);
-  setTotal("Rs. " + calculation);
+  setTotal("Rs. " + calculation.toFixed(2));
 }, [amount, taxRate, disRateper]);
  function createInvoiceFunction()
  {
@@ -143,7 +161,7 @@ const CreateInvoice = () => {
         </View>
         <Pressable
           style={[styles.wrapper, styles.wrapperLayout]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
+          onPress={() => handleSave}
         >
           <Image
             style={styles.icon}
@@ -166,17 +184,26 @@ const CreateInvoice = () => {
         source={require("../assets/group-141.png")}
       />
       <View style={styles.parent}>
-      
+
         <TextInput 
         style={[styles.text1, styles.text1Typo]}
         value={selectedDate ? selectedDate.toDateString() : ''}
         placeholder="Select a date"
         editable={false}></TextInput>
+         
         <View style={[styles.groupInner, styles.lineViewPosition]} />
         <View style={[styles.lineView, styles.lineViewPosition]} />
-        <TextInput style={[styles.statusPaiddue, styles.text1Typo]} onChangeText={setStatus} placeholder="Status">
+
+        
+        
+        <TextInput style={[styles.statusPaiddue, styles.text1Typo]}
+         value={status} 
+         editable={false}
+         placeholder="Status"
+        />
+        
          
-        </TextInput>
+       
         <Pressable
         onPress={openDatePicker}
         >
@@ -219,7 +246,7 @@ const CreateInvoice = () => {
         <TextInput style={[styles.text4, styles.textTypo]}placeholder="QTY" keyboardType="numeric"></TextInput>
         <Text style={[styles.amount, styles.rateTypo]}>Amount</Text>
         <Text style={[styles.addAmount, styles.addTypo]} >{amount}</Text>
-        <TextInput style={[styles.addAmount1, styles.addTypo]} placeholder="-"></TextInput>
+        <TextInput style={[styles.addAmount1, styles.addTypo]} placeholder="0">{amount}</TextInput>
         <View style={[styles.groupChild1, styles.groupChildLayout]} />
         <View style={[styles.groupChild2, styles.groupChildLayout]} /> 
        </View>
@@ -311,11 +338,30 @@ const CreateInvoice = () => {
         <Text style={[styles.total, styles.totalTypo]}>Total</Text>
         <Text style={[styles.rs3050, styles.text5Clr]}>{total}</Text>
       </View>
+     <TouchableOpacity>
       <Image
         style={styles.ellipseIcon}
         contentFit="cover"
-        source={require("../assets/ellipse-101.png")}
+        source={require("../assets/vector-61.png")}
       />
+      </TouchableOpacity>
+
+      {/* { (
+        <View>
+        <Picker
+        style={styles.picker}
+          selectedValue={status}
+          onValueChange={(itemValue) =>handleInvoiceStatusSelect(itemValue)}
+        >
+          <Picker.Item label="Select Vehicle Type" value="" />
+          {invoiceStatus.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )} */}
+
+      
        <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
         <TouchableOpacity onPress={createInvoiceFunction}>
         <Image
@@ -337,7 +383,7 @@ const CreateInvoice = () => {
           source={require("../assets/mask-group.png")}
         />
 
-      <Footer  />
+      <Footer style={[position= "absolute"]}  />
     </View>
     
   );
@@ -715,6 +761,9 @@ const styles = StyleSheet.create({
   text1: {
     left: 5,
   },
+  invoiceStatusPicker:{
+    top:232
+  },
   groupInner: {
     left: -1,
     top: 34,
@@ -1033,11 +1082,11 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   loritaWrapper: {
-    flexDirection: "row",
+    //flexDirection: "row",
   },
   frameView: {
     top: 171,
-    left: 24,
+    left: 20,
     position: "absolute",
     width:180 ,
   },
@@ -1051,7 +1100,7 @@ const styles = StyleSheet.create({
     position:"absolute",
   },
   text5: {
-    left: 47,
+    left: 37,
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     fontSize: FontSize.size_sm,
@@ -1062,11 +1111,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_sm,
     color: Color.textTxtPrimary,
-    left: 0,
+    left: -5,
     top: 0,
   },
   rs3050: {
-    left: 69,
+    left: 55,
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     fontSize: FontSize.size_sm,
@@ -1081,10 +1130,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   ellipseIcon: {
-    top: 230,
+    top: 235,
     left: 383,
     width: 16,
-    height: 16,
+    height: 10,
     position: "absolute",
   },
   groupChild6: {
@@ -1208,7 +1257,7 @@ const styles = StyleSheet.create({
   //    height: 1000,
   //    width: "100%",
       left:-8,
-  // position:"absolute",
+   position:"absolute",
   },
 });
 

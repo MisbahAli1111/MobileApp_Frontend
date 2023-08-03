@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from 'expo-image-picker';
 
 
 
@@ -20,8 +20,9 @@ const AddVehicle = () => {
   const [Vehiclecolor,setvehiclecolor]=useState("");
   const [phoneNumber, setphoneNumber]=useState('');
   const [km, setKm]=useState('');
+  const [image, setImage] = useState(null);
 
-  //const [showDropdown, setShowDropdown] = useState(false);
+  
     const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
     const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
     const colorCategories = [
@@ -29,6 +30,27 @@ const AddVehicle = () => {
       "Orange", "Brown", "Purple", "Pink", "Gold", "Beige", "Teal", "Navy"
     ];
   
+   
+
+    const pickImage = async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+        return;
+      }
+  
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.canceled) {
+        setImage(result.uri);
+      }
+      
+    };
     
   
     const handleVechileTypeSelect = (code) => {
@@ -75,21 +97,21 @@ function handleHomePress() {
   {
     navigation.navigate("AddVehicle");
   }
-  const [fileUri, setFileUri] = useState(null);
+  // const [fileUri, setFileUri] = useState(null);
 
-  const handleFileUpload = async () => {
-    try {
-      const response = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
+  // const handleFileUpload = async () => {
+  //   try {
+  //     const response = await DocumentPicker.pick({
+  //       type: [DocumentPicker.types.allFiles],
+  //     });
 
-      setFileUri(response.uri);
-      // Handle the uploaded file
-      console.log('Uploaded file:', response);
-    } catch (error) {
-      console.log('Error picking file:', error);
-    }
-  };
+  //     setFileUri(response.uri);
+  //     // Handle the uploaded file
+  //     console.log('Uploaded file:', response);
+  //   } catch (error) {
+  //     console.log('Error picking file:', error);
+  //   }
+  // };
   return (
     <View style={styles.addVehicle}>
       <Image
@@ -150,15 +172,22 @@ function handleHomePress() {
       <View style={styles.noImageFoundParent}>
        
         <View style={[styles.uploadParent, styles.uploadPosition]}>
+        <Pressable
+        onPress={pickImage}>
           <Text style={[styles.upload, styles.uploadPosition]} type="file" >Upload</Text>
+          </Pressable>
+
+
           {/* <TouchableOpacity onPress={handleFileUpload}>
         <Text style={styles.uploadText}>{fileUri ? 'File Selected' : 'Upload File'}</Text>
       </TouchableOpacity> */}
+      
           <Image
             style={[styles.vectorIcon1, styles.vectorIconLayout]}
             contentFit="cover"
             source={require("../assets/vector16.png")}
           />
+      
         </View>
       </View>
       <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
@@ -181,6 +210,7 @@ function handleHomePress() {
             { (
         <View  style={styles.vechilePicker}>
         <Picker
+        style={styles.picker}
           selectedValue={vehicleType}
           onValueChange={(itemValue) =>handleVechileTypeSelect(itemValue)}
         >
@@ -239,15 +269,14 @@ function handleHomePress() {
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
               placeholder="Vehicle Color   " 
-              value={Vehiclecolor}
-              editable={false}
+              onChange={Vehiclecolor}
 
 
               />
               
             
-            <View style={styles.carParent1}>
-              {/* <Text style={[styles.car, styles.vehicleTypo]}>Black</Text> */}
+            {/* <View style={styles.carParent1}>
+              <Text style={[styles.car, styles.vehicleTypo]}>Black</Text>
               <Image
                 style={[styles.frameChild, styles.childLayout]}
                 contentFit="cover"
@@ -268,7 +297,7 @@ function handleHomePress() {
       )}
 
 
-            </View>
+            </View> */}
           </View>
         </View>
       </View>
@@ -759,12 +788,12 @@ const styles = StyleSheet.create({
   vechilePicker: {
     left: -12,
     width: 30,
-    bottom:-1
+    bottom:-1,
   },
   vechileColor: {
     left: -12,
     width: 30,
-    bottom:-1
+    bottom:-1,
   },
   carParent: {
     marginLeft: 16,
@@ -843,7 +872,7 @@ const styles = StyleSheet.create({
   },
   frameContainer: {
     left: 197,
-    top: -12,
+    top: -1,
     position: "absolute",
   },
   frameParent: {
