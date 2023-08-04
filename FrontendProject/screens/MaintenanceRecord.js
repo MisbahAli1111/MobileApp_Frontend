@@ -134,13 +134,13 @@ const MaintenanceRecord = () => {
       
 
  
-  <View style={styles.cont}>
+  {/* <View style={styles.cont}>
       <Footer  prop={"MaintenanceRecord"} />
       </View>
 
     <View style={styles.boxContianer}>
     <MaintenanceRecordList dsearch={search} />
-      </View>
+      </View> */}
       
       
     </View>

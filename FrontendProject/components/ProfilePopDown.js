@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
+import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
+
+
 const ProfileDropdown = () => {
     const navigation = useNavigation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -61,11 +64,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 25,
     right: 5,
-    backgroundColor: '#fff',
+    backgroundColor: Color.steelblue_300,
+   zIndex:12,
     borderRadius: 10,
     borderWidth: 0.5,
     borderColor: 'black',
-    elevation: 5,
     padding: 10,
   },
   item: {

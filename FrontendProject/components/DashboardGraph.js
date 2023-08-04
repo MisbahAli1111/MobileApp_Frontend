@@ -41,7 +41,7 @@ const DashboardGraph = () => {
             },
           ],
         }}
-        width={387} // Decreased the width to make the chart smaller
+        width={350} // Decreased the width to make the chart smaller
         height={180}
         chartConfig={chartConfig}
         style={{
@@ -59,11 +59,11 @@ const DashboardGraph = () => {
 
 const styles = StyleSheet.create({
   container: {
-    top: -10,
+    top: -8,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    left: 1, 
+    left: -16, 
   },
   vehiclesText:{
     fontSize:20,

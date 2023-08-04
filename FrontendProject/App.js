@@ -50,12 +50,12 @@ const App = () => {
               component={Login}
               options={{ headerShown: false }}
             /> */}
-           <Stack.Screen
+            <Stack.Screen
               name="Home"
               component={Home}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
+           {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               options={{ headerShown: false }}
@@ -64,8 +64,8 @@ const App = () => {
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               options={{ headerShown: false }}
-        />
-            <Stack.Screen
+        /> */}
+            {/* <Stack.Screen
               name="Invoices"
               component={Invoices}
               options={{ headerShown: false }}
@@ -76,10 +76,10 @@ const App = () => {
               name="AddEmployee"
               component={AddEmployee}
               options={{ headerShown: false }}
-            />
+            /> */}
 
             
-                        <Stack.Screen
+                        {/* <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               options={{ headerShown: false }}
@@ -114,20 +114,20 @@ const App = () => {
               name="CreateInvoice"
               component={CreateInvoice}
               options={{ headerShown: false }}
-            /> 
+            />  */}
             
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               options={{ headerShown: false }}
-            />
+            />*/}
             
               <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               options={{ headerShown: false }}
-            /> 
+            />  
              
            
             <Stack.Screen
@@ -135,11 +135,11 @@ const App = () => {
               component={Vehicles}
               options={{ headerShown: false }}
             />  
-             <Stack.Screen 
+             {/* <Stack.Screen 
               name="AddVehicle"
               component={AddVehicle}
               options={{ headerShown: false }}
-            />  
+            />   */}
              <Stack.Screen 
               name="VehicleDetails"
               component={VehicleDetails}

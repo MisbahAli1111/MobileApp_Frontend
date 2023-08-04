@@ -8,6 +8,7 @@ import VehicleRecords from "../components/VehicleRecords";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
 import ProfileDropdown from "../components/ProfilePopDown";
+import FilterSearch from "../components/FilterSearch";
 
 
 const Vehicles = () => {
@@ -47,7 +48,7 @@ const Vehicles = () => {
       {/* head back icon */}
       <View style={[styles.rectangleParent, styles.image2IconPosition]}>
         <View style={[styles.groupChild, styles.image2IconPosition]} />
-        <View style={styles.groupItem} ><ProfileDropdown/></View>
+        <View style={styles.groupItem}><ProfileDropdown/></View>
         <View style={styles.vehiclesParent}>
           <Text style={[styles.vehicles1, styles.filterTypo]}>Vehicles</Text>
           <TouchableWithoutFeedback onPress={handlePress}>
@@ -108,8 +109,7 @@ const Vehicles = () => {
           <View
             style={styles.filt}
           >
-            
-            <Text style={[styles.filter, styles.text5Typo]}>Filter</Text>
+            <FilterSearch/>
           </View>
         </View>
       </View>
@@ -138,7 +138,7 @@ const Vehicles = () => {
 
 
       
-      <View>
+      {/* <View>
 
       <Pressable
         style={[styles.groupWrapper, styles.groupLayoutt]}
@@ -156,7 +156,7 @@ const Vehicles = () => {
           </View>
         </View>
       </Pressable>
-      </View>
+      </View> */}
 
     </View>
   );
@@ -188,8 +188,9 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
   },
   filt: {
-    top: 2,
-    left: -6,
+    top: 4,
+    left: 6,
+    width:70
   },
 
   iconLayout3: {
