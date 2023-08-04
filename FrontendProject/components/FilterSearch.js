@@ -99,6 +99,7 @@ const FilterSearch = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
+    left:-10,
   },
   filterText: {
     top: -5,

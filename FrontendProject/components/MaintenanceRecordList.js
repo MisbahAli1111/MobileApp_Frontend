@@ -188,7 +188,7 @@ displayedRecords.map((record, index) => (
 const styles = StyleSheet.create({
   groupParentLayout: {
     height: 132,
-    width: 392,
+    width: 375,
     left:5,
     position: "relative",
     alignItems: 'flex-start',
@@ -246,15 +246,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
  
-  groupParentLayout: {
-    height: 132,
-    width: 392,
-    left:5,
-    position: "relative",
-    alignItems: 'flex-start',
-    flexWrap:"wrap",
-    marginTop:5,
-  },
+
   surfaceParentFlexBox: {
     flexDirection: "row",
     alignItems: "center",

@@ -217,9 +217,10 @@ function VehicleRecords({dsearch,type}) {
 const styles = StyleSheet.create({
 
     scroll:{
-        marginTop:240,
+        marginTop:225,
         height:538,
-       
+        marginLeft:13,
+        width:385,
     },
     image2IconPosition: {
         width: 430,
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         flexWrap: "wrap",
         marginTop: 5,
-        marginBottom: 15, 
+        marginBottom: 20, 
       },
       
        
@@ -316,13 +317,13 @@ const styles = StyleSheet.create({
     },
     innerLayout: {
         backgroundColor: Color.steelblue_300,
-        width: 392,
+        width: 375,
         borderRadius: Border.br_5xs,
         position: "absolute",
     },
     innerLayoutW: {
         backgroundColor: Color.darkslateblue,
-        width: 392,
+        width: 375,
         borderRadius: Border.br_5xs,
         position: "absolute",
     },
@@ -343,7 +344,7 @@ const styles = StyleSheet.create({
         fontWeight: "500",
     },
     iconPosition: {
-        left: 0,
+        left: 10,
         position: "absolute",
     },
     imageTypo: {
@@ -580,10 +581,10 @@ const styles = StyleSheet.create({
 
     rectangleIcon: {
         borderRadius: 79,
-        width: 113,
-        top: 10,
-        height: 113,
-
+        width: 100,
+        top: 18,
+        height: 100,
+        
     },
     image: {
         bottom: 279,

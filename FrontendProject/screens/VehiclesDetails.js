@@ -37,7 +37,7 @@ const MaintenanceDetailView = () => {
         <View style={styles.maintenanceRecordParent}>
           <Text style={styles.maintenanceRecord}>Vehicle Detail</Text>
           <Pressable
-          onPress={() => navigation.navigate("MaintenanceRecord")}
+          onPress={() => navigation.navigate("Vehicles",{type:'default'})  }
           style={[styles.vectorIcon]} 
           >
           <Image

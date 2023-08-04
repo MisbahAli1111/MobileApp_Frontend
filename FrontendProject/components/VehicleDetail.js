@@ -15,7 +15,7 @@ function RecordDetails() {
   return (
     <View>
         <View>
-            <Text style={styles.heading}>Corolla GLI </Text>
+            <Text style={styles.heading}>Corolla GLI 2016</Text>
         </View>
 
       {/* blue div  */}
@@ -103,15 +103,15 @@ function RecordDetails() {
 const styles = StyleSheet.create({
     heading:{
         top:392,
-        fontSize:16,
+        fontSize:20,
         fontFamily: FontFamily.poppinsRegular,
         color: Color.Black,
-        fontWeight:'700',
-        left:20,
+        fontWeight: 'bold',
+        left:25,
     },
   childViewPosition: {
-    width: 430,
-    left: -6.5,
+    width: 380,
+    left: 18,
     position: "absolute",
   },
   cont:{
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   vectorGroupLayout: {
     height: 301,
-    width: 392,
+    width: 382,
     position: "absolute",
   },
   frameParentPosition: {
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   typePosition: {
-    left: 279,
+    left: 245,
     position: "absolute",
   },
   homeTypo: {
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   },
   frameParent: {
     width: 200,
-    left: 281,
+    left: 240,
     height: 50,
   },
   frameContainer: {
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
   },
   pmParent: {
     width: 150,
-    left: 281,
+    left: 245,
   },
   carWrapper: {
     flexDirection: "row",
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
   },
   vectorGroup: {
     top: 430,
-    left: 10,
+    left: 16,
   },
   details: {
     fontWeight: "700",

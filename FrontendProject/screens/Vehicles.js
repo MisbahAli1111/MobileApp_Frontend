@@ -16,8 +16,7 @@ const Vehicles = () => {
   const type = route.params?.type;
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
-  // console.warn(type);
-
+ 
   const handleQuery = (query) => {
     setSearch(query);
 
@@ -29,9 +28,6 @@ const Vehicles = () => {
 
   return (
     <View style={styles.vehicles}>
-
-
-
 
       <Image
         style={styles.lightTexture22341Icon}
@@ -74,10 +70,6 @@ const Vehicles = () => {
         </View>
       </View>
 
-      
-
-      {/* 3rd  */}
-      
       <View contentContainerStyle={styles.contView}>
       <VehicleRecords dsearch={search} type={type} />
     </View>
@@ -135,29 +127,6 @@ const Vehicles = () => {
         />
       </View>
 
-
-
-      
-      {/* <View>
-
-      <Pressable
-        style={[styles.groupWrapper, styles.groupLayoutt]}
-        onPress={() => navigation.navigate("AddVehicle")}
-      >
-        <View style={styles.rectangleGroupp}>
-          <View style={[styles.groupInnerr, styles.groupInnerLayout]} />
-          <View style={styles.addRecordParent}>
-            <Text style={[styles.addRecord, styles.addTypo]}>Add Vehicle</Text>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require("../assets/vector14.png")}
-            />
-          </View>
-        </View>
-      </Pressable>
-      </View> */}
-
     </View>
   );
 };
@@ -175,11 +144,8 @@ const styles = StyleSheet.create({
     
   },
   contView: {
-    top: 250,
-    left: 5,
-    flex:1,
-    backgroundColor:'red',
-
+    
+    
   },
 
 
@@ -199,8 +165,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   vehiclesChildPosition: {
-    width: 392,
-    left: 12,
+    width: 380,
+    left: 20,
     position: "absolute",
   },
   textClr: {
@@ -272,7 +238,7 @@ const styles = StyleSheet.create({
   },
   innerLayout: {
     backgroundColor: Color.steelblue_300,
-    width: 392,
+    width: 380,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
@@ -282,7 +248,7 @@ const styles = StyleSheet.create({
   },
   name1Clr: {
     color: Color.dimgray_200,
-    textAlign: "left",
+    textAlign: "left", 
   },
   text2Typo: {
     color: Color.gray_300,
@@ -359,7 +325,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   groupItem: {
-    top: 13,
+    top: 15,
     left: 43,
     width: 340,
     height: 50,
@@ -381,7 +347,7 @@ const styles = StyleSheet.create({
     top: "8.33%",
     right: "90.23%",
     bottom: "2.82%",
-    left: "0%",
+    left: "1%",
     position: "absolute",
   },
   vehiclesParent: {
@@ -568,7 +534,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 20,
-    left: 0,
+    left: 5,
     top: 0,
     position: "absolute",
   },
@@ -655,7 +621,7 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     overflow: "hidden",
     top: 15,
-    left: 350,
+    left: 340,
   },
   vector: {
     left: "86.39%",
