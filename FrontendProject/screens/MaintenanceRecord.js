@@ -6,6 +6,8 @@ import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from  "../components/MaintenanceRecordList";
 import ProfileDropdown from "../components/ProfilePopDown";
+import FilterSearch from "../components/FilterSearch";
+
 const MaintenanceRecord = () => {
   const navigation = useNavigation();
 
@@ -69,7 +71,8 @@ const MaintenanceRecord = () => {
                 source={require("../assets/homemuted.png")}
               />
             </View>
-            <View style={styles.elementPosition} />
+            
+            {/* <View style={styles.elementPosition} /> */}
             <View style={styles.elementPosition}>
               <Text style={[styles.text, styles.davidTypo1]}>\</Text>
             </View>
@@ -84,13 +87,16 @@ const MaintenanceRecord = () => {
                 Search
                 </Text>
             </View>
+            
           </View>
         </View>
+        {/* <View style={styles.FilterSearch}><FilterSearch/></View> */}
         <Pressable
           style={[styles.groupWrapper, styles.groupLayout]}
           onPress={() => navigation.navigate("AddRecord")}
         >
           <View style={[styles.rectangleGroup, styles.groupLayout]}>
+          
             <View style={[styles.groupInner, styles.groupInnerLayout]} />
             <View style={styles.addRecordParent}>
               <Text style={[styles.addRecord, styles.addTypo]}>Add Record</Text>
@@ -134,13 +140,13 @@ const MaintenanceRecord = () => {
       
 
  
-  {/* <View style={styles.cont}>
+  <View style={styles.cont}>
       <Footer  prop={"MaintenanceRecord"} />
       </View>
 
     <View style={styles.boxContianer}>
     <MaintenanceRecordList dsearch={search} />
-      </View> */}
+      </View>
       
       
     </View>
@@ -158,14 +164,16 @@ const styles = StyleSheet.create({
     },
     left: 0,
   },
-
-
+  FilterSearch:{
+    left:228,
+    top:10
+  },
   boxContianer :{
-    flexDirection:"column",
     flex:1,
     flexWrap:"wrap",
-    marginTop:230,
-    marginRight: 20,
+    marginTop:220,
+    marginLeft: 10,
+    marginBottom:115,
     // alignItems: 'flex-end', 
   },
   iconLayout1: {
@@ -220,7 +228,7 @@ const styles = StyleSheet.create({
 
   rectangleLayout: {
     height: 55,
-    width: 392,
+    width: 385,
     position: "absolute",
   },
   rectanglePosition: {
@@ -229,7 +237,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   davidTypo: {
-    fontSize: FontSize.size_smi,
+    fontSize: 18,
     textAlign: "left",
   },
   iconLayout: {
@@ -323,14 +331,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 20,
-    left: 0,
+    left: 10,
     top: 0,
   },
   elementPosition: {
-    left: 18,
+    left: 30,
     justifyContent: "center",
     height: 20,
-    top: 0,
+    top: 1,
     position: "absolute",
   },
   text: {
@@ -341,7 +349,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.caption2Regular,
   },
   element2: {
-    left: 81,
+    left: 95,
     height: 20,
     top: 0,
   },
@@ -352,7 +360,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   surface: {
-    left: 27,
+    left: 40,
     top: 2,
     flexDirection: "row",
     justifyContent: "center",
@@ -363,8 +371,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
   },
   surface1: {
-    left: 90,
-    top: 2,
+    left: 105,
+    top: 0,
     flexDirection: "row",
     justifyContent: "center",
   },
@@ -418,7 +426,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupWrapper: {
-    left: 270,
+    left: 260,
     position: "absolute",
   },
 
@@ -432,7 +440,7 @@ const styles = StyleSheet.create({
   },
   rectanglePressable: {
     height: 55,
-    width: 392,
+    width: 378,
     position: "absolute",
     backgroundColor: Color.steelblue_300,
   },
@@ -442,6 +450,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "800",
     position: "absolute",
+    
     color:'black',
   },
   icon1: {
@@ -460,7 +469,7 @@ const styles = StyleSheet.create({
   },
   rectangleContainer: {
     top: 145,
-    left: 14,
+    left: 20,
   },
 
 

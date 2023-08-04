@@ -1,486 +1,349 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet,TextInput, TouchableWithoutFeedback, View, Text, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
-import Footer from "../components/Footer";
-import MaintenanceRecordList from  "../components/MaintenanceRecordList";
-import ProfileDropdown from "../components/ProfilePopDown";
-import FilterSearch from "../components/FilterSearch";
+import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
+import { TextInput } from "react-native-gesture-handler";
 
-const MaintenanceRecord = () => {
-  const navigation = useNavigation();
-
-  const [search, setSearch] = useState('');
-
-  const handleQuery= (query) => {
-    setSearch(query);
-  }
-
-  return (
-    <View style={styles.maintenanceRecord}>
-      
-      <Image
-        style={styles.lightTexture22341Icon}
-        contentFit="cover"
-        source={require("../assets/light-texture2234-1.png")}
-      />
-      <Image
-        style={styles.image2Icon}
-        contentFit="cover"
-        source={require("../assets/image-2.png")}
-      />
-      <View style={styles.rectangleParent}>
-        <View style={[styles.groupChild, styles.groupInnerShadowBox]} />
-        <View style={styles.groupItem} >
-        <ProfileDropdown/>
-        </View>
-
-        <View style={styles.recordParent}>
-          <Text style={styles.record}>Record</Text>
-          {/* backicon  */}
-          <TouchableWithoutFeedback onPress={() => navigation.navigate("Home")}>
-
-            <Image
-              style={[styles.vectorIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/vector2.png")}
-            />
-          </TouchableWithoutFeedback>
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.wrapperLayout]}
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Image
-            style={styles.iconLayout}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
-      </View>
+function RecordList({dsearch}) {
+const navigation = useNavigation();
+const [search, setSearch] = useState('');
+const [data, setData] = useState([]);
 
 
-      <View style={styles.groupParent}>
-        <View style={[styles.breadcrumbsWrapper, styles.breadcrumbsLayout]}>
-          <View style={[styles.breadcrumbs, styles.breadcrumbsLayout]}>
-            <View style={[styles.housefill, styles.housefillFlexBox]}>
-              <Image
-                style={styles.homeMutedIcon}
-                contentFit="cover"
-                source={require("../assets/homemuted.png")}
-              />
-            </View>
-            
-            {/* <View style={styles.elementPosition} /> */}
-            <View style={styles.elementPosition}>
-              <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-            </View>
-            <View style={[styles.element2, styles.housefillFlexBox]}>
-              <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-            </View>
-            <View style={[styles.surface, styles.surfaceParentFlexBox]}>
-              <Text style={styles.search}>Search</Text>
-            </View>
-            <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
-              <Text style={[styles.abc123, styles.abc123Clr]}>
-                Search
-                </Text>
-            </View>
-            
-          </View>
-        </View>
-        {/* <View style={styles.FilterSearch}><FilterSearch/></View> */}
-        <Pressable
-          style={[styles.groupWrapper, styles.groupLayout]}
-          onPress={() => navigation.navigate("AddRecord")}
-        >
-          <View style={[styles.rectangleGroup, styles.groupLayout]}>
-          
-            <View style={[styles.groupInner, styles.groupInnerLayout]} />
-            <View style={styles.addRecordParent}>
-              <Text style={[styles.addRecord, styles.addTypo]}>Add Record</Text>
-              <Image
-                style={[styles.vectorIcon1, styles.iconLayout1]}
-                contentFit="cover"
-                source={require("../assets/vector14.png")}
-              />
-            </View>
-          </View>
-        </Pressable>
-</View>
+  
+const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
+const records = [
+  {
+    id:"erwecs",
+    maintainedOn: "sdbfgljb",
+    maintainedBy: "yess",
+    mileage: "137,000",
+    service: "Service Details 1",
+  },
+  {
+    id:"cnaojos",
+    maintainedOn: "2nd January 2023",
+    maintainedBy: "ggggg",
+    mileage: "150,000",
+    service: "Service Details 2",
 
-      {/* search */}
-      <View style={[styles.rectangleContainer, styles.rectangleLayout]}>
-        <Pressable
-          style={[styles.rectanglePressable, styles.rectanglePosition]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        />
-        <TextInput style={[styles.davidDaniel, styles.davidTypo]}
-        placeholder="David "
-        clearButtonMode="always"
-        value={search}
-        onChangeText={(query) => handleQuery(query)}
-        />
-          
-        <Pressable
-          style={styles.vector}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={[styles.icon1, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector8.png")}
-          />
-        </Pressable>
-      </View>
+  },
+  {
+    id:"wsncds",
+    maintainedOn: "2nd January 2023",
+    maintainedBy: "no",
+    mileage: "150,000",
+    service: "Service Details 2",
 
-      
-      
+  },
+  {
+    id:"cnaojos",
+    maintainedOn: "2nd January 2023",
+    maintainedBy: "ggggg",
+    mileage: "150,000",
+    service: "Service Details 2",
 
+  },
+  {
+    id:"wsncds",
+    maintainedOn: "2nd January 2023",
+    maintainedBy: "no",
+    mileage: "150,000",
+    service: "Service Details 2",
+
+  },
+  {
+    id:"cnaojos",
+    maintainedOn: "2nd January 2023",
+    maintainedBy: "ggggg",
+    mileage: "150,000",
+    service: "Service Details 2",
+
+  },
+  {
+    id:"wsncds",
+    maintainedOn: "2nd January 2023",
+    maintainedBy: "no",
+    mileage: "150,000",
+    service: "Service Details 2",
+
+  },
  
-  <View style={styles.cont}>
-      <Footer  prop={"MaintenanceRecord"} />
-      </View>
+];
 
-    <View style={styles.boxContianer}>
-    <MaintenanceRecordList dsearch={search} />
-      </View>
-      
-      
-    </View>
-    
+const displayedRecords = search ? data : records;
 
-  );
+const handlePress = (index,recordId) => {
+  setCurrentPressedIndex(index);
+  navigation.navigate("MaintenanceDetailView",{recordId:recordId});
 };
 
+useEffect(() => {
+  setSearch(dsearch);
+  const formattedQuery = dsearch.trim().toLowerCase();
+  const maintained=records.filter((record) => record.maintainedBy.includes(formattedQuery))
+  setData(maintained);
+}, [dsearch]);
+
+
+  return (
+    <ScrollView style={styles.wrap}>
+    {
+displayedRecords.map((record, index) => (
+      <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
+        <View style={[styles.groupFrame]}>
+          <Pressable
+            style={[styles.groupFrame, styles.groupParentLayout]}
+            onPress={() => handlePress(index,record.id)}
+          >
+            {/* Image */}
+            <Image
+              style={[
+                styles.rectangleIcon,
+                styles.groupParentLayout,
+              ]}
+              contentFit="cover"
+              source={currentPressedIndex === index ? require("../assets/rectangle-541.png") : require("../assets/rectangle-54.png")}
+            />
+            <View style={[styles.frameParent, styles.frameParentLayout]}>
+              <View
+                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
+              >
+                <Text
+                  style={[
+                    currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                    styles.davidTypo,
+                  ]}>
+                  {`Maintained On `}</Text>
+
+                <Text style={[
+                  styles.stJanuary2023,
+                  currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
+                ]}>
+                  {record.maintainedOn}
+                </Text>
+              </View>
+              <View
+                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
+              >
+                <Text style={[
+                  currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                  styles.davidTypo,
+                ]}>
+                  Maintained By
+                </Text>
+                <Text style={[
+                  styles.stJanuary2023,
+                  currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
+                ]}>
+                  {record.maintainedBy}
+                </Text>
+              </View>
+              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
+                <Text style={[
+                  currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                  styles.davidTypo,
+                ]}>
+                  Mileage
+                </Text>
+              </View>
+              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
+                <Text style={[
+                  currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                  styles.davidTypo,
+                ]}>
+                  Service
+                </Text>
+              </View>
+            </View>
+            <Image
+              style={[styles.groupIcon, styles.iconLayout1]}
+              contentFit="cover"
+              source={currentPressedIndex === index ? require("../assets/group-801.png") : require("../assets/group-80.png")}
+            />
+            <Image
+              style={[
+                styles.vehicleServicesSvgrepoCom1Icon,
+                styles.vehicleIconLayout,
+              ]}
+              contentFit="cover"
+              source={
+                currentPressedIndex === index ? require("../assets/vehicleservicessvgrepocom-12.png") : require("../assets/vehicleservicessvgrepocom-11.png")}
+            />
+            <Text style={[
+               currentPressedIndex === index ? styles.carWashW :styles.carWash, styles.carPosition]}>Car Wash</Text>
+            <Text style={[
+              currentPressedIndex === index ? styles.text2W: styles.text2, styles.textPosition]}>137,000</Text>
+
+          </Pressable>
+        </View>
+      </View>
+    ))}
+     </ScrollView>
+  );
+}
 const styles = StyleSheet.create({
-  groupInnerShadowBox: {
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    left: 0,
-  },
-  FilterSearch:{
-    left:228,
-    top:10
-  },
-
-
-  boxContianer :{
-    flexDirection:"column",
-    flex:1,
+  groupParentLayout: {
+    height: 132,
+    width: 392,
+    left:5,
+    position: "relative",
+    alignItems: 'flex-start',
     flexWrap:"wrap",
-    marginTop:230,
-    marginRight: 20,
-    // alignItems: 'flex-end', 
+    marginTop:5,
   },
-  iconLayout1: {
-    maxHeight: "100%",
-    maxWidth: "100%",
-    overflow: "hidden",
+  serviceWrapper: {
+    top: 84,
   },
-  wrapperLayout: {
-    height: 43,
-    position: "absolute",
+  wrap:{
+  width:385,
+    
   },
-  breadcrumbsLayout: {
-    width: 150,
-    height: 20,
-    left: 0,
-    position: "absolute",
-  },
-  housefillFlexBox: {
-    justifyContent: "center",
-    position: "absolute",
-  },
-  davidTypo1: {
+  text2Typo: {
+    color: Color.gray_300,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "500",
+  },
+  frameParent: {
+    top: 15,
+    width: 209,
+    left: 43,
+  },
+  
+  text2TypoW: {
+    color: Color.white,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  mileageWrapper: {
+    top: 56,
+  },
+  frameParentLayout: {
+    height: 104,
+    position: "absolute",
+  },
+  maintainedOnParent: {
+    left: 0,
+    top: 0,
+  },
+  wrapperPosition: {
+    left: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    position: "absolute",
+  },
+ 
+
+  maintainedByParent: {
+    top: 28,
+    left: 0,
+  },
+ 
+  groupParentLayout: {
+    height: 132,
+    width: 392,
+    left:5,
+    position: "relative",
+    alignItems: 'flex-start',
+    flexWrap:"wrap",
+    marginTop:5,
   },
   surfaceParentFlexBox: {
     flexDirection: "row",
     alignItems: "center",
     position: "absolute",
   },
-  abc123Clr: {
-    color: Color.darkslateblue,
-    textAlign: "left",
-  },
-  groupLayout: {
-    width: 119,
-    height: 33,
-    top: 0,
-  },
-  groupInnerLayout: {
-    borderRadius: Border.br_11xl,
-    position: "absolute",
-  },
-  addTypo: {
-    lineHeight: 18,
-    textAlign: "center",
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
+  maintainedOn: {
+    color: Color.dimgray_200,
+    fontFamily: FontFamily.poppinsRegular,
   },
 
-  rectangleLayout: {
-    height: 55,
-    width: 392,
-    position: "absolute",
-  },
-  rectanglePosition: {
-    borderRadius: Border.br_5xs,
-    left: 0,
-    top: 0,
+  maintainedOnW: {
+    color: Color.white,
+    fontFamily: FontFamily.poppinsRegular,
   },
   davidTypo: {
     fontSize: FontSize.size_smi,
     textAlign: "left",
   },
-  iconLayout: {
-    height: "100%",
-    width: "100%",
-  },
-
-  lightTexture22341Icon: {
-    width: 430,
-    left: 0,
-    top: 0,
-    position: "absolute",
-    height: 932,
-  },
-  image2Icon: {
-    top: 803,
-    height: 129,
-    display: "none",
-    width: 430,
-    left: 0,
+  groupIcon: {
+    height: "57.58%",
+    width: "5.1%",
+    top: "11.36%",
+    right: "91.07%",
+    bottom: "31.06%",
+    left: "3.83%",
     position: "absolute",
   },
-  groupChild: {
-    backgroundColor: Color.gray_400,
-    height: 60,
-    elevation: 10,
-    shadowRadius: 10,
-    shadowColor: "rgba(0, 0, 0, 0.03)",
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    width: 430,
-    position: "absolute",
-    top: 0,
-  },
-  groupItem: {
-    top: 13,
-    width: 340,
-    height: 50,
-    left: 43,
-    position: "absolute",
-  },
-  record: {
-    top: "0%",
-    left: "73.97%",
-    fontSize: FontSize.size_base,
-    textAlign: "center",
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  vectorIcon: {
-    height: "88.85%",
-    width: "9.99%",
-    top: "8.33%",
-    right: "90.01%",
-    bottom: "2.82%",
-    left: "-2%",
-    position: "absolute",
-  },
-  recordParent: {
-    height: "38.1%",
-    width: "50.93%",
-    top: "30.16%",
-    right: "43.95%",
-    bottom: "31.75%",
-    left: "5.12%",
-    position: "absolute",
-  },
-  wrapper: {
-    top: 59,
-    width: 49,
-    left: 19,
-  },
-  rectangleParent: {
-    top: 35,
-    height: 63,
-    width: 430,
-    left: 0,
-    position: "absolute",
-  },
-  homeMutedIcon: {
-    width: 12,
-    height: 14,
-  },
-  housefill: {
-    width: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    height: 20,
-    left: 0,
-    top: 0,
-  },
-  elementPosition: {
-    left: 18,
-    justifyContent: "center",
-    height: 20,
-    top: 0,
-    position: "absolute",
-  },
-  text: {
-    lineHeight: 17,
-    textAlign: "left",
-    fontSize: FontSize.caption2Regular_size,
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.caption2Regular,
-  },
-  element2: {
-    left: 81,
-    height: 20,
-    top: 0,
-  },
-  search: {
-    color: Color.steelblue_100,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_sm,
-    textAlign: "left",
-  },
-  surface: {
-    left: 27,
-    top: 2,
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  abc123: {
-    fontWeight: "600",
-    fontFamily: FontFamily.poppinsSemibold,
-    fontSize: FontSize.size_sm,
-  },
-  surface1: {
-    left: 90,
-    top: 0,
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  breadcrumbs: {
-    height: 20,
-    top: 0,
-  },
-  breadcrumbsWrapper: {
-    height: 20,
-    top: 6,
-  },
-  groupInner: {
-    shadowColor: "rgba(0, 0, 0, 0.05)",
-    shadowRadius: 20,
-    elevation: 20,
-    backgroundColor: Color.steelblue_300,
-    width: 119,
-    height: 33,
-    top: 0,
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    left: 0,
-    borderRadius: Border.br_11xl,
-  },
-  addRecord: {
-    left: 17,
-    fontSize: FontSize.caption2Regular_size,
-    top: 0,
-  },
-  vectorIcon1: {
-    height: "72.22%",
-    width: "14.77%",
-    top: "16.67%",
-    right: "86.36%",
-    bottom: "11.11%",
-    left: "-1.14%",
-    position: "absolute",
-  },
-  addRecordParent: {
-    top: 8,
-    left: 16,
-    width: 88,
-    height: 18,
-    position: "absolute",
-  },
-  rectangleGroup: {
-    left: 0,
-    position: "absolute",
-  },
-  groupWrapper: {
-    left: 270,
-    position: "absolute",
-  },
-
-
-  groupParent: {
-    top: 100,
-    height: 33,
-    width: 392,
-    left: 19,
-    position: "absolute",
-  },
-  rectanglePressable: {
-    height: 55,
-    width: 392,
-    position: "absolute",
-    backgroundColor: Color.steelblue_300,
-  },
-  davidDaniel: {
-    top: 14,
-    left: 21,
-    fontFamily: FontFamily.caption2Regular,
-    fontWeight: "800",
-    position: "absolute",
-    color:'black',
-  },
-  icon1: {
+ 
+  iconLayout1: {
     maxHeight: "100%",
     maxWidth: "100%",
     overflow: "hidden",
   },
-  vector: {
-    left: "86.39%",
-    top: "29.41%",
-    right: "8.16%",
-    bottom: "33.83%",
-    width: "5.45%",
-    height: "36.76%",
+  vehicleServicesSvgrepoCom1Icon: {
+    top: 97,
+    left: 15,
+  },
+  vehicleIconLayout: {
+    width: 20,
+    height: 20,
+    position: "absolute",
+    overflow: "hidden",
+  },
+  stJanuary2023: {
+    marginLeft: 5,
+  },
+  carWashW: {
+    color: Color.white,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  carWash: {
+    color: Color.gray_300,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  text2W: {
+    color: Color.white,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  carPosition: {
+    left: 96,
+    top: 101,
     position: "absolute",
   },
-  rectangleContainer: {
-    top: 145,
-    left: 14,
+  textPosition: {
+    left: 101,
+    top: 73,
+    position: "absolute",
   },
-
-
-  maintenanceRecord: {
-    backgroundColor: Color.white,
-    flex: 1,
-    overflow: "hidden",
-    height: 932,
-    width: "100%",
+  text2: {
+    color: Color.gray_300,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  rectangleIcon: {
+    borderRadius: Border.br_5xs,
+    left: 0,
+    top: 0,
   },
 });
 
-export default MaintenanceRecord;
+export default RecordList;
