@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 
-function InvoiceDiscount() {
+function InvoiceDiscount({ onItemsChange }) {
 const navigation = useNavigation();
 const [items, setItems] = useState([{ itemName: '', rate: ''}]);
 
@@ -43,6 +43,11 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
     setItems(newItems);
   };
 
+  useEffect(() => {
+    if (typeof onItemsChange === 'function') {
+      onItemsChange(items);
+    }
+  }, [items]);
 
 
   const handleAddRow = () => {
@@ -72,6 +77,12 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
         keyExtractor={(item, index) => index.toString()}
       />
 
+
+    </View>
+
+<View
+style={styles.wrap}
+>
 <TouchableOpacity onPress={handleAddRow}>
     <View style={styles.buttonBack}>
         <Image
@@ -82,8 +93,8 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
         />
         </View>
       </TouchableOpacity>
-    </View>
-    
+</View>
+
     </View>
       
      
@@ -511,6 +522,13 @@ const styles = StyleSheet.create({
         bottom: "79.19%",
         left: "86.28%",
         position:"absolute",
+      },
+      wrap:{
+        height:40,
+        width:180,
+        backgroundColor: Color.steelblue_300,
+        borderRadius: 1,
+        position: "relative",
       },
       text1: {
         left: 5,

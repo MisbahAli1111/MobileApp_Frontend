@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 
-function InvoiceDiscount() {
+function InvoiceDiscount({ onItemsChange }) {
 const navigation = useNavigation();
 const [items, setItems] = useState([{ itemName: '', rate: ''}]);
 
@@ -43,7 +43,11 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
     setItems(newItems);
   };
 
-
+  useEffect(() => {
+    if (typeof onItemsChange === 'function') {
+      onItemsChange(items);
+    }
+  }, [items]);
 
   const handleAddRow = () => {
     setItems([...items, { itemName: '', rate: ''}]);
@@ -71,7 +75,10 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
-
+</View>
+<View
+style={styles.wrap}
+>
 <TouchableOpacity onPress={handleAddRow}>
     <View style={styles.buttonBack}>
         <Image
@@ -82,8 +89,7 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
         />
         </View>
       </TouchableOpacity>
-    </View>
-    
+ </View>   
     </View>
       
      
@@ -97,6 +103,14 @@ left:20,
 marginTop:20,
 
 position:'relative',
+},
+wrap:{
+  height:40,
+  width:180,
+  left:5,
+  backgroundColor: Color.steelblue_300,
+  borderRadius: 1,
+  position: "relative",
 },
 buttonBack:{
   elevation: 20,
@@ -223,7 +237,7 @@ groupLayout: {
   // },
   rectangleViewBg: {
     backgroundColor: Color.steelblue_300,
-    borderRadius: Border.br_3xs,
+    borderRadius: 4,
     position: "relative",
   },
   rateTypo: {
@@ -564,7 +578,7 @@ groupLayout: {
   rectangleIcon: {
     height: 38,
     width: 180,
-    left: 0,
+    left: 5,
     top: 0,
     borderRadius: Border.br_3xs,
     position: "absolute",
@@ -572,7 +586,7 @@ groupLayout: {
   rectangleView: {
     marginTop:17,
     width: 180,
-    left: 0,
+    left: 5,
   },
   vectorGroup: {
     left: 0,
@@ -865,7 +879,7 @@ groupLayout: {
   },
   frameView: {
     top: 171,
-    left: 20,
+    left: 30,
     position: "absolute",
     width:180 ,
   },

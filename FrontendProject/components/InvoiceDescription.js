@@ -6,10 +6,17 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 
-function InvoiceDescription() {
+function InvoiceDescription({ onItemsChange }) {
 const navigation = useNavigation();
+;
+
 const [items, setItems] = useState([{ itemName: '', rate: '', quantity: '' }]);
 
+useEffect(() => {
+  if (typeof onItemsChange === 'function') {
+    onItemsChange(items);
+  }
+}, [items]);
 const [amount, setAmount] = useState(0);
 
   const renderItem =({ item, index })=>(
@@ -32,7 +39,7 @@ const [amount, setAmount] = useState(0);
       style={[styles.text3, styles.textTypo]}
       onChangeText={(text) => handleChangeQuantity(text, index)}
       value={item.quantity}
-      placeholder="QTY"
+      placeholder="0"
       keyboardType="numeric"
     />
     <Text style={[styles.amountt, styles.rateTypo]}>{calculateAmount(index)}</Text>
@@ -97,7 +104,13 @@ const [amount, setAmount] = useState(0);
         keyExtractor={(item, index) => index.toString()}
       />
 
-<TouchableOpacity onPress={handleAddRow}>
+  
+    </View>
+    <View
+    style={styles.wrap}
+    >
+    <TouchableOpacity 
+    onPress={handleAddRow}>
     <View style={styles.buttonBack}>
         <Image
         
@@ -106,9 +119,9 @@ const [amount, setAmount] = useState(0);
           source={require("../assets/vector11.png")}
         />
         </View>
+        
       </TouchableOpacity>
-    </View>
-    
+      </View>
     </View>
       
      
@@ -161,12 +174,14 @@ rowContainer: {
   justifyContent: 'space-between',
   paddingHorizontal: 5,
   paddingVertical: 10,
+  
 },
 
 groupLayout: {
   flexDirection: 'row',
   alignItems: 'center',
   left:10,
+
 },
   // container:{
   //  // marginLeft:0,
@@ -247,9 +262,17 @@ groupLayout: {
   //   width: 392,
   //   position: "absolute",
   // },
+  wrap:{
+    width:378,
+    height:40,
+    left:5,
+    backgroundColor: Color.steelblue_300,
+    borderRadius: 3,
+    position: "relative",
+  },
   rectangleViewBg: {
     backgroundColor: Color.steelblue_300,
-    borderRadius: Border.br_3xs,
+    borderRadius: 4,
     position: "relative",
   },
   rateTypo: {
@@ -266,17 +289,17 @@ groupLayout: {
     textAlign: "left",
   },
   addTypo1: {
-    left: 132,
-    width: 64,
-    color: Color.dimgray_200,
+    left: 112,
+    width: 100,
+    color: Color.Black,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
     position: "absolute",
   },
   textTypo: {
-    width: 30,
-    left: 222,
+    width: 100,
+    left: 210,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
@@ -587,16 +610,16 @@ groupLayout: {
   },
   rectangleIcon: {
     height: 38,
-    width: 392,
-    left: 0,
+    width: 378,
+    left: 5,
     top: 0,
     borderRadius: Border.br_3xs,
     position: "absolute",
   },
   rectangleView: {
     marginTop:17,
-    width: 392,
-    left: 0,
+    width: 378,
+    left: 5,
   },
   vectorGroup: {
     left: 0,
@@ -885,7 +908,7 @@ groupLayout: {
   },
   frameView: {
     top: 171,
-    left: 20,
+    left: 25,
     position: "absolute",
     width:180 ,
   },

@@ -1,458 +1,125 @@
-import * as React from "react";
+import React from 'react';
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
-import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, View, Text, Pressable,ScrollView, TouchableOpacity, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
-import Footer from "../components/Footer";
-import InvoiceDetailView from "./InvoiceDetailView";
+import { View, StyleSheet,Text,TextInput,Pressable } from 'react-native';
+import { BarChart } from 'react-native-chart-kit';
+import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import CreateInvoiceForm from "../components/CreateInvoiceForm";
-import InvoiceDescription from "../components/InvoiceDescription";
-import InvoiceTax from "../components/InvoiceDiscount";
-import InvoiceDiscount from "../components/InvoiceTax";
-import { useRef } from "react";
-
-
-const CreateInvoice = () => {
 
 
 
-  const navigation = useNavigation();
+const CreateInvoiceForm = ({onFormDataChange }) => {
 
+    const [name, setName]=useState('');
+    // console.warn(name);
+    const [status, setStatus]=useState('');
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [regNumber,setregNumber]=useState('');
 
-
-  const[showPicker,setShowPicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [date, setDate]=useState(new  Date());
   
-  const [itemName,setItemName]=useState('');
-  const [rate,setRate]=useState('');
-  const [amount,setAmount]=useState(0);
-  const [quantity,setQuantity]=useState('');
- 
-  
-  
-  const [disRateper,setdisRateper]=useState(0);
-  const [total, setTotal]=useState('');
-  const [calculation, setCalculation]=useState(0);
-  
-
-  const [Description,setDescription]=useState(['']);
-  const [discount ,setDiscount] = useState(['']);
-  const [tax,setTax]=useState(['']);
-  
-  
-  const invoiceStatus =['Paid' ,'Due'];
-  const [Name, setName ] = useState('');
-  const [regNumber, setregNumber ] = useState('');
-  const [date, setDate ] = useState('');
-  const [totalAmount, setTotalAmount] = useState(0);
-
-    const handleItemsChange = (items) => {    
-      setDescription(items);
-    };
-
-    const handleTaxChange = (items) =>{
-      setDiscount(items);
-    }
-    const handleDiscount =(items)=>{
-      setTax(items);
-    }
-    const handleFormDataChange = (data) => {
-      setName(data.name);
-      setDate(data.date);
-      setregNumber(data.regNumber);
-    };
-  
-    const handleSave = () => {
-      const isDescriptionEmpty = Description.some(
-        (item) => !item.itemName || !item.quantity || !item.rate
-      );
+    const handleDateChange = (event, date) => {
+        setShowDatePicker(false);
+        if (date) {
+          setSelectedDate(date);
+          
+        }
+      };
     
-      const isDiscountEmpty = discount.some((item) => !item.itemName || !item.rate);
-    
-      const isTaxEmpty = tax.some((item) => !item.itemName || !item.rate);
-    
-    
-      if (!Name || !regNumber ||   isDescriptionEmpty || isDiscountEmpty || isTaxEmpty) {
-        Alert.alert('Please fill all fields.');
-      } else {
-        //  navigation.navigate('InvoiceDetailView');
-      }
-    };
+      const openDatePicker = () => {
+        setShowDatePicker(true);
+      };
 
 
-   
-
-    // const handleInvoiceStatusSelect = (code) => {
-    //   setStatus(code);
-      
-    // };
-
-   
-
-//  const invoiceData=[name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper,regNumber];
-//  useEffect(()=>{
-//  setAmount(quantity*rate);
-//  },[quantity,rate])
-
-
-//  useEffect(() => {
-//   // Convert the input values to numbers
-//   const amountValue = parseFloat(amount);
-//   const taxRateValue = parseFloat(taxRate);
-//   const disRateperValue = parseFloat(disRateper);
-
-//   // Perform the calculation whenever any of the input values change
-//   const calculation = amountValue + (amountValue * (taxRateValue / 100)) - (amountValue * (disRateperValue / 100));
-  
-//   // Set the calculation result and the total
-//   setCalculation(calculation);
-//   setTotal("Rs. " + calculation.toFixed(2));
-// }, [amount, taxRate, disRateper]);
-
-useEffect(() => {
-  setAmount(0.0);
-  calculateTotalAmount();
-}, [Description, discount, tax]);
-
-const calculateTotalAmount = () => {
-  if (
-    Description.some((item) => !item.itemName || !item.quantity || !item.rate) ||
-    discount.length === 0 ||
-    tax.length === 0
-  ) {
-    setTotalAmount(0.0);
-    return;
-  }
-
- 
-  let totalAmount = 0.0; 
-  
-
-  
-
- for (const item of Description) {
-  
-    const itemAmount = parseFloat(item.quantity) * parseFloat(item.rate); 
-    totalAmount += itemAmount;
-    
-  }
-
-  
-  let totalDiscount = 0.0;
-  for (const disc of discount) {
-    totalDiscount += (parseFloat(disc.rate) / 100) * totalAmount; // Convert rate to decimal
-  } 
-
-  let totaltax = 0.0;
-  for (const t of tax) {
-    totaltax += (parseFloat(t.rate) / 100) * totalAmount; // Convert rate to decimal
-  }
-  totalAmount += totalDiscount;
-    totalAmount -= totaltax;
-
-    totalAmount=totalAmount.toFixed(2);
-  
-  setTotalAmount(totalAmount);
-
-};
-
-
-
-//  function createInvoiceFunction()
-//  {
-//   navigation.navigate("InvoiceDetailView", { data: invoiceData });
-//  }
-//   function addService() { 
-
-//    }
-//    function addDiscounts()
-//    {
-
-//    }
-//    function addTaxes()
-//    {
-    
-//    }
-
-
-//Date Functions
-
-
-   
-  
+      useEffect(() => {
+        if (typeof onFormDataChange === 'function') {
+          onFormDataChange({ name, regNumber, date });
+        }
+      }, [name, regNumber, date, onFormDataChange]);
 
   return (
-<View style={styles.createInvoice}>
-      {/* <Image
-        style={[styles.createInvoiceChild, styles.createChildLayout3]}
-        contentFit="cover"
-        source={require("../assets/rectangle-63.png")}
-      /> */}
-      <Image
-        style={[styles.lightTexture22341Icon, styles.groupChildPosition]}
-        contentFit="cover"
-        source={require("../assets/light-texture2234-1.png")}
-      />
-      <Image
-        style={[styles.image2Icon, styles.image2IconPosition]}
-        contentFit="cover"
-        source={require("../assets/image-2.png")}
-      />
-      <View style={[styles.breadcrumbs, styles.element2Position]}>
-        <View style={[styles.housefill, styles.elementFlexBox]}>
-          <Image
-            style={styles.homeMutedIcon}
-            contentFit="cover"
-            source={require("../assets/homemuted.png")}
-          />
+    <View style={styles.main}>
+        {/* Name  */}
+        <View style={styles.frameView}>
+       <View style={styles.loritaWrapper}>
+          <TextInput style={[styles.lorita, styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
         </View>
-        <View style={[styles.element, styles.elementFlexBox]} />
-        <View style={[styles.element1, styles.elementFlexBox]}>
-          <Text style={styles.text}>\</Text>
-        </View>
-        <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
-      </View>
-
-      <View style={[styles.vectorParent, styles.groupChildPosition]}>
+         {/* frame2@3x */}
         <Image
-          style={[styles.groupChild, styles.groupChildPosition]}
+          style={styles.date2SvgrepoCom11}
           contentFit="cover"
-          source={require("../assets/rectangle-571.png")}
+          source={require("../assets/frame2.png")}
         />
-        <View style={styles.groupItem} />
-        <View style={styles.createInvoiceParent}>
-          <Text style={styles.createInvoice1}>Create Invoice</Text>
-          <Image
-            style={[styles.vectorIcon, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.wrapperLayout]}
-          onPress={() => handleSave}
-        >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
-      </View>
-
-      <Image
-        style={[styles.createInvoiceItem, styles.image2IconPosition]}
-        contentFit="cover"
-        source={require("../assets/rectangle-65.png")}
-      />
-      {/* reg number  */}
-      <Image
-        style={[styles.groupIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/group-141.png")}
-      />
-
-      
-
-      <View style={[styles.element2, styles.elementFlexBox]}>
-        <Text style={styles.textt}>\</Text>
-      </View>
-      <Text style={styles.createInvoice2}>Create Invoice</Text>
-       
-
-
-
-
-
-        {/* description  */}
-       {/* <View style={[styles.groupParent, styles.groupLayout]}>
-        <View style={[styles.vectorGroup, styles.groupLayout]}>
-          <Image
-            style={styles.rectangleIcon}
-            contentFit="cover"
-            source={require("../assets/rectangle-62.png")}
-          />
-          <View style={[styles.rectangleView, styles.rectangleViewBg]} />
-        </View>
-         <Text style={[styles.description, styles.rateTypo]}>DESCRIPTION</Text>
-        <TextInput style={[styles.addItem, styles.taxTypo1]} onChangeText={setItemName} placeholder="Add Item"></TextInput>
-        <TextInput style={styles.addItem1} placeholder="Add Item"></TextInput>
-        <Text style={[styles.rate, styles.rateTypo]}>RATE</Text>
-        <TextInput style={[styles.addRate, styles.addTypo1]} onChangeText={setRate} placeholder="Add Rate" keyboardType="numeric"></TextInput>
-        <TextInput style={[styles.addRate1, styles.addTypo1]} placeholder="Add Rate" keyboardType="numeric"></TextInput>
-        <Text style={[styles.qty, styles.rateTypo]}>QTY</Text>
-        <TextInput style={[styles.text3, styles.textTypo]} onChangeText={setQuantity} placeholder="QTY  " keyboardType="numeric"></TextInput>
-        <TextInput style={[styles.text4, styles.textTypo]}placeholder="QTY" keyboardType="numeric"></TextInput>
-        <Text style={[styles.amount, styles.rateTypo]}>Amount</Text>
-        <Text style={[styles.addAmount, styles.addTypo]} >{amount}</Text>
-        <TextInput style={[styles.addAmount1, styles.addTypo]} placeholder="0">{amount}</TextInput>
-        <View style={[styles.groupChild1, styles.groupChildLayout]} />
-        <View style={[styles.groupChild2, styles.groupChildLayout]} /> 
-       </View> */}
-        <View style={styles.form}>
-       <CreateInvoiceForm onFormDataChange={handleFormDataChange}/>
-       </View>
-       <ScrollView  style={styles.scroll}>
-        <View>
-          <InvoiceDescription onItemsChange={handleItemsChange}/>
-        </View>
-        <View style={styles.containerr}>
-      <View style={styles.tablewrapper}>
-        <View style={styles.tableRow}>
-          <View style={styles.taxd}>
-            <InvoiceDiscount onItemsChange={handleDiscount} />
-          </View>
-          <View style={styles.taxdd}>
-            <InvoiceTax onItemsChange={handleTaxChange}/>
-          </View>
-        </View>
-      </View>
-    </View>
-    </ScrollView>
-      <View style={[styles.footer,styles.foo]}>
-      <Footer prop={"Invoices"} />
-      </View>  
-
-
-
-
-       {/* <Image
-        style={[styles.createInvoiceChild1, styles.createChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/rectangle-621.png")}
-      /> */}
-       
-{/* <View style={[styles.createInvoiceChild2, styles.rectangleViewBg]} /> */}
-{/* <TouchableOpacity onPress={addTaxes}>
-      <View style={[styles.rectangleParent, styles.rectangleShadowBox]}>
-        <View style={styles.groupChildShadowBox} />
-        <Image
-          style={[styles.vectorIcon1, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/vector11.png")}
-        />
-      </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={addService}>
-      <View style={[styles.rectangleGroup, styles.rectangleShadowBox]}>
-        <View style={styles.groupChildShadowBox} />
      
-        <Image
-          style={[styles.vectorIcon1, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/vector11.png")}
-        />
-        
-      </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={addDiscounts}>
-      
-      <View style={[styles.rectangleContainer, styles.rectangleShadowBox]}>
-        <View style={styles.groupChildShadowBox} />
-        <Image
-          style={[styles.vectorIcon1, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/vector11.png")}
-        />
-      
-      </View>
-      </TouchableOpacity> */}
-      {/* <View style={[styles.taxesParent, styles.rateParentLayout]}>
-        <Text style={[styles.taxes, styles.rateTypo]}>Taxes  </Text>
-        <TextInput style={[styles.taxName, styles.taxLayout2]} onChangeText={setTaxName}  placeholder="Tax Name"></TextInput>
-        <TextInput style={[styles.taxName1, styles.taxLayout2]}  placeholder="Tax Name"></TextInput>
-      </View>
-      <View style={[styles.taxRateParent, styles.taxLayout1]}>
-        <Text style={[styles.taxRate, styles.taxLayout1]}>Tax Rate(%)</Text>
-        <TextInput style={[styles.taxRate1, styles.taxLayout]} onChangeText={setTaxRate} placeholder="Tax Rate" keyboardType="numeric"></TextInput>
-        <TextInput style={[styles.taxRate2, styles.taxLayout]}  placeholder="Tax Rate" keyboardType="numeric"></TextInput>
-      </View> */}
-      {/* <View style={[styles.createInvoiceChild3, styles.createChildLayout1]} />
-      <View style={[styles.createInvoiceChild4, styles.createChildPosition]} /> */}
-      {/* <Image
-        style={[styles.createInvoiceChild5, styles.createChildLayout2]}
-        contentFit="cover"
-        source={require("../assets/rectangle-621.png")}
-      /> */}
-      {/* <View style={[styles.discountsParent, styles.discountsLayout]}>
-        <Text style={[styles.discounts, styles.discountsLayout]}>
-          Discounts
-        </Text>
-        <TextInput style={[styles.name, styles.nameTypo]} onChangeText={setDisName} placeholder="Name" ></TextInput>
-        <TextInput style={[styles.name1, styles.nameTypo]} placeholder="Name"></TextInput>
-      </View> */}
-      {/* <View style={[styles.rateParent, styles.taxLayout]}>
-        <Text style={styles.rate1}>Rate(%)</Text>
-        <TextInput style={[styles.taxRate3, styles.taxLayout]} onChangeText={setdisRateper} placeholder="Tax Rate" keyboardType="numeric"></TextInput>
-        <TextInput style={[styles.taxRate4, styles.taxLayout]} placeholder="Tax Rate" keyboardType="numeric"></TextInput>
-      </View> */}
-      <View style={[styles.createInvoiceChild6, styles.createChildLayout1]} />
-      <View style={[styles.createInvoiceChild7, styles.createChildPosition]} />
-      
-      <Image
-        style={[styles.vectorIcon4, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector12.png")}
-      />
-      <View style={styles.group}>
-        <Text style={[styles.text5, styles.text5Clr]}>-</Text>
-        <Text style={[styles.total, styles.totalTypo]}>Total</Text>
-        <Text style={[styles.rs3050, styles.text5Clr]}>Rs {totalAmount}</Text>
-      </View>
-     <TouchableOpacity>
-      <Image
-        style={styles.ellipseIcon}
-        contentFit="cover"
-        source={require("../assets/vector-61.png")}
-      />
-      </TouchableOpacity>
-
-      {/* { (
-        <View>
-        <Picker
-        style={styles.picker}
-          selectedValue={status}
-          onValueChange={(itemValue) =>handleInvoiceStatusSelect(itemValue)}
-        >
-          <Picker.Item label="Select Vehicle Type" value="" />
-          {invoiceStatus.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )} */}
-
-      
-       <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
-        <TouchableOpacity onPress={handleSave}>
-        <Image
-          style={[styles.groupChild6, styles.groupChild6Layout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-73.png")}
-        />
-        <TouchableOpacity onPress={handleSave}>
-          <Text style={[styles.createInvoice3, styles.totalTypo]}>
-          Create Invoice
-        </Text>
-        </TouchableOpacity>
-        </TouchableOpacity> 
-
       </View> 
+
+    {/* reg  */}
+    <View style={[styles.createInvoiceInner, styles.createLayout]} />
+      <TextInput style={[styles.regNumber, styles.text5Clr]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput> 
+      {/* licenseplatenumbersvgrepocom-12@3x  */}
+      <View style={styles.ss}>
       <Image
-          style={styles.maskGroupIcon}
+          style={styles.date2SvgrepoCom11}
           contentFit="cover"
-          source={require("../assets/mask-group.png")}
+          source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
         />
-      
+        </View>
+    <View style={[styles.createInvoiceChild8, styles.createLayout]} />
+      {/* date and status  */}
+      <View style={styles.parent}>
+
+        <TextInput 
+        style={[styles.text1, styles.text1Typo]}
+        value={selectedDate ? selectedDate.toDateString() : ''}
+        placeholder="Select a date"
+        editable={false}></TextInput>
+         
+        <View style={[styles.groupInner, styles.lineViewPosition]} />
+        
+        
+        
+        <TextInput style={[styles.statusPaiddue, styles.text1Typo]}
+         value={status} 
+         editable={false}
+         placeholder="Status"
+        />
+        <View style={[styles.lineView, styles.lineViewPosition]} />
+
+        {/* vector-7@3x  */}
+        <Image
+          style={styles.pick}
+          contentFit="cover"
+          source={require("../assets/vector-7.png")}
+        />
+        <Pressable
+        onPress={openDatePicker}
+        >
+        <Image
+          style={styles.date2SvgrepoCom11}
+          contentFit="cover"
+          source={require("../assets/date2svgrepocom-1-11.png")}
+        />
+        </Pressable>
+        {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+        )}
+      </View>
     </View>
-    
   );
 };
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+
+  },
+
   // container:{
   //  // marginLeft:0,
   // },
@@ -462,37 +129,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
-  form:{
-    marginTop:0,
-  },
+
   createChildLayout3: {
     height: 126,
     top: 501,
     width: 186,
   },
-  taxd:{
-    flex: 1,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
- 
+
+  ss:{
+    top:176,
+    left:215,
   },
-  containerr:{
-    flex:1,
+
+
+  pick:{
+    left: 359,
+    height: 15,
+    width: 15,
+    top: 5,
+    position: "absolute",
+    overflow: "hidden",
   },
-  footer:{
-    position:'absolute',
-  },
-  tablewrapper:{
-    flex:1,
-  },
-  taxdd:{
-    flex: 1, 
-  },
-  scroll:{
-    marginTop:300,
-   
-    height:350,
-  },
+
   groupChildPosition: {
     width: 430,
     left: 0,
@@ -534,13 +192,14 @@ const styles = StyleSheet.create({
     borderColor: "#cbcbcb",
     borderStyle: "solid",
     top: 204,
-    width: 188,
+    width: 174,
     position: "absolute",
   },
   text5ClrName: {
     top:5,
     color: Color.dimgray_100,
     textAlign: "left",
+    left:12,
   },
   text1Typo: {
     top: 1,
@@ -753,15 +412,6 @@ const styles = StyleSheet.create({
     height: 20,
     top: 0,
   },
-  textt: {
-    fontSize: FontSize.caption2Regular_size,
-    lineHeight: 17,
-    fontFamily: FontFamily.caption2Regular,
-    textAlign: "left",
-    color: Color.textTxtPrimary,
-    fontWeight: "500",
-    left:10,
-  },
   text: {
     fontSize: FontSize.caption2Regular_size,
     lineHeight: 17,
@@ -769,7 +419,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.textTxtPrimary,
     fontWeight: "500",
-    left:0,
   },
   element1: {
     left: 18,
@@ -785,7 +434,7 @@ const styles = StyleSheet.create({
   breadcrumbs: {
     width: 87,
     height: 20,
-    left: 30,
+    left: 19,
     position: "absolute",
   },
   groupChild: {
@@ -864,19 +513,19 @@ const styles = StyleSheet.create({
     position:"absolute",
   },
   text1: {
-    left: 5,
+    left: 12,
   },
   invoiceStatusPicker:{
     top:232
   },
   groupInner: {
-    left: -1,
+    left: 8,
     top: 34,
-    width: 186,
+    width: 174,
   },
   lineView: {
     left: 205,
-    width: 188,
+    width: 174,
     top: 34,
   },
   statusPaiddue: {
@@ -904,7 +553,7 @@ const styles = StyleSheet.create({
   },
   createInvoice2: {
     top: 130,
-    left: 130,
+    left: 119,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
@@ -1179,7 +828,7 @@ const styles = StyleSheet.create({
     left: 225,
   },
   createInvoiceChild8: {
-    left: 18,
+    left: 26,
   },
   lorita: {
     fontFamily: FontFamily.poppinsRegular,
@@ -1210,22 +859,22 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: FontSize.size_sm,
     position: "absolute",
-    top: -25,
+    top: 0,
   },
   total: {
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_sm,
     color: Color.textTxtPrimary,
-    left: -8,
-    top: -25,
+    left: -5,
+    top: 0,
   },
   rs3050: {
-    left: 50,
+    left: 55,
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     fontSize: FontSize.size_sm,
     position: "absolute",
-    top: -25,
+    top: 0,
   },
   group: {
     left: 279,
@@ -1364,6 +1013,7 @@ const styles = StyleSheet.create({
       left:-8,
    position:"absolute",
   },
-});
 
-export default CreateInvoice;
+ 
+});
+export default CreateInvoiceForm;
