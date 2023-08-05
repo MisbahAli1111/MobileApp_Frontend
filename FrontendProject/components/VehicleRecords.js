@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
         height:538,
         marginLeft:13,
         width:385,
+        zIndex:1,
     },
     image2IconPosition: {
         width: 430,

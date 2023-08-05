@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   cont:{
     padding:6,
-    top:-14,
+    top:-10,
     right:5,
     zIndex:999,
   },

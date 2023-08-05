@@ -59,19 +59,19 @@ const App = () => {
               name="AddRecord"
               component={AddRecord}
               options={{ headerShown: false }}
-            />
+            />*/}
             <Stack.Screen
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               options={{ headerShown: false }}
-        /> */}
-            {/* <Stack.Screen
+        /> 
+            <Stack.Screen
               name="Invoices"
               component={Invoices}
               options={{ headerShown: false }}
         />  
                
-            
+            {/* 
             <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
@@ -109,19 +109,19 @@ const App = () => {
               name="OwnerInfo"
               component={OwnerInfo}
               options={{ headerShown: false }}
-          /> 
+          />  */}
             <Stack.Screen
               name="CreateInvoice"
               component={CreateInvoice}
               options={{ headerShown: false }}
-            />  */}
+            /> 
             
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               options={{ headerShown: false }}
-            />*/}
+            />
             
               <Stack.Screen
               name="MaintenanceRecord"
@@ -135,11 +135,11 @@ const App = () => {
               component={Vehicles}
               options={{ headerShown: false }}
             />  
-             {/* <Stack.Screen 
+             <Stack.Screen 
               name="AddVehicle"
               component={AddVehicle}
               options={{ headerShown: false }}
-            />   */}
+            />  
              <Stack.Screen 
               name="VehicleDetails"
               component={VehicleDetails}

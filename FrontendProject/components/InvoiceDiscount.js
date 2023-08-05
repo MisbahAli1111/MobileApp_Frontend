@@ -111,17 +111,17 @@ const styles = StyleSheet.create({
     },
     buttonBack:{
       elevation: 20,
-      shadowRadius: 20,
+      shadowRadius: 150,
       shadowColor: "rgba(0, 0, 0, 0.05)",
       backgroundColor: Color.steelblue_200,
-      height: 26,
-      width: 54,
-      borderRadius:8,
-      shadowOpacity: 1,
+      height: 27,
+      width: 48,
+      borderRadius:10,
+      shadowOpacity: 30,
       left:60,
       shadowOffset: {
         width: 0,
-        height: 3,
+        height: 30,
         
       }
     
@@ -134,11 +134,13 @@ const styles = StyleSheet.create({
       marginRight: 5,
     },
     addButton:{
-     height:24,
-     width:24,
-     alignContent:'center',
-     left:14,
-    
+      height:16,
+      width:16,
+      alignContent:'center',
+      left:16,
+      top:4,
+      marginTop:0,
+     
     },
     rowContainer: {
       flexDirection: 'row',
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
       // },
       rectangleViewBg: {
         backgroundColor: Color.steelblue_300,
-        borderRadius: Border.br_3xs,
+        borderRadius: 5,
         position: "relative",
       },
       rateTypo: {
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
         textAlign: "left",
       },
       addTypo1: {
-        left: 85,
+        left: 100,
         width: 164,
         color: Color.dimgray_200,
         fontFamily: FontFamily.poppinsRegular,
@@ -525,7 +527,8 @@ const styles = StyleSheet.create({
       },
       wrap:{
         height:40,
-        width:180,
+        width:185,
+        left:-5,
         backgroundColor: Color.steelblue_300,
         borderRadius: 1,
         position: "relative",
@@ -581,16 +584,16 @@ const styles = StyleSheet.create({
       },
       rectangleIcon: {
         height: 38,
-        width: 180,
-        left: 0,
+        width: 185,
+        left: -5,
         top: 0,
         borderRadius: Border.br_3xs,
         position: "absolute",
       },
       rectangleView: {
         marginTop:17,
-        width: 180,
-        left: 0,
+        width: 185,
+        left: -5,
       },
       vectorGroup: {
         left: 0,
@@ -598,7 +601,7 @@ const styles = StyleSheet.create({
       },
       description: {
         width: 150,
-        left: 10,
+        left: 6,
         position: "absolute",
         top: 10,
         flexDirection:'row',
@@ -612,7 +615,7 @@ const styles = StyleSheet.create({
         fontWeight:'700',
         width:100,
         flexDirection:'column',
-        left:-10,
+        left:6 ,
       },
       addItem1: {
         width: 64,
@@ -625,7 +628,7 @@ const styles = StyleSheet.create({
         position: "absolute",
       },
       rate: {
-        left: 90,
+        left: 102,
         width: 100,
         top: 10,
         position: "absolute",

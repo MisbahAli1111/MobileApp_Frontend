@@ -26,8 +26,6 @@ function Footer(props) {
       navigation.navigate("Invoices", {data:props.data});
      } 
      navigation.navigate("Invoices", {data:props.data});
-   
-   
   }
   function handleHomePress() {
     
@@ -44,7 +42,7 @@ function Footer(props) {
     navigation.navigate("AddRecord");
   }
   return (
-    <View>
+    <View style={styles.cont}>
 
       <View style={[styles.rectangleView, styles.iconLayout1]} />
       <View style={styles.addVehicleChild12} />
@@ -113,6 +111,7 @@ function Footer(props) {
           source={require("../assets/group-111.png")}
         />
       </Pressable>
+      
       <TouchableWithoutFeedback
       onPress={handleAddRecord}
       >
@@ -122,6 +121,8 @@ function Footer(props) {
         source={require("../assets/group-174.png")}
       />
       </TouchableWithoutFeedback>
+
+
       <TouchableOpacity onPressIn={handleVehiclePress}
         style={[styles.wrapper1, styles.ellipseLayout]}
         onPress={handleVehiclePress}
@@ -153,6 +154,9 @@ function Footer(props) {
   );
 }
 const styles = StyleSheet.create({
+  cont:{
+    top:-8,
+  },
   iconLayout1: {
     width: 430,
     left: 0,

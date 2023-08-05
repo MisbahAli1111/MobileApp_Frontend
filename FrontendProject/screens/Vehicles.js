@@ -65,6 +65,8 @@ const Vehicles = () => {
             source={require("../assets/rectangle-58.png")}
           />
         </Pressable>
+     
+
         <View style={[styles.cont]}>
           <Footer prop={"Vehicles"} />
         </View>
@@ -139,13 +141,11 @@ const styles = StyleSheet.create({
   },
   cont: {
     padding: 6,
-    top: -50,
+    top: -45,
     right: 5,
-    
+    zIndex:999,
   },
-  contView: {
-    
-    
+  contView: { 
   },
 
 

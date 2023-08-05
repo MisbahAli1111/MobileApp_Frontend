@@ -168,12 +168,15 @@ const styles = StyleSheet.create({
     left:228,
     top:10
   },
+  cont:{
+    marginLeft:1,
+  },
   boxContianer :{
     flex:1,
     flexWrap:"wrap",
     marginTop:220,
     marginLeft: 10,
-    marginBottom:115,
+    marginBottom:90,
     // alignItems: 'flex-end', 
   },
   iconLayout1: {

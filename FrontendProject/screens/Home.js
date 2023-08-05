@@ -9,9 +9,8 @@ import { TouchableWithoutFeedback } from 'react-native';
 import Footer from "../components/Footer";
 import * as Svg from 'react-native-svg';
 import { LineChart } from "react-native-chart-kit";
-
+import HomeVehicleTypes from "../components/HomeVehicleTypes";
 import ProfilePopDown from "../components/ProfilePopDown";
-
 import DashboardGraph from "../components/DashboardGraph";
 
 const Home = () => {
@@ -81,79 +80,7 @@ const Home = () => {
 
       {/* car , bike, auto.. */}
 
-      {/* car  */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Vehicles', { type: 'Car' })}
-        activeOpacity={0.5}
-      >
-        <LinearGradient
-          style={[styles.rectangleLineargradient, styles.homeChild1Layout]}
-          locations={[0, 1]}
-          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-        />
-        <Text style={[styles.car, styles.carTypo]}>Car</Text>
-        <Image
-          style={styles.pngwing3Icon}
-          contentFit="cover"
-          source={require("../assets/pngwing-3.png")}
-        />
-      </TouchableOpacity>
-
-      {/* bike  */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Vehicles', { type: 'Bike' })}
-        activeOpacity={0.5}
-      >
-        <Image
-          style={[styles.pngwing1Icon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/pngwing-1.png")}
-        />
-        <LinearGradient
-          style={[styles.homeChild1, styles.homeChild1Layoutt]}
-          locations={[0, 1]}
-          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-        />
-        <Text style={[styles.bike, styles.bikeLayout]}>Bike</Text>
-      </TouchableOpacity>
-
-      {/* truck  */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Vehicles', { type: 'Truck' })}
-        activeOpacity={0.5}
-      >
-        <LinearGradient
-          style={[styles.homeChild2, styles.homeChildLayout]}
-          locations={[0, 1]}
-          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-        />
-        <Text style={[styles.truck, styles.autoTypo]}>Truck</Text>
-        <Image
-          style={[styles.pngwing2Icon, styles.groupChildLayout2]}
-          contentFit="cover"
-          source={require("../assets/pngwing-2.png")}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Vehicles', { type: 'Auto' })}
-        activeOpacity={0.5}
-      >
-        {/* auto  */}
-        <LinearGradient
-          style={[styles.homeChild3, styles.homeChildLayout]}
-          locations={[0, 1]}
-          colors={["rgba(7, 132, 199, 0.5)", "rgba(217, 217, 217, 0)"]}
-        />
-        <Text style={[styles.auto, styles.autoTypo]}>Auto</Text>
-        <Image
-          style={[styles.pngegg1Icon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/pngegg-1.png")}
-        />
-      </TouchableOpacity>
-
-     
+     <HomeVehicleTypes />
 
 
 
@@ -188,6 +115,9 @@ const styles = StyleSheet.create({
     width: 430,
     left: 0,
     position: "absolute",
+  },
+  wrap:{
+    left:-5,
   },
   homeLayout: {
     width: 186,

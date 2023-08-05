@@ -193,14 +193,16 @@ const styles = StyleSheet.create({
     position: "relative",
     alignItems: 'flex-start',
     flexWrap:"wrap",
-    marginTop:5,
+    marginBottom:20,
   },
   serviceWrapper: {
     top: 84,
   },
   wrap:{
   width:385,
-    
+  marginLeft:1,
+  
+  
   },
   text2Typo: {
     color: Color.gray_300,

@@ -138,17 +138,17 @@ position:'relative',
 },
 buttonBack:{
   elevation: 20,
-  shadowRadius: 20,
+  shadowRadius: 150,
   shadowColor: "rgba(0, 0, 0, 0.05)",
   backgroundColor: Color.steelblue_200,
-  height: 26,
-  width: 54,
-  borderRadius:8,
-  shadowOpacity: 1,
-  left:159,
+  height: 27,
+  width: 48,
+  borderRadius:10,
+  shadowOpacity: 30,
+  left:160,
   shadowOffset: {
     width: 0,
-    height: 3,
+    height: 30,
     
   }
 
@@ -163,10 +163,13 @@ inputField: {
   marginRight: 5,
 },
 addButton:{
- height:24,
- width:24,
- alignContent:'center',
- left:14,
+  height:16,
+  width:16,
+  alignContent:'center',
+  left:16,
+  top:4,
+  marginTop:0,
+ 
 },
 rowContainer: {
   flexDirection: 'row',
@@ -289,7 +292,7 @@ groupLayout: {
     textAlign: "left",
   },
   addTypo1: {
-    left: 112,
+    left: 110,
     width: 100,
     color: Color.Black,
     fontFamily: FontFamily.poppinsRegular,
@@ -299,7 +302,7 @@ groupLayout: {
   },
   textTypo: {
     width: 100,
-    left: 210,
+    left: 213,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
@@ -693,7 +696,7 @@ groupLayout: {
     position: "absolute",
   },
   amountt: {
-    left: 291,
+    left: 286,
     width: 80,
     top: -4,
     paddingVertical: 24,
