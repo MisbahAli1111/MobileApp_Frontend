@@ -12,7 +12,7 @@ import {shareAsync} from 'expo-sharing';
 import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-function InvoiceDetailView({route}) {
+function InvoiceDetailView() {
   const [groupContainer10Visible, setGroupContainer10Visible] = useState(false);
   const navigation = useNavigation();
 
@@ -23,7 +23,6 @@ function InvoiceDetailView({route}) {
   const closeGroupContainer10 = useCallback(() => {
     setGroupContainer10Visible(false);
   }, []);
-  const { data } = route.params;
 
   const html = `
   <html lang="en">
@@ -116,7 +115,7 @@ function InvoiceDetailView({route}) {
       </tbody>
     </table>
     <div class="total">
-      <p>Subtotal: ${subtotal}</p>
+     <p>Subtotal: </p>
       <p>Tax: $5.00</p>
       <p>Discount: $0.00</p>
       <p>Total: $90.00</p>
@@ -134,8 +133,8 @@ await shareAsync(file.uri);
 
 };
 
-  const [name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper,regNumber] = data;
-  const invoiceDetail=[name,itemName, status,selectedDate,regNumber,rate, total,quantity,amount,taxRate,disRateper];
+  // const [name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper,regNumber] = data;
+  // const invoiceDetail=[name,itemName, status,selectedDate,regNumber,rate, total,quantity,amount,taxRate,disRateper];
   function  editInvoiceFunction (){ 
 navigation.navigate("CreateInvoice");
  }
@@ -208,16 +207,16 @@ navigation.navigate("CreateInvoice");
           <Text style={[styles.description, styles.changePosition]}>
             DESCRIPTION
           </Text>
-          <Text style={[styles.oilChange, styles.textTypo4]}>{itemName}</Text>
+          <Text style={[styles.oilChange, styles.textTypo4]}></Text>
           
           <Text style={[styles.rate, styles.qtyTypo]}>RATE</Text>
-          <Text style={[styles.text1, styles.textTypo2]}>{rate}</Text>
+          <Text style={[styles.text1, styles.textTypo2]}></Text>
   
           <Text style={[styles.qty, styles.qtyTypo]}>QTY</Text>
-          <Text style={[styles.text5, styles.textTypo1]}>{quantity}</Text>
+          <Text style={[styles.text5, styles.textTypo1]}></Text>
          
           <Text style={[styles.amount, styles.textPosition1]}>Amount</Text>
-          <Text style={[styles.text9, styles.textPosition1]}>{amount}</Text>
+          <Text style={[styles.text9, styles.textPosition1]}></Text>
 
           <View style={[styles.groupInner, styles.groupLayout1]} />
           <View style={[styles.lineView, styles.groupLayout1]} />
@@ -234,7 +233,7 @@ navigation.navigate("CreateInvoice");
         />
         <View style={styles.setstyle}>
         <Text style={[styles.corollaGli2016, styles.dueTypo]}>
-          {regNumber}
+          {/* {regNumber} */}
         </Text>
         <View style={[styles.ellipseParent, styles.ellipseLayout]}>
           <Image
@@ -242,12 +241,12 @@ navigation.navigate("CreateInvoice");
             contentFit="cover"
             source={require("../assets/ellipse-10.png")}
           />
-          <Text style={styles.paid}>{status}</Text>
+          <Text style={styles.paid}></Text>
         </View>
-        <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
+        <Text style={[styles.loritaDaniel, styles.dueTypo]}></Text>
         <View style={[styles.dateParent, styles.parentLayout1]}>
           <Text style={[styles.date, styles.dueTypo]}>DATE</Text>
-          <Text style={[styles.jan2023, styles.rs3000Typo]}>{selectedDate.toDateString()}</Text>
+          <Text style={[styles.jan2023, styles.rs3000Typo]}></Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
         <View style={[styles.dueParent, styles.parentLayout1]}>
@@ -257,10 +256,10 @@ navigation.navigate("CreateInvoice");
         </View>
         <View style={[styles.balanceParent, styles.parentLayout1]}>
           <Text style={[styles.date, styles.dueTypo]}>Balance</Text>
-          <Text style={styles.rs3000Typo}>{total} </Text>
+          <Text style={styles.rs3000Typo}></Text>
           <Text style={[styles.text14, styles.textLayout]}>-</Text>
         </View>
-        <Text style={[styles.inv00011, styles.invoiceTypo]}>{invoiceNumber}</Text>
+        <Text style={[styles.inv00011, styles.invoiceTypo]}></Text>
         <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
         
         </View>
@@ -270,11 +269,11 @@ navigation.navigate("CreateInvoice");
             <Text style={[styles.text18, styles.rs0Position]}>-</Text>
             <Text style={[styles.subtotal, styles.tax0Typo]}>Subtotal</Text>
             <Text style={[styles.tax0, styles.tax0Typo]}>Tax (%)</Text>
-            <Text style={[styles.rs3550, styles.rs0Typo]}>{amount}</Text>
-            <Text style={[styles.rs0, styles.rs0Typo]}>{taxRate}</Text>
+            <Text style={[styles.rs3550, styles.rs0Typo]}></Text>
+            <Text style={[styles.rs0, styles.rs0Typo]}></Text>
             <Text style={[styles.text19, styles.textPosition]}>-</Text>
             <Text style={[styles.discount, styles.textPosition]}>Discount</Text>
-            <Text style={[styles.text20, styles.textPosition]}>{disRateper}</Text>
+            <Text style={[styles.text20, styles.textPosition]}></Text>
             <View style={styles.group}>
               <Text style={[styles.text17, styles.textTypo]}>-</Text>
               <Text style={[styles.text18, styles.rs0Position]}>-</Text>
@@ -282,8 +281,8 @@ navigation.navigate("CreateInvoice");
               <Text style={[styles.balanceDue, styles.rs0Position]}>
                 Balance Due
               </Text>
-              <Text style={[styles.rs3550, styles.rs0Typo]}>{total}</Text>
-              <Text style={[styles.rs0, styles.rs0Typo]}>{total}</Text>
+              <Text style={[styles.rs3550, styles.rs0Typo]}></Text>
+              <Text style={[styles.rs0, styles.rs0Typo]}></Text>
             </View>
           </View>
           <View style={[styles.groupChild2, styles.groupLayout]} />
@@ -365,7 +364,7 @@ navigation.navigate("CreateInvoice");
           <FrameComponent onClose={closeGroupContainer10} />
         </View>
       </Modal> 
-      <Footer data={invoiceDetail}/>
+      <Footer />
       </View>
     </>
   );

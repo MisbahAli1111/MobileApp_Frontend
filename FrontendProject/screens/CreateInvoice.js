@@ -75,11 +75,12 @@ const CreateInvoice = () => {
     const isTaxEmpty = tax.some((item) => !item.itemName || !item.rate);
 
 
-    if (!Name || !regNumber || isDescriptionEmpty || isDiscountEmpty || isTaxEmpty) {
-      Alert.alert('Please fill all fields.');
-    } else {
-      //  navigation.navigate('InvoiceDetailView');
-    }
+    // if (!Name || !regNumber || isDescriptionEmpty || isDiscountEmpty || isTaxEmpty) {
+    //   Alert.alert('Please fill all fields.');
+    // } else {
+    //    
+    // }
+    navigation.navigate('InvoiceDetailView');
   };
 
 
@@ -220,7 +221,7 @@ const CreateInvoice = () => {
 
       {/* footer  */}
       <View style={[styles.footer]}>
-        <Footer prop={"Invoices"} />
+        <Footer  />
       </View>
 
 
