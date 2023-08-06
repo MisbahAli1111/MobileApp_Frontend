@@ -20,12 +20,6 @@ const SwitchBusiness1 = () => {
       <Text style={[styles.switchBusiness1, styles.businessFlexBox]}>
         Switch Business
       </Text>
-      <View style={styles.switchBusinessChild} />
-      <Image
-        style={[styles.switchBusinessItem, styles.switchBusinessItemPosition]}
-        contentFit="cover"
-        source={require("../assets/group-26.png")}
-      />
       <Image
         style={[styles.switchBusinessInner, styles.groupInnerLayout]}
         contentFit="cover"
@@ -118,11 +112,7 @@ const SwitchBusiness1 = () => {
           Create New Business
         </Text>
       </Pressable>
-      <Image
-        style={styles.groupIcon}
-        contentFit="cover"
-        source={require("../assets/group-1713.png")}
-      />
+      
     </View>
   );
 };

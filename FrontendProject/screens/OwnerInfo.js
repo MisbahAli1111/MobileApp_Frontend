@@ -179,16 +179,8 @@ const OwnerInfo = () => {
         onBlur={() => setPhoneNumberFocused(false)}
         onChangeText={setPhonenumber}
       />
-      <Image
-        style={[styles.ownerInfoChild3, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector-22.png")}
-      />
-      <Image
-        style={[styles.ownerInfoChild2, styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-32.png")}
-      />
+      
+      
       <Text style={[styles.ownerInfo1, styles.registerTypo]}>Owner Info</Text>
       <Text
         style={[styles.letsRegister, styles.letsPosition]}
@@ -222,17 +214,8 @@ const OwnerInfo = () => {
       </Pressable>
       
       
-      <View style={styles.rectangleView} />
-      <Pressable
       
-    onPress={() => navigation.navigate('BusinessInfo')}
-      >
-      <Image
-        style={[styles.groupIcon, styles.iconPosition]}
-        contentFit="cover"
-        source={require("../assets/group-261.png")}
-      />
-      </Pressable>
+    
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
         onPress= {handleSignUp}

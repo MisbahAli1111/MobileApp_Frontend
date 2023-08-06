@@ -3,7 +3,6 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import FrameComponent from "../components/FrameComponent";
 import Footer from "../components/Footer";
 import CreateInvoice from "./CreateInvoice";
 import {printToFileAsync} from 'expo-print';
@@ -13,17 +12,11 @@ import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 function InvoiceDetailView() {
-  const [groupContainer10Visible, setGroupContainer10Visible] = useState(false);
+ 
   const navigation = useNavigation();
 
-  const openGroupContainer10 = useCallback(() => {
-    setGroupContainer10Visible(true);
-  }, []);
-
-  const closeGroupContainer10 = useCallback(() => {
-    setGroupContainer10Visible(false);
-  }, []);
-
+ 
+  
   const html = `
   <html lang="en">
 <head>
@@ -326,45 +319,10 @@ navigation.navigate("CreateInvoice");
           contentFit="cover"
           source={require("../assets/icbaselineshare.png")}
         />
-        <View style={styles.vectorGroup}>
-          <Image
-            style={styles.rectangleIcon}
-            contentFit="cover"
-            source={require("../assets/rectangle-57.png")}
-          />
-          <View style={styles.groupChild3} />
-          
-            <Text style={[styles.invoiceDetail, styles.invoiceTypo]}>
-              Invoice Detail
-            </Text>
-            <Pressable
-            style={styles.invoiceDetailParent}
-            onPress={() => navigation.navigate("Invoices")}
-          >
-            <Image
-              style={styles.vectorIcon}
-              contentFit="cover"
-              source={require("../assets/vector2.png")}
-            />
-          </Pressable>
-          
-        </View>
-        <Image
-          style={styles.maskGroupIcon}
-          contentFit="cover"
-          source={require("../assets/mask-group.png")}
-        />
+        
 
-       <Modal animationType="fade" transparent visible={groupContainer10Visible}>
-        <View style={styles.groupContainer10Overlay}>
-          <Pressable
-            style={styles.groupContainer10Bg}
-            onPress={closeGroupContainer10}
-          />
-          <FrameComponent onClose={closeGroupContainer10} />
-        </View>
-      </Modal> 
-      <Footer />
+       
+      <Footer prop ={"Invoices"}/>
       </View>
     </>
   );

@@ -94,11 +94,6 @@ const Home = () => {
 
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
       <View style={[styles.homeChild8, styles.childPosition]} >
-      {/* top face icon */}
-      <ProfilePopDown />
-      {/* Dashboard */}
-      <Text style={[styles.dashboard, styles.dashboardTypo]}>Dashboard</Text>
-      {/* backicon top */}
       </View>
 
       

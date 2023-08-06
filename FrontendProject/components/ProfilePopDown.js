@@ -6,21 +6,12 @@ import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
 const ProfileDropdown = () => {
     const navigation = useNavigation();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleToggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+  
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleToggleDropdown}>
-        <Image
-          source={require('../assets/mask-group1.png')}
-          style={styles.profileImage}
-        />
-      </TouchableOpacity>
-      {isDropdownOpen && (
+      
+     
         <View style={styles.dropdown}>
           <View style={styles.item}>
             <Text style={styles.text}>Shayan Hassan Shayan@example.com</Text>
@@ -39,11 +30,11 @@ const ProfileDropdown = () => {
           onPress={() => navigation.navigate("SwitchBusiness")}>
             <Text style={styles.text}>Switch Business</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item1}>
+          <TouchableOpacity style={styles.item2}>
             <Text style={styles.text}>Logout</Text>
           </TouchableOpacity>
         </View>
-      )}
+      
     </View>
   );
 };
@@ -52,20 +43,13 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
   },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    left: 320,
-    top:-10
-  },
+  
   dropdown: {
     width: 180,
     position: 'absolute',
-    top: 25,
-    right: 5,
-    backgroundColor: Color.steelblue_300,
-   zIndex:12,
+    top: 15,
+    right: 45,
+    backgroundColor: '#fff',
     borderRadius: 10,
     borderWidth: 0.5,
     borderColor: 'black',
@@ -82,6 +66,10 @@ const styles = StyleSheet.create({
     borderBottomWidth:0.5,
     borderBottomColor:'black'
     
+  },
+  item2: {
+    paddingVertical: 10,
+    paddingBottom:1
   },
   text: {
     fontSize: 16,

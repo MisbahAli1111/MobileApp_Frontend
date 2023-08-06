@@ -5,7 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from  "../components/MaintenanceRecordList";
-import ProfileDropdown from "../components/ProfilePopDown";
 import FilterSearch from "../components/FilterSearch";
 
 const MaintenanceRecord = () => {
@@ -30,35 +29,7 @@ const MaintenanceRecord = () => {
         contentFit="cover"
         source={require("../assets/image-2.png")}
       />
-      <View style={styles.rectangleParent}>
-        <View style={[styles.groupChild, styles.groupInnerShadowBox]} />
-        <View style={styles.groupItem} >
-        <ProfileDropdown/>
-        </View>
 
-        <View style={styles.recordParent}>
-          <Text style={styles.record}>Record</Text>
-          {/* backicon  */}
-          <TouchableWithoutFeedback onPress={() => navigation.navigate("Home")}>
-
-            <Image
-              style={[styles.vectorIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/vector2.png")}
-            />
-          </TouchableWithoutFeedback>
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.wrapperLayout]}
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Image
-            style={styles.iconLayout}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
-      </View>
 
 
       <View style={styles.groupParent}>

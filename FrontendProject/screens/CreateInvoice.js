@@ -47,10 +47,14 @@ const CreateInvoice = () => {
   const [Name, setName] = useState('');
   const [regNumber, setregNumber] = useState('');
   const [date, setDate] = useState('');
+  const [status,setStatus] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
 
   const handleItemsChange = (items) => {
     setDescription(items);
+  };
+  const handleInvoiceStatusSelect= (code) => {
+    setStatus(code);
   };
 
   const handleTaxChange = (items) => {
@@ -63,6 +67,7 @@ const CreateInvoice = () => {
     setName(data.name);
     setDate(data.date);
     setregNumber(data.regNumber);
+    setStatus(data.status)
   };
 
   const handleSave = () => {
@@ -135,11 +140,7 @@ const CreateInvoice = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <Image
-        style={[styles.image2Icon, styles.image2IconPosition]}
-        contentFit="cover"
-        source={require("../assets/image-2.png")}
-      />
+      
       <View style={[styles.breadcrumbs, styles.element2Position]}>
         <View style={[styles.housefill, styles.elementFlexBox]}>
           <Image
@@ -155,38 +156,8 @@ const CreateInvoice = () => {
         <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
       </View>
 
-      <View style={[styles.vectorParent, styles.groupChildPosition]}>
-        <Image
-          style={[styles.groupChild, styles.groupChildPosition]}
-          contentFit="cover"
-          source={require("../assets/rectangle-571.png")}
-        />
-        <View style={styles.groupItem} />
-        <View style={styles.createInvoiceParent}>
-          <Text style={styles.createInvoice1}>Create Invoice</Text>
-          <Image
-            style={[styles.vectorIcon, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.wrapperLayout]}
-          onPress={() => handleSave}
-        >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
-      </View>
-
-      <Image
-        style={[styles.createInvoiceItem, styles.image2IconPosition]}
-        contentFit="cover"
-        source={require("../assets/rectangle-65.png")}
-      />
+     
+    
       {/* reg number  */}
       <Image
         style={[styles.groupIcon, styles.iconLayout]}
@@ -219,50 +190,35 @@ const CreateInvoice = () => {
             </View>
       </ScrollView>
 
-      {/* footer  */}
-      <View style={[styles.footer]}>
-        <Footer  />
-      </View>
+      
 
 
 
       <View style={[styles.createInvoiceChild6, styles.createChildLayout1]} />
       <View style={[styles.createInvoiceChild7, styles.createChildPosition]} />
 
-      <Image
-        style={[styles.vectorIcon4, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector12.png")}
-      />
+  
       <View style={styles.group}>
         <Text style={[styles.text5, styles.text5Clr]}>-</Text>
         <Text style={[styles.total, styles.totalTypo]}>Total</Text>
         <Text style={[styles.rs3050, styles.text5Clr]}>Rs {totalAmount}</Text>
       </View>
-      <TouchableOpacity>
-        <Image
-          style={styles.ellipseIcon}
-          contentFit="cover"
-          source={require("../assets/vector-61.png")}
-        />
-      </TouchableOpacity>
+      
 
-      {/* { (
-        <View>
+      <View style={styles.picker}>
         <Picker
-        style={styles.picker}
-          selectedValue={status}
+          selectedValue={invoiceStatus}
           onValueChange={(itemValue) =>handleInvoiceStatusSelect(itemValue)}
         >
-          <Picker.Item label="Select Vehicle Type" value="" />
+          <Picker.Item label="Select Invoice Status" value="" />
           {invoiceStatus.map((code) => (
             <Picker.Item key={code} label={code} value={code} />
           ))}
         </Picker>
         </View>
-      )} */}
+      
 
-
+      {/* Submit Button  */}
       <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
         <TouchableOpacity onPress={handleSave}>
           <Image
@@ -278,11 +234,11 @@ const CreateInvoice = () => {
         </TouchableOpacity>
 
       </View>
-      <Image
-        style={styles.maskGroupIcon}
-        contentFit="cover"
-        source={require("../assets/mask-group.png")}
-      />
+      
+      {/* footer  */}
+      <View style={[styles.footer]}>
+        <Footer prop={"Invoices"} />
+      </View>
 
     </View>
 
@@ -299,6 +255,11 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 0,
+  },
+  picker:{
+    top:-435,
+    left:360,
+    width:50,
   },
   createChildLayout3: {
     height: 126,

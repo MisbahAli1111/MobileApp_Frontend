@@ -22,15 +22,7 @@ const SwitchBusiness = () => {
         Switch Business
       </Text>
       <View style={styles.switchBusinessChild} />
-      <Pressable
-      onPress={() => navigation.navigate("OwnerInfo")}
-      >
-      <Image
-        style={[styles.switchBusinessItem, styles.switchBusinessItemPosition]}
-        contentFit="cover"
-        source={require("../assets/group-26.png")}
-      />
-      </Pressable>
+      
       
   
       <View style={styles.boxContianer}>
@@ -251,10 +243,10 @@ const styles = StyleSheet.create({
   groupChild1: {
     borderRadius: Border.br_7xs,
     left: -8,
-    top: -25,
+    top: -35,
   },
   createNewBusiness: {
-    top: -16,
+    top: -25,
     left: 113,
     color: Color.white,
     fontSize: FontSize.size_base,

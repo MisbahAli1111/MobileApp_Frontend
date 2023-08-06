@@ -7,7 +7,6 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import VehicleRecords from "../components/VehicleRecords";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
-import ProfileDropdown from "../components/ProfilePopDown";
 import FilterSearch from "../components/FilterSearch";
 
 
@@ -41,32 +40,9 @@ const Vehicles = () => {
       />
       
 
-      {/* head back icon */}
+      {/* Footer */}
       <View style={[styles.rectangleParent, styles.image2IconPosition]}>
-        <View style={[styles.groupChild, styles.image2IconPosition]} />
-        <View style={styles.groupItem}><ProfileDropdown/></View>
-        <View style={styles.vehiclesParent}>
-          <Text style={[styles.vehicles1, styles.filterTypo]}>Vehicles</Text>
-          <TouchableWithoutFeedback onPress={handlePress}>
-            <Image
-              style={[styles.vectorIcon, styles.iconLayout3]}
-              contentFit="cover"
-              source={require("../assets/vector2.png")}
-            />
-          </TouchableWithoutFeedback>
-        </View>
-        <Pressable
-          style={styles.wrapper}
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Image
-            style={styles.iconLayout2}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
-     
-
+        
         <View style={[styles.cont]}>
           <Footer prop={"Vehicles"} />
         </View>

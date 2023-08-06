@@ -6,7 +6,7 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import VehicleDetails from "../components/VehicleDetail";
 import { useRoute } from "@react-navigation/native";
-import ProfileDropdown from "../components/ProfilePopDown";
+
 const MaintenanceDetailView = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -23,36 +23,8 @@ const MaintenanceDetailView = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      {/* header  */}
-      <View style={[styles.vectorParent, styles.childViewPosition]}>
-        <Image
-          style={[styles.groupChild, styles.childViewPosition]}
-          contentFit="cover"
-          source={require("../assets/rectangle-571.png")}
-        />
-        {/* profile icon  */}
-        <View style={styles.groupItem} ><ProfileDropdown /></View>
-        
-        {/* back icon  */}
-        <View style={styles.maintenanceRecordParent}>
-          <Text style={styles.maintenanceRecord}>Vehicle Detail</Text>
-          <Pressable
-          onPress={() => navigation.navigate("Vehicles",{type:'default'})  }
-          style={[styles.vectorIcon]} 
-          >
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
-          </Pressable>
-        </View>
-        <Image
-          style={[styles.groupInner, styles.groupInnerLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-58.png")}
-        />
-      </View>
+
+      
 
     {/* home  */}
 
@@ -288,7 +260,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
     fontSize: FontSize.size_sm,
-    top: 2,
+    top: 0,
   },
   text1: {
     fontFamily: FontFamily.caption2Regular,

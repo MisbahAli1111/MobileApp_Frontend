@@ -32,22 +32,9 @@ const MaintenanceDetailView = () => {
           contentFit="cover"
           source={require("../assets/rectangle-571.png")}
         />
-        <View style={styles.groupItem} ><ProfileDropdown/></View>
+        <View style={styles.groupItem} />
         
-        {/* back icon  */}
-        <View style={styles.maintenanceRecordParent}>
-          <Text style={styles.maintenanceRecord}>Maintenance Record</Text>
-          <Pressable
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-          style={[styles.vectorIcon]} 
-          >
-          <Image
-            style={styles.vectorIcon}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
-          </Pressable>
-        </View>
+       
         <Image
           style={[styles.groupInner, styles.groupInnerLayout]}
           contentFit="cover"

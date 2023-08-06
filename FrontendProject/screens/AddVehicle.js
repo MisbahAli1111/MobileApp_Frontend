@@ -8,7 +8,6 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from 'expo-image-picker';
-import ProfileDropdown from "../components/ProfilePopDown";
 
 
 
@@ -122,37 +121,7 @@ function handleHomePress() {
       <View style={styles.elementPosition}>
         <Text style={[styles.text, styles.textTypo]}>\</Text>
       </View>
-      <View style={styles.addVehicleParent}>
-        <Text style={[styles.addVehicle1, styles.addVehicle1Position]}>
-          Add Vehicle
-        </Text>
-        <Text style={[styles.text1, styles.textTypo]}>\</Text>
-      </View>
-      <Pressable
-      onPress={() => navigation.navigate("Vehicles") }>
-      <Image
-        style={[styles.addVehicleChild, styles.iconLayout1]}
-        contentFit="cover"
-        source={require("../assets/rectangle-57.png")}
-      />
-      </Pressable>
-      <View style={styles.addVehicleItem} ><ProfileDropdown/></View>
-      <Text style={[styles.addVehicle2, styles.uploadTypo]}>Add Vehicle</Text>
-      <Image
-        style={[styles.vectorIcon, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector2.png")}
-      />
-      <Pressable
-        style={[styles.wrapper, styles.wrapperLayout]}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/rectangle-58.png")}
-        />
-      </Pressable>
+      
       <View style={styles.noImageFoundParent}>
        
         <View style={[styles.uploadParent, styles.uploadPosition]}>
@@ -160,12 +129,7 @@ function handleHomePress() {
         onPress={pickImage}>
           <Text style={[styles.upload, styles.uploadPosition]} type="file" >Upload</Text>
           </Pressable>
-
-
-          {/* <TouchableOpacity onPress={handleFileUpload}>
-        <Text style={styles.uploadText}>{fileUri ? 'File Selected' : 'Upload File'}</Text>
-      </TouchableOpacity> */}
-      
+          
           <Image
             style={[styles.vectorIcon1, styles.vectorIconLayout]}
             contentFit="cover"

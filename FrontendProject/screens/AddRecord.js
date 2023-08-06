@@ -382,41 +382,15 @@ onPress={openTimePicker}>
       {/* addMaintenanceRecord */}
       <View style={[styles.vectorGroup, styles.iconGroupLayout]}>
       
-        <Image
-          style={[styles.groupInner, styles.iconGroupLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-57.png")}
-        />
-        <View style={styles.groupChild1} ><ProfileDropdown/></View>
-        <View style={styles.addMaintenanceRecordGroup}>
-          <Text style={[styles.addMaintenanceRecord1, styles.addTypo]}>
-            Add Maintenance Record
-          </Text>
-        </View>
+  
+        <View style={styles.groupChild1} />
+        
         <View style={styles.addMaintenanceRecordGroupp}>
           <Text style={ styles.addTypo}>
             Add Maintenance Record
           </Text>
         </View>
-        {/* backicon  */}
-        <TouchableWithoutFeedback onPress={() => navigation.navigate("SwitchBusiness")}>
-
-          <Image
-            style={[styles.vectorIcon2, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector2.png")}
-          />
-        </TouchableWithoutFeedback>
-        <Pressable
-          style={[styles.rectanglePressable, styles.addRecordChild4Layout]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={styles.icon}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
+        
       </View>
      
 
@@ -434,7 +408,7 @@ onPress={openTimePicker}>
           selectedValue={selectedCode}
           onValueChange={(itemValue) => handleCodeSelect(itemValue)}
         >
-          <Picker.Item  label="Select Country Code" value="" />
+          <Picker.Item  label="Select Maintenance Type " value="" />
           {services.map((code) => (
             <Picker.Item key={code} label={code} value={code} />
           ))}

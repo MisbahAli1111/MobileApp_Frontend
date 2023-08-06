@@ -1,6 +1,7 @@
 const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+
 import { useFonts } from "expo-font";
 import Home from "./screens/Home";
 import AddRecord from "./screens/AddRecord";
@@ -22,6 +23,7 @@ import Login from "./screens/Login";
 import VehicleDetails from  "./screens/VehiclesDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import Header from "./components/Header";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -44,107 +46,216 @@ const App = () => {
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-           {/* <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false }}
-            /> */}
-            <Stack.Screen
+          <Stack.Navigator  screenOptions={({ route, navigation }) => ({
+        header: ({ previous }) => {
+          // Set default values for header options
+          const { title = route.name, showBackArrow = previous !== undefined,onBackPress = route.name, profileImage } = route.params;
+          // const onBackPress = options.onBackPress || (() => navigation.goBack())
+          // Render the custom header with the provided options
+          return (
+            <Header
+              title={title}
+              showBackArrow={showBackArrow}
+               onBackPress={onBackPress}
+              profileImage={profileImage}
+              
+            />
+            
+          );
+          
+        },
+      })}
+      >
+          {/* <Stack.Screen
+          name="Login"
+          component={Login}
+          initialParams={{
+          title: 'Login', 
+          showBackArrow: true, 
+          profileImage: require('./assets/mask-group1.png'), 
+          }}/> */}
+
+          <Stack.Screen
               name="Home"
               component={Home}
-              options={{ headerShown: false }}
+              initialParams={{
+          title: 'Dashboard', 
+          showBackArrow: false,
+          profileImage: require('./assets/mask-group1.png'),
+              }}
             />
+
            {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
-              options={{ headerShown: false }}
-            />*/}
-            <Stack.Screen
+              initialParams={{
+          title: 'Add Record', 
+          showBackArrow: true, 
+          onBackPress:'Vehicles',
+          profileImage: require('./assets/mask-group1.png'),
+              }}
+            /> */}
+
+            {/* <Stack.Screen
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
-              options={{ headerShown: false }}
-        /> 
-            <Stack.Screen
+              initialParams={{
+          title: 'Maintenance Record', 
+          showBackArrow: true, 
+          onBackPress:'Vehicles',
+          profileImage: require('./assets/mask-group1.png'),
+              }}
+              />  */}
+
+
+            {/* <Stack.Screen
               name="Invoices"
               component={Invoices}
-              options={{ headerShown: false }}
-        />  
+              initialParams={{
+          title: 'Invoices', 
+          showBackArrow: true, 
+          onBackPress:'Vehicles',
+          profileImage: require('./assets/mask-group1.png'),
+              }}
                
-            {/* 
-            <Stack.Screen
+              />   */}
+               
+            
+            {/* <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
-              options={{ headerShown: false }}
+              initialParams={{
+              title: ' ', 
+              showBackArrow: true, 
+              onBackPress:'Vehicles',
+              }}
             /> */}
 
             
-                        {/* <Stack.Screen
+            {/* <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
-              options={{ headerShown: false }}
-            />
-          
-            <Stack.Screen
+              initialParams={{
+              title: ' ', 
+              showBackArrow: true, 
+              onBackPress:'Vehicles',
+              }}
+            /> */}
+
+            {/* Useless screens hain  */}
+
+            {/* <Stack.Screen
               name="SwitchBusiness1"
               component={SwitchBusiness1}
-              options={{ headerShown: false }}
             />
+             <Stack.Screen
+              name="SwitchBusiness3"
+              component={SwitchBusiness3}
+              options={{ headerShown: false }}
+            /> 
+
             <Stack.Screen
               name="SwitchBusiness2"
               component={SwitchBusiness2}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
+            /> */}
+
+            {/* Yaha tak useless hai  */}
+            
+
+            {/* <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SwitchBusiness3"
-              component={SwitchBusiness3}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
+              initialParams={{
+              title: '', 
+              showBackArrow: true, 
+              onBackPress:'Vehicles',
+              }}
+            /> */}
+
+            
+            
+            {/* <Stack.Screen
               name="OwnerInfo"
               component={OwnerInfo}
-              options={{ headerShown: false }}
+              initialParams={{
+              title: '', 
+              showBackArrow: true, 
+              onBackPress:'Vehicles',
+              }}
           />  */}
-            <Stack.Screen
-              name="CreateInvoice"
-              component={CreateInvoice}
-              options={{ headerShown: false }}
-            /> 
+
+
+            {/* <Stack.Screen
+                name="CreateInvoice"
+                component={CreateInvoice}
+                initialParams={{
+                title: 'Create Invoice', 
+                showBackArrow: true, 
+                onBackPress:'Vehicles',
+                profileImage: require('./assets/mask-group1.png'),
+                }}
+              />  */}
             
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="InvoiceDetailView"
               component={InvoiceDetailView}
-              options={{ headerShown: false }}
-            />
+              initialParams={{
+                title: 'Invoice Detail', 
+                showBackArrow: true, 
+                onBackPress:'Vehicles',
+                profileImage: require('./assets/mask-group1.png'),
+                }}
+            /> */}
             
-              <Stack.Screen
+              {/* <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
-              options={{ headerShown: false }}
-            />  
+              initialParams={{
+                title: 'Records', 
+                showBackArrow: true, 
+                onBackPress:'Vehicles',
+                profileImage: require('./assets/mask-group1.png'),
+                }}
+            />   */}
              
            
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Vehicles"
               component={Vehicles}
-              options={{ headerShown: false }}
-            />  
-             <Stack.Screen 
+              initialParams={{
+                title: 'Vehicles', 
+                showBackArrow: true, 
+                onBackPress:'Vehicles',
+                profileImage: require('./assets/mask-group1.png'),
+                }}
+            />   */}
+
+
+             {/* <Stack.Screen 
               name="AddVehicle"
               component={AddVehicle}
-              options={{ headerShown: false }}
-            />  
-             <Stack.Screen 
+              initialParams={{
+                title: 'Vehicles', 
+                showBackArrow: true, 
+                onBackPress:'Add Vehicles',
+                profileImage: require('./assets/mask-group1.png'),
+                }}
+            />   */}
+
+
+
+             {/* <Stack.Screen 
               name="VehicleDetails"
               component={VehicleDetails}
-              options={{ headerShown: false }}
-            />  
+              initialParams={{
+                title: 'Vehicle Details', 
+                showBackArrow: true, 
+                onBackPress:'AddVehicle',
+                profileImage: require('./assets/mask-group1.png'),
+                }}
+            />   */}
             
           </Stack.Navigator>
         ) : null}

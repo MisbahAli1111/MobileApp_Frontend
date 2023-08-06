@@ -1,35 +1,32 @@
 import React, { useState, useCallback } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
+import { StyleSheet, Text, View, Pressable, TextInput} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import FrameComponent from "../components/FrameComponent";
 import { Border, FontFamily, Color, FontSize, Padding } from "../GlobalStyles";
+import Footer from "../components/Footer";
 
 const Invoices = () => {
-  const [groupContainer38Visible, setGroupContainer38Visible] = useState(false);
+  
   const navigation = useNavigation();
-
-  const openGroupContainer38 = useCallback(() => {
-    setGroupContainer38Visible(true);
-  }, []);
-
-  const closeGroupContainer38 = useCallback(() => {
-    setGroupContainer38Visible(false);
-  }, []);
+ 
+ 
 
   return (
-    <>
+    
       <View style={styles.invoices}>
         <Image
           style={[styles.lightTexture22341Icon, styles.invPosition]}
           contentFit="cover"
           source={require("../assets/light-texture2234-1.png")}
         />
+        
+        {/* Invoices  */}
         <View style={styles.groupParent}>
           <Pressable
             style={[styles.vectorParent, styles.parentLayout]}
             onPress={() => navigation.navigate("InvoiceDetailView")}
           >
+          {/* Yeha pr custom oval bana kar invoices show karni hogi   */}
             <Image
               style={[styles.groupChild, styles.groupChildLayout1]}
               contentFit="cover"
@@ -51,287 +48,20 @@ const Invoices = () => {
                 <Text style={[styles.paid, styles.paidTypo]}>Paid</Text>
               </View>
             </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupItem, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupInner, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleContainer, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupItem, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild1, styles.groupChildLayout]} />
-              <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.groupPressable, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupItem, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupInner, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent2, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild4, styles.groupChild4Bg]} />
-            <Text style={[styles.muhammadAli4, styles.text4Typo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent2, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv00014, styles.text4Typo]}>#INV0001</Text>
-              <Text style={[styles.jan20234, styles.text4Typo]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text4, styles.text4Typo]}>-</Text>
-            </View>
-            <Text style={[styles.rs30004, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild1, styles.groupChildLayout]} />
-              <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent4, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild6, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent4, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild6, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent4, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupItem, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent10, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild6, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent10, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild6, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent14, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild6, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.rectangleParent16, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-            <View style={[styles.groupChild6, styles.groupChildLayout1]} />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-              <View style={[styles.groupChild7, styles.groupChildLayout]} />
-              <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-            </View>
-          </Pressable>
+          </Pressable> 
         </View>
-        <Image
-          style={[styles.image2Icon, styles.iconChildPosition]}
-          contentFit="cover"
-          source={require("../assets/image-2.png")}
-        />
-        <Pressable
-          style={[styles.vectorGroup, styles.iconChildPosition]}
-          onPress={openGroupContainer38}
-        >
-          <Image
-            style={[styles.rectangleIcon, styles.iconChildPosition]}
-            contentFit="cover"
-            source={require("../assets/rectangle-571.png")}
-          />
-          <View style={styles.groupChild20} />
-          <View style={styles.invoicesParent}>
-            <Text style={styles.invoices1}>Invoices</Text>
-            <Image
-              style={[styles.vectorIcon, styles.iconLayout2]}
-              contentFit="cover"
-              source={require("../assets/vector2.png")}
-            />
-          </View>
-          <Image
-            style={[styles.groupChild21, styles.groupChild21Layout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-58.png")}
-          />
-        </Pressable>
-        <Text style={[styles.text12, styles.totalClr]}>$1200,00</Text>
-        <Text style={[styles.total, styles.totalTypo]}>Total</Text>
-        <View style={styles.invoicesChild} />
-        <Image
-          style={styles.invoicesItem}
-          contentFit="cover"
-          source={require("../assets/line-15.png")}
-        />
+
+
+        {/* Search bar  */}
         <View style={[styles.rectangleParent18, styles.rectangleLayout]}>
           <Pressable
             style={[styles.rectanglePressable, styles.rectangleLayout]}
-            onPress={() => navigation.navigate("MaintenanceRecord")}
           />
-          <Text style={[styles.searchInvoice, styles.paidTypo]}>
-            Search Invoice
-          </Text>
+          <TextInput style={[styles.searchInvoice, styles.paidTypo]}
+            placeholder ="Search Invoice"
+          />
           <Pressable
             style={styles.vector}
-            onPress={() => navigation.navigate("MaintenanceRecord")}
           >
             <Image
               style={[styles.icon, styles.iconLayout1]}
@@ -340,89 +70,9 @@ const Invoices = () => {
             />
           </Pressable>
         </View>
-        <Image
-          style={[styles.invoicesInner, styles.groupChild21Layout]}
-          contentFit="cover"
-          source={require("../assets/group-1712.png")}
-        />
-        <Image
-          style={styles.maskGroupIcon}
-          contentFit="cover"
-          source={require("../assets/mask-group.png")}
-        />
-        <View style={[styles.invoicesChild1, styles.iconChildPosition]} />
-        <View style={[styles.invoicesChild2, styles.invoicesChild2ShadowBox]} />
-        <View style={[styles.invoicesChild3, styles.invoicesChild3Layout]} />
-        <Text style={[styles.home, styles.homeTypo]}>Home</Text>
-        <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
-        <Text style={[styles.addVehicle, styles.homeTypo]}>Add Vehicle</Text>
-        <Text style={[styles.records, styles.homeTypo]}>Records</Text>
-        <Text style={[styles.invoices2, styles.homeTypo]}>Invoices</Text>
-        <Image
-          style={[styles.ellipseIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/ellipse-5.png")}
-        />
-        <View style={[styles.housefill, styles.housefillFlexBox]}>
-          <Image
-            style={styles.homeMutedIcon}
-            contentFit="cover"
-            source={require("../assets/homemuted1.png")}
-          />
-        </View>
-        <Pressable
-          style={[styles.wrapper, styles.iconLayout]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={styles.iconLayout1}
-            contentFit="cover"
-            source={require("../assets/ellipse-8.png")}
-          />
-        </Pressable>
-        <Image
-          style={[styles.groupIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/group-183.png")}
-        />
-        <Image
-          style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
-          contentFit="cover"
-          source={require("../assets/microphonesvgrepocom-11.png")}
-        />
-        <Pressable
-          style={[styles.container, styles.iconLayout]}
-          onPress={() => navigation.navigate("Invoices")}
-        >
-          <Image
-            style={styles.iconLayout1}
-            contentFit="cover"
-            source={require("../assets/ellipse-7.png")}
-          />
-        </Pressable>
-        <Image
-          style={[
-            styles.invoiceWarrantyLineSvgrepoIcon,
-            styles.svgrepoIconLayout,
-          ]}
-          contentFit="cover"
-          source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-        />
-        <Pressable
-          style={[styles.frame, styles.frameLayout]}
-          onPress={() => navigation.navigate("AddVehicle")}
-        >
-          <Image
-            style={styles.iconLayout1}
-            contentFit="cover"
-            source={require("../assets/group-111.png")}
-          />
-        </Pressable>
-        <Image
-          style={[styles.invoicesChild4, styles.frameLayout]}
-          contentFit="cover"
-          source={require("../assets/group-174.png")}
-        />
+
+        {/* Footer lagana hai  */}
+
         <View style={styles.breadcrumbsParent}>
           <View style={[styles.breadcrumbs, styles.housefill1Position]}>
             <View style={[styles.housefill1, styles.housefill1Position]}>
@@ -447,18 +97,15 @@ const Invoices = () => {
             </Text>
           </Pressable>
         </View>
+
+
+        <View style={[styles.cont]}>
+        <Footer prop={"Invoices"}   />
+      </View>
       </View>
 
-      <Modal animationType="fade" transparent visible={groupContainer38Visible}>
-        <View style={styles.groupContainer38Overlay}>
-          <Pressable
-            style={styles.groupContainer38Bg}
-            onPress={closeGroupContainer38}
-          />
-          <FrameComponent onClose={closeGroupContainer38} />
-        </View>
-      </Modal>
-    </>
+      
+    
   );
 };
 
@@ -477,8 +124,9 @@ const styles = StyleSheet.create({
     borderRadius: Border.br_3xs,
     height: 85,
     width: 393,
-    left: 0,
-    position: "absolute",
+    left: -8,
+    justifyContent:"flex-start",
+    
   },
   paidTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -899,11 +547,14 @@ const styles = StyleSheet.create({
   rectanglePressable: {
     borderRadius: Border.br_5xs,
     backgroundColor: Color.steelblue_300,
-    left: 0,
+    left: 11,
     top: 0,
+    alignItems:"center",
+    justifyContent:"center"
   },
   searchInvoice: {
     top: 14,
+    width:300,
     left: 21,
     color: "#1e1e1e",
     textAlign: "left",
@@ -926,7 +577,8 @@ const styles = StyleSheet.create({
   },
   rectangleParent18: {
     top: 182,
-    left: 19,
+    alignItems:"center",
+    justifyContent:"center"
   },
   invoicesInner: {
     top: 3,
@@ -1042,7 +694,7 @@ const styles = StyleSheet.create({
     left: 164,
   },
   homeMutedIcon1: {
-    width: 12,
+    width: 14,
     height: 14,
   },
   housefill1: {
@@ -1065,7 +717,7 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   invoices3: {
-    top: 11,
+    top: 0,
     left: 27,
     fontFamily: FontFamily.poppinsSemibold,
     color: Color.darkslateblue,

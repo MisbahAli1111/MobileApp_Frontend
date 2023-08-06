@@ -160,7 +160,7 @@ const BusinessInfo = () => {
         placeholder="Phone Number"
         value={phoneNumber}
         keyboardType='numeric'
-        maxLength={11}
+        maxLength={15}
         onFocus={() => setPhoneNumberFocused(true)}
         onBlur={() => setPhoneNumberFocused(false)}
         onChangeText={setPhonenumber}
@@ -297,7 +297,7 @@ const BusinessInfo = () => {
       <Text style={[styles.letsLevelUp, styles.letsPosition]}>
         Let’s level up your business, together.
       </Text>
-      <View style={styles.rectangleView} />
+      
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
         onPress= {handleSignUp}
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     left: 20,
   },
   rectangleView: {
-    top: 917,
+    top: 9,
     left: 138,
     borderRadius: Border.br_11xl,
     backgroundColor: Color.textTxtPrimary,
