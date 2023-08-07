@@ -1,79 +1,38 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable, TextInput} from "react-native";
+import { StyleSheet,TextInput, TouchableWithoutFeedback, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Border, FontFamily, Color, FontSize, Padding } from "../GlobalStyles";
+import { FontFamily, Color, Border, FontSize,Padding } from "../GlobalStyles";
 import Footer from "../components/Footer";
-
+import MaintenanceRecordList from  "../components/MaintenanceRecordList";
+import FilterSearch from "../components/FilterSearch";
+import InvoiceList from "../components/InvoiceList";
 const Invoices = () => {
-  
   const navigation = useNavigation();
- 
- 
+
+  const [search, setSearch] = useState('');
+
+  const handleQuery= (query) => {
+    setSearch(query);
+
+  }
 
   return (
-    
-      <View style={styles.invoices}>
-        <Image
-          style={[styles.lightTexture22341Icon, styles.invPosition]}
-          contentFit="cover"
-          source={require("../assets/light-texture2234-1.png")}
-        />
-        
-        {/* Invoices  */}
-        <View style={styles.groupParent}>
-          <Pressable
-            style={[styles.vectorParent, styles.parentLayout]}
-            onPress={() => navigation.navigate("InvoiceDetailView")}
-          >
-          {/* Yeha pr custom oval bana kar invoices show karni hogi   */}
-            <Image
-              style={[styles.groupChild, styles.groupChildLayout1]}
-              contentFit="cover"
-              source={require("../assets/rectangle-692.png")}
-            />
-            <Text style={[styles.muhammadAli, styles.paidTypo]}>
-              Muhammad Ali
-            </Text>
-            <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
-              <Text style={[styles.inv0001, styles.textTypo]}>#INV0001</Text>
-              <Text style={[styles.jan2023, styles.janPosition]}>
-                01/Jan/2023
-              </Text>
-              <Text style={[styles.text, styles.textPosition]}>-</Text>
-            </View>
-            <Text style={[styles.rs3000, styles.rs3000Typo]}>Rs. 3000</Text>
-            <View style={[styles.frameWrapper, styles.frameWrapperPosition]}>
-              <View style={[styles.paidWrapper, styles.paidWrapperPosition]}>
-                <Text style={[styles.paid, styles.paidTypo]}>Paid</Text>
-              </View>
-            </View>
-          </Pressable> 
-        </View>
+    <View style={styles.maintenanceRecord}>
+      
+      <Image
+        style={styles.lightTexture22341Icon}
+        contentFit="cover"
+        source={require("../assets/light-texture2234-1.png")}
+      />
+      <Image
+        style={styles.image2Icon}
+        contentFit="cover"
+        source={require("../assets/image-2.png")}
+      />
 
 
-        {/* Search bar  */}
-        <View style={[styles.rectangleParent18, styles.rectangleLayout]}>
-          <Pressable
-            style={[styles.rectanglePressable, styles.rectangleLayout]}
-          />
-          <TextInput style={[styles.searchInvoice, styles.paidTypo]}
-            placeholder ="Search Invoice"
-          />
-          <Pressable
-            style={styles.vector}
-          >
-            <Image
-              style={[styles.icon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/vector13.png")}
-            />
-          </Pressable>
-        </View>
-
-        {/* Footer lagana hai  */}
-
-        <View style={styles.breadcrumbsParent}>
+<View style={styles.breadcrumbsParent}>
           <View style={[styles.breadcrumbs, styles.housefill1Position]}>
             <View style={[styles.housefill1, styles.housefill1Position]}>
               <Image
@@ -99,633 +58,129 @@ const Invoices = () => {
         </View>
 
 
-        <View style={[styles.cont]}>
-        <Footer prop={"Invoices"}   />
-      </View>
-      </View>
+
+      {/* search */}
+      <View style={[styles.rectangleParent18, styles.rectangleLayout]}>
+          <Pressable
+            style={[styles.rectanglePressable, styles.rectangleLayout]}
+           
+          />
+        
+          <TextInput style={[styles.searchInvoice, styles.paidTypo]}
+        placeholder="Search Invoice "
+        clearButtonMode="always"
+        value={search}
+        onChangeText={(query) => handleQuery(query)}
+        />
+          <Pressable
+            style={styles.vector}
+            onPress={() => navigation.navigate("MaintenanceRecord")}
+          >
+            <Image
+              style={[styles.icon, styles.iconLayout1]}
+              contentFit="cover"
+              source={require("../assets/vector13.png")}
+            />
+          </Pressable>
+        </View>
 
       
+      
+
+ 
+  <View style={styles.cont}>
+      <Footer  prop={"Invoices"} />
+      </View>
+
+    <View style={styles.boxContianer}>
+    <InvoiceList dsearch={search} />
+    </View>
+      
+      
+    </View>
     
+
   );
 };
 
 const styles = StyleSheet.create({
-  invPosition: {
+  groupInnerShadowBox: {
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
     left: 0,
-    top: 0,
   },
-  parentLayout: {
-    height: 85,
-    width: 393,
-    left: 0,
-    position: "absolute",
+  FilterSearch:{
+    left:228,
+    top:10
   },
-  groupChildLayout1: {
-    borderRadius: Border.br_3xs,
-    height: 85,
-    width: 393,
-    left: -8,
-    justifyContent:"flex-start",
+  cont:{
+    marginLeft:1,
     
   },
-  paidTypo: {
-    fontFamily: FontFamily.poppinsMedium,
-    textAlign: "left",
-    fontWeight: "500",
+  boxContianer :{
+    flex:1,
+    flexWrap:"wrap",
+    marginTop:250,
+    marginLeft: 12,
+    marginBottom:90,
+   
+    // alignItems: 'flex-end', 
   },
-  inv0001ParentLayout: {
-    height: 23,
-    position: "absolute",
-  },
-  textTypo: {
-    color: Color.dimgray_100,
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  janPosition: {
-    left: 86,
-    top: 1,
-    fontSize: FontSize.size_sm,
-  },
-  textPosition: {
-    left: 75,
-    fontSize: FontSize.size_sm,
-    top: 1,
-  },
-  rs3000Typo: {
-    left: 311,
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    fontSize: FontSize.size_base,
-    top: 15,
-    position: "absolute",
-  },
-  frameWrapperPosition: {
-    left: 325,
-    top: 47,
-  },
-  paidWrapperPosition: {
-    backgroundColor: Color.darkolivegreen,
-    borderRadius: Border.br_sm,
-    left: 0,
-    top: 0,
-  },
-  groupChildLayout: {
-    width: 53,
-    height: 23,
-    position: "absolute",
-  },
-  groupChild4Bg: {
-    backgroundColor: Color.darkslateblue,
-    top: 0,
-  },
-  text4Typo: {
-    fontFamily: FontFamily.poppinsBold,
-    fontWeight: "700",
-    color: Color.white,
-    textAlign: "left",
-    position: "absolute",
-  },
-  iconChildPosition: {
-    width: 430,
-    left: 0,
-    position: "absolute",
-  },
-  iconLayout2: {
+  iconLayout1: {
     maxHeight: "100%",
     maxWidth: "100%",
     overflow: "hidden",
   },
-  groupChild21Layout: {
+  wrapperLayout: {
     height: 43,
     position: "absolute",
   },
-  totalClr: {
-    color: Color.red,
-    fontSize: FontSize.size_lg,
-    top: 1032,
-  },
-  totalTypo: {
-    fontWeight: "600",
-    textAlign: "left",
-    position: "absolute",
-  },
-  rectangleLayout: {
-    height: 55,
-    width: 392,
-    position: "absolute",
-  },
-  iconLayout1: {
-    height: "100%",
-    width: "100%",
-  },
-  invoicesChild2ShadowBox: {
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: -4,
-    },
-  },
-  invoicesChild3Layout: {
-    borderRadius: Border.br_11xl,
-    position: "absolute",
-  },
-  homeTypo: {
-    lineHeight: 18,
-    textAlign: "center",
-    fontFamily: FontFamily.poppinsMedium,
-  },
-  iconLayout: {
-    height: 45,
-    width: 45,
-    top: 845,
+  breadcrumbsLayout: {
+    width: 150,
+    height: 20,
+    left: 0,
     position: "absolute",
   },
   housefillFlexBox: {
     justifyContent: "center",
+    position: "absolute",
+  },
+  davidTypo1: {
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "500",
+  },
+  surfaceParentFlexBox: {
+    flexDirection: "row",
     alignItems: "center",
-  },
-  svgrepoIconLayout: {
-    height: 26,
-    width: 26,
-    top: 855,
-    position: "absolute",
-    overflow: "hidden",
-  },
-  frameLayout: {
-    height: 104,
-    width: 104,
-    top: 777,
     position: "absolute",
   },
-  housefill1Position: {
-    height: 20,
-    left: 0,
+  abc123Clr: {
+    color: Color.darkslateblue,
+    textAlign: "left",
+  },
+  groupLayout: {
+    width: 119,
+    height: 33,
+    top: 0,
+  },
+  groupInnerLayout: {
+    borderRadius: Border.br_11xl,
     position: "absolute",
   },
   text13Typo: {
     fontSize: FontSize.caption2Regular_size,
     fontWeight: "500",
   },
-  lightTexture22341Icon: {
-    width: 424,
-    position: "absolute",
-    height: 932,
-    left: 0,
-  },
-  groupChild: {
-    top: 0,
-  },
-  muhammadAli: {
-    textAlign: "left",
-    color: Color.textTxtPrimary,
-    fontSize: FontSize.size_base,
-    left: 15,
-    top: 15,
-    position: "absolute",
-  },
-  inv0001: {
-    fontSize: FontSize.size_mini,
-    left: 0,
-    top: 0,
-  },
-  jan2023: {
-    fontSize: FontSize.size_sm,
-    color: Color.dimgray_100,
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  text: {
-    color: Color.dimgray_100,
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  inv0001Parent: {
-    width: 175,
-    top: 47,
-    left: 15,
-  },
-  rs3000: {
-    color: Color.textTxtPrimary,
-  },
-  paid: {
-    color: Color.white,
-    fontSize: FontSize.size_mini,
-    textAlign: "left",
-  },
-  paidWrapper: {
-    paddingHorizontal: 9,
-    paddingVertical: 0,
-    flexDirection: "row",
-    position: "absolute",
-  },
-  frameWrapper: {
-    width: 52,
-    height: 23,
-    position: "absolute",
-  },
-  vectorParent: {
-    top: 0,
-  },
-  groupItem: {
-    backgroundColor: Color.steelblue_300,
-    top: 0,
-  },
-  groupInner: {
-    backgroundColor: Color.gold,
-    borderRadius: Border.br_sm,
-    width: 53,
-    left: 0,
-    top: 0,
-  },
-  due: {
-    left: 12,
-    color: Color.white,
-    fontSize: FontSize.size_mini,
-    textAlign: "left",
-    top: 0,
-    position: "absolute",
-  },
-  rectangleGroup: {
-    left: 325,
-    top: 47,
-  },
-  rectangleParent: {
-    top: 210,
-  },
-  groupChild1: {
-    backgroundColor: Color.darkolivegreen,
-    borderRadius: Border.br_sm,
-    left: 0,
-    top: 0,
-  },
-  paid1: {
-    left: 10,
-    color: Color.white,
-    fontSize: FontSize.size_mini,
-    textAlign: "left",
-    top: 0,
-    position: "absolute",
-  },
-  rectangleContainer: {
-    top: 420,
-  },
-  groupPressable: {
-    top: 105,
-  },
-  groupChild4: {
-    borderRadius: Border.br_3xs,
-    height: 85,
-    width: 393,
-    left: 0,
-    position: "absolute",
-  },
-  muhammadAli4: {
-    fontSize: FontSize.size_base,
-    left: 15,
-    top: 15,
-  },
-  inv00014: {
-    fontSize: FontSize.size_mini,
-    left: 0,
-    top: 0,
-  },
-  jan20234: {
-    fontSize: FontSize.size_sm,
-    left: 86,
-    top: 1,
-  },
-  text4: {
-    left: 75,
-    fontSize: FontSize.size_sm,
-    top: 1,
-  },
-  inv0001Parent2: {
-    width: 174,
-    top: 47,
-    left: 15,
-  },
-  rs30004: {
-    color: Color.white,
-  },
-  rectangleParent2: {
-    top: 315,
-  },
-  groupChild6: {
-    backgroundColor: Color.gainsboro_100,
-    top: 0,
-  },
-  groupChild7: {
-    backgroundColor: Color.dimgray_100,
-    borderRadius: Border.br_sm,
-    width: 53,
-    left: 0,
-    top: 0,
-  },
-  rectangleParent4: {
-    top: 525,
-  },
-  rectangleParent10: {
-    top: 630,
-  },
-  rectangleParent14: {
-    top: 742,
-  },
-  rectangleParent16: {
-    top: 847,
-  },
-  groupParent: {
-    top: 257,
-    width: 393,
-    left: 19,
-    position: "absolute",
-    height: 932,
-  },
-  image2Icon: {
-    top: 803,
-    height: 129,
-    display: "none",
-  },
-  groupContainer38Overlay: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(113, 113, 113, 0.3)",
-  },
-  groupContainer38Bg: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    left: 0,
-    top: 0,
-  },
-  rectangleIcon: {
-    top: -6,
-    height: 80,
-  },
-  groupChild20: {
-    top: 13,
-    left: 43,
-    width: 340,
-    height: 50,
-    position: "absolute",
-  },
-  invoices1: {
-    top: "0%",
-    left: "70.22%",
+  addTypo: {
+    lineHeight: 18,
     textAlign: "center",
     color: Color.textTxtPrimary,
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
-    fontSize: FontSize.size_base,
     position: "absolute",
-  },
-  vectorIcon: {
-    height: "88.85%",
-    width: "9.72%",
-    top: "8.33%",
-    right: "90.28%",
-    bottom: "2.82%",
-    left: "0%",
-    position: "absolute",
-  },
-  invoicesParent: {
-    height: "38.1%",
-    width: "52.33%",
-    top: "30.16%",
-    right: "42.56%",
-    bottom: "31.75%",
-    left: "5.12%",
-    position: "absolute",
-  },
-  groupChild21: {
-    top: 59,
-    width: 49,
-    left: 19,
-  },
-  vectorGroup: {
-    height: 63,
-    top: 47,
-  },
-  text12: {
-    left: 383,
-    fontFamily: FontFamily.montserratRegular,
-    textAlign: "left",
-    position: "absolute",
-  },
-  total: {
-    left: 17,
-    fontFamily: FontFamily.montserratSemibold,
-    color: Color.red,
-    fontSize: FontSize.size_lg,
-    top: 1032,
-  },
-  invoicesChild: {
-    top: 1003,
-    left: 322,
-    borderStyle: "solid",
-    borderColor: "#ff0000",
-    borderTopWidth: 1,
-    width: 149,
-    height: 1,
-    position: "absolute",
-  },
-  invoicesItem: {
-    top: 980,
-    left: 339,
-    width: 19,
-    height: 0,
-    position: "absolute",
-  },
-  rectanglePressable: {
-    borderRadius: Border.br_5xs,
-    backgroundColor: Color.steelblue_300,
-    left: 11,
-    top: 0,
-    alignItems:"center",
-    justifyContent:"center"
-  },
-  searchInvoice: {
-    top: 14,
-    width:300,
-    left: 21,
-    color: "#1e1e1e",
-    textAlign: "left",
-    fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  icon: {
-    maxHeight: "100%",
-    maxWidth: "100%",
-    overflow: "hidden",
-  },
-  vector: {
-    left: "86.39%",
-    top: "29.41%",
-    right: "8.16%",
-    bottom: "33.83%",
-    width: "5.45%",
-    height: "36.76%",
-    position: "absolute",
-  },
-  rectangleParent18: {
-    top: 182,
-    alignItems:"center",
-    justifyContent:"center"
-  },
-  invoicesInner: {
-    top: 3,
-    left: 29,
-    width: 372,
-  },
-  maskGroupIcon: {
-    top: 63,
-    left: 380,
-    width: 31,
-    height: 31,
-    position: "absolute",
-  },
-  invoicesChild1: {
-    top: 782,
-    backgroundColor: Color.aliceblue_100,
-    height: 150,
-  },
-  invoicesChild2: {
-    top: 830,
-    shadowColor: "rgba(0, 0, 0, 0.03)",
-    shadowRadius: 10,
-    elevation: 10,
-    height: 102,
-    width: 430,
-    left: 0,
-    position: "absolute",
-    backgroundColor: Color.steelblue_300,
-  },
-  invoicesChild3: {
-    top: 917,
-    left: 139,
-    backgroundColor: Color.textTxtPrimary,
-    width: 154,
-    height: 6,
-  },
-  home: {
-    left: 22,
-    top: 895,
-    lineHeight: 18,
-    fontSize: FontSize.size_sm,
-    color: Color.textTxtPrimary,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  vehicles: {
-    left: 99,
-    top: 895,
-    lineHeight: 18,
-    fontSize: FontSize.size_sm,
-    color: Color.textTxtPrimary,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  addVehicle: {
-    top: 867,
-    left: 172,
-    fontSize: FontSize.size_sm,
-    color: Color.textTxtPrimary,
-    fontWeight: "500",
-    lineHeight: 18,
-    position: "absolute",
-  },
-  records: {
-    left: 271,
-    top: 895,
-    lineHeight: 18,
-    fontSize: FontSize.size_sm,
-    color: Color.textTxtPrimary,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  invoices2: {
-    left: 359,
-    top: 895,
-    lineHeight: 18,
-    fontSize: FontSize.size_sm,
-    color: Color.textTxtPrimary,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  ellipseIcon: {
-    left: 20,
-  },
-  homeMutedIcon: {
-    width: 25,
-    height: 27,
-  },
-  housefill: {
-    top: 852,
-    left: 31,
-    position: "absolute",
-  },
-  wrapper: {
-    left: 277,
-  },
-  groupIcon: {
-    left: 105,
-  },
-  microphoneSvgrepoCom1Icon: {
-    left: 287,
-  },
-  container: {
-    left: 365,
-  },
-  invoiceWarrantyLineSvgrepoIcon: {
-    left: 375,
-  },
-  frame: {
-    left: 163,
-  },
-  invoicesChild4: {
-    left: 164,
-  },
-  homeMutedIcon1: {
-    width: 14,
-    height: 14,
-  },
-  housefill1: {
-    width: 14,
-    justifyContent: "center",
-    alignItems: "center",
-    top: 0,
-  },
-  elementPosition: {
-    left: 18,
-    height: 20,
-    justifyContent: "center",
-    top: 0,
-    position: "absolute",
-  },
-  text13: {
-    lineHeight: 17,
-    fontFamily: FontFamily.caption2Regular,
-    textAlign: "left",
-    color: Color.textTxtPrimary,
-  },
-  invoices3: {
-    top: 0,
-    left: 27,
-    fontFamily: FontFamily.poppinsSemibold,
-    color: Color.darkslateblue,
-    fontSize: FontSize.size_sm,
-  },
-  breadcrumbs: {
-    top: 6,
-    width: 87,
   },
   createInvoice: {
     lineHeight: 18,
@@ -733,8 +188,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     color: Color.white,
   },
+  invoicesChild3Layout: {
+    borderRadius: Border.br_11xl,
+    position: "absolute",
+  },
   createInvoiceWrapper: {
-    left: 242,
+    left:226,
     shadowColor: "rgba(0, 0, 0, 0.05)",
     shadowRadius: 20,
     elevation: 20,
@@ -749,20 +208,354 @@ const styles = StyleSheet.create({
     top: 0,
     flexDirection: "row",
   },
+  totalTypo: {
+    fontWeight: "600",
+    textAlign: "left",
+    position: "absolute",
+  },
+  invoices3: {
+    top: 0,
+    left: 35,
+    fontFamily: FontFamily.poppinsSemibold,
+    color: Color.darkslateblue,
+    fontSize: FontSize.size_sm,
+  },
+  text13Typo: {
+    fontSize: FontSize.caption2Regular_size,
+    fontWeight: "500",
+  },
+  text13: {
+    lineHeight: 17,
+    fontFamily: FontFamily.caption2Regular,
+    textAlign: "left",
+    color: Color.textTxtPrimary,
+  },
+
+  homeMutedIcon1: {
+    width: 12,
+    height: 14,
+  },
+  housefill1: {
+    width: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    top: 0,
+  },
+  housefill1Position: {
+    height: 20,
+    left: 2,
+    position: "absolute",
+  },
+
   breadcrumbsParent: {
-    top: 130,
-    width: 390,
-    height: 32,
+    flex: 1,
+    width: '80%', 
+    height: 32, 
+    position: 'absolute',
+    marginTop:130,
+    marginLeft:22,
+  },
+  paidTypo: {
+    fontFamily: FontFamily.poppinsMedium,
+    textAlign: "left",
+    fontWeight: "500",
+  },
+  vector: {
+    left: "86.39%",
+    top: "29.41%",
+    right: "8.16%",
+    bottom: "33.83%",
+    width: "5.45%",
+    height: "36.76%",
+    position: "absolute",
+  },
+  rectangleLayout: {
+    height: 55,
+    width: 385,
+    position: "absolute",
+  },
+  searchInvoice: {
+    top: 14,
+    left: 21,
+    color: "#1e1e1e",
+    textAlign: "left",
+    fontSize: FontSize.size_base,
+    position: "absolute",
+  },
+  rectanglePosition: {
+    borderRadius: Border.br_5xs,
+    left: 0,
+    top: 0,
+  },
+  davidTypo: {
+    fontSize: 18,
+    textAlign: "left",
+  },
+  iconLayout: {
+    height: "100%",
+    width: "100%",
+  },
+
+  lightTexture22341Icon: {
+    width: 430,
+    left: 0,
+    top: 0,
+    position: "absolute",
+    height: 932,
+  },
+  image2Icon: {
+    top: 803,
+    height: 129,
+    display: "none",
+    width: 430,
+    left: 0,
+    position: "absolute",
+  },
+  rectangleLayout: {
+    height: 55,
+    width: 375,
+    position: "absolute",
+  },
+  rectangleParent18: {
+    marginTop:180,
+    marginLeft:21,
+  },
+  rectanglePressable: {
+    borderRadius: Border.br_5xs,
+    backgroundColor: Color.steelblue_300,
+    left: 0,
+    top: 0,
+  },
+  groupChild: {
+    backgroundColor: Color.gray_400,
+    height: 60,
+    elevation: 10,
+    shadowRadius: 10,
+    shadowColor: "rgba(0, 0, 0, 0.03)",
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    width: 430,
+    position: "absolute",
+    top: 0,
+  },
+  groupItem: {
+    top: 13,
+    width: 340,
+    height: 50,
+    left: 43,
+    position: "absolute",
+  },
+  record: {
+    top: "0%",
+    left: "73.97%",
+    fontSize: FontSize.size_base,
+    textAlign: "center",
+    color: Color.textTxtPrimary,
+    fontFamily: FontFamily.poppinsMedium,
+    fontWeight: "500",
+    position: "absolute",
+  },
+  vectorIcon: {
+    height: "88.85%",
+    width: "9.99%",
+    top: "8.33%",
+    right: "90.01%",
+    bottom: "2.82%",
+    left: "-2%",
+    position: "absolute",
+  },
+  recordParent: {
+    height: "38.1%",
+    width: "50.93%",
+    top: "30.16%",
+    right: "43.95%",
+    bottom: "31.75%",
+    left: "5.12%",
+    position: "absolute",
+  },
+  wrapper: {
+    top: 59,
+    width: 49,
+    left: 19,
+  },
+  rectangleParent: {
+    top: 35,
+    height: 63,
+    width: 430,
+    left: 0,
+    position: "absolute",
+  },
+  homeMutedIcon: {
+    width: 12,
+    height: 14,
+  },
+  housefill: {
+    width: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 20,
+    left: 10,
+    top: 0,
+  },
+  elementPosition: {
+    left: 22,
+    justifyContent: "center",
+    height: 20,
+    top: 1,
+    position: "absolute",
+  },
+  text: {
+    lineHeight: 17,
+    textAlign: "left",
+    fontSize: FontSize.caption2Regular_size,
+    color: Color.textTxtPrimary,
+    fontFamily: FontFamily.caption2Regular,
+  },
+  element2: {
+    left: 95,
+    height: 20,
+    top: 0,
+  },
+  search: {
+    color: Color.steelblue_100,
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: FontSize.size_sm,
+    textAlign: "left",
+  },
+  surface: {
+    left: 40,
+    top: 2,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  abc123: {
+    fontWeight: "600",
+    fontFamily: FontFamily.poppinsSemibold,
+    fontSize: FontSize.size_sm,
+  },
+  surface1: {
+    left: 105,
+    top: 0,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  breadcrumbs: {
+    height: 20,
+    top: 15,
+  },
+  breadcrumbsWrapper: {
+    height: 20,
+    top: 6,
+  },
+  groupInner: {
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    shadowRadius: 20,
+    elevation: 20,
+    backgroundColor: Color.steelblue_300,
+    width: 119,
+    height: 33,
+    top: 0,
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    left: 0,
+    borderRadius: Border.br_11xl,
+  },
+  addRecord: {
+    left: 17,
+    fontSize: FontSize.caption2Regular_size,
+    top: 0,
+  },
+  vectorIcon1: {
+    height: "72.22%",
+    width: "14.77%",
+    top: "16.67%",
+    right: "86.36%",
+    bottom: "11.11%",
+    left: "-1.14%",
+    position: "absolute",
+  },
+  addRecordParent: {
+    top: 8,
+    left: 16,
+    width: 88,
+    height: 18,
+    position: "absolute",
+  },
+  rectangleGroup: {
+    left: 0,
+    position: "absolute",
+  },
+  groupWrapper: {
+    left: 260,
+    position: "absolute",
+  },
+
+
+  groupParent: {
+    top: 100,
+    height: 33,
+    width: 392,
     left: 19,
     position: "absolute",
   },
-  invoices: {
+  rectanglePressable: {
+    height: 55,
+    width: 378,
+    position: "absolute",
+    backgroundColor: Color.steelblue_300,
+  },
+  davidDaniel: {
+    top: 14,
+    left: 21,
+    fontFamily: FontFamily.caption2Regular,
+    fontWeight: "800",
+    position: "absolute",
+    
+    color:'black',
+  },
+  icon1: {
+    maxHeight: "100%",
+    maxWidth: "100%",
+    overflow: "hidden",
+  },
+  iconLayout1: {
+    height: "100%",
+    width: "100%",
+  },
+  vector: {
+    left: "86.39%",
+    top: "29.41%",
+    right: "8.16%",
+    bottom: "33.83%",
+    width: "5.45%",
+    height: "36.76%",
+    position: "absolute",
+  },
+  icon: {
+    maxHeight: "100%",
+    maxWidth: "100%",
+    overflow: "hidden",
+  },
+  rectangleContainer: {
+    top: 145,
+    left: 20,
+  },
+
+
+  maintenanceRecord: {
     backgroundColor: Color.white,
     flex: 1,
     overflow: "hidden",
-    width: "100%",
     height: 932,
+    width: "100%",
   },
 });
 
 export default Invoices;
+

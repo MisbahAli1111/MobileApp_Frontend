@@ -194,14 +194,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexWrap:"wrap",
     marginBottom:20,
+    
   },
   serviceWrapper: {
     top: 84,
   },
   wrap:{
   width:385,
-  marginLeft:1,
-  
+  marginLeft:1,  
   
   },
   text2Typo: {

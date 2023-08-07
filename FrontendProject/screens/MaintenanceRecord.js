@@ -117,7 +117,7 @@ const MaintenanceRecord = () => {
 
     <View style={styles.boxContianer}>
     <MaintenanceRecordList dsearch={search} />
-      </View>
+    </View>
       
       
     </View>
@@ -457,3 +457,4 @@ const styles = StyleSheet.create({
 });
 
 export default MaintenanceRecord;
+
