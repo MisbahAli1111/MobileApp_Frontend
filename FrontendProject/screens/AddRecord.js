@@ -6,7 +6,9 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
-import ProfileDropdown from "../components/ProfilePopDown";
+import ImagePickerCamera from "../components/ImagePickerCamera";
+import ImagePickerGallery from "../components/ImagePickerGallery";
+import Footer from "../components/Footer";
 
 
 
@@ -37,6 +39,36 @@ const AddRecord = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
   const services = ['Oil and Coolant Level', 'Air Filter', 'Tire Pressure', 'Lights', 'Oil and Filter Change','Rotate tires','Wax Vechile','Transmission Fluid','Spark Plugs','Serpentine Belt','Winshield Wipers','Battery Checkup'];
+  const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
+  const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
+  const [selectedGalleryImageUri, setSelectedGalleryImageUri] = useState(null);
+  const [selectedCameraImageUri, setSelectedCameraImageUri] = useState(null);
+
+  const handleCameraIconClick = () => {
+    setShowCameraImagePicker(true);
+  };
+
+  const handleCameraImageSelected = (uri) => {
+    setSelectedCameraImageUri(uri);
+    setShowCameraImagePicker(false);
+  };
+
+  const handleGalleryIconClick = () => {
+    setShowGalleryImagePicker(true);
+  };
+
+  const handleGalleryImageSelected = (uri) => {
+    setSelectedGalleryImageUri(uri);
+    setShowGalleryImagePicker(false);
+  };
+
+  const handleDeleteGalleryImage = () => {
+    setSelectedGalleryImageUri(null);
+  };
+
+  const handleDeleteCameraImage = () => {
+    setSelectedCameraImageUri(null);
+  };
 
     const handleDateChange = (event, date) => {
       setShowDatePicker(false);
@@ -71,6 +103,9 @@ const AddRecord = () => {
       setShowDropdown(false);
     };
 
+    
+    
+
 
 
   const handleSave = () => {
@@ -101,11 +136,7 @@ const AddRecord = () => {
         source={require("../assets/light-texture2234-1.png")}
       />
 
-      <Image
-        style={[styles.image2Icon, styles.text1Position]}
-        contentFit="cover"
-        source={require("../assets/image-2.png")}
-      />
+      
       <View style={styles.breadcrumbs}>
         <View style={[styles.housefill, styles.housefillFlexBox]}>
           <Image
@@ -228,17 +259,65 @@ const AddRecord = () => {
 
         ></TextInput>
         <View style={[styles.groupChild, styles.childLayout]} />
+        
+        <View style={[position="absolute"]}>
+        {/* gallery image start  */}
+        <Pressable onPress={handleGalleryIconClick} >
         <Image
           style={[styles.gallerySvgrepoCom1Icon, styles.svgrepoIconLayout1]}
           contentFit="cover"
           source={require("../assets/gallerysvgrepocom-1.png")}
         />
+        </Pressable>
+        
+      {/* gallery image end  */}
+
+        {/* camera image start */}
+        <Pressable onPress={handleCameraIconClick}
+        >
         <Image
           style={[styles.cameraSvgrepoCom61, styles.svgrepoIconLayout1]}
           contentFit="cover"
           source={require("../assets/camerasvgrepocom-6-1.png")}
         />
+        </Pressable>
+      
+      {/* camera image end  */}
       </View>
+      
+
+       {showCameraImagePicker && (
+         <ImagePickerCamera onImageSelected={handleCameraImageSelected} />
+       )}
+      {selectedCameraImageUri && (
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: selectedCameraImageUri }} style={styles.image} />
+          <TouchableOpacity onPress={handleDeleteCameraImage} style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Delete</Text>
+        </TouchableOpacity>
+        </View>
+      )}
+
+      {showGalleryImagePicker && (
+        <ImagePickerGallery onImageSelected={handleGalleryImageSelected} />
+      )}
+      {selectedGalleryImageUri && (
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: selectedGalleryImageUri }} style={styles.image} />
+          <TouchableOpacity onPress={handleDeleteGalleryImage} style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Delete</Text>
+        </TouchableOpacity>
+        </View>
+      )}
+      </View>
+      
+     
+      
+
+      
+
+
+
 <Pressable
 onPress={openTimePicker}>
       <Image
@@ -267,115 +346,10 @@ onPress={openTimePicker}>
           <Text style={styles.save}>Save</Text>
         </View>
       </Pressable>
-      <View style={[styles.rectangleView, styles.iconGroupLayout]} />
-      <View style={styles.addRecordChild5} />
-      <Text style={[styles.home, styles.addTypo]}>Home</Text>
-      <Text style={[styles.vehicles, styles.addTypo]}>Vehicles</Text>
-      <Text style={[styles.addVehicle, styles.addTypo]}>Add Vehicle</Text>
-      <Text style={[styles.records, styles.addTypo]}>Records</Text>
-      <Text style={[styles.invoices, styles.addTypo]}>Invoices</Text>
-      {/* //home eclipse */}
-      {/* homeicon */}
-      <Pressable
-        onPress={() => navigation.navigate("Home")}
-      >
-        <Image
-          style={[styles.ellipseIcon, styles.frameLayoutt]}
-          contentFit="cover"
-          source={require("../assets/ellipse-5.png")}
-        />
-        <View style={[styles.housefill1, styles.housefillFlexBox]}>
-          <Image
-            style={styles.homeMutedIcon1}
-            contentFit="cover"
-            source={require("../assets/homemuted1.png")}
-          />
-        </View>
-      </Pressable>
-
-      {/* man? */}
-      <Pressable
-        style={styles.wrapperPosition}
-        onPress={() => navigation.navigate("Vehicles")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-5.png")}
-        />
-      </Pressable>
-
-
-      {/* bookicon */}
-      <Pressable
-        style={[styles.container, styles.frameLayout]}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-7.png")}
-        />
-        <Image
-          style={[styles.microphoneSvgrepoCom1Icon, styles.svgrepoIconLayout]}
-          contentFit="cover"
-          source={require("../assets/microphonesvgrepocom-1.png")}
-        />
-      </Pressable>
-
-      {/* manicon */}
-      <Image
-        style={[styles.carCitroenTopVehicleSvgrepIcon, styles.wrapperPosition]}
-        contentFit="cover"
-        source={require("../assets/carcitroentopvehiclesvgrepocom-1.png")}
-      />
-      {/* invoice */}
-      <Pressable
-        style={[styles.frame, styles.frameLayout]}
-        onPress={() => navigation.navigate("Invoices")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-        <Image
-          style={[
-            styles.invoiceWarrantyLineSvgrepoIcon,
-            styles.svgrepoIconLayout,
-          ]}
-          contentFit="cover"
-          source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-        />
-      </Pressable>
-
-
-      {/* wheel */}
-      <Pressable
-        style={[styles.groupPressable, styles.groupPressableLayout]}
-        onPress={() => navigation.navigate("AddVehicle")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/group-11.png")}
-        />
-        <Image
-
-          contentFit="cover"
-          source={require("../assets/group-174.png")}
-        />
-      </Pressable>
-      <Pressable
-        onPress={() => navigation.navigate("AddVehicle")}
-
-      >
-        <Image
-          style={[styles.addRecordChild6, styles.groupPressableLayoutt]}
-          contentFit="cover"
-          source={require("../assets/group-174.png")}
-        />
-      </Pressable>
+      <View style={[styles.cont]}>
+        <Footer prop={"MaintenanceRecord"}   />
+      </View>
+      
 
 
 
@@ -443,6 +417,13 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     fontSize: FontSize.caption2Regular_size,
   },
+  image: {
+    bottom:15,
+    width: 350,
+    height: 150,
+    contentFit: 'cover',
+    
+  },
   pmTypo: {
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
@@ -459,6 +440,7 @@ const styles = StyleSheet.create({
     top: 265,
     position: "absolute",
   },
+  
   childLayout: {
     width: 384,
     height: 2,
@@ -466,6 +448,11 @@ const styles = StyleSheet.create({
     borderColor: "#cbcbcb",
     borderStyle: "solid",
     position: "absolute",
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginTop: 60,
+    position:"relative"
   },
   // here 
   iconLayout: {
@@ -483,11 +470,16 @@ const styles = StyleSheet.create({
 
   },
   servicesClick:{
-    top: 320,
-    width: 590,
-    right: 185
+    top: 312,
+    width: 80,
+    left:323
 
 
+  },
+  cont: {
+    padding: 6,
+    top: -55,
+    right: 5,
   },
   container: {
     flex: 1,
@@ -499,6 +491,21 @@ const styles = StyleSheet.create({
     width: 25,
     position: "absolute",
     overflow: "hidden",
+  },
+  deleteButton: {
+    position: "absolute",
+    top:140,
+    backgroundColor: "#ff0000", // Customize the background color as needed
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+
+  // Style for the delete button text
+  deleteButtonText: {
+    color: "#ffffff", // Customize the text color as needed
+    fontSize: 16,
+    fontWeight: "bold",
   },
   groupItemLayout: {
     height: 45,
@@ -722,10 +729,12 @@ const styles = StyleSheet.create({
   gallerySvgrepoCom1Icon: {
     left: 350,
     top: 2,
+    position:"absolute"
   },
   cameraSvgrepoCom61: {
     left: 318,
     top: 2,
+    position:"absolute"
   },
   enterDetailParent: {
     top: 454,
@@ -755,7 +764,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorParent: {
-    top: 630,
+    top: 650,
     left: 18,
   },
   addRecordChild4: {
@@ -930,7 +939,7 @@ const styles = StyleSheet.create({
   vectorIcon3: {
     height: "1.26%",
     width: "4.65%",
-    top: "37.65%",
+    top: "36.65%",
     right: "7.67%",
     bottom: "55.39%",
     left: "89.80%",
