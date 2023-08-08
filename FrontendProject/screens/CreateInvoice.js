@@ -5,7 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, View, Text, Pressable, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
+// import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
 import InvoiceDetailView from "./InvoiceDetailView";
 import DateTimePicker from '@react-native-community/datetimepicker';

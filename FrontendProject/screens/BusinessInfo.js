@@ -7,7 +7,6 @@ import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-
 const BusinessInfo = () => {
   const navigation = useNavigation();
 
@@ -24,16 +23,89 @@ const BusinessInfo = () => {
   const [locationFocused, setlocationFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
 
+
+  const [EMessage, setEMessage] =useState('');
+  const [CMessage , setCMessage] = useState('');
+  const isValidEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+
   const handleSignUp = () => {
+
+    if(!name){
+      setNameError(true);
+    }else{
+      setNameError(false);
+    }
+
+    if(!countryCode){
+      setPLError('Please select Country Code');
+      setNumberError(true);
+    }else{
+      setPLError('');
+      if(!phoneNumber){
+        setPLError("Please provide Contact Number")
+      }
+      else{
+        setNumberError(false);
+      }
+      
+    }
+    
+    if(!email){
+      setEMessage('Please provide an Email');
+      setEmailError(true);
+    }else{
+      setEMessage('');
+      if(!isValidEmail(email))
+      {
+        setEMessage('Please provide a Valid Email');
+        setEmailError(true);
+        return;
+      }else{
+        setEmailError(false);
+      }
+    }
+
+    if(!city){
+      setCMessage('Please select City');
+      setCountryError(true);
+    }else{
+      setCMessage('');
+      if(!country)
+      {
+        setCMessage('Please select Country');
+        setCountryError(true);
+      }else{
+        setCountryError(false);
+      }
+      
+    }
+
+    if(!location){
+      setLocationError(true);
+    }
+    else{
+      setLocationError(false);
+    }
+
+
     if(name && email && location && city && country && countryCode && phoneNumber)
     {
       navigation.navigate('OwnerInfo');
     }
-    else{
-      Alert.alert('Fill All fields');
-    }
+    
   };
 
+  const [NameEror,setNameError]=useState(false);
+  const [EmailEror,setEmailError]=useState(false);
+  const [LocationEror,setLocationError]=useState(false);
+ const [CountryError,setCountryError]=useState(false);
+  const [PLEror,setPLError]=useState('');
+  const [NumberEror,setNumberError]=useState(false);
+  
   
 
   const [countryShowDropdown, setCountryShowDropdown] = useState(false);
@@ -126,6 +198,18 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
+ <Text style={[styles.businessInfo1, styles.nextTypo]}>Business Info</Text>
+      <Text
+        style={[styles.letsRegister, styles.letsPosition]}
+      >{`Let’s Register `}</Text>
+      <Text style={[styles.letsLevelUp, styles.letsPosition]}>
+        Let’s level up your business, together.
+      </Text>
+      
+
+
+      {/* Name  */}
+     
       <TextInput style={[styles.davidDaniel, styles.davidDanielTypo]}
       placeholder="Name"
         value={name}
@@ -133,121 +217,93 @@ const BusinessInfo = () => {
         onBlur={() => setNameFocused(false)}
         onChangeText={setName}
       />
-      <TextInput style={[styles.daviddaniel33outlookcom, styles.davidDanielTypo]}
+      <Image
+        style={[styles.user1Icon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/user-1.png")}
+      />
+      <Image
+        style={[
+         NameEror ? styles.businessInfoChildR : styles.businessInfoChild
+          , styles.businessChildLayout]}
+        contentFit="cover"
+        source={require("../assets/line-11.png")}
+      />
+      
+      {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null }
+
+      
+      {/* Email  */}
+      <TextInput style={[styles.daviddaniel33outlookcom, styles.davidDanielTypoE]}
       placeholder="Email"
         value={email}
         onFocus={() => setEmailFocused(true)}
         onBlur={() => setEmailFocused(false)}
         onChangeText={setEmail}
-        
       />
       <Image
-        style={[styles.businessInfoChild, styles.businessChildLayout]}
+        style={[styles.atSign1Icon, styles.iconLayout]}
         contentFit="cover"
-        source={require("../assets/line-11.png")}
+        source={require("../assets/atsign-1.png")}
       />
       <Image
-        style={[styles.businessInfoItem, styles.businessChildLayout]}
+        style={[
+          EmailEror ? styles.businessInfoItemR : styles.businessInfoItem ,
+           styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-21.png")}
       />
-      <Image
-        style={[styles.businessInfoInner, styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-31.png")}
-      />
-      <TextInput style={styles.textInput}
-        placeholder="Phone Number"
-        value={phoneNumber}
-        keyboardType='numeric'
-        maxLength={15}
-        onFocus={() => setPhoneNumberFocused(true)}
-        onBlur={() => setPhoneNumberFocused(false)}
-        onChangeText={setPhonenumber}
-      />
-      <TextInput style={[styles.pk, styles.pkPosition]}
-      placeholder='PK'
-        value={countryCode}
-        editable={false}
-      />
-      <Pressable
-      // style={styles.vectorIcon}
-      onPress = {toggleCodeDropdown}>
+{EmailEror ? <Text style={styles.nameError}>{EMessage}</Text> : null }
+
       
-      <Image
-        style={styles.vectorIcon}
-        contentFit="cover"
-        source={require("../assets/vector-21.png")}
-      />
-      
-      </Pressable>
-
-      { (
-        <View style={styles.codeClick} >
-        <Picker
-          selectedValue={countryCode}
-          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-        >
-          <Picker.Item   label="Select Country Code" value="PK" />
-          {countryCodes.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )}
-
-
-
-
-      <Image
-        style={[styles.businessInfoInner, styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-31.png")}
-      />
+      {/* Location  */}
       <TextInput style={[styles.h218GulshanKarachi, styles.davidDanielTypo]}
       placeholder="location"
         value={location}
         onFocus={() => setlocationFocused(true)}
         onBlur={() => setlocationFocused(false)}
         onChangeText={setlocation}
-
       />
       <Image
-        style={[styles.businessInfoChild2, styles.businessChildLayout]}
+        style={[styles.mapPin1Icon, styles.iconLayout]}
         contentFit="cover"
-        source={require("../assets/line-4.png")}
+        source={require("../assets/mappin-1.png")}
       />
-
-      
       <Image
-        style={[styles.businessInfoChild3, styles.businessChildLayout]}
+        style={[
+          LocationEror ? styles.businessInfoInnerR :styles.businessInfoInner
+          , styles.businessChildLayout]}
         contentFit="cover"
-        source={require("../assets/line-71.png")}
+        source={require("../assets/line-31.png")}
       />
-      
+      {LocationEror ? <Text style={styles.nameError}>Please Enter a Valid Location</Text> : null }
+
+
+      {/* City  */}
       <TextInput style={[styles.karachi, styles.karachiTypo]}
       placeholder="city"
       value={city}
       editable={false}
       />
-      
-      <Pressable
-      
-      >
+     <TextInput style={[styles.pakistan, styles.karachiTypo]}
+       placeholder="country"
+       value={country}
+      editable={false}
+     />
+     <Pressable>
       <Image
         style={[styles.businessInfoChild4, styles.businessChildPosition]}
         contentFit="cover"
         source={require("../assets/vector-6.png")}
       />
       </Pressable>
-    
       { 
         <View  style={styles.CityClick}>
         <Picker
           selectedValue={city}
           onValueChange={(itemValue) => handleCitySelect(itemValue)}
         >
-          <Picker.Item    label="Select City" value="Karachi" />
+          <Picker.Item     value="Karachi" />
           {cities.map((code) => (
             <Picker.Item key={code} label={code} value={code} />
           ))}
@@ -255,18 +311,7 @@ const BusinessInfo = () => {
         </View>
       }
 
-
-
-      
-      <TextInput style={[styles.pakistan, styles.karachiTypo]}
-       
-        placeholder="country"
-        
-        value={country}
-       editable={false}
-      />
       <Pressable
-       
       onPress={toggleCountryDropdown}>
       <Image
         style={[styles.businessInfoChild5, styles.businnessChildPosition]}
@@ -287,17 +332,68 @@ const BusinessInfo = () => {
         </Picker>
         </View>
       )}
-
-
-
-      <Text style={[styles.businessInfo1, styles.nextTypo]}>Business Info</Text>
-      <Text
-        style={[styles.letsRegister, styles.letsPosition]}
-      >{`Let’s Register `}</Text>
-      <Text style={[styles.letsLevelUp, styles.letsPosition]}>
-        Let’s level up your business, together.
-      </Text>
+      <Image
+        style={[
+          CountryError ? styles.businessInfoInnerR :styles.businessInfoInner
+          , styles.businessChildLayout]}
+        contentFit="cover"
+        source={require("../assets/line-31.png")}
+      />
+      {CountryError ? <Text style={styles.nameError}>{CMessage}</Text> : null }
       
+
+
+
+      <TextInput style={styles.textInput}
+        placeholder="Phone Number"
+        value={phoneNumber}
+        keyboardType='numeric'
+        maxLength={15}
+        onFocus={() => setPhoneNumberFocused(true)}
+        onBlur={() => setPhoneNumberFocused(false)}
+        onChangeText={setPhonenumber}
+      />
+      <TextInput style={[styles.pk, styles.pkPosition]}
+      placeholder='PK'
+        value={countryCode}
+        editable={false}
+      />
+
+      <Pressable
+      onPress = {toggleCodeDropdown}>
+      <Image
+        style={styles.vectorIcon}
+        contentFit="cover"
+        source={require("../assets/vector-21.png")}
+      />
+      
+      </Pressable>
+      { (
+        <View style={styles.codeClick} >
+        <Picker
+          selectedValue={countryCode}
+          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+        >
+          <Picker.Item   label="Select Country Code" value="PK" />
+          {countryCodes.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
+      <Image
+        style={[styles.phone1Icon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/phone-1.png")}
+      />
+     <Image
+        style={[
+         NumberEror ?  styles.businessInfoChild2R : styles.businessInfoChild2
+          , styles.businessChildLayout]}
+        contentFit="cover"
+        source={require("../assets/line-4.png")}
+      />
+
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
         onPress= {handleSignUp}
@@ -309,26 +405,10 @@ const BusinessInfo = () => {
         />
         <Text style={[styles.next, styles.nextTypo]}>Next</Text>
       </Pressable>
-      <Image
-        style={[styles.mapPin1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/mappin-1.png")}
-      />
-      <Image
-        style={[styles.user1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/user-1.png")}
-      />
-      <Image
-        style={[styles.atSign1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/atsign-1.png")}
-      />
-      <Image
-        style={[styles.phone1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/phone-1.png")}
-      />
+      {NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null }
+      
+      
+      
       
     </View>
   );
@@ -338,40 +418,63 @@ const styles = StyleSheet.create({
   groupChildPosition: {
     left: 0,
     top: 0,
+  
+  },
+  nameWrap:{},
+  wrap:{
+    flex:1,
+    // backgroundColor:'red',
   },
   davidDanielTypo: {
+    height: 28,
+    top:2,
+    textAlign: "left",
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: FontSize.size_base,
+    marginLeft: 66,
+    position: "relative",
+  },
+  nameError:{
+    marginTop:12,
+    marginLeft:50,
+    color:'red',
+  },
+  davidDanielTypoE: {
     height: 28,
     textAlign: "left",
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     left: 56,
-    position: "absolute",
+    position: "relative",
   },
   businessChildLayout: {
     height: 2,
-    width: 390,
+    width: 370,
     left: 20,
-    position: "absolute",
+    position: "relative",
+    marginTop:10,
   },
   pkPosition: {
     width: 30,
     height: 27,
-    top: 586,
+    marginTop:-35,
+    marginBottom:8,
     textAlign: "left",
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    left: 56,
-    position: "absolute",
+    marginLeft: 65,
+    position: "relative",
   },
   karachiTypo: {
-    top: 519,
+    
     height: 27,
     textAlign: "left",
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
   },
   cityTouch:{
     top: 500,
@@ -380,16 +483,15 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   businessChildPosition: {
-    top: 445,
+    marginTop:-20,
     height: 10,
     width: 16,
-    position: "absolute",
+    position: "relative",
   },
   businnessChildPosition: {
-    top: 393,
     height: 10,
     width: 16,
-    position: "absolute",
+    position: "relative",
   },
   nextTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -411,7 +513,7 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     left: 20,
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
   },
   lightTexture22341Icon: {
@@ -421,22 +523,36 @@ const styles = StyleSheet.create({
     top: 0,
   },
   davidDaniel: {
-    top: 329,
+    marginTop:330,
     width: 181,
   },
   daviddaniel33outlookcom: {
-    top: 393,
+    marginTop:20,
     width: 231,
+    marginLeft:10,
   },
   businessInfoChild: {
-    top: 367,
+   marginTop:10,
   },
+  businessInfoChildR: {
+    marginTop:10,
+    backgroundColor:'red',
+   },
+ 
   businessInfoItem: {
-    top: 432,
+    marginTop:10,
   },
+  businessInfoItemR: {
+    marginTop:10,
+    backgroundColor:'red',
+  },
+  
   businessInfoInner: {
-    top: 624,
+    
   },
+  businessInfoInnerR: {
+    backgroundColor:'red',
+  },  
   text: {
     left: 109,
     width: 176,
@@ -450,12 +566,13 @@ const styles = StyleSheet.create({
   },
   textInput:
   {
-    top: 585,
-    left: 110,
+    marginLeft: 130,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-
+    position:'relative',
+    marginTop:20,
+    marginBottom:8,
   },
   pk: {
     color: Color.textTxtPrimary,
@@ -468,11 +585,13 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorIcon: {
-    top: 566,
+    // backgroundColor:'red',
+    marginTop:-28,
+    marginLeft:12,
     left: 83,
     height: 10,
     width: 16,
-    position: "absolute",
+    position: "relative",
     overflow:"hidden",
   },
   pk1: {
@@ -480,45 +599,51 @@ const styles = StyleSheet.create({
   },
   h218GulshanKarachi: {
     width: 282,
-    top: 455,
+    marginTop:20,    
   },
-  businessInfoChild2: {
-    top: 496,
+  businessInfoChild2R: {
+   backgroundColor:'red',
   },
   businessInfoChild3: {
-    top: 560,
   },
   karachi: {
-    width: 100,
-    left: 30,
-    top: 519,
+    width: 90,
+    marginLeft: 35,
+    marginTop:25,
   },
   businessInfoChild4: {
-    left: 131,
-    position:'absolute',
+    marginLeft:130,
+    position:'relative',
   },
   pakistan: {
-    left: 165,
+    marginLeft: 175,
     width: 120,
+    marginTop:-25,
   },
   businessInfoChild5: {
-    left: 290,
+    marginLeft: 300,
+    marginTop:-30,
   },
   CountryClick: {
-    right: -242,
-    top: 372,
-    width:80
-  
+    marginLeft: 252,
+    marginTop:-50,
+    width:80,
+    height:40,
+    // backgroundColor:'red',
   },
   CityClick: {
-    right: 248,
-    top: 425,
-    
+    marginTop:-40,
+    marginLeft:110,
+    // backgroundColor:'red',
+    height:50,
+    width:50,
   },
   codeClick:{
-    top: 545,
-    right:297
-
+    marginTop:-48,
+    marginBottom:10,
+    marginLeft:77,
+    height:50,
+    width:50,
   },
   businessInfo1: {
     top: 281,
@@ -567,16 +692,22 @@ const styles = StyleSheet.create({
     left: 10,
   },
   mapPin1Icon: {
-    top: 455,
+    marginTop:-25,
+    marginLeft:10,
+    marginBottom:10,
   },
   user1Icon: {
-    top: 333,
+    marginTop:-25,
+    marginLeft:8,
   },
   atSign1Icon: {
-    top: 397,
+    marginTop:-25,
+    marginLeft:10,
   },
   phone1Icon: {
-    top: 591,
+   marginTop:-44,
+   marginLeft:15,
+   marginBottom:8,
   },
   groupIcon: {
     top: 3,

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Button, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View,TextInput, Button, Text, Pressable, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
+// import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
 import Footer from "../components/Footer";
 import * as Svg from 'react-native-svg';

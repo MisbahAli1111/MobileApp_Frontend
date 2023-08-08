@@ -9,12 +9,9 @@ import FilterSearch from "../components/FilterSearch";
 import InvoiceList from "../components/InvoiceList";
 const Invoices = () => {
   const navigation = useNavigation();
-
   const [search, setSearch] = useState('');
-
   const handleQuery= (query) => {
     setSearch(query);
-
   }
 
   return (

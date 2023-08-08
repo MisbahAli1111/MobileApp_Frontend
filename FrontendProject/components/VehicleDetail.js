@@ -5,7 +5,6 @@ import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
 
 function RecordDetails() {
 
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight:"700",
     
   },
   parentPosition: {
@@ -471,7 +470,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight:"700",
   },
   detailsParent: {
     top: 385,

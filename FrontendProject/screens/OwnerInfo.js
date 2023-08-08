@@ -5,7 +5,6 @@ import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, Text,TextInput, View, Pressable,TouchableOpacity, Alert, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
-import { TouchableHighlight } from "react-native-gesture-handler";
 
 
 const OwnerInfo = () => {

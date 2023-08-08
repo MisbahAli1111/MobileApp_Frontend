@@ -1,63 +1,114 @@
 import * as React from "react";
 import { useState } from "react";
 import { Image } from "expo-image";
-import { Pressable, StyleSheet, Text, TextInput,View} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
-import { TouchableHighlight } from "react-native-gesture-handler";
 import { Alert } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 
 const AddEmployee = () => {
   const navigation = useNavigation();
-
   const [name, setName] = useState('');
   const [cnic, setcnic] = useState('');
   const [email, setemail] = useState('');
-  const[Password,setPassword] = useState('');
-  const[ConfirmPassword,setConfirmPassword] = useState('');
-  const[phoneNumber,setPhonenumber] = useState('');
-  const[passwordVisible,setPasswordVisible] = useState(true);
-  const[ConfirmPasswordVisible,setConfirmPasswordVisible] = useState(true);
+  const [Password, setPassword] = useState('');
+  const [ConfirmPassword, setConfirmPassword] = useState('');
+  const [phoneNumber, setPhonenumber] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(true);
+  const [countryCode, setCountryCode] = useState('');
+  const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
+  const [NameEror, setNameError] = useState(false);
+  const [CNICEror, setCNICError] = useState(false);
 
+  const [EmailEror, setEmailError] = useState(false);
+  const [LocationEror, setLocationError] = useState(false);
+  const [PasswordError, setPasswordError] = useState(false);
+  const [CPasswordError, setCPasswordError] = useState(false);
+  const [NoError,setNoError]=useState(false);
+  const [PLEror, setPLError] = useState('');
+  const [NumberEror, setNumberError] = useState(false);
+
+const [LPasswordError,setLPasswordError] = useState(false);
+const [CError , setCError] = useState('');
   const [nameFocused, setNameFocused] = useState(false);
   const [cnicFocused, setcnicFocused] = useState(false);
   const [emailFocused, setemailFocused] = useState(false);
   const [PasswordFocused, setPasswordFocused] = useState(false);
   const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
+  const [countryCodeFocused, setCountryCodeFocused] = useState(false);
 
-  
-  const handleSignUp = () => {
-    // console.warn(name);
-    if(name && cnic && email && Password && ConfirmPassword && phoneNumber && selectedCode && Password === ConfirmPassword)
-    {
-    
-      navigation.navigate('Home');
-    }
-    else if(Password !== ConfirmPassword)
-    {
-      Alert.alert('Password and Confirm Password should be same.')
-    }
-    else{
-      Alert.alert('Fill all Fields')
-    }
+  const isValidEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
   };
 
-   //Country Code
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [selectedCode, setSelectedCode] = useState('');
-    const countryCodes = ['PK', 'IN', 'SA', 'US', 'UK'];
-  
-    const toggleDropdown = () => {
-      setShowDropdown(!showDropdown);
-    };
-  
-    const handleCodeSelect = (code) => {
-      setSelectedCode(code);
-      setShowDropdown(false);
-    };
 
+  const handleSignUp = () => {
+    let hasErrors = false;
+
+    if (!name) {
+      setNameError(true);
+      hasErrors = true;
+    } else {
+      setNameError(false);
+    }
+  
+    if (!cnic) {
+      setCNICError(true);
+      hasErrors = true;
+    } else {
+      setCNICError(false);
+    }
+  
+    if (!email || !isValidEmail(email)) {
+      setEmailError(true);
+      hasErrors = true;
+    } else {
+      setEmailError(false);
+    }
+  
+    if (!countryCode) {
+      setPLError('Please select Country Code');
+      setNumberError(true);
+      hasErrors = true;
+    } else {
+      setPLError('');
+      if (!phoneNumber) {
+        setPLError('Please provide Contact Number');
+        hasErrors = true;
+      } else {
+        setNumberError(false);
+      }
+    }
+  
+    if (!Password) {
+      setPasswordError(true);
+      hasErrors = true;
+    } else {
+      setPasswordError(false);
+    }
+  
+    if (!ConfirmPassword) {
+      setCPasswordError(true);
+      setCError('Please provide Confirm password');
+      hasErrors = true;
+    } else {
+      if (Password !== ConfirmPassword) {
+        setCPasswordError(true);
+        setLPasswordError(true);
+        setCError('Password and Confirm Password do not match');
+        hasErrors = true;
+      } else {
+        setLPasswordError(false);
+        setCPasswordError(false);
+      }
+    }
+  
+    if (!hasErrors) {
+      navigation.navigate('MaintenanceRecord');
+    }
+  };
 
   return (
     <View style={styles.addEmployee}>
@@ -66,17 +117,9 @@ const AddEmployee = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <TextInput style={[styles.daviddaniel33outlookcom, styles.passwordTypo]}
-      
-      placeholder="Email"
-        
-        value={email}
-        onFocus={() => setemailFocused(true)}
-        onBlur={() => setemailFocused(false)}
-        onChangeText={setemail}
 
-      />
-      
+
+
       <TextInput style={[styles.name, styles.passwordTypo]}
         placeholder="Name"
         value={name}
@@ -84,23 +127,14 @@ const AddEmployee = () => {
         onBlur={() => setNameFocused(false)}
         onChangeText={setName}
       />
-      <TextInput style={[styles.password, styles.passwordTypo]}
-      placeholder="Password"
-        secureTextEntry={passwordVisible}
-        value={Password}
-        onFocus={() => setPasswordFocused(true)}
-        onBlur={() => setPasswordFocused(false)}
-        onChangeText={setPassword}
-
+      <Image
+        style={[styles.addEmployeeItem,
+          NameEror ?  styles.addChildLayoutR :styles.addChildLayout
+          ]}
+        contentFit="cover"
+        source={require("../assets/line-1.png")}
       />
-      <TextInput style={[styles.confirmPassword, styles.passwordTypo]}
-      placeholder="Confirm Password"
-        secureTextEntry={ConfirmPasswordVisible}
-        value={ConfirmPassword}
-        onFocus={() => setConfirmPasswordFocused(true)}
-        onBlur={() => setConfirmPasswordFocused(false)}
-        onChangeText={setConfirmPassword}
-       />
+      {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
       <TextInput style={[styles.cnicNumber, styles.passwordTypo]}
         placeholder="CNIC Number"
         keyboardType="numeric"
@@ -109,6 +143,28 @@ const AddEmployee = () => {
         onFocus={() => setcnicFocused(true)}
         onBlur={() => setcnicFocused(false)}
         onChangeText={setcnic}
+      />
+      <Image
+        style={[styles.addEmployeeInner,
+          CNICEror ?  styles.addChildLayoutR :styles.addChildLayout
+          ]}
+        contentFit="cover"
+        source={require("../assets/line-2.png")}
+      />
+      {CNICEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
+
+      <TextInput style={styles.pk}
+        placeholder='PK'
+        maxLength={2}
+        value={countryCode}
+        onFocus={() => setCountryCodeFocused(true)}
+        onBlur={() => setCountryCodeFocused(false)}
+        onChangeText={setCountryCode}
+      />
+      <Image
+        style={styles.addEmployeeChild}
+        contentFit="cover"
+        source={require("../assets/vector-1.png")}
       />
       <TextInput style={[styles.text, styles.textPosition]}
         placeholder="Phone Number"
@@ -119,130 +175,122 @@ const AddEmployee = () => {
         onBlur={() => setPhoneNumberFocused(false)}
         onChangeText={setPhonenumber}
       />
-      <TextInput style={styles.pk}
-        placeholder='PK'
-        value={selectedCode}
-        editable={false}
-      />
       <Image
-        style={styles.addEmployeeChild}
-        contentFit="cover"
-        source={require("../assets/vector-1.png")}
-      />
-      <Image
-        style={[styles.addEmployeeItem, styles.addChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-1.png")}
-      />
-      <Image
-        style={[styles.addEmployeeInner, styles.addChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-2.png")}
-      />
-      <Image
-        style={[styles.lineIcon, styles.addChildLayout]}
+        style={[styles.lineIcon,
+          NumberEror ?  styles.addChildLayoutR :styles.addChildLayout
+          ]}
         contentFit="cover"
         source={require("../assets/line-8.png")}
       />
+      {NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null}
+
+      <TextInput style={[styles.daviddaniel33outlookcom, styles.passwordTypo]}
+        placeholder="Email"
+
+        value={email}
+        onFocus={() => setemailFocused(true)}
+        onBlur={() => setemailFocused(false)}
+        onChangeText={setemail}
+      />
       <Image
-        style={[styles.addEmployeeChild1, styles.addChildLayout]}
+        style={[styles.addEmployeeChild1,
+          EmailEror ?  styles.addChildLayoutR :styles.addChildLayout
+          ]}
         contentFit="cover"
         source={require("../assets/line-9.png")}
       />
+    {EmailEror ? <Text style={styles.nameError}>Please Provide a valid Email</Text> : null}
+
+      <TextInput style={[styles.password, styles.passwordTypo]}
+        placeholder="Password"
+        secureTextEntry={passwordVisible}
+        value={Password}
+        onFocus={() => setPasswordFocused(true)}
+        onBlur={() => setPasswordFocused(false)}
+        onChangeText={setPassword}
+      />
+      <Pressable
+        onPress={
+          () => { setPasswordVisible((prev) => !prev); }
+        }>
+        <Image
+          style={[styles.vectorIcon1, styles.vectorIconPosition]}
+          contentFit="cover"
+          source={require("../assets/vector6.png")}
+        />
+      </Pressable>
       <Image
-        style={[styles.addEmployeeChild2, styles.addChildLayout]}
+        style={[styles.addEmployeeChild2,
+          PasswordError ?  styles.addChildLayoutR :styles.addChildLayout
+         
+          ]}
         contentFit="cover"
         source={require("../assets/line-7.png")}
       />
-      <Image
-        style={[styles.addEmployeeChild3, styles.addChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-3.png")}
+      {PasswordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
+      <TextInput style={[styles.confirmPassword, styles.passwordTypo]}
+        placeholder="Confirm Password"
+        secureTextEntry={ConfirmPasswordVisible}
+        value={ConfirmPassword}
+        onFocus={() => setConfirmPasswordFocused(true)}
+        onBlur={() => setConfirmPasswordFocused(false)}
+        onChangeText={setConfirmPassword}
       />
-      
-      <Pressable 
-      style={styles.countryCode}
-      onPress={toggleDropdown}
-      >
-      <Image
-        
-        style={styles.addEmployeeChild}
-        contentFit="cover"
-        source={require("../assets/vector-2.png")}
-      />
-      </Pressable>
-      
-      {showDropdown && (
-        <View style={styles.addEmployeeChild} >
-        <Picker
-          selectedValue={selectedCode}
-          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-        >
-          <Picker.Item style={styles.addEmployeeChild} label="Select Country Code" value="" />
-          {countryCodes.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )}
-
-
-
-      
-      <Image
-        style={[styles.addEmployeeChild3, styles.addChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-3.png")}
-      />
-      <View style={[styles.groupParent, styles.groupLayout]}>
       <Pressable
-        onPress={handleSignUp}  
+        onPress={
+          () => { setConfirmPasswordVisible((prev) => !prev); }
+        }
       >
         <Image
-          style={[styles.groupChild, styles.groupLayout]}
+          style={[styles.vectorIcon2, styles.vectorIconPosition]}
           contentFit="cover"
-          source={require("../assets/group-166.png")}
+          source={require("../assets/vector7.png")}
         />
-        <Text style={[styles.register, styles.registerTypo]}>Register</Text>
+      </Pressable>
+      <Image
+        style={[
+          styles.addEmployeeChild3, 
+        CPasswordError ?  styles.addChildLayoutR :styles.addChildLayout ]}
+        contentFit="cover"
+        source={require("../assets/line-3.png")}
+      />
+      {CPasswordError ? <Text style={styles.nameError}>{CError}</Text> : null}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <View style={[styles.groupParent, styles.groupLayout]}>
+        <Pressable
+          onPress={handleSignUp}
+        >
+          <Image
+            style={[styles.groupChild, styles.groupLayout]}
+            contentFit="cover"
+            source={require("../assets/group-166.png")}
+          />
+          <Text style={[styles.register, styles.registerTypo]}>Register</Text>
         </Pressable>
       </View>
-      
+
       <Text style={[styles.employeeInfo, styles.registerTypo]}>
         Employee Info
       </Text>
-      <Pressable
-      onPress={
-        ()=> {setPasswordVisible((prev) => !prev);}
-        }>
-      
-      <Image
-        style={[styles.vectorIcon1, styles.vectorIconPosition]}
-        contentFit="cover"
-        source={require("../assets/vector6.png")}
-      />
-      </Pressable>
-      <Pressable
-      onPress={
-        ()=> {setConfirmPasswordVisible((prev) => !prev);}
-        }
-      >
-      <Image
-        style={[styles.vectorIcon2, styles.vectorIconPosition]}
-        contentFit="cover"
-        source={require("../assets/vector7.png")}
-      />
-      </Pressable>
-      <View style={styles.rectangleView} />
-      {/* Add going back functionality */}
-      <Pressable
-      onPress={() => navigation.navigate('OwnerInfo')}>
-      <Image
-        style={[styles.groupIcon, styles.iconPosition]}
-        contentFit="cover"
-        source={require("../assets/group-26.png")}
-      />
-      </Pressable>
-      
+
+
+
+
+
     </View>
   );
 };
@@ -258,24 +306,43 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   textPosition: {
-    left: "16.98%",
+    left: "22.98%",
     width: "40.93%",
-    top: "35.52%",
+    top: 0,
+    marginTop: -16,
     height: "2.9%",
     textAlign: "left",
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
+  },
+  nameError: {
+    marginTop: 12,
+    marginLeft: 22,
+    color: 'red',
   },
   addChildLayout: {
+    marginTop: 6,
     left: "4.73%",
     right: "4.73%",
     width: "90.54%",
     height: "0.22%",
     maxHeight: "100%",
     maxWidth: "100%",
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
+  },
+  addChildLayoutR: {
+    marginTop: 6,
+    left: "4.73%",
+    right: "4.73%",
+    width: "90.54%",
+    height: "0.22%",
+    maxHeight: "100%",
+    maxWidth: "100%",
+    position: "relative",
+    overflow: "hidden",
+    backgroundColor:'red',
   },
   groupLayout: {
     height: 45,
@@ -292,7 +359,7 @@ const styles = StyleSheet.create({
     width: 20,
     // maxHeight: "100%",
     // maxWidth: "100%",
-    position: "absolute",
+    position: "relative",
   },
   lightTexture22341Icon: {
     top: 0,
@@ -301,119 +368,112 @@ const styles = StyleSheet.create({
   },
   daviddaniel33outlookcom: {
     width: "55.81%",
-    top: "42.38%",
+    top: 0,
+    marginTop: 25,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
-    left: "4.65%",
+    left: "7.55%",
     height: "3%",
     textAlign: "left",
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
   },
   name: {
     width: "13.02%",
-    top: "21.67%",
+    marginTop: 205,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
-    left: "4.65%",
+    left: "7.45%",
     height: "3%",
     textAlign: "left",
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
   },
   password: {
     width: "20.47%",
-    top: "49.25%",
+    top: 0,
+    marginTop: 25,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
-    left: "4.65%",
+    left: "7.55%",
     height: "3%",
     textAlign: "left",
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
   },
   confirmPassword: {
     width: "39.07%",
-    top: "56.12%",
+    top: 0,
+    marginTop: 25,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
-    left: "4.65%",
+    left: "7.45%",
     height: "3%",
     textAlign: "left",
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
   },
   cnicNumber: {
     width: "29.07%",
-    top: "28.54%",
+    marginTop: 25,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
-    left: "4.65%",
+    left: "7.65%",
     height: "3%",
     textAlign: "left",
     fontSize: FontSize.size_base,
-    position: "absolute",
+    position: "relative",
   },
   text: {
     color: Color.dimgray_100,
   },
   pk: {
-    width:35,
+    width: 35,
     color: Color.textTxtPrimary,
-    top: "35.52%",
+    top: 0,
+    marginTop: 30,
     height: "2.9%",
     textAlign: "left",
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    left: "4.65%",
-    position: "absolute",
+    left: "7.23%",
+    position: "relative",
   },
   addEmployeeChild: {
     height: "0.98%",
     width: "3.58%",
-    top: "36.51%",
+    top: 0,
+    marginTop: -20,
     right: "85.19%",
     bottom: "62.51%",
-    left: "11.23%",
+    left: "14.23%",
     maxHeight: "100%",
     maxWidth: "100%",
-    position: "absolute",
-    overflow: "hidden",
-  },
-  countryCode: {
-    height: "20%",
-    width: "20%",
-    top: "36.51%",
-    right: "85.19%",
-    bottom: "62.51%",
-    left: "11.23%",
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
   },
   addEmployeeItem: {
-    top: "26.12%",
+    top: 0,
     bottom: "73.66%",
   },
   addEmployeeInner: {
-    top: "46.25%",
+    top: 0,
     bottom: "53.53%",
   },
   lineIcon: {
-    top: "53.14%",
+    top: 0,
     bottom: "46.64%",
   },
   addEmployeeChild1: {
-    top: "60.04%",
+    top: 0,
     bottom: "39.75%",
   },
   addEmployeeChild2: {
-    top: "32.46%",
+    top: 0,
     bottom: "67.32%",
   },
   addEmployeeChild3: {
-    top: "39.36%",
+    top: 0,
     bottom: "60.43%",
   },
   text1: {
@@ -458,11 +518,13 @@ const styles = StyleSheet.create({
   },
   vectorIcon1: {
     height: 15,
-    top: 465,
+    top: 0,
+    marginTop: -25,
   },
   vectorIcon2: {
     height: 15,
-    top: 530,
+    top: 0,
+    marginTop: -25,
   },
   rectangleView: {
     top: 917,

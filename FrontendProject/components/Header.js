@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-
 import ProfileDropdown from './ProfilePopDown';
 import { Color } from "../GlobalStyles";
 

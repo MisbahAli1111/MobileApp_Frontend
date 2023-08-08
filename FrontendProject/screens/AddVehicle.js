@@ -2,10 +2,10 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable,TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text,TextInput, Pressable,TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
+
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from 'expo-image-picker';
 

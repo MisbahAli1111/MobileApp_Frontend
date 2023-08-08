@@ -4,7 +4,6 @@ import { StyleSheet, View, Button, Text, Pressable, TouchableOpacity } from "rea
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
 
 
 

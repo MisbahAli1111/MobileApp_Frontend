@@ -1,10 +1,9 @@
 import * as React from "react";
 import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TouchableOpacity,FlatList ,TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity,TextInput,FlatList ,TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
 
 function InvoiceDiscount({ onItemsChange }) {
 const navigation = useNavigation();

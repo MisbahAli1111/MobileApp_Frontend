@@ -2,10 +2,9 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, ScrollView,TouchableOpacity, Pressable } from "react-native";
+import { StyleSheet, View, Text,TextInput, ScrollView,TouchableOpacity, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
 
 function VehicleRecords({dsearch,type}) {
     const navigation = useNavigation();

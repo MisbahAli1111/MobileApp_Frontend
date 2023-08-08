@@ -3,10 +3,10 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View,Button, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View,Button,TextInput, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { set } from "react-native-reanimated";
 function BusinessList({ }) {

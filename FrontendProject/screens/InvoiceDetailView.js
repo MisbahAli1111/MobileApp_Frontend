@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
+import { StyleSheet, Text, View, Pressable,TouchableOpacity, Modal } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import Footer from "../components/Footer";
@@ -9,7 +9,7 @@ import {printToFileAsync} from 'expo-print';
 import {shareAsync} from 'expo-sharing';
 
 import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 function InvoiceDetailView() {
  

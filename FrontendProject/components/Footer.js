@@ -2,10 +2,10 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View,TextInput, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import { TextInput } from "react-native-gesture-handler";
+// import { TextInput } from "react-native-gesture-handler";
 
 
 function Footer(props) {

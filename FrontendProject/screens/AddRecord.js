@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "expo-image";
-import { TouchableWithoutFeedback, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import { TouchableWithoutFeedback,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
@@ -16,14 +16,26 @@ import Footer from "../components/Footer";
 const AddRecord = () => {
   const navigation = useNavigation();
 
-  
-  const [details, setDetails] = useState('');
+
+  const [NumberError, setNumberError] = useState('');
   const [carNumber, setCarNumber] = useState('');
-  const [date, setDate] = useState(new  Date());
+  const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [driven, setDriven] = useState('');
   const [user, setUser] = useState('');
   const [service, setService] = useState('');
+
+  const [details, setDetails] = useState(false);
+  const [NameError, setNameError] = useState(false);
+  const [DateError, setDateError] = useState(false);
+  const [TimeError, setTimeError] = useState(false);
+  const [drivenError, setDrivenError] = useState(false);
+  const [DetailError, setDetailError] = useState('');
+  const [serviceError, setServiceError] = useState('');
+
+
+
+
 
   const [detailFocused, setDetailFocused] = useState(false);
   const [carNumberFocused, setCarNumberFocused] = useState(false);
@@ -38,7 +50,7 @@ const AddRecord = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
-  const services = ['Oil and Coolant Level', 'Air Filter', 'Tire Pressure', 'Lights', 'Oil and Filter Change','Rotate tires','Wax Vechile','Transmission Fluid','Spark Plugs','Serpentine Belt','Winshield Wipers','Battery Checkup'];
+  const services = ['Oil and Coolant Level', 'Air Filter', 'Tire Pressure', 'Lights', 'Oil and Filter Change', 'Rotate tires', 'Wax Vechile', 'Transmission Fluid', 'Spark Plugs', 'Serpentine Belt', 'Winshield Wipers', 'Battery Checkup'];
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
   const [selectedGalleryImageUri, setSelectedGalleryImageUri] = useState(null);
@@ -58,6 +70,7 @@ const AddRecord = () => {
   };
 
   const handleGalleryImageSelected = (uri) => {
+    
     setSelectedGalleryImageUri(uri);
     setShowGalleryImagePicker(false);
   };
@@ -70,59 +83,72 @@ const AddRecord = () => {
     setSelectedCameraImageUri(null);
   };
 
-    const handleDateChange = (event, date) => {
-      setShowDatePicker(false);
-      if (date) {
-        setSelectedDate(date);
-      }
-    };
-  
-    const openDatePicker = () => {
-      setShowDatePicker(true);
-    };
+  const handleDateChange = (event, date) => {
+    setShowDatePicker(false);
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
 
-    const handleTimeChange = (event, time) => {
-      setShowTimePicker(false);
-      if (time) {
-        setSelectedTime(time);
-      }
-    };
-  
-    const openTimePicker = () => {
-      setShowTimePicker(true);
-    };
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+  };
 
-   
-  
-    const toggleDropdown = () => {
-      setShowDropdown(!showDropdown);
-    };
-  
-    const handleCodeSelect = (code) => {
-      setSelectedCode(code);
-      setShowDropdown(false);
-    };
+  const handleTimeChange = (event, time) => {
+    setShowTimePicker(false);
+    if (time) {
+      setSelectedTime(time);
+    }
+  };
 
-    
-    
+  const openTimePicker = () => {
+    setShowTimePicker(true);
+  };
+
+
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleCodeSelect = (code) => {
+    setSelectedCode(code);
+    setShowDropdown(false);
+  };
+
+
+
 
 
 
   const handleSave = () => {
 
-    if (
-      details.trim() === '' ||
-      selectedCode.trim() === '' ||
-      carNumber.trim() === '' ||
-      selectedDate.toDateString().trim() === '' ||
-      selectedTime.toLocaleTimeString().trim() === '' ||
-      user.trim() === '' ||
-      driven.trim() === ''
-    ) {
-      alert('Please enter all input fields.');
-      return;
+    if(!carNumber){
+      setNumberError(true);
+    }else{
+      setNumberError(false);
     }
-    navigation.navigate("MaintenanceRecord");
+
+    if(!date){
+      setDateError(true);
+    }else{
+      setDateError(false);
+    }
+
+
+    // if (
+    //   details.trim() === '' ||
+    //   selectedCode.trim() === '' ||
+    //   carNumber.trim() === '' ||
+    //   selectedDate.toDateString().trim() === '' ||
+    //   selectedTime.toLocaleTimeString().trim() === '' ||
+    //   user.trim() === '' ||
+    //   driven.trim() === ''
+    // ) {
+    //   alert('Please enter all input fields.');
+    //   return;
+    // }
+    // navigation.navigate("MaintenanceRecord");
   };
 
 
@@ -136,7 +162,7 @@ const AddRecord = () => {
         source={require("../assets/light-texture2234-1.png")}
       />
 
-      
+
       <View style={styles.breadcrumbs}>
         <View style={[styles.housefill, styles.housefillFlexBox]}>
           <Image
@@ -158,47 +184,8 @@ const AddRecord = () => {
       />
 
 
-        <TextInput style={[styles.text2, styles.pmTypo]}
-          value={selectedDate ? selectedDate.toDateString() : ''}
-        placeholder="Select a date"
-        editable={false}
-        ></TextInput>
-      
-      
-      <View style={[styles.addRecordItem, styles.addPosition]} />
-      <View style={[styles.addRecordInner, styles.addPosition]} />
-
-      <TextInput style={[styles.pm, styles.pmTypo]}
-        placeholder="06: 00pm"
-        value={selectedTime ? selectedTime.toLocaleTimeString() : ''}
-        editable={false}
-      ></TextInput>
-      
-      <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
-        placeholder="Lorita Daniel"
-        value={user}
-        onFocus={() => setUserFocused(true)}
-        onBlur={() => setUserFocused(false)}
-        onChangeText={setUser}
-      ></TextInput>
-      <TextInput style={[styles.kmDriven, styles.pmTypo]}
-        placeholder="KM Driven"
-        keyboardType="numeric"
-        value={driven}
-        onFocus={() => setDrivenFocused(true)}
-        onBlur={() => setDrivenFocused(false)}
-        onChangeText={setDriven}
-      ></TextInput>
-      <TextInput style={[styles.oilChange, styles.pmTypo]}
-        placeholder="Oil Change"
-        value={selectedCode}
-        editable={false}
-      ></TextInput>
-      <View style={[styles.lineView, styles.childLayout]} />
-      <View style={[styles.addRecordChild1, styles.childLayout]} />
-      <View style={[styles.addRecordChild2, styles.childLayout]} />
-      <View style={[styles.addRecordChild3, styles.childLayout]} />
-      <TextInput style={[styles.jxc7789, styles.pmTypo]}
+      <ScrollView  style={styles.wrap}>
+      <TextInput style={[styles.jxc7789, styles.pmTypof]}
         placeholder="JXC - 7789"
         value={carNumber}
         onFocus={() => setCarNumberFocused(true)}
@@ -206,29 +193,28 @@ const AddRecord = () => {
         onChangeText={setCarNumber}
       >
       </TextInput>
-      {/* this  */}
-
       <Image
-        style={[styles.vectorIcon1, styles.iconLayout]}
+        style={styles.licensePlateNumberSvgrepoCIcon}
         contentFit="cover"
-        source={require("../assets/vector1.png")}
+        source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
       />
+      <View style={[styles.addRecordChild3, styles.childLayout]} />
+      {NumberError ? <Text style={styles.nameError}>Please provide valid car Number</Text> : null}
 
-      <Image
-        style={[styles.groupIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/group-92.png")}
-      />
 
+      <TextInput style={[styles.text2, styles.pmTypo]}
+        value={selectedDate ? selectedDate.toDateString() : ''}
+        placeholder="Select a date"
+        editable={false}
+      ></TextInput>
       <Pressable
         onPress={openDatePicker}
-        >
-      <Image
-        style={[styles.date2SvgrepoCom11, styles.svgrepoIconLayout1]}
-
-        contentFit="cover"
-        source={require("../assets/date2svgrepocom-1-1.png")}
-      />
+      >
+        <Image
+          style={[styles.date2SvgrepoCom11, styles.svgrepoIconLayout1]}
+          contentFit="cover"
+          source={require("../assets/date2svgrepocom-1-1.png")}
+        />
       </Pressable>
       {showDatePicker && (
         <DateTimePicker
@@ -237,18 +223,101 @@ const AddRecord = () => {
           display="default"
           onChange={handleDateChange}
         />
-        )}
-        
+      )}
+      <View style={[styles.addRecordItem, styles.addPosition]} />
 
+
+      <TextInput style={[styles.pm, styles.pmTypo]}
+        placeholder="06: 00pm"
+        value={selectedTime ? selectedTime.toLocaleTimeString() : ''}
+        editable={false}
+      ></TextInput>
+      <Pressable
+        onPress={openTimePicker}>
+        <Image
+          style={[styles.timeOclockSvgrepoCom1Icon, styles.svgrepoIconLayout1]}
+          contentFit="cover"
+          source={require("../assets/timeoclocksvgrepocom-1.png")}
+        />
+      </Pressable>
+      {showTimePicker && (
+        <DateTimePicker
+          value={selectedTime || new Date()}
+          mode="time"
+          display="default"
+          onChange={handleTimeChange}
+        />
+      )}
+      <View style={[styles.addRecordInner, styles.addPosition]} />
+
+
+
+      <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
+        placeholder="Lorita Daniel"
+        value={user}
+        onFocus={() => setUserFocused(true)}
+        onBlur={() => setUserFocused(false)}
+        onChangeText={setUser}
+      ></TextInput>
+    <Image
+        style={[styles.vectorIcon1, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/vector1.png")}
+      />
+      <View style={[styles.groupChild, styles.childLayout]} />
+
+
+
+      <TextInput style={[styles.kmDriven, styles.pmTypo]}
+        placeholder="KM Driven"
+        keyboardType="numeric"
+        value={driven}
+        onFocus={() => setDrivenFocused(true)}
+        onBlur={() => setDrivenFocused(false)}
+        onChangeText={setDriven}
+      ></TextInput>
+      <Image
+        style={[styles.groupIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/group-92.png")}
+      />
+<View style={[styles.lineView, styles.childLayout]} />
       
 
 
 
+      <TextInput style={[styles.oilChange, styles.pmTypo]}
+        placeholder="Oil Change"
+        value={selectedCode}
+        editable={false}
+      ></TextInput>
       <Image
-        style={styles.licensePlateNumberSvgrepoCIcon}
+        style={[styles.vectorIcon3, styles.iconLayout]}
         contentFit="cover"
-        source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
+        source={require("../assets/vector3.png")}
       />
+       {(
+        <View style={styles.servicesClick} >
+          <Picker
+            selectedValue={selectedCode}
+            onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+          >
+            <Picker.Item label="Select Maintenance Type " value="" />
+            {services.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
+        </View>
+      )}
+       <View style={[styles.addRecordChild2, styles.childLayout]} />
+
+      
+      
+      
+     
+
+      {/* this  */}
+
       <View style={styles.enterDetailParent}>
         <TextInput style={[styles.enterDetail, styles.pmTypo]}
           placeholder="Enter Detail..."
@@ -256,88 +325,77 @@ const AddRecord = () => {
           onFocus={() => setDetailFocused(true)}
           onBlur={() => setDetailFocused(false)}
           onChangeText={setDetails}
-
         ></TextInput>
-        <View style={[styles.groupChild, styles.childLayout]} />
-        
-        <View style={[position="absolute"]}>
-        {/* gallery image start  */}
-        <Pressable onPress={handleGalleryIconClick} >
-        <Image
-          style={[styles.gallerySvgrepoCom1Icon, styles.svgrepoIconLayout1]}
-          contentFit="cover"
-          source={require("../assets/gallerysvgrepocom-1.png")}
-        />
-        </Pressable>
-        
-      {/* gallery image end  */}
+        <View style={[position = "absolute"]}>
+          {/* gallery image start  */}
+          <Pressable onPress={handleGalleryIconClick} >
+            <Image
+              style={[styles.gallerySvgrepoCom1Icon, styles.svgrepoIconLayout1]}
+              contentFit="cover"
+              source={require("../assets/gallerysvgrepocom-1.png")}
+            />
+          </Pressable>
 
-        {/* camera image start */}
-        <Pressable onPress={handleCameraIconClick}
-        >
-        <Image
-          style={[styles.cameraSvgrepoCom61, styles.svgrepoIconLayout1]}
-          contentFit="cover"
-          source={require("../assets/camerasvgrepocom-6-1.png")}
-        />
-        </Pressable>
-      
-      {/* camera image end  */}
-      </View>
-      
+          {/* gallery image end  */}
 
-       {showCameraImagePicker && (
-         <ImagePickerCamera onImageSelected={handleCameraImageSelected} />
-       )}
-      {selectedCameraImageUri && (
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: selectedCameraImageUri }} style={styles.image} />
-          <TouchableOpacity onPress={handleDeleteCameraImage} style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Delete</Text>
-        </TouchableOpacity>
+          {/* camera image start */}
+          <Pressable onPress={handleCameraIconClick}
+          >
+            <Image
+              style={[styles.cameraSvgrepoCom61, styles.svgrepoIconLayout1]}
+              contentFit="cover"
+              source={require("../assets/camerasvgrepocom-6-1.png")}
+            />
+          </Pressable>
+
+          {/* camera image end  */}
         </View>
-      )}
-
-      {showGalleryImagePicker && (
-        <ImagePickerGallery onImageSelected={handleGalleryImageSelected} />
-      )}
-      {selectedGalleryImageUri && (
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: selectedGalleryImageUri }} style={styles.image} />
-          <TouchableOpacity onPress={handleDeleteGalleryImage} style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Delete</Text>
-        </TouchableOpacity>
-        </View>
-      )}
-      </View>
-      
-     
-      
-
-      
 
 
-
-<Pressable
-onPress={openTimePicker}>
-      <Image
-        style={[styles.timeOclockSvgrepoCom1Icon, styles.svgrepoIconLayout1]}
-        contentFit="cover"
-        source={require("../assets/timeoclocksvgrepocom-1.png")}
-      />
-</Pressable>
-{showTimePicker && (
-        <DateTimePicker
-          value={selectedTime || new Date()}
-          mode="time"
-          display="default"
-          onChange={handleTimeChange}
-        />
+        {showCameraImagePicker && (
+          <ImagePickerCamera onImageSelected={handleCameraImageSelected} />
+        )}
+        {selectedCameraImageUri && (
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: selectedCameraImageUri }} style={styles.image} />
+            <TouchableOpacity onPress={handleDeleteCameraImage} style={styles.deleteButton}>
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         )}
 
+        {showGalleryImagePicker && (
+          <ImagePickerGallery onImageSelected={handleGalleryImageSelected} />
+        )}
+        {selectedGalleryImageUri && (
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: selectedGalleryImageUri }} style={styles.image} />
+            <TouchableOpacity onPress={handleDeleteGalleryImage} style={styles.deleteButton}>
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
 
-      <Pressable onPress={handleSave}>
-        <View style={[styles.vectorParent, styles.groupItemLayout]}>
+      <View style={[styles.addRecordChild1, styles.childLayout]} />
+
+
+
+      </ScrollView>
+
+
+
+
+
+
+
+
+
+
+
+
+    <Pressable onPress={handleSave}>
+      <View style={[styles.vectorParent, styles.groupItemLayout]}>
           <Image
             style={[styles.groupItem, styles.groupItemLayout]}
             contentFit="cover"
@@ -346,49 +404,32 @@ onPress={openTimePicker}>
           <Text style={styles.save}>Save</Text>
         </View>
       </Pressable>
+
       <View style={[styles.cont]}>
-        <Footer prop={"MaintenanceRecord"}   />
+        <Footer prop={"MaintenanceRecord"} />
       </View>
-      
+
 
 
 
       {/* addMaintenanceRecord */}
       <View style={[styles.vectorGroup, styles.iconGroupLayout]}>
-      
-  
+
+
         <View style={styles.groupChild1} />
-        
+
         <View style={styles.addMaintenanceRecordGroupp}>
-          <Text style={ styles.addTypo}>
+          <Text style={styles.addTypo}>
             Add Maintenance Record
           </Text>
         </View>
-        
+
       </View>
-     
+
+
 
       
-      <Image
-        style={[styles.vectorIcon3, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector3.png")}
-      />
-      
-      
-      { (
-        <View style={styles.servicesClick} >
-        <Picker
-          selectedValue={selectedCode}
-          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-        >
-          <Picker.Item  label="Select Maintenance Type " value="" />
-          {services.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )}
+     
 
 
     </View>
@@ -399,6 +440,11 @@ const styles = StyleSheet.create({
   iconGroupLayout: {
     width: 430,
     left: 0,
+  },
+  nameError: {
+    marginTop: 12,
+    marginLeft: 28,
+    color: 'red',
   },
   text1Position: {
     display: "none",
@@ -418,41 +464,57 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption2Regular_size,
   },
   image: {
-    bottom:15,
+    bottom: 15,
     width: 350,
     height: 150,
     contentFit: 'cover',
-    
+
   },
-  pmTypo: {
+  pmTypof: {
+    marginLeft: 8,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
     textAlign: "left",
-    position: "absolute",
-    width: 200
+    position: "relative",
+    width: 200,
+    marginTop: 10,
+  },
+  pmTypo: {
+    marginLeft: 8,
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: FontSize.size_base,
+    color: Color.darkslateblue,
+    textAlign: "left",
+    position: "relative",
+    width: 200,
+    
   },
   addPosition: {
     height: 2,
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
-    top: 265,
-    position: "absolute",
+    top: 0,
+marginTop:5,
+    position: "relative",
   },
-  
+
+
+
   childLayout: {
     width: 384,
     height: 2,
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
-    position: "absolute",
+    position: "relative",
+    
   },
   imageContainer: {
     alignItems: "center",
     marginTop: 60,
-    position:"relative"
+    position: "relative"
   },
   // here 
   iconLayout: {
@@ -469,17 +531,16 @@ const styles = StyleSheet.create({
     overflow: "hidden",
 
   },
-  servicesClick:{
-    top: 312,
+  servicesClick: {
+    top: 0,
     width: 80,
-    left:323
-
+    left: 323,
+    marginTop:-38,
+    marginBottom:6,
 
   },
   cont: {
-    padding: 6,
-    top: -55,
-    right: 5,
+    position:'absolute',
   },
   container: {
     flex: 1,
@@ -489,12 +550,12 @@ const styles = StyleSheet.create({
   svgrepoIconLayout1: {
     height: 25,
     width: 25,
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
   },
   deleteButton: {
     position: "absolute",
-    top:140,
+    top: 140,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -507,10 +568,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  wrap:{
+    // backgroundColor:'red',
+    marginTop:170,
+    marginBottom:200,
+    flex:1,
+    overflow:'hidden',
+  },
   groupItemLayout: {
     height: 45,
     width: 381,
-    position: "absolute",
+    position: "relative",
   },
   addRecordChild4Layout: {
     height: 43,
@@ -629,52 +697,64 @@ const styles = StyleSheet.create({
   },
   text2: {
     left: 24,
-    top: 232,
+    top: 0,
+    marginTop: 25,
     fontFamily: FontFamily.poppinsRegular,
   },
   addRecordItem: {
-    width: 167,
-    left: 23,
+    width: 175,
+    left: 28,
+
   },
   addRecordInner: {
     left: 220,
     width: 182,
+    marginTop:25,
   },
   pm: {
     left: 221,
-    top: 232,
+    top: 0,
+    marginTop: -35,
     fontFamily: FontFamily.poppinsRegular,
   },
   loritaDaniel: {
-    top: 287,
+    top: 0,
+    marginTop:25,
+    marginBottom:6,
     left: 24,
   },
   kmDriven: {
-    top: 342,
+    top: 0,
     left: 24,
+    marginTop:25,
+    marginBottom:5,
   },
   oilChange: {
-    top: 398,
+    top: 0,
     left: 24,
+    marginTop:25,
   },
   lineView: {
-    top: 376,
+    top: 0,
     left: 23,
+    marginTop:10,
   },
   addRecordChild1: {
-    top: 432,
+    top: 0,
     left: 23,
+    
   },
   addRecordChild2: {
-    top: 320,
+    top: 0,
     left: 23,
+    marginTop:-10,
   },
   addRecordChild3: {
-    top: 211,
+    top: 0,
     left: 23,
   },
   jxc7789: {
-    top: 184,
+
     left: 24,
   },
   vectorIcon: {
@@ -689,33 +769,39 @@ const styles = StyleSheet.create({
   // this 
   vectorIcon1: {
     right: "6.98%",
-    left: "89.50%",
+    left: "89.20%",
     bottom: "66.63%",
-    top: "30.50%",
+    top: 0,
+    marginTop:-35,
+    marginBottom:5,
     width: "5.81%",
-    height: "2.68%",
+    height: "6.48%",
     maxWidth: "100%",
     position: "relative",
   },
   groupIcon: {
-    height: "2.82%",
-    width: "6.1%",
-    top: "33.50%",
+    height: "7.00%",
+    width: "6.5%",
+    top: 0,
+    marginTop:-35,
     right: "6.95%",
     bottom: "60.6%",
-    left: "88.95%",
+    left: "88.99%",
+    marginBottom:6,
   },
   date2SvgrepoCom11: {
-    left: 162,
-    top: 180,
+    marginLeft: 178,
+    top: 0,
+    marginTop: -30,
     height: 25,
   },
   licensePlateNumberSvgrepoCIcon: {
-    top: 170,
-    left: 360,
+    top: 0,
+    marginTop: -40,
+    marginLeft: 350,
     width: 40,
     height: 40,
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
   },
   enterDetail: {
@@ -723,30 +809,35 @@ const styles = StyleSheet.create({
     top: 0,
   },
   groupChild: {
-    top: 34,
-    left: -1,
+    top: 0,
+    left: 18,
+    marginTop:10,
   },
   gallerySvgrepoCom1Icon: {
-    left: 350,
-    top: 2,
-    position:"absolute"
+    left: 345,
+    top: 0,
+    marginTop:-30,
+    position: "relative"
   },
   cameraSvgrepoCom61: {
-    left: 318,
-    top: 2,
-    position:"absolute"
+    left: 310,
+    top: 0,
+    marginTop:-30,
+    position: "relative"
   },
   enterDetailParent: {
-    top: 454,
+    top: 0,
     width: 382,
     height: 35,
     left: 24,
-    position: "absolute",
+    marginTop:25,
+    position: "relative",
   },
   timeOclockSvgrepoCom1Icon: {
-    left: 371,
-    top: 180,
+    left: 365,
+    top: 0,
     height: 25,
+    marginTop:-30,
   },
   groupItem: {
     borderRadius: Border.br_7xs,
@@ -754,17 +845,18 @@ const styles = StyleSheet.create({
     top: 0,
   },
   save: {
-    top: 11,
+    top: 0,
     left: 171,
     color: Color.snow,
+    marginTop:-35,
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
     textAlign: "left",
     fontWeight: "500",
-    position: "absolute",
+    position: "relative",
   },
   vectorParent: {
-    top: 650,
+    top: 0,
     left: 18,
   },
   addRecordChild4: {
@@ -937,9 +1029,11 @@ const styles = StyleSheet.create({
     top: 8,
   },
   vectorIcon3: {
-    height: "1.26%",
-    width: "4.65%",
-    top: "36.65%",
+    height: "4.00%",
+    width: "4.00%",
+    top: 0,
+    marginTop:-20,
+    marginBottom:5,
     right: "7.67%",
     bottom: "55.39%",
     left: "89.80%",
