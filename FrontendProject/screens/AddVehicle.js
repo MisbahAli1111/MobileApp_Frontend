@@ -116,28 +116,34 @@ function handleHomePress() {
           source={require("../assets/homemuted.png")}
         />
         </Pressable>
+        <Text style={[styles.text, styles.textTypo,]}>\</Text>
       </View>
-      <View style={styles.elementPosition} />
-      <View style={styles.elementPosition}>
-        <Text style={[styles.text, styles.textTypo]}>\</Text>
-      </View>
+      
+    
       
       <View style={styles.noImageFoundParent}>
        
-        <View style={[styles.uploadParent, styles.uploadPosition]}>
-        <Pressable
+        
+        {/* <Pressable
         onPress={pickImage}>
-          <Text style={[styles.upload, styles.uploadPosition]} type="file" >Upload</Text>
-          </Pressable>
+          <Text style={[styles.upload, styles.uploadPosition]} >Upload</Text>
+          </Pressable> */}
           
-          <Image
-            style={[styles.vectorIcon1, styles.vectorIconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector16.png")}
-          />
+          {/* <Image
+              style={[styles.vectorIcon1, styles.vectorIconLayout]}
+              contentFit="cover"
+              source={require("../assets/camerasvgrepocom-6-1.png")}
+            />
+            <Image
+             style={[styles.vectorIcon1, styles.vectorIconLayout]}
+              contentFit="cover"
+              source={require("../assets/gallerysvgrepocom-1.png")}
+            /> */}
+            <Text>qwertyuioasdfghjklscvbnmfghjk</Text>
       
-        </View>
+        
       </View>
+
       <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
           <TextInput
@@ -486,7 +492,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   uploadPosition: {
-    top: "0%",
+    top: -230,
+
     position: "absolute",
   },
   addInnerPosition: {
@@ -608,7 +615,7 @@ const styles = StyleSheet.create({
   housefill: {
     height: 20,
     width: 13,
-    top: 130,
+    top: 120,
     justifyContent: "center",
     left: 19,
     position: "absolute",
@@ -623,6 +630,8 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "left",
     color: Color.textTxtPrimary,
+    top:-15,
+    left:12
   },
   addVehicle1: {
     top: -2,
@@ -688,8 +697,7 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   upload: {
-    left: "10.96%",
- //   textDecoration: "display",
+    
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
@@ -712,10 +720,12 @@ const styles = StyleSheet.create({
     left: "10.34%",
   },
   noImageFoundParent: {
-    top: 277,
-    left: 157,
-    width: 116,
-    height: 47,
+    // top: 140,
+    alignItems:"center",
+    justifyContent:"center",
+    // bottom: 390,
+    width: "100%",
+    height: "100%",
     position: "absolute",
   },
   vehicleType: {

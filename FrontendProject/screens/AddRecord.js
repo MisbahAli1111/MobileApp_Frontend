@@ -9,7 +9,7 @@ import { Picker } from "@react-native-picker/picker";
 import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
 import Footer from "../components/Footer";
-
+import Carousel from "react-native-snap-carousel";
 
 
 
@@ -53,34 +53,32 @@ const AddRecord = () => {
   const services = ['Oil and Coolant Level', 'Air Filter', 'Tire Pressure', 'Lights', 'Oil and Filter Change', 'Rotate tires', 'Wax Vechile', 'Transmission Fluid', 'Spark Plugs', 'Serpentine Belt', 'Winshield Wipers', 'Battery Checkup'];
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
-  const [selectedGalleryImageUri, setSelectedGalleryImageUri] = useState(null);
-  const [selectedCameraImageUri, setSelectedCameraImageUri] = useState(null);
+ const [selectedImage,setSelectedImage] = useState([]);
 
   const handleCameraIconClick = () => {
     setShowCameraImagePicker(true);
-  };
-
-  const handleCameraImageSelected = (uri) => {
-    setSelectedCameraImageUri(uri);
-    setShowCameraImagePicker(false);
   };
 
   const handleGalleryIconClick = () => {
     setShowGalleryImagePicker(true);
   };
 
-  const handleGalleryImageSelected = (uri) => {
+  const handleCameraImageSelected = (uri) => {
     
-    setSelectedGalleryImageUri(uri);
+    setSelectedImage([...selectedImage, uri]);
     setShowGalleryImagePicker(false);
   };
 
-  const handleDeleteGalleryImage = () => {
-    setSelectedGalleryImageUri(null);
+  const handleGalleryImageSelected = (uri) => {
+    
+    setSelectedImage([...selectedImage, uri]);
+    setShowGalleryImagePicker(false);
   };
 
-  const handleDeleteCameraImage = () => {
-    setSelectedCameraImageUri(null);
+  const handleImageDelete = (index) => {
+    const newSelectedImage = [...selectedImage];
+    newSelectedImage.splice(index, 1);
+    setSelectedImage(newSelectedImage);
   };
 
   const handleDateChange = (event, date) => {
@@ -355,55 +353,64 @@ const AddRecord = () => {
         {showCameraImagePicker && (
           <ImagePickerCamera onImageSelected={handleCameraImageSelected} />
         )}
-        {selectedCameraImageUri && (
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: selectedCameraImageUri }} style={styles.image} />
-            <TouchableOpacity onPress={handleDeleteCameraImage} style={styles.deleteButton}>
-              <Text style={styles.deleteButtonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
         {showGalleryImagePicker && (
           <ImagePickerGallery onImageSelected={handleGalleryImageSelected} />
         )}
-        {selectedGalleryImageUri && (
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: selectedGalleryImageUri }} style={styles.image} />
-            <TouchableOpacity onPress={handleDeleteGalleryImage} style={styles.deleteButton}>
-              <Text style={styles.deleteButtonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        
+       
+     
       </View>
 
       <View style={[styles.addRecordChild1, styles.childLayout]} />
-
-
-
       </ScrollView>
 
+      
 
-
-
-
-
-
-
-
-
-
-
-    <Pressable onPress={handleSave}>
+      <View style={styles.container}>
+  {selectedImage.length > 0 && (
+    <Carousel
+      data={selectedImage}
+      renderItem={({ item, index }) => (
+        <View key={index} >
+          <Image source={{ uri: item }} style={styles.image} />
+          <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      sliderWidth={325}
+      itemWidth={300}
+    />
+  )}
+</View>
+      
       <View style={[styles.vectorParent, styles.groupItemLayout]}>
+      <Pressable onPress={handleSave}>
           <Image
             style={[styles.groupItem, styles.groupItemLayout]}
             contentFit="cover"
             source={require("../assets/rectangle-73.png")}
           />
           <Text style={styles.save}>Save</Text>
+          </Pressable>
         </View>
-      </Pressable>
+      
+      
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
       <View style={[styles.cont]}>
         <Footer prop={"MaintenanceRecord"} />
@@ -433,10 +440,44 @@ const AddRecord = () => {
 
 
     </View>
+
   );
 };
 
 const styles = StyleSheet.create({
+  imageUpload:{
+    position:"absolute",
+
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginTop: 60,
+    position: 'relative',
+  },
+  image: {
+    width: 350,
+    height: 150,
+    contentFit: 'cover',
+  },
+  deleteButton: {
+    position: "absolute",
+    top: 150,
+    left:110,
+    backgroundColor: "#ff0000", // Customize the background color as needed
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   iconGroupLayout: {
     width: 430,
     left: 0,
@@ -462,13 +503,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 17,
     fontSize: FontSize.caption2Regular_size,
-  },
-  image: {
-    bottom: 15,
-    width: 350,
-    height: 150,
-    contentFit: 'cover',
-
   },
   pmTypof: {
     marginLeft: 8,
@@ -511,11 +545,6 @@ marginTop:5,
     position: "relative",
     
   },
-  imageContainer: {
-    alignItems: "center",
-    marginTop: 60,
-    position: "relative"
-  },
   // here 
   iconLayout: {
     maxHeight: "150%",
@@ -542,36 +571,16 @@ marginTop:5,
   cont: {
     position:'absolute',
   },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  
   svgrepoIconLayout1: {
     height: 25,
     width: 25,
     position: "relative",
     overflow: "hidden",
   },
-  deleteButton: {
-    position: "absolute",
-    top: 140,
-    backgroundColor: "#ff0000", // Customize the background color as needed
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-
-  // Style for the delete button text
-  deleteButtonText: {
-    color: "#ffffff", // Customize the text color as needed
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   wrap:{
     // backgroundColor:'red',
     marginTop:170,
-    marginBottom:200,
     flex:1,
     overflow:'hidden',
   },
@@ -579,6 +588,11 @@ marginTop:5,
     height: 45,
     width: 381,
     position: "relative",
+  },
+  groupItem2Layout: {
+    height: 45,
+    width: 381,
+    position: "absolute",
   },
   addRecordChild4Layout: {
     height: 43,
@@ -856,7 +870,7 @@ marginTop:5,
     position: "relative",
   },
   vectorParent: {
-    top: 0,
+    top: -170,
     left: 18,
   },
   addRecordChild4: {
@@ -940,9 +954,7 @@ marginTop:5,
     left: 30,
   },
   // invoicecss
-  container: {
-    left: 277,
-  },
+ 
   carCitroenTopVehicleSvgrepIcon: {
     overflow: "hidden",
   },

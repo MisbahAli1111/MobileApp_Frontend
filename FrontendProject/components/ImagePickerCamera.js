@@ -3,7 +3,6 @@ import { View, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 const ImagePickerCamera = ({ onImageSelected }) => {
-  const [imageUri, setImageUri] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -22,17 +21,17 @@ const ImagePickerCamera = ({ onImageSelected }) => {
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedAsset = result.assets[0];
-        setImageUri(selectedAsset.uri);
+        
         onImageSelected(selectedAsset.uri);
       }
     })();
   }, []);
 
-  return (
-    <View style={styles.container}>
-      {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
-    </View>
-  );
+  // return (
+  //   <View style={styles.container}>
+  //     {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+  //   </View>
+  // );
 };
 
 const styles = StyleSheet.create({
