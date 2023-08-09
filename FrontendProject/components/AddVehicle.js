@@ -1,17 +1,15 @@
 import * as React from "react";
 import { useState } from "react";
 import { Image } from "expo-image";
-import { Modal,StyleSheet, View, Text,ScrollView,TextInput, Pressable,TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text,TextInput, Pressable,TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import Footer from "../components/Footer";
+import ImagePickerCamera from "../components/ImagePickerCamera";
+import ImagePickerGallery from "../components/ImagePickerGallery";
 import { Picker } from "@react-native-picker/picker";
 import Carousel,{Pagination} from "react-native-snap-carousel";
 import {Video} from "expo-av";
-import ImagePickerCamera from "../components/ImagePickerCamera";
-import ImagePickerGallery from "../components/ImagePickerGallery";
-
-
+import Footer from "../components/Footer";
 
 
 
@@ -24,7 +22,6 @@ const AddVehicle = () => {
   const [Vehiclecolor,setvehiclecolor]=useState("");
   const [phoneNumber, setphoneNumber]=useState('');
   const [km, setKm]=useState('');
-
   const [vehicleTypeError, setvehicleTypeError]=useState(false);
   const [vehicleModelError, setvehicleModelError]=useState(false);
   const [RegistrationError, setRegistrationError]=useState(false);
@@ -34,55 +31,32 @@ const AddVehicle = () => {
   const [kmError, setKmError]=useState(false);
   const [Msg, setMsg ]=useState('');
   const [RMsg, setRMsg ]=useState('');
-  
   const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
   const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
-   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
+  const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
   const [selectedImage,setSelectedImage] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [originalUri, setOriginalUri] = useState('');
-  const [status, setStatus] = useState({});
-  const video = React.useRef(null);
-
-
   
    const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
       {item.type === "image" ? (
-        <Pressable style={styles.image}
-        onPress={() => handleOpen(item.uri)}>
         <Image source={{ uri: item.uri }} style={styles.image} />
-        </Pressable>
       ) : (
-        <Pressable style={styles.video}
-        onPress={() => handleOpen(item.uri)}>
         <Video
           source={{ uri: item.uri }}
           style={styles.video}
           controls
         />
-        </Pressable>
       )}
       <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
         <Text style={styles.deleteButtonText}>Delete</Text>
       </TouchableOpacity>
     </View>
   );
-
   
-  const handleOpen = (uri) => {
-    setOriginalUri(uri);
-    setModalVisible(true);
-  };
-
-  const handleClose = () => {
-    setModalVisible(false);
-    setOriginalUri('');
-  };
-
- 
+  
+  
     const handleCameraIconClick = () => {
       setShowCameraImagePicker(true);
     };
@@ -108,6 +82,10 @@ const AddVehicle = () => {
       newSelectedImage.splice(index, 1);
       setSelectedImage(newSelectedImage);
     };
+  
+   
+
+    
     
   
     const handleVechileTypeSelect = (code) => {
@@ -120,9 +98,7 @@ const AddVehicle = () => {
       
     };
 
-
-
-    function saveVehicle() {
+  function saveVehicle() {
       let isValid = true;
     
       if (!vehicleType) {
@@ -180,8 +156,6 @@ const AddVehicle = () => {
         alert('Fill all Fields');
       }
     }
-    
-
   
   return (
     <View style={styles.addVehicle}>
@@ -209,15 +183,16 @@ const AddVehicle = () => {
       </View>
       
     
+
       {/* Image Upload  */}
-     <View style={styles.noImageFoundParent}>
+      <View style={styles.noImageFoundParent}>
        
       <View style={[styles.uploadParent, styles.uploadPosition]}>
-        <TouchableOpacity
+        <Pressable
         onPress={handleGalleryIconClick}>
           <Text style={[styles.upload]}  >Upload</Text>
-          </TouchableOpacity>
-         <TouchableOpacity
+          </Pressable>
+         <Pressable
          onPress={handleCameraIconClick}
          >
           <Image
@@ -225,7 +200,7 @@ const AddVehicle = () => {
             contentFit="cover"
             source={require("../assets/vector16.png")}
           />
-          </TouchableOpacity>
+          </Pressable>
 
           {showCameraImagePicker && (
           <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
@@ -256,39 +231,15 @@ const AddVehicle = () => {
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
         />
-        
       </View>
     )}
-    
-    <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
-          {originalUri.endsWith('.mp4') ? (
-            <Video
-            ref={video}
-              source={{ uri: originalUri }}
-              style={styles.modalVideo}
-              useNativeControls
-              contentFit="contain"
-        isLooping
-        onPlaybackStatusUpdate={setStatus}
-        
-            />
-          ) : (
-            <Image source={{ uri: originalUri }} style={styles.modalImage} />
-          )}
-          <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
-            <Text style={styles.deleteButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    
   </View>    
             
       
         
       </View>
 
-            <ScrollView style={styles.wrap}>
+       <ScrollView style={styles.wrap}>
 
       <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
@@ -329,16 +280,12 @@ const AddVehicle = () => {
       <View style={[styles.lineView,
         vehicleTypeError  ? styles.childBorderR :styles.childBorder
          ]} />
-      
-
-
-      
       <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
       placeholder="Modal "
       value={vehicleModel}
       editable={false}  
         />
-      {/* <Text style={[styles.text2, styles.vehicleTypo]}>{`2011 `}</Text> */}
+     
       <Image
         style={[styles.addVehicleChild2, styles.childLayout]}
         contentFit="cover"
@@ -357,13 +304,11 @@ const AddVehicle = () => {
         </Picker>
         </View>
       )}
-<View style={[styles.addVehicleChild1,
+      <View style={[styles.addVehicleChild1,
  vehicleTypeError  ? styles.childBorderR :styles.childBorder
    ]} />
 
 {vehicleTypeError ? <Text style={styles.nameError}>{Msg}</Text> : null}
-
-
 
       <View style={[styles.frameParent, styles.lineParentLayout]}>
         <View style={styles.frameWrapper}>
@@ -386,38 +331,18 @@ const AddVehicle = () => {
             <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
               placeholder="Vehicle Color   " 
               onChange={Vehiclecolor}
+
+
               />
               
             
-            {/* <View style={styles.carParent1}>
-              <Text style={[styles.car, styles.vehicleTypo]}>Black</Text>
-              <Image
-                style={[styles.frameChild, styles.childLayout]}
-                contentFit="cover"
-                source={require("../assets/vector-61.png")}
-              />
-              
-             {( <View  style={styles.vechileColor}>
-        <Picker
-          selectedValue={Vehiclecolor}
-          onValueChange={(itemValue) =>handleVechileColorSelect(itemValue)}
-        >
-          <Picker.Item label="Select Vehicle Colour" value="" />
-          {colorCategories.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )}
-
-
-            </View> */}
+            
           </View>
         </View>
       </View>
       {RegistrationError ? <Text style={styles.nameError}>{RMsg}</Text> : null}
       <View style={[styles.lineParent, styles.lineParentLayout]}>
-         <View style={styles.frameWrapper}>
+        <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.davidDaniel, styles.vehicleTypo]}    onChange={setName} placeholder="Name">
           
@@ -425,7 +350,7 @@ const AddVehicle = () => {
           </View>
         </View>
       </View>
-      <Image
+       <Image
         style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/mdiusercircleoutline.png")}
@@ -434,8 +359,8 @@ const AddVehicle = () => {
         styles.groupInner,
         nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
-     
-
+             
+            
       <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
           <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    
@@ -467,24 +392,16 @@ const AddVehicle = () => {
           </View>
         </View>
       </View>
-      {/* odometersvgrepocom-1@3x */}
       <Image
         style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/odometersvgrepocom-1.png")}
       />
-      <View style={[
+       <View style={[
         styles.groupInner, 
         styles.groupInnerLayout]} />
       {kmError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
       </ScrollView>
-
-      
-      
-     
-      {/* <View style={[styles.addVehicleChild3, styles.groupInnerLayout]} /> */}
-      
-      
    
       
       <Image
@@ -505,18 +422,6 @@ const AddVehicle = () => {
       </Pressable>
       
       
-      {/* <Image
-        style={[styles.addVehicleChild8, styles.addChildLayout1]}
-        contentFit="cover"
-        source={require("../assets/rectangle-622.png")}
-      />
-      <Image
-        style={[styles.addVehicleChild9, styles.addChildLaydaout1]}
-        contentFit="cover"
-        source={require("../assets/rectangle-74.png")}
-      />
-      <Text style={[styles.steeda, styles.text4Position]}>STEEDA</Text>
-      <Text style={[styles.text4, styles.text4Position]}>2023</Text> */}
       <Image
         style={[styles.addVehicleChild10, styles.addChildLayout]}
         contentFit="cover"
@@ -527,45 +432,21 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/vector-8.png")}
       />
-
-
+      
       <View style={[styles.cont]}>
         <Footer prop={"Vehicles"}/>
       </View>
-      
+
 
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    alignItems:"center",
-    justifyContent:"center"
-  },
-  modalImage: {
+  video: {
     width: "100%",
     height:"100%",
-  },
-  modalVideo: {
-    width: '100%',
-    height:"100%"
-    
-  },
-  deleteButton1: {
-    position: "relative",
-    top: -30,
-    left:0,
-    backgroundColor: "#ff0000", // Customize the background color as needed
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-video: {
-    width: "100%",
-    height:"100%",
-    alignItems:"flex-end"
+    resizeMode: 'contain',
   },
   carouselItem: {
     width: 350,
@@ -914,7 +795,7 @@ wrap:{
     color: Color.textTxtPrimary,
   },
   upload: {
-    top:295,
+    top:300,
     left:35,
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
@@ -925,7 +806,7 @@ wrap:{
   vectorIcon1: {
     height: "39.67%",
     width: "26.09%",
-    top: 270,
+    top: 275,
     right: "73.91%",
     bottom: "16.67%",
     left: "18%",
@@ -938,13 +819,12 @@ wrap:{
     left: "10.34%",
   },
   noImageFoundParent: {
-  
-    top: 147,
+      top: 147,
       left: 157,
       width: 116,
       height: 200,
       position: "absolute",
-  },
+    },
   vehicleType: {
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
@@ -1069,17 +949,17 @@ wrap:{
     top: 0,
     marginTop:8,
   },
-  groupInner: {
-    left:20,
-    marginTop:8,
-    marginBottom:5,
-    borderColor: "#cbcbcb",
-  },
-  groupInnerR: {
-    left:20,
-    marginTop:8,
-    marginBottom:5,
-    borderColor: "red",
+    groupInner: {
+      left:20,
+      marginTop:8,
+      marginBottom:5,
+      borderColor: "#cbcbcb",
+    },
+    groupInnerR: {
+      left:20,
+      marginTop:8,
+      marginBottom:5,
+      borderColor: "red",
   },
   davidDaniel: {
     width: 168,

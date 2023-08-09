@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "expo-image";
-import { TouchableWithoutFeedback,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import {ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
 import Footer from "../components/Footer";
 import Carousel,{Pagination} from "react-native-snap-carousel";
+import {Video} from "expo-av";
 
 
 
@@ -56,9 +57,17 @@ const [Msg,setMsg]=useState('');
  const [selectedImage,setSelectedImage] = useState([]);
  const [activeSlide, setActiveSlide] = useState(0);
 
-const renderCarouselItem = ({ item, index }) => (
+ const renderCarouselItem = ({ item, index }) => (
   <View key={index} style={styles.carouselItem}>
-    <Image source={{ uri: item }} style={styles.image} />
+    {item.type === "image" ? (
+      <Image source={{ uri: item.uri }} style={styles.image} />
+    ) : (
+      <Video
+        source={{ uri: item.uri }}
+        style={styles.video}
+        controls
+      />
+    )}
     <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
       <Text style={styles.deleteButtonText}>Delete</Text>
     </TouchableOpacity>
@@ -404,10 +413,10 @@ const renderCarouselItem = ({ item, index }) => (
 
 
         {showCameraImagePicker && (
-          <ImagePickerCamera onImageSelected={handleCameraImageSelected} />
+          <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
         )}
         {showGalleryImagePicker && (
-          <ImagePickerGallery onImageSelected={handleGalleryImageSelected} />
+          <ImagePickerGallery onImageSelected={(uri, type) => handleGalleryImageSelected(uri, type)} />
         )}
         
        
@@ -417,13 +426,14 @@ const renderCarouselItem = ({ item, index }) => (
       {/* <View style={[styles.addRecordChild1, styles.childLayout]} /> */}
       <View style={styles.container}>
     {selectedImage.length > 0 && (
-      <View>
+      <View style={styles.imageContainer}>
         <Carousel
           data={selectedImage}
           renderItem={renderCarouselItem}
-          sliderWidth={325}
-          itemWidth={300}
+          sliderWidth={350}
+          itemWidth={350}
           onSnapToItem={(index) => setActiveSlide(index)}
+          sliderHeight={100}
         />
         <Pagination
           dotsLength={selectedImage.length}
@@ -437,7 +447,7 @@ const renderCarouselItem = ({ item, index }) => (
         />
       </View>
     )}
-  </View>
+  </View>    
       
       </ScrollView>
      
@@ -509,6 +519,17 @@ const renderCarouselItem = ({ item, index }) => (
 };
 
 const styles = StyleSheet.create({
+  video: {
+    width: "100%",
+    height:"100%",
+    resizeMode: 'contain',
+  },
+  carouselItem: {
+    width: 350,
+    height: 160,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   paginationContainer: {
     paddingVertical: 10,
   },

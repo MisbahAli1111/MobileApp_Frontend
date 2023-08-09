@@ -14,18 +14,18 @@ const ImagePickerGallery = ({ onImageSelected }) => {
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        aspect: [16 , 9],
         quality: 1,
         multiple: true,
       });
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const selectedAsset = result.assets[0];
-        onImageSelected(selectedAsset.uri);
-
-      }
+      
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const selectedAsset = result.assets[0];
+          onImageSelected(selectedAsset.uri, selectedAsset.type);
+        }
+      
     })();
   }, []);
 
