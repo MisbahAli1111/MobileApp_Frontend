@@ -16,7 +16,7 @@ import Carousel,{Pagination} from "react-native-snap-carousel";
 const AddRecord = () => {
   const navigation = useNavigation();
 
-
+const [Msg,setMsg]=useState('');
   const [NumberError, setNumberError] = useState('');
   const [carNumber, setCarNumber] = useState('');
   const [date, setDate] = useState(new Date());
@@ -130,34 +130,62 @@ const renderCarouselItem = ({ item, index }) => (
 
 
   const handleSave = () => {
-
-    if(!carNumber){
+    let hasErrors = false; // Initialize the flag
+  
+    if (!carNumber) {
       setNumberError(true);
-    }else{
+      hasErrors = true;
+    } else {
       setNumberError(false);
     }
-
-    if(!date){
+  
+    if (!date) {
       setDateError(true);
-    }else{
+      setMsg('Please provide Date');
+      hasErrors = true;
+    } else {
+      if (!time) {
+        setDateError(true);
+        setMsg('Please provide Time');
+        hasErrors = true;
+      }
       setDateError(false);
     }
-
-
-    // if (
-    //   details.trim() === '' ||
-    //   selectedCode.trim() === '' ||
-    //   carNumber.trim() === '' ||
-    //   selectedDate.toDateString().trim() === '' ||
-    //   selectedTime.toLocaleTimeString().trim() === '' ||
-    //   user.trim() === '' ||
-    //   driven.trim() === ''
-    // ) {
-    //   alert('Please enter all input fields.');
-    //   return;
-    // }
-    // navigation.navigate("MaintenanceRecord");
+  
+    if (!user) {
+      setNameError(true);
+      hasErrors = true;
+    } else {
+      setNameError(false);
+    }
+  
+    if (!driven) {
+      setDrivenError(true);
+      hasErrors = true;
+    } else {
+      setDrivenError(false);
+    }
+  
+    if (!selectedCode) {
+      setServiceError(true);
+      hasErrors = true;
+    } else {
+      setServiceError(false);
+    }
+  
+    if (!details) {
+      setDetailError(true);
+      hasErrors = true;
+    } else {
+      setDetailError(false);
+    }
+  
+   
+    if (!hasErrors) {
+      navigation.navigate('MaintenanceRecord');
+    }
   };
+  
 
 
 
@@ -206,7 +234,9 @@ const renderCarouselItem = ({ item, index }) => (
         contentFit="cover"
         source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
       />
-      <View style={[styles.addRecordChild3, styles.childLayout]} />
+      <View style={[styles.addRecordChild3,
+          NumberError ? styles.childLayoutR :styles.childLayout
+         ]} />
       {NumberError ? <Text style={styles.nameError}>Please provide valid car Number</Text> : null}
 
 
@@ -257,7 +287,7 @@ const renderCarouselItem = ({ item, index }) => (
         />
       )}
       <View style={[styles.addRecordInner, styles.addPosition]} />
-
+      {DateError ? <Text style={styles.nameError}>{Msg}</Text> : null}
 
 
       <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
@@ -272,8 +302,10 @@ const renderCarouselItem = ({ item, index }) => (
         contentFit="cover"
         source={require("../assets/vector1.png")}
       />
-      <View style={[styles.groupChild, styles.childLayout]} />
-
+      <View style={[styles.groupChild,
+          NameError ? styles.childLayoutR :styles.childLayout
+         ]} />
+      {NameError ? <Text style={styles.nameError}>Please provide User Name</Text> : null}
 
 
       <TextInput style={[styles.kmDriven, styles.pmTypo]}
@@ -289,8 +321,10 @@ const renderCarouselItem = ({ item, index }) => (
         contentFit="cover"
         source={require("../assets/group-92.png")}
       />
-<View style={[styles.lineView, styles.childLayout]} />
-      
+<View style={[styles.lineView,
+   drivenError ? styles.childLayoutR :styles.childLayout
+   ]} />
+{drivenError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
 
 
 
@@ -317,7 +351,10 @@ const renderCarouselItem = ({ item, index }) => (
           </Picker>
         </View>
       )}
-       <View style={[styles.addRecordChild2, styles.childLayout]} />
+       <View style={[styles.addRecordChild2,
+          serviceError ? styles.childLayoutR :styles.childLayout
+         ]} />
+       {serviceError ? <Text style={styles.nameError}>Please provide service</Text> : null}
 
       
       
@@ -350,7 +387,9 @@ const renderCarouselItem = ({ item, index }) => (
           <Pressable onPress={handleCameraIconClick}
           >
             <Image
-              style={[styles.cameraSvgrepoCom61, styles.svgrepoIconLayout1]}
+              style={[styles.cameraSvgrepoCom61, 
+                styles.svgrepoIconLayout1
+              ]}
               contentFit="cover"
               source={require("../assets/camerasvgrepocom-6-1.png")}
             />
@@ -358,6 +397,10 @@ const renderCarouselItem = ({ item, index }) => (
 
           {/* camera image end  */}
         </View>
+        <View style={[styles.addRecordChild22,
+          DetailError ? styles.childLayoutR :styles.childLayout
+           ]} />
+        {DetailError ? <Text style={styles.nameError}>Please provide Details</Text> : null}
 
 
         {showCameraImagePicker && (
@@ -371,9 +414,7 @@ const renderCarouselItem = ({ item, index }) => (
      
       </View>
 
-      <View style={[styles.addRecordChild1, styles.childLayout]} />
-      
-      </ScrollView>
+      {/* <View style={[styles.addRecordChild1, styles.childLayout]} /> */}
       <View style={styles.container}>
     {selectedImage.length > 0 && (
       <View>
@@ -397,6 +438,9 @@ const renderCarouselItem = ({ item, index }) => (
       </View>
     )}
   </View>
+      
+      </ScrollView>
+     
 
       
 
@@ -516,6 +560,12 @@ const styles = StyleSheet.create({
     marginLeft: 28,
     color: 'red',
   },
+  nameErrorL: {
+    marginTop: 12,
+    marginLeft: 28,
+   position:'relative',
+    color: 'red',
+  },
   text1Position: {
     display: "none",
     position: "absolute",
@@ -566,13 +616,20 @@ marginTop:5,
 
 
   childLayout: {
-    width: 384,
+    width: 375,
     height: 2,
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
     position: "relative",
-    
+  },
+  childLayoutR: {
+    width: 375,
+    height: 2,
+    borderTopWidth: 2,
+    borderColor: 'red',
+    borderStyle: "solid",
+    position: "relative",
   },
   // here 
   iconLayout: {
@@ -607,8 +664,11 @@ marginTop:5,
     position: "relative",
     overflow: "hidden",
   },
+
   wrap:{
     // backgroundColor:'red',
+    marginVertical:225,
+   
     marginTop:170,
     flex:1,
     overflow:'hidden',
@@ -787,6 +847,12 @@ marginTop:5,
     left: 23,
     
   },
+  addRecordChild22: {
+    top: 0,
+    left: 0,
+    marginTop:6,
+    marginBottom:10,
+  },
   addRecordChild2: {
     top: 0,
     left: 23,
@@ -817,14 +883,14 @@ marginTop:5,
     top: 0,
     marginTop:-35,
     marginBottom:5,
-    width: "5.81%",
-    height: "6.48%",
+    width: 25,
+    height: 25,
     maxWidth: "100%",
     position: "relative",
   },
   groupIcon: {
-    height: "7.00%",
-    width: "6.5%",
+    height: 25,
+    width: 25,
     top: 0,
     marginTop:-35,
     right: "6.95%",
@@ -890,6 +956,7 @@ marginTop:5,
   save: {
     top: 0,
     left: 171,
+    
     color: Color.snow,
     marginTop:-35,
     fontFamily: FontFamily.poppinsMedium,
@@ -899,7 +966,7 @@ marginTop:5,
     position: "relative",
   },
   vectorParent: {
-    top: -170,
+    top: -190,
     left: 18,
   },
   addRecordChild4: {
