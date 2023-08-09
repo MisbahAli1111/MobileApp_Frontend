@@ -83,9 +83,9 @@ const App = () => {
           showBackArrow: false,
           profileImage: require('./assets/mask-group1.png'),
               }}
-            /> */}
+            />
 
-           {/* <Stack.Screen
+           <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               initialParams={{
@@ -94,9 +94,9 @@ const App = () => {
           onBackPress:'Vehicles',
           profileImage: require('./assets/mask-group1.png'),
               }}
-            /> */}
+            />
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               initialParams={{
@@ -163,7 +163,7 @@ const App = () => {
             {/* Yaha tak useless hai  */}
             
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
@@ -230,7 +230,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
 
 
              <Stack.Screen 

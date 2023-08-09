@@ -9,7 +9,7 @@ import { Picker } from "@react-native-picker/picker";
 import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
 import Footer from "../components/Footer";
-import Carousel from "react-native-snap-carousel";
+import Carousel,{Pagination} from "react-native-snap-carousel";
 
 
 
@@ -54,6 +54,16 @@ const AddRecord = () => {
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
  const [selectedImage,setSelectedImage] = useState([]);
+ const [activeSlide, setActiveSlide] = useState(0);
+
+const renderCarouselItem = ({ item, index }) => (
+  <View key={index} style={styles.carouselItem}>
+    <Image source={{ uri: item }} style={styles.image} />
+    <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
+      <Text style={styles.deleteButtonText}>Delete</Text>
+    </TouchableOpacity>
+  </View>
+);
 
   const handleCameraIconClick = () => {
     setShowCameraImagePicker(true);
@@ -362,27 +372,37 @@ const AddRecord = () => {
       </View>
 
       <View style={[styles.addRecordChild1, styles.childLayout]} />
+      
       </ScrollView>
+      <View style={styles.container}>
+    {selectedImage.length > 0 && (
+      <View>
+        <Carousel
+          data={selectedImage}
+          renderItem={renderCarouselItem}
+          sliderWidth={325}
+          itemWidth={300}
+          onSnapToItem={(index) => setActiveSlide(index)}
+        />
+        <Pagination
+          dotsLength={selectedImage.length}
+          activeDotIndex={activeSlide}
+          containerStyle={styles.paginationContainer}
+          dotColor="#007aff"
+          dotStyle={styles.paginationDot}
+          inactiveDotColor="#ccc"
+          inactiveDotOpacity={0.4}
+          inactiveDotScale={0.6}
+        />
+      </View>
+    )}
+  </View>
 
       
 
-      <View style={styles.container}>
-  {selectedImage.length > 0 && (
-    <Carousel
-      data={selectedImage}
-      renderItem={({ item, index }) => (
-        <View key={index} >
-          <Image source={{ uri: item }} style={styles.image} />
-          <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      sliderWidth={325}
-      itemWidth={300}
-    />
-  )}
-</View>
+      
+
+    
       
       <View style={[styles.vectorParent, styles.groupItemLayout]}>
       <Pressable onPress={handleSave}>
@@ -445,6 +465,15 @@ const AddRecord = () => {
 };
 
 const styles = StyleSheet.create({
+  paginationContainer: {
+    paddingVertical: 10,
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 8,
+  },
   imageUpload:{
     position:"absolute",
 
@@ -452,7 +481,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   imageContainer: {
     alignItems: 'center',
@@ -467,7 +496,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     position: "absolute",
     top: 150,
-    left:110,
+    left:105,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,

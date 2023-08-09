@@ -2,10 +2,10 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text,TextInput, Pressable,TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text,ScrollView,TextInput, Pressable,TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-
+import Footer from "../components/Footer";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from 'expo-image-picker';
 
@@ -22,9 +22,18 @@ const AddVehicle = () => {
   const [km, setKm]=useState('');
   const [image, setImage] = useState(null);
 
+  const [vehicleTypeError, setvehicleTypeError]=useState(false);
+  const [vehicleModelError, setvehicleModelError]=useState(false);
+  const [RegistrationError, setRegistrationError]=useState(false);
+  const [nameError,setNameError]=useState(false);
+  const [VehiclecolorError,setvehiclecolorError]=useState(false);
+  const [phoneNumberError, setphoneNumberError]=useState(false);
+  const [kmError, setKmError]=useState(false);
+  const [Msg, setMsg ]=useState('');
+  const [RMsg, setRMsg ]=useState('');
   
-    const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
-    const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
+  const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
+  const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
     
   
    
@@ -68,15 +77,58 @@ const AddVehicle = () => {
 
  function saveVehicle()
  {
-  if(vehicleModel && vehicleType && Registration && name && vehicleModel  && Vehiclecolor
-    && phoneNumber && km) 
-    {
-      navigation.navigate('Vehicles');
+
+  if(!vehicleType){
+    setMsg('Please Enter Vehicle Type');
+    setvehicleTypeError(true);
+  }else{
+    if(!vehicleModel){
+      setMsg('Please Enter Vehicle Modal');
+      setvehicleTypeError(true);
+    }else{
+      setvehicleTypeError(false);
     }
-    else
-    {
-      alert('Fill all Fields')
+  }
+
+  if(!Registration){
+    setRMsg('Please Enter Registration Number');
+    setRegistrationError(true);
+  }else{
+    if(!Vehiclecolor){
+      setRMsg('Please Enter Vehicle Color');
+      setRegistrationError(true);
+    }else{
+      setRegistrationError(false);
     }
+  }
+
+  if(!name){
+    setNameError(true);
+  }else{
+    setNameError(false);
+  }
+
+  if(!phoneNumber){
+    setphoneNumberError(true);
+  }else{
+    setphoneNumberError(false);
+  }
+
+  if(!km){
+    setKmError(true);
+  }else{
+    setKmError(false);
+  }
+
+  // if(vehicleModel && vehicleType && Registration && name && vehicleModel  && Vehiclecolor
+  //   && phoneNumber && km) 
+  //   {
+  //     navigation.navigate('Vehicles');
+  //   }
+  //   else
+  //   {
+  //     alert('Fill all Fields')
+  //   }
  }
  function handleInvoicePress()
 {
@@ -107,7 +159,8 @@ function handleHomePress() {
         contentFit="cover"
         source={require("../assets/image-2.png")}
       />
-      <View style={[styles.housefill, styles.housefillFlexBox]}>
+      <View style={[styles.housefill
+        , styles.housefillFlexBox]}>
       <Pressable
       onPress={() => navigation.navigate("Home")}>
         <Image
@@ -139,10 +192,12 @@ function handleHomePress() {
               contentFit="cover"
               source={require("../assets/gallerysvgrepocom-1.png")}
             /> */}
-            <Text>qwertyuioasdfghjklscvbnmfghjk</Text>
+            {/* <Text>qwertyuioasdfghjklscvbnmfghjk</Text> */}
       
         
       </View>
+
+            <ScrollView style={styles.wrap}>
 
       <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
@@ -180,8 +235,13 @@ function handleHomePress() {
           </View>
         </View>
       </View>
-      <View style={[styles.lineView, styles.childBorder]} />
-      <View style={[styles.addVehicleChild1, styles.childBorder]} />
+      <View style={[styles.lineView,
+        vehicleTypeError  ? styles.childBorderR :styles.childBorder
+         ]} />
+      
+
+
+      
       <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
       placeholder="Modal "
       value={vehicleModel}
@@ -206,6 +266,13 @@ function handleHomePress() {
         </Picker>
         </View>
       )}
+<View style={[styles.addVehicleChild1,
+ vehicleTypeError  ? styles.childBorderR :styles.childBorder
+   ]} />
+
+{vehicleTypeError ? <Text style={styles.nameError}>{Msg}</Text> : null}
+
+
 
       <View style={[styles.frameParent, styles.lineParentLayout]}>
         <View style={styles.frameWrapper}>
@@ -217,15 +284,17 @@ function handleHomePress() {
             ></TextInput>
           </View>
         </View>
-        <View style={[styles.groupChild, styles.groupPosition]} />
-        <View style={[styles.groupItem, styles.savePosition]} />
+        <View style={[
+         RegistrationError ? styles.groupChildR : styles.groupChild
+          , styles.groupPosition]} />
+        <View style={[
+         RegistrationError ?  styles.groupItemR: styles.groupItem 
+          , styles.savePosition]} />
         <View style={styles.frameContainer}>
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
               placeholder="Vehicle Color   " 
               onChange={Vehiclecolor}
-
-
               />
               
             
@@ -255,9 +324,9 @@ function handleHomePress() {
           </View>
         </View>
       </View>
+      {RegistrationError ? <Text style={styles.nameError}>{RMsg}</Text> : null}
       <View style={[styles.lineParent, styles.lineParentLayout]}>
-        <View style={[styles.groupInner, styles.groupInnerLayout]} />
-        <View style={styles.frameWrapper}>
+         <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.davidDaniel, styles.vehicleTypo]}    onChange={setName} placeholder="Name">
           
@@ -265,19 +334,17 @@ function handleHomePress() {
           </View>
         </View>
       </View>
-      <View style={[styles.lineGroup, styles.lineParentLayout]}>
-        <View style={[styles.groupInner, styles.groupInnerLayout]} />
-        <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setKm} placeholder="Km Driven   "
-            keyboardType="numeric">
-             
-            </TextInput>
-          </View>
-        </View>
-      </View>
-      
-      <View style={[styles.addVehicleChild3, styles.groupInnerLayout]} />
+      <Image
+        style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/mdiusercircleoutline.png")}
+      />
+      <View style={[
+        styles.groupInner,
+        nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
+      {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
+     
+
       <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
           <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    
@@ -289,15 +356,44 @@ function handleHomePress() {
         </View>
       </View>
       <Image
-        style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/mdiusercircleoutline.png")}
-      />
-      <Image
         style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/materialsymbolspermcontactcalendaroutline2.png")}
       />
+      <View style={[
+        styles.groupInner
+        , 
+        styles.groupInnerLayout
+        ]} />
+      {phoneNumberError ? <Text style={styles.nameError}>Please Provide Contact Number</Text> : null}
+     
+      <View style={[styles.lineGroup, styles.lineParentLayout]}>
+         <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setKm} placeholder="Km Driven   "
+            keyboardType="numeric"> 
+            </TextInput>
+          </View>
+        </View>
+      </View>
+      {/* odometersvgrepocom-1@3x */}
+      <Image
+        style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/odometersvgrepocom-1.png")}
+      />
+      <View style={[
+        styles.groupInner, 
+        styles.groupInnerLayout]} />
+      {kmError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
+      </ScrollView>
+
+      
+      
+     
+      {/* <View style={[styles.addVehicleChild3, styles.groupInnerLayout]} /> */}
+      
+      
    
       
       <Image
@@ -340,98 +436,13 @@ function handleHomePress() {
         contentFit="cover"
         source={require("../assets/vector-8.png")}
       />
-    <View style={[styles.rectangleView, styles.iconLayout1]} />
-      <View style={styles.addVehicleChild12} />
-      <Text style={[styles.home, styles.homeTypo]}>Home</Text>
-      <Text style={[styles.vehicles, styles.homeTypo]}>Vehicles</Text>
-      <Text style={[styles.addVehicle3, styles.homeTypo]}>Add Vehicle</Text>
-      <Text style={[styles.records, styles.homeTypo]}>Records</Text>
-      <Text style={[styles.invoices, styles.homeTypo]}>Invoices</Text>
-      <TouchableOpacity onPress={handleHomePress}>
-      <Image
-        style={[styles.ellipseIcon, styles.ellipseLayout1]}
-        contentFit="cover"
-        source={require("../assets/ellipse-5.png")}
-      />
-      </TouchableOpacity>
-      <View style={[styles.housefill1, styles.text4Position]}>
-     <TouchableOpacity onPress={handleHomePress}>
-        <Image
-          style={styles.homeMutedIcon1}
-          contentFit="cover"
-          source={require("../assets/homemuted1.png")}
-        />
-</TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        style={[styles.frame, styles.ellipseLayout]}
-        onPress={handleRecordPress}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-       </TouchableOpacity> 
-     
-      <TouchableOpacity
-        style={[styles.ellipsePressable, styles.ellipseLayout]}
-        onPress={handleInvoicePress}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-8.png")}
-        />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={handleInvoicePress}>
-      <Image
-        style={styles.invoiceWarrantyLineSvgrepoIcon}
-        contentFit="cover"
-        source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
-      />
-      </TouchableOpacity>
-      <Pressable
-        style={[styles.groupPressable, styles.groupPressableLayout]}
-        onPress={() => navigation.navigate("AddVehicle")}
-      >
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/group-111.png")}
-        />
-      </Pressable>
-      <Image
-        style={[styles.addVehicleChild13, styles.groupPressableLayout]}
-        contentFit="cover"
-        source={require("../assets/group-174.png")}
-      />
-      <TouchableOpacity onPressIn={handleVehiclePress}
-        style={[styles.wrapper1, styles.ellipseLayout]}
-        onPress={handleVehiclePress}
-      >
 
-        <Image
-          style={styles.icon}
-          contentFit="cover"
-          source={require("../assets/ellipse-7.png")}
-        />
-        </TouchableOpacity>
+
+      <View style={[styles.cont]}>
+        <Footer prop={"Vehicles"}/>
+      </View>
       
-       <TouchableOpacity onPress={handleVehiclePress}>
-      <Image
-        style={styles.carCitroenTopVehicleSvgrepIcon}
-        contentFit="cover"
-        source={require("../assets/carcitroentopvehiclesvgrepocom-13.png")}
-      />
-    </TouchableOpacity>
-      
-       <TouchableOpacity onPress={handleRecordPress}>
-        <Image
-          style={styles.record641Icon}
-          source={require('../assets/record64-1.png')}
-        />
-      </TouchableOpacity>
+
     </View>
   );
 };
@@ -441,14 +452,32 @@ const styles = StyleSheet.create({
     width: 430,
     left: 0,
   },
+  cont:{
+    position:'absolute',
+  },
  vehicleModelPicker:{
-  top:400,
+  top:0,
+  marginTop:-38,
   width: 60,
   left: 359
  },
  vehicleColorPicker:{
   
  },
+ nameError: {
+  marginTop: 5,
+  marginBottom:4,
+  marginLeft: 28,
+  color: 'red',
+},
+wrap:{
+  // backgroundColor:'red',
+  marginTop:350,
+  // marginBottom:5,
+  marginVertical:245,
+  flex:1,
+  overflow:'hidden',
+},
   text1Position: {
     display: "none",
     position: "absolute",
@@ -498,7 +527,7 @@ const styles = StyleSheet.create({
   },
   addInnerPosition: {
     left: 24,
-    position: "absolute",
+    position: "relative",
   },
   childLayout: {
     height: 9,
@@ -510,13 +539,22 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
-    position: "absolute",
+    position: "relative",
+    // backgroundColor:'red',
+  },
+  childBorderR: {
+    height: 2,
+    borderTopWidth: 2,
+    borderColor: "red",
+    borderStyle: "solid",
+    position: "relative",
+    // backgroundColor:'red',
   },
   lineParentLayout: {
     height: 34,
     width: 382,
     left: 24,
-    position: "absolute",
+    position: "relative",
   },
   groupPosition: {
     left: -1,
@@ -527,12 +565,20 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupInnerLayout: {
-    width: 384,
+    width: 375,
     height: 2,
     borderTopWidth: 2,
-    borderColor: "#cbcbcb",
+    
     borderStyle: "solid",
-    position: "absolute",
+    position: "relative",
+  },
+  groupInnerLayoutR: {
+    width: 375,
+    height: 2,
+    borderTopWidth: 2,
+    borderColor: "red",
+    borderStyle: "solid",
+    position: "relative",
   },
   addChildLayout2: {
     width: 20,
@@ -544,7 +590,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     left: 372,
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
   },
   saveTypo: {
@@ -566,9 +612,9 @@ const styles = StyleSheet.create({
   },
   addChildLayout: {
     width: 9,
-    top: 299,
+    top: 0,
     height: 14,
-    position: "absolute",
+    position: "relative",
   },
   homeTypo: {
     lineHeight: 18,
@@ -763,7 +809,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   addVehicleInner: {
-    top: 400,
+    top: 0,
+    marginTop:10,
   },
   lineView: {
     width: 167,
@@ -772,7 +819,7 @@ const styles = StyleSheet.create({
     borderColor: "#cbcbcb",
     borderStyle: "solid",
     left: 23,
-    top: 446,
+    top: 0,
   },
   addVehicleChild1: {
     left: 220,
@@ -781,14 +828,15 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
-    top: 446,
+    marginTop:-5,
+    top: 0,
   },
   vehicleModel: {
-    left: 221,
-    top: 413,
+    marginLeft:230,
+    marginTop: -42,
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
-    position: "absolute",
+    position: "relative",
   },
   text2: {
     left: 349,
@@ -815,6 +863,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 167,
   },
+  groupChildR: {
+    height: 2,
+    borderTopWidth: 2,
+    borderColor: "red",
+    borderStyle: "solid",
+    position: "absolute",
+    width: 167,
+  },
   groupItem: {
     width: 187,
     top: 33,
@@ -824,17 +880,35 @@ const styles = StyleSheet.create({
     borderColor: "#cbcbcb",
     borderStyle: "solid",
   },
+  groupItemR: {
+    width: 187,
+    top: 33,
+    left: 196,
+    height: 2,
+    borderTopWidth: 2,
+    borderColor: "red",
+    borderStyle: "solid",
+  },
   frameContainer: {
     left: 197,
     top: -1,
     position: "absolute",
   },
   frameParent: {
-    top: 467,
+    top: 0,
+    marginTop:8,
   },
   groupInner: {
-    left: -1,
-    top: 33,
+    left:20,
+    marginTop:8,
+    marginBottom:5,
+    borderColor: "#cbcbcb",
+  },
+  groupInnerR: {
+    left:20,
+    marginTop:8,
+    marginBottom:5,
+    borderColor: "red",
   },
   davidDaniel: {
     width: 168,
@@ -842,10 +916,11 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
   },
   lineParent: {
-    top: 522,
+    top: 0,
+    marginTop:10,
   },
   lineGroup: {
-    top: 632,
+    marginTop:15,
   },
   lineContainer: {
     top: 687,
@@ -859,13 +934,14 @@ const styles = StyleSheet.create({
     left: 23,
   },
   addVehicleInner1: {
-    top: 577,
+    marginTop:8,
   },
   mdiuserCircleOutlineIcon: {
-    top: 519,
+    marginTop:-37,
   },
   materialSymbolspermContactIcon: {
-    top: 574,
+    top: 0,
+    marginTop:-28,
   },
   addVehicleChild4: {
     left: 359,
@@ -887,7 +963,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   odometerSvgrepoCom1Icon: {
-    top: 626,
+    top: 0,
+    marginTop:-40,
   },
   rectangleIcon: {
     top: 737,
