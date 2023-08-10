@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-
+import axios from 'axios';
 const BusinessInfo = () => {
   const navigation = useNavigation();
 
@@ -30,6 +30,34 @@ const BusinessInfo = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
+
+
+  // API Call 
+  let data = JSON.stringify({
+    "firstName": "Misbah",
+    "lastName": "Ali",
+    "email": "ali@gmail.com",
+    "password": "12345678"
+  });
+  
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'http://localhost:8080/api/users/register/owner',
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    data : data
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
 
 
   const handleSignUp = () => {

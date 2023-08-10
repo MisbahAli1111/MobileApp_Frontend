@@ -1,72 +1,116 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import ImagePickerCamera from '../components/ImagePickerCamera';
-import { FontFamily, Color, FontSize, Border } from '../GlobalStyles';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  Image,
-} from 'react-native';
+import React from "react";
+import { Image } from "expo-image";
+import {ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { useState } from "react";
 
 const Login = () => {
-  const userProfileImage = require('../assets/mask-group1.png');
 
-  const [showImagePicker, setShowImagePicker] = useState(false);
-  const [selectedImageUri, setSelectedImageUri] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleIconClick = () => {
-    setShowImagePicker(true);
-  };
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError , setPasswordError] = useState(false);
+  const handleLogin = () => {
+   if(!email){
+    setEmailError(true);
+   }else{
+    setEmailError(false);
+   }
 
-  const handleImageSelected = (uri) => {
-    setSelectedImageUri(uri);
-    setShowImagePicker(false);
+   if(!password){
+    setPasswordError(true);
+   }else{
+    setPasswordError(false);
+   }
   };
 
   return (
-    <View style={styles.login}>
-      <TouchableOpacity onPress={handleIconClick} style={styles.text}>
-        <Text style={styles.text}>Click Me</Text>
-      </TouchableOpacity>
-      {showImagePicker && (
-        <ImagePickerCamera onImageSelected={handleImageSelected} />
-      )}
-      {selectedImageUri && (
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: selectedImageUri }} style={styles.image} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Login Form</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        onChangeText={text => setEmail(text)}
+        value={email}
+      />
+      {emailError ? <Text style={styles.nameError}>Please provide Email</Text> : null}
+
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        onChangeText={text => setPassword(text)}
+        value={password}
+      />
+{passwordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
+<View style={[styles.vectorParent, styles.groupItemLayout]}>
+      <Pressable onPress={handleLogin}>
+          <Image
+            style={[styles.groupItem, styles.groupItemLayout]}
+            contentFit="cover"
+            source={require("../assets/rectangle-73.png")}
+          />
+          <Text style={styles.save}>Save</Text>
+          </Pressable>
         </View>
-      )}
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  login: {
-    height: '100%',
+  container: {
     flex: 1,
-    width: '100%',
-    // alignItems:"center",
-    backgroundColor: Color.white,
-  },
-  text: {
-    fontSize: 20,
-    fontFamily: FontFamily.primaryBold,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    backgroundColor:'#dfeef2',
   },
-  imageContainer: {
-    alignItems: 'center',
-    marginTop: 60,
+  login:{
+    height:50,
+    width:100,
   },
-  image: {
-    width: 300,
-    height: 300,
-    resizeMode: 'cover',
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    
+  },
+  input: {
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 20,
+    width: '80%',
+    fontSize: 16,
+    padding: 8,
+  },
+  groupItemLayout: {
+    height: 45,
+    width: 381,
+    position: "absolute",
+    top:400,
+
+  },
+  groupItem: {
+    borderRadius: Border.br_7xs,
+    left: 0,
+    top: 0,
+  },
+  nameError: {
+    
+    color: 'red',
+  },
+  save: {
+    top: 445,
+    left: 171,
+    
+    color: Color.snow,
+    marginTop:-35,
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: FontSize.size_base,
+    textAlign: "left",
+    fontWeight: "500",
+    position: "absolute",
   },
 });
 

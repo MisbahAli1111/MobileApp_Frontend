@@ -2,10 +2,10 @@ import * as React from "react";
 import { useState } from 'react';
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, Text,TextInput, View, Pressable,TouchableOpacity, Alert, ImageBackground } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable, TouchableOpacity, Alert, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
-
+import axios from 'axios';
 
 const OwnerInfo = () => {
   const navigation = useNavigation();
@@ -13,12 +13,12 @@ const OwnerInfo = () => {
   const [name, setName] = useState('');
   const [cnic, setcnic] = useState('');
   const [email, setemail] = useState('');
-  const[Password,setPassword] = useState('');
-  const[ConfirmPassword,setConfirmPassword] = useState('');
-  const[countryCode,setCountryCode] = useState('');
-  const[phoneNumber,setPhonenumber] = useState('');
-  const[passwordVisible,setPasswordVisible] = useState(true);
-  const[ConfirmPasswordVisible,setConfirmPasswordVisible] = useState(true);
+  const [Password, setPassword] = useState('');
+  const [ConfirmPassword, setConfirmPassword] = useState('');
+  const [countryCode, setCountryCode] = useState('');
+  const [phoneNumber, setPhonenumber] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(true);
+  const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
 
   const [nameFocused, setNameFocused] = useState(false);
   const [cnicFocused, setcnicFocused] = useState(false);
@@ -26,38 +26,52 @@ const OwnerInfo = () => {
   const [PasswordFocused, setPasswordFocused] = useState(false);
   const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
-  const [countryCodeFocused,setCountryCodeFocused] = useState(false);
+  const [countryCodeFocused, setCountryCodeFocused] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-    const [selectedCode, setSelectedCode] = useState('');
-    
-    
-    const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
-    
-    
-  
-    const toggleDropdown = () => {
-      setShowDropdown(!showDropdown);
-    };
-  
-    const handleCodeSelect = (code) => {
-      setSelectedCode(code);
-      setShowDropdown(false);
-    };
+  const [selectedCode, setSelectedCode] = useState('');
 
-  const handleSignUp = () => {
-    if(name && cnic && email && Password && ConfirmPassword && phoneNumber && countryCode && Password === ConfirmPassword)
-    {
-      navigation.navigate('AddEmployee');
-    }
-    else if(Password !== ConfirmPassword)
-    {
-      Alert.alert('Password and Confirm Password Should be Same.')
-    }
-    else{
-      Alert.alert('Fill all Fields')
-    }
+
+  const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
+
+
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
+  const handleCodeSelect = (code) => {
+    setSelectedCode(code);
+    setShowDropdown(false);
+  };
+
+  const handleSignUp = () => {
+    const axios = require('axios');
+    let data = JSON.stringify({
+      "firstName": "Misbah",
+      "lastName": "Ali",
+      "email": "yes@gmail.com",
+      "password": "12345678"
+    });
+    
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://localhost:8080/api/users/register/owner',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  
+  };
   return (
     <View style={styles.ownerInfo}>
       <Image
@@ -66,33 +80,33 @@ const OwnerInfo = () => {
         source={require("../assets/light-texture2234-1.png")}
       />
       <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
-      placeholder="Name"
+        placeholder="Name"
         value={name}
         onFocus={() => setNameFocused(true)}
         onBlur={() => setNameFocused(false)}
         onChangeText={setName}
       />
       <TextInput style={[styles.daviddaniel33outlookcom, styles.david1Typo]}
-      placeholder="Email"
+        placeholder="Email"
         value={email}
         onFocus={() => setemailFocused(true)}
         onBlur={() => setemailFocused(false)}
         onChangeText={setemail}
 
       />
-        
-      
+
+
       <TextInput style={[styles.david, styles.textTypo]}
-      placeholder="Password"
+        placeholder="Password"
         secureTextEntry={passwordVisible}
         value={Password}
         onFocus={() => setPasswordFocused(true)}
         onBlur={() => setPasswordFocused(false)}
         onChangeText={setPassword}
-        
+
       />
       <TextInput style={[styles.david1, styles.david1Typo]}
-      placeholder="Confirm Password"
+        placeholder="Confirm Password"
         secureTextEntry={ConfirmPasswordVisible}
         value={ConfirmPassword}
         onFocus={() => setConfirmPasswordFocused(true)}
@@ -139,38 +153,38 @@ const OwnerInfo = () => {
         source={require("../assets/line-32.png")}
       />
       <TextInput style={[styles.pk, styles.pkPosition]}
-      placeholder='PK'
+        placeholder='PK'
         value={selectedCode}
         editable={false}
       />
       <Pressable
-      style={styles.countryCode}
-       onPress={toggleDropdown}
+        style={styles.countryCode}
+        onPress={toggleDropdown}
       >
-      <Image
-        style={[styles.vectorIcon, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector-12.png")}
-      />
+        <Image
+          style={[styles.vectorIcon, styles.vectorIconLayout]}
+          contentFit="cover"
+          source={require("../assets/vector-12.png")}
+        />
       </Pressable>
 
 
-      { (
+      {(
         <View style={styles.code} >
-        <Picker
-          selectedValue={selectedCode}
-          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-        >
-          <Picker.Item  label="Select Country Code" value="" />
-          {countryCodes.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
+          <Picker
+            selectedValue={selectedCode}
+            onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+          >
+            <Picker.Item label="Select Country Code" value="" />
+            {countryCodes.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
         </View>
       )}
 
       <TextInput style={[styles.text2, styles.textPosition]}
-      placeholder="Phone Number"
+        placeholder="Phone Number"
         value={phoneNumber}
         keyboardType="numeric"
         maxLength={11}
@@ -178,8 +192,8 @@ const OwnerInfo = () => {
         onBlur={() => setPhoneNumberFocused(false)}
         onChangeText={setPhonenumber}
       />
-      
-      
+
+
       <Text style={[styles.ownerInfo1, styles.registerTypo]}>Owner Info</Text>
       <Text
         style={[styles.letsRegister, styles.letsPosition]}
@@ -188,36 +202,36 @@ const OwnerInfo = () => {
         Let’s level up your business, together.
       </Text>
 
-     {/* show Password */}
+      {/* show Password */}
       <Pressable
-       onPress={
-        ()=> {setPasswordVisible((prev) => !prev);}
+        onPress={
+          () => { setPasswordVisible((prev) => !prev); }
         }>
-      <Image
-        
-        style={[styles.vectorIcon1, styles.vectorIconPosition]}
-        contentFit="cover"
-        source={require("../assets/vector9.png")}
-      />
+        <Image
+
+          style={[styles.vectorIcon1, styles.vectorIconPosition]}
+          contentFit="cover"
+          source={require("../assets/vector9.png")}
+        />
       </Pressable>
       <Pressable
-      onPress={
-        ()=> {setConfirmPasswordVisible((prev) => !prev);}
+        onPress={
+          () => { setConfirmPasswordVisible((prev) => !prev); }
         }
       >
-      <Image
-        style={[styles.vectorIcon2, styles.vectorIconPosition]}
-        contentFit="cover"
-        source={require("../assets/vector10.png")}
-      />
+        <Image
+          style={[styles.vectorIcon2, styles.vectorIconPosition]}
+          contentFit="cover"
+          source={require("../assets/vector10.png")}
+        />
       </Pressable>
-      
-      
-      
-    
+
+
+
+
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
-        onPress= {handleSignUp}
+        onPress={handleSignUp}
       >
         <Image
           style={[styles.groupChild, styles.groupLayout]}
@@ -241,13 +255,13 @@ const OwnerInfo = () => {
         contentFit="cover"
         source={require("../assets/key-1.png")}
       />
-      
+
       <Image
         style={[styles.user1Icon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/user-1.png")}
       />
-      
+
     </View>
   );
 };
@@ -273,9 +287,9 @@ const styles = StyleSheet.create({
   },
   code:
   {
-    width:80,
-    top:445,
-    left:31.5,
+    width: 80,
+    top: 445,
+    left: 31.5,
 
   },
   textTypo: {
@@ -471,20 +485,20 @@ const styles = StyleSheet.create({
     height: 15,
     top: 537,
   },
-  touchableOpacity:{
+  touchableOpacity: {
     position: 'absolute',
     left: 360,
     width: 20,
     height: 20,
     top: 590,
-    
-   
+
+
   },
-   
+
   vectorIcon2: {
     height: 15,
     top: 605,
-    
+
   },
   rectangleView: {
     top: 917,

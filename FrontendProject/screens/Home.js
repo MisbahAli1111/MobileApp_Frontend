@@ -12,7 +12,7 @@ import { LineChart } from "react-native-chart-kit";
 import HomeVehicleTypes from "../components/HomeVehicleTypes";
 import ProfilePopDown from "../components/ProfilePopDown";
 import DashboardGraph from "../components/DashboardGraph";
-
+import axios from 'axios';
 const Home = () => {
   const navigation = useNavigation();
   //data=[];
