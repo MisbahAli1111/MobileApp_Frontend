@@ -175,7 +175,7 @@ const App = () => {
 
             
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="OwnerInfo"
               component={OwnerInfo}
               initialParams={{
@@ -230,7 +230,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />  
+            />   */}
 
 
              <Stack.Screen 

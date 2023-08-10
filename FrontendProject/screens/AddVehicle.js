@@ -10,8 +10,7 @@ import Carousel,{Pagination} from "react-native-snap-carousel";
 import {Video} from "expo-av";
 import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
-
-
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 
 
@@ -51,19 +50,24 @@ const AddVehicle = () => {
    const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
       {item.type === "image" ? (
-        <Pressable style={styles.image}
+        <Pressable style={styles.mediaContainer}
         onPress={() => handleOpen(item.uri)}>
         <Image source={{ uri: item.uri }} style={styles.image} />
         </Pressable>
       ) : (
-        <Pressable style={styles.video}
+        <View style={styles.videoContainer1}>
+        <Pressable style={styles.mediaContainer}
         onPress={() => handleOpen(item.uri)}>
         <Video
           source={{ uri: item.uri }}
           style={styles.video}
           controls
         />
+       <View style={styles.iconContainer}>
+            <EvilIcons name="play" size={50} color="white" />
+          </View>
         </Pressable>
+        </View>
       )}
       <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
         <Text style={styles.deleteButtonText}>Delete</Text>
@@ -71,6 +75,11 @@ const AddVehicle = () => {
     </View>
   );
 
+  const handlePlayButton = async () => {
+    if (video.current) {
+      await video.current.playAsync();
+    }
+  };
   
   const handleOpen = (uri) => {
     setOriginalUri(uri);
@@ -242,7 +251,7 @@ const AddVehicle = () => {
           data={selectedImage}
           renderItem={renderCarouselItem}
           sliderWidth={350}
-          itemWidth={350}
+          itemWidth={400}
           onSnapToItem={(index) => setActiveSlide(index)}
           sliderHeight={100}
         />
@@ -263,18 +272,26 @@ const AddVehicle = () => {
     <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           {originalUri.endsWith('.mp4') ? (
+            <View style={styles.videoContainer}>
             <Video
             ref={video}
-              source={{ uri: originalUri }}
-              style={styles.modalVideo}
-              useNativeControls
-              contentFit="contain"
-        isLooping
-        onPlaybackStatusUpdate={setStatus}
-        
+            source={{ uri: originalUri }}
+            style={styles.modalMedia}
+            useNativeControls
+            contentFit="contain"
+            isLooping
+            onPlaybackStatusUpdate={setStatus}
             />
+            <View style={styles.iconContainer1}>
+            {!status.isPlaying && ( 
+              <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
+            <EvilIcons name="play" size={50} color="white" />
+            </TouchableOpacity>
+            )}
+          </View>
+          </View>
           ) : (
-            <Image source={{ uri: originalUri }} style={styles.modalImage} />
+            <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
           )}
           <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
             <Text style={styles.deleteButtonText}>Close</Text>
@@ -539,10 +556,42 @@ const AddVehicle = () => {
 };
 
 const styles = StyleSheet.create({
+  videoContainer1: {
+    position: 'relative',
+    // alignItems:"center",
+    // left:20
+  },
+  videoContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    
+    
+  },
+  iconContainer1:{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -25 }],
+    zIndex:1
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: '60%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -25 }], // Adjust the values based on the icon size
+  },
   modalContainer: {
     flex: 1,
     alignItems:"center",
     justifyContent:"center"
+  },
+  modalMedia: {
+    width: '100%',
+    height: '100%',
+    
   },
   modalImage: {
     width: "100%",
@@ -552,6 +601,26 @@ const styles = StyleSheet.create({
     width: '100%',
     height:"100%"
     
+  },
+  mediaContainer: {
+    width: 350,
+    height: 160,
+    position: 'relative',
+    alignItems:"center",
+    justifyContent:"center"
+  },
+
+  media: {
+    width: '100%',
+    height: '100%',
+  },
+
+  playIcon: {
+    position: 'absolute',
+    width: 50, // Adjust the size of the play icon as needed
+    height: 50, // Adjust the size of the play icon as needed
+    alignSelf: 'center',
+    tintColor: 'white', // Customize the play icon color
   },
   deleteButton1: {
     position: "relative",
@@ -565,11 +634,12 @@ const styles = StyleSheet.create({
 video: {
     width: "100%",
     height:"100%",
-    alignItems:"flex-end"
+    left:80
   },
   carouselItem: {
     width: 350,
     height: 160,
+    position:"relative",
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -594,11 +664,10 @@ video: {
   imageContainer: {
     alignItems: 'center',
     marginTop: 0,
-    position: 'relative',
+    // position: 'relative',
     width: "100%",
     height: "100%",
-    justifyContent: 'center',
-    alignItems: 'center',
+    
   },
   image: {
     width: "100%",
