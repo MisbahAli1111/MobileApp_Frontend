@@ -83,7 +83,7 @@ const App = () => {
           showBackArrow: false,
           profileImage: require('./assets/mask-group1.png'),
               }}
-            />
+            /> */}
 
            <Stack.Screen
               name="AddRecord"
@@ -140,7 +140,7 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
-            /> */}
+            />
 
             {/* Useless screens hain  */}
 

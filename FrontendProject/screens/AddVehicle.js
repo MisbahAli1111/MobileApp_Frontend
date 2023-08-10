@@ -269,37 +269,10 @@ const AddVehicle = () => {
       </View>
     )}
     
-    <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modalContainer}>
-          {originalUri.endsWith('.mp4') ? (
-            <View style={styles.videoContainer}>
-            <Video
-            ref={video}
-            source={{ uri: originalUri }}
-            style={styles.modalMedia}
-            useNativeControls
-            contentFit="contain"
-            isLooping
-            onPlaybackStatusUpdate={setStatus}
-            />
-            <View style={styles.iconContainer1}>
-            {!status.isPlaying && ( 
-              <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
-            <EvilIcons name="play" size={50} color="white" />
-            </TouchableOpacity>
-            )}
-          </View>
-          </View>
-          ) : (
-            <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
-          )}
-          <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
-            <Text style={styles.deleteButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+    
     
   </View>    
+  
             
       
         
@@ -549,7 +522,35 @@ const AddVehicle = () => {
       <View style={[styles.cont]}>
         <Footer prop={"Vehicles"}/>
       </View>
-      
+      <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          {originalUri.endsWith('.mp4') ? (
+            <View style={styles.videoContainer}>
+            <Video
+            ref={video}
+            source={{ uri: originalUri }}
+            style={styles.modalMedia}
+            useNativeControls
+            contentFit="contain"
+            isLooping
+            onPlaybackStatusUpdate={setStatus}
+            />
+            <View style={styles.iconContainer1}>
+            {!status.isPlaying && ( 
+              <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
+            <EvilIcons name="play" size={50} color="white" />
+            </TouchableOpacity>
+            )}
+          </View>
+          </View>
+          ) : (
+            <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          )}
+          <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
+            <Text style={styles.deleteButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
 
     </View>
   );
@@ -557,9 +558,9 @@ const AddVehicle = () => {
 
 const styles = StyleSheet.create({
   videoContainer1: {
-    position: 'relative',
-    // alignItems:"center",
-    // left:20
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   videoContainer: {
     position: 'relative',
@@ -575,7 +576,6 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
     transform: [{ translateX: -25 }, { translateY: -25 }],
-    zIndex:1
   },
   iconContainer: {
     position: 'absolute',
@@ -638,7 +638,7 @@ video: {
   },
   carouselItem: {
     width: 350,
-    height: 160,
+    height: 200,
     position:"relative",
     justifyContent: 'center',
     alignItems: 'center',

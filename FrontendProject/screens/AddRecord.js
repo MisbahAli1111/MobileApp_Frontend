@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "expo-image";
-import {ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import {Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import ImagePickerGallery from "../components/ImagePickerGallery";
 import Footer from "../components/Footer";
 import Carousel,{Pagination} from "react-native-snap-carousel";
 import {Video} from "expo-av";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 
 
@@ -57,48 +58,83 @@ const [Msg,setMsg]=useState('');
  const [selectedImage,setSelectedImage] = useState([]);
  const [activeSlide, setActiveSlide] = useState(0);
 
- const renderCarouselItem = ({ item, index }) => (
-  <View key={index} style={styles.carouselItem}>
-    {item.type === "image" ? (
-      <Image source={{ uri: item.uri }} style={styles.image} />
-    ) : (
-      <Video
-        source={{ uri: item.uri }}
-        style={styles.video}
-        controls
-      />
-    )}
-    <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
-      <Text style={styles.deleteButtonText}>Delete</Text>
-    </TouchableOpacity>
-  </View>
-);
+ const [modalVisible, setModalVisible] = useState(false);
+  const [originalUri, setOriginalUri] = useState('');
+  const [status, setStatus] = useState({});
+  const video = React.useRef(null);
 
-  const handleCameraIconClick = () => {
-    setShowCameraImagePicker(true);
+
+  
+   const renderCarouselItem = ({ item, index }) => (
+    <View key={index} style={styles.carouselItem}>
+      {item.type === "image" ? (
+        <Pressable style={styles.mediaContainer}
+        onPress={() => handleOpen(item.uri)}>
+        <Image source={{ uri: item.uri }} style={styles.image} />
+        </Pressable>
+      ) : (
+        <View style={styles.videoContainer1}>
+        <Pressable style={styles.mediaContainer}
+        onPress={() => handleOpen(item.uri)}>
+        <Video
+          source={{ uri: item.uri }}
+          style={styles.video}
+          controls
+        />
+       <View style={styles.iconContainer}>
+            <EvilIcons name="play" size={50} color="white" />
+          </View>
+        </Pressable>
+        </View>
+      )}
+      <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const handlePlayButton = async () => {
+    if (video.current) {
+      await video.current.playAsync();
+    }
+  };
+  
+  const handleOpen = (uri) => {
+    setOriginalUri(uri);
+    setModalVisible(true);
   };
 
-  const handleGalleryIconClick = () => {
-    setShowGalleryImagePicker(true);
+  const handleClose = () => {
+    setModalVisible(false);
+    setOriginalUri('');
   };
 
-  const handleCameraImageSelected = (uri) => {
-    
-    setSelectedImage([...selectedImage, uri]);
-    setShowGalleryImagePicker(false);
-  };
-
-  const handleGalleryImageSelected = (uri) => {
-    
-    setSelectedImage([...selectedImage, uri]);
-    setShowGalleryImagePicker(false);
-  };
-
-  const handleImageDelete = (index) => {
-    const newSelectedImage = [...selectedImage];
-    newSelectedImage.splice(index, 1);
-    setSelectedImage(newSelectedImage);
-  };
+ 
+    const handleCameraIconClick = () => {
+      setShowCameraImagePicker(true);
+    };
+  
+    const handleGalleryIconClick = () => {
+      setShowGalleryImagePicker(true);
+    };
+  
+    const handleCameraImageSelected = (uri,type) => {
+      
+      setSelectedImage([...selectedImage, { uri, type }]);
+      setShowGalleryImagePicker(false);
+    };
+  
+    const handleGalleryImageSelected = (uri,type) => {
+      
+      setSelectedImage([...selectedImage, { uri, type }]);
+      setShowGalleryImagePicker(false);
+    };
+  
+    const handleImageDelete = (index) => {
+      const newSelectedImage = [...selectedImage];
+      newSelectedImage.splice(index, 1);
+      setSelectedImage(newSelectedImage);
+    };
 
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
@@ -423,19 +459,19 @@ const [Msg,setMsg]=useState('');
      
       </View>
 
-      {/* <View style={[styles.addRecordChild1, styles.childLayout]} /> */}
-      <View style={styles.container}>
+      
+      
     {selectedImage.length > 0 && (
       <View style={styles.imageContainer}>
         <Carousel
           data={selectedImage}
           renderItem={renderCarouselItem}
           sliderWidth={350}
-          itemWidth={350}
+          itemWidth={400}
           onSnapToItem={(index) => setActiveSlide(index)}
           sliderHeight={100}
         />
-        <Pagination
+    <Pagination
           dotsLength={selectedImage.length}
           activeDotIndex={activeSlide}
           containerStyle={styles.paginationContainer}
@@ -445,10 +481,10 @@ const [Msg,setMsg]=useState('');
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
         />
+        
       </View>
-    )}
-  </View>    
-      
+    )} 
+     
       </ScrollView>
      
 
@@ -489,6 +525,35 @@ const [Msg,setMsg]=useState('');
       <View style={[styles.cont]}>
         <Footer prop={"MaintenanceRecord"} />
       </View>
+      <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          {originalUri.endsWith('.mp4') ? (
+            <View style={styles.videoContainer}>
+            <Video
+            ref={video}
+            source={{ uri: originalUri }}
+            style={styles.modalMedia}
+            useNativeControls
+            contentFit="contain"
+            isLooping
+            onPlaybackStatusUpdate={setStatus}
+            />
+            <View style={styles.iconContainer1}>
+            {!status.isPlaying && ( 
+              <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
+            <EvilIcons name="play" size={50} color="white" />
+            </TouchableOpacity>
+            )}
+          </View>
+          </View>
+          ) : (
+            <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          )}
+          <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
+            <Text style={styles.deleteButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
 
 
 
@@ -519,19 +584,117 @@ const [Msg,setMsg]=useState('');
 };
 
 const styles = StyleSheet.create({
-  video: {
+  pgContainer:{
+    top:200,
+  },
+  videoContainer1: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  videoContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    
+    
+  },
+  iconContainer1:{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -25 }],
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: '60%',
+    left: '50%',
+    transform: [{ translateX: -25 }, { translateY: -25 }], // Adjust the values based on the icon size
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems:"center",
+    justifyContent:"center"
+  },
+  modalMedia: {
+    width: '100%',
+    height: '100%',
+    
+  },
+  modalImage: {
     width: "100%",
     height:"100%",
-    resizeMode: 'contain',
+  },
+  modalVideo: {
+    width: '100%',
+    height:"100%"
+    
+  },
+  mediaContainer: {
+    width: 350,
+    height: 160,
+    position: 'relative',
+    alignItems:"center",
+    justifyContent:"center"
+  },
+
+  media: {
+    width: '100%',
+    height: '100%',
+  },
+
+  playIcon: {
+    position: 'absolute',
+    width: 50, // Adjust the size of the play icon as needed
+    height: 50, // Adjust the size of the play icon as needed
+    alignSelf: 'center',
+    tintColor: 'white', // Customize the play icon color
+  },
+  deleteButton1: {
+    position: "relative",
+    top: -30,
+    left:0,
+    backgroundColor: "#ff0000", // Customize the background color as needed
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+video: {
+    width: "100%",
+    height:"100%",
+    left:80
+  },
+
+  imageUpload:{
+    position:"absolute",
+
+  },
+  
+  imageContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+    position: 'relative',
+    width: "100%",
+    height: "60%",
+    justifyContent: 'center',
+    
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    contentFit: 'cover',
   },
   carouselItem: {
     width: 350,
-    height: 160,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
   },
   paginationContainer: {
-    paddingVertical: 10,
+    top:-130,
+    position:"relative"
   },
   paginationDot: {
     width: 10,
@@ -546,22 +709,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  imageContainer: {
-    alignItems: 'center',
-    marginTop: 60,
-    position: 'relative',
+    justifyContent: 'center',
   },
   image: {
-    width: 350,
-    height: 150,
-    contentFit: 'cover',
+    height:"100%",
+    width:"100%",
   },
   deleteButton: {
     position: "absolute",
-    top: 150,
-    left:105,
+    top: 190,
+    left:130,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -689,7 +846,6 @@ marginTop:5,
   wrap:{
     // backgroundColor:'red',
     marginVertical:225,
-   
     marginTop:170,
     flex:1,
     overflow:'hidden',
