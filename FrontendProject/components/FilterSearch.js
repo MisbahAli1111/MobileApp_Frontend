@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
-const FilterSearch = () => {
+const FilterSearch = ({onFilterSelect}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = useState([]);
   const [sortOrder, setSortOrder] = useState('');
@@ -12,18 +12,16 @@ const FilterSearch = () => {
 
   const applyFilter = () => {
     // Here, you can handle the logic for applying the filter
-    console.log('Filter Applied:');
-    console.log('Selected Attributes:', selectedAttributes);
-    console.log('Sort Order:', sortOrder);
+    onFilterSelect(selectedAttributes, sortOrder);
+    
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={toggleDropdown}>
-        <Text style={styles.filterText}>Filter</Text>
-      </TouchableOpacity>
-      {isDropdownOpen && (
+      
+      
         <View style={styles.dropdown}>
+        
           <View style={styles.pickerContainer}>
             <Text style={styles.pickerLabel}>Select Attributes:</Text>
             <View style={styles.radioButtonGroup}>
@@ -91,7 +89,6 @@ const FilterSearch = () => {
             <Text style={styles.applyButtonText}>Apply Filter</Text>
           </TouchableOpacity>
         </View>
-      )}
     </View>
   );
 };
@@ -99,7 +96,6 @@ const FilterSearch = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    left:-10,
   },
   filterText: {
     top: -5,
@@ -114,14 +110,14 @@ const styles = StyleSheet.create({
     width: 200,
     height: 405,
     position: 'absolute',
-    top: 10,
-    right: 65,
-    backgroundColor: Color.steelblue_200,
+    top: 0,
+    right: 100,
+    backgroundColor: Color.steelblue_300,
     borderRadius: 10,
     borderWidth: 0.5,
     borderColor: 'black',
     padding: 10,
-    zIndex: 2,
+    zIndex:999
   },
   pickerContainer: {
     marginBottom: 8,

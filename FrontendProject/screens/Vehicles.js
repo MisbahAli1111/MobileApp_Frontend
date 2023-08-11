@@ -15,15 +15,25 @@ const Vehicles = () => {
   const type = route.params?.type;
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
- 
+  const [filterSearchClicked,setFilterSearchClicked] =useState(false);
+  
+
   const handleQuery = (query) => {
     setSearch(query);
 
-  }
-
-  const handlePress = () => {
-    navigation.navigate('Home');
   };
+  const functionFilterSearch = () =>{
+    setFilterSearchClicked(true);
+  };
+
+  const addFilterInState = (attribute, sort) => {
+  
+    setFilterSearchClicked(false);
+    console.log('Selected Filters:', attribute)
+    console.log('selected Sort: ',sort)
+  };
+   
+
 
   return (
     <View style={styles.vehicles}>
@@ -79,10 +89,14 @@ const Vehicles = () => {
           <View
             style={styles.filt}
           >
-            <FilterSearch/>
+          <Pressable onPress={functionFilterSearch}>
+            <Text style={styles.filterText}>Filter</Text>
+            </Pressable>
           </View>
-        </View>
+          {filterSearchClicked && <FilterSearch onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
       </View>
+        </View>
+      
 
       {/* search gli  */}
       <View style={[styles.rectangleGroup, styles.vehiclesChildPosition]}>
@@ -103,6 +117,24 @@ const Vehicles = () => {
           contentFit="cover"
           source={require("../assets/vector15.png")}
         />
+      </View>
+      <View>
+      <Pressable
+        style={[styles.groupWrapper, styles.groupLayoutt]}
+        onPress={() => navigation.navigate("AddVehicle")}
+      >
+        <View style={styles.rectangleGroupp}>
+          <View style={[styles.groupInnerr, styles.groupInnerLayout]} />
+          <View style={styles.addRecordParent}>
+            <Text style={[styles.addRecord, styles.addTypo]}>Add Vehicle</Text>
+            <Image
+              style={styles.vectorIcon1}
+              contentFit="cover"
+              source={require("../assets/vector14.png")}
+            />
+          </View>
+        </View>
+      </Pressable>
       </View>
 
     </View>
@@ -131,7 +163,7 @@ const styles = StyleSheet.create({
   },
   filt: {
     top: 4,
-    left: 6,
+    right:95,
     width:70
   },
 
@@ -148,6 +180,16 @@ const styles = StyleSheet.create({
   textClr: {
     color: Color.white,
     textAlign: "left",
+  },
+  filterText: {
+    top: -5,
+    height: 20,
+    left: 1,
+    fontFamily: FontFamily.poppinsSemibold,
+    fontSize: FontSize.size_sm,
+    color: '#000',
+    marginBottom: 10,
+    fontWeight: "500",
   },
 
   groupParentLayout: {
@@ -556,7 +598,7 @@ const styles = StyleSheet.create({
     left: -110,
   },
   materialSymbolsarrowRightAParent: {
-    left: 342,
+    left: 310,
     width: 48,
     top: 0,
   },
@@ -623,7 +665,7 @@ const styles = StyleSheet.create({
     height: 111,
   },
   rectangleGroupp: {
-    top: -2,
+    top: 10,
     height: 35,
     left: 0,
 

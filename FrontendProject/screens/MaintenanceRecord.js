@@ -7,10 +7,24 @@ import Footer from "../components/Footer";
 import MaintenanceRecordList from  "../components/MaintenanceRecordList";
 import FilterSearch from "../components/FilterSearch";
 
+
 const MaintenanceRecord = () => {
   const navigation = useNavigation();
 
   const [search, setSearch] = useState('');
+  const [filterSearchClicked,setFilterSearchClicked] =useState(false);
+  
+
+  const functionFilterSearch = () =>{
+    setFilterSearchClicked(true);
+  };
+
+const addFilterInState = (attribute, sort) => {
+  
+    setFilterSearchClicked(false);
+    console.log('Selected Filters:', attribute)
+    console.log('selected Sort: ',sort)
+  }; 
 
   const handleQuery= (query) => {
     setSearch(query);
@@ -47,21 +61,25 @@ const MaintenanceRecord = () => {
             <View style={styles.elementPosition}>
               <Text style={[styles.text, styles.davidTypo1]}>\</Text>
             </View>
-            <View style={[styles.element2, styles.housefillFlexBox]}>
+            {/* <View style={[styles.element2, styles.housefillFlexBox]}>
               <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-            </View>
+            </View> */}
             <View style={[styles.surface, styles.surfaceParentFlexBox]}>
               <Text style={styles.search}>Search</Text>
             </View>
             <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
+              <Pressable onPress={functionFilterSearch}>
               <Text style={[styles.abc123, styles.abc123Clr]}>
-                Search
+                Filter
                 </Text>
+              </Pressable>
+              {filterSearchClicked && <FilterSearch onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
             </View>
+            
             
           </View>
         </View>
-        {/* <View style={styles.FilterSearch}><FilterSearch/></View> */}
+       
         <Pressable
           style={[styles.groupWrapper, styles.groupLayout]}
           onPress={() => navigation.navigate("AddRecord")}
@@ -340,12 +358,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   abc123: {
-    fontWeight: "600",
+    fontWeight: "500",
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.size_sm,
   },
   surface1: {
-    left: 105,
+    left: 220,
     top: 0,
     flexDirection: "row",
     justifyContent: "center",
