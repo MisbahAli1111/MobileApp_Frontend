@@ -1,19 +1,32 @@
 import React, { useState, useCallback } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, Pressable,TouchableOpacity, Modal } from "react-native";
+import { StyleSheet, Text, View, Pressable,TouchableOpacity} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import Footer from "../components/Footer";
-import CreateInvoice from "./CreateInvoice";
 import {printToFileAsync} from 'expo-print';
+import * as FileSystem from 'expo-file-system';
 import {shareAsync} from 'expo-sharing';
-
+import * as Sharing from 'expo-sharing';
 import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 
 
 function InvoiceDetailView() {
  
   const navigation = useNavigation();
+  const[invoiceID,setInvoiceID] =useState('');
+  const [date,setDate] = useState('');
+  const [due,setDue] = useState('');
+  const[balance,setBalance] = useState('');
+  const[name,setName] = useState('')
+  const [registrationNumber,setRegistrationNumber] = useState('');
+  const[status,setStatus] = useState('');
+  const[subTotal,setSubTotal] = useState('');
+  const[tax,setTax] =useState('');
+  const [discount,setDiscount] = useState('');
+  const [total,setTotal] = useState('');
+  const[balanceDue,setBalanceDue] = useState('');
+  //add description rate ,qty amount state and also add them into pdf.
 
  
   
@@ -72,15 +85,14 @@ function InvoiceDetailView() {
     <div class="header">Invoice</div>
     <div class="details">
       <div>
-        <p>Invoice ID: INV1234</p>
-        <p>Date: 2023-08-01</p>
-        <p>Due Date: 2023-08-15</p>
-        <p>Balance Due: $100.00</p>
+        <p>Invoice ID: ${invoiceID}</p>
+        <p>Date: ${date}</p>
+        <p>Balance Due: ${total}</p>
       </div>
       <div>
-        <p>Name: John Doe</p>
-        <p>Registration Number: ABC123</p>
-        <p>Status: Paid</p>
+        <p>Name: ${name}</p>
+        <p>Registration Number: ${registrationNumber}</p>
+        <p>Status: ${status}</p>
       </div>
     </div>
     <table class="items-table">
@@ -108,10 +120,10 @@ function InvoiceDetailView() {
       </tbody>
     </table>
     <div class="total">
-     <p>Subtotal: </p>
-      <p>Tax: $5.00</p>
-      <p>Discount: $0.00</p>
-      <p>Total: $90.00</p>
+     <p>Subtotal: ${subTotal} </p>
+      <p>Tax: ${tax}</p>
+      <p>Discount: ${discount}</p>
+      <p>Total: ${total}</p>
     </div>
   </div>
 </body>
@@ -126,8 +138,26 @@ await shareAsync(file.uri);
 
 };
 
-  // const [name,itemName, status,selectedDate, rate, total,quantity,amount,taxRate,disRateper,regNumber] = data;
-  // const invoiceDetail=[name,itemName, status,selectedDate,regNumber,rate, total,quantity,amount,taxRate,disRateper];
+const printPDf = async () => {
+  try {
+    const file = await printToFileAsync({
+      html: html,
+      base64: false
+    });
+
+    const downloadObject = await FileSystem.downloadAsync(file.uri, FileSystem.documentDirectory + 'invoice.pdf');
+    if (downloadObject.status === 200) {
+      console.log('PDF downloaded successfully:', downloadObject.uri);
+      // You can also share the downloaded PDF if needed
+      // await Sharing.shareAsync(downloadObject.uri);
+    } else {
+      console.error('Error downloading the PDF.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+};
   function  editInvoiceFunction (){ 
 navigation.navigate("CreateInvoice");
  }
@@ -144,11 +174,7 @@ navigation.navigate("CreateInvoice");
         <Text style={styles.total}>Total</Text>
         <View style={styles.invoiceDetailViewChild} />
         <View style={styles.invoiceDetailViewItem} />
-        <Image
-          style={[styles.invoiceDetailViewInner, styles.parentLayout1]}
-          contentFit="cover"
-          source={require("../assets/line-15.png")}
-        />
+        
         <View style={styles.breadcrumbsParent}>
           <View style={styles.breadcrumbs}>
             <View style={[styles.housefill, styles.housefillFlexBox]}>
@@ -158,31 +184,17 @@ navigation.navigate("CreateInvoice");
                 source={require("../assets/homemuted.png")}
               />
             </View>
-            <View style={styles.elementPosition} />
+          
             <View style={styles.elementPosition}>
               <Text style={styles.text}>\</Text>
             </View>
             <Text style={[styles.invoice, styles.dueTypo]}>Invoice</Text>
           </View>
-          {/* <TouchableOpacity onPress={editInvoiceFunction}>
-          <View style={[styles.editInvoiceWrapper, styles.invoiceShadowBox]}>
-            <Text style={[styles.editInvoice, styles.invoiceTypo1]}>
-              Edit Invoice
-            </Text>
-          </View>
-          </TouchableOpacity> */}
           <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
         <TouchableOpacity onPress={editInvoiceFunction}>
-        {/* <Image
-          style={[styles.groupChild6, styles.groupChild6Layout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-73.png")}
-        /> */}
-        <Pressable onPress={editInvoiceFunction}>
-          <Text style={[styles.editInvoice2, styles.totalTypo]}>
-          Edit Invoice
+        <Text style={[styles.editInvoice2, styles.totalTypo]}>
+        Edit Invoice
         </Text>
-        </Pressable>
         </TouchableOpacity> 
       </View> 
 
@@ -211,14 +223,11 @@ navigation.navigate("CreateInvoice");
           <Text style={[styles.amount, styles.textPosition1]}>Amount</Text>
           <Text style={[styles.text9, styles.textPosition1]}></Text>
 
-          <View style={[styles.groupInner, styles.groupLayout1]} />
-          <View style={[styles.lineView, styles.groupLayout1]} />
-          <View style={[styles.groupChild1, styles.inv0001Position]} />
         </View>
         <View style={[styles.element2, styles.housefillFlexBox]}>
           <Text style={styles.text}>\</Text>
         </View>
-        <Text style={[styles.inv0001, styles.inv0001Position]}>INV0001</Text>
+        <Text style={[styles.inv0001, styles.inv0001Position]}>{invoiceID}</Text>
         <LinearGradient
           style={styles.rectangleLineargradient}
           locations={[0, 1]}
@@ -269,25 +278,20 @@ navigation.navigate("CreateInvoice");
             <Text style={[styles.text20, styles.textPosition]}></Text>
             <View style={styles.group}>
               <Text style={[styles.text17, styles.textTypo]}>-</Text>
-              <Text style={[styles.text18, styles.rs0Position]}>-</Text>
+              
               <Text style={[styles.total1, styles.total1Typo]}>Total</Text>
-              <Text style={[styles.balanceDue, styles.rs0Position]}>
-                Balance Due
-              </Text>
+              
               <Text style={[styles.rs3550, styles.rs0Typo]}></Text>
-              <Text style={[styles.rs0, styles.rs0Typo]}></Text>
+              
             </View>
           </View>
           <View style={[styles.groupChild2, styles.groupLayout]} />
         </View>
-        {/* <Image
-          style={[styles.groupIcon, styles.groupIconLayout]}
-          contentFit="cover"
-          source={require("../assets/group-1712.png")}
-        /> */}
         
-                <Pressable
-          style={[styles.container, styles.framePosition]}//printer button
+        
+        <Pressable
+          style={[styles.container, styles.framePosition]}
+          onPress={printPDf}//printer button
         >
           <Image
             style={styles.icon}
@@ -382,7 +386,7 @@ const styles = StyleSheet.create({
     },
   },
   setstyle:{
-
+top:-50,
   },
   invoiceTypo1: {
     textAlign: "center",
@@ -563,7 +567,7 @@ const styles = StyleSheet.create({
   },
   iconLayout: {
     width: 24,
-    left: 365,
+    left: 375,
     height: 24,
     position: "absolute",
     overflow: "hidden",
@@ -611,7 +615,7 @@ const styles = StyleSheet.create({
     width: 19,
   },
   homeMutedIcon: {
-    width: 12,
+    width: 14,
     height: 14,
   },
   housefill: {
@@ -646,7 +650,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   breadcrumbs: {
-    top: 2,
+    top: 0,
     width: 79,
     height: 20,
     left: 0,
@@ -680,11 +684,12 @@ const styles = StyleSheet.create({
   },
   rectangleView: {
     top: 180,
-    left: 5,
+    left: 6,
+    padding:20,
     borderRadius: 16,
-    backgroundColor: "rgba(217, 217, 217, 0.27)",
-    width: 420,
-    height: 482,
+    backgroundColor: "rgba(217, 217, 217, 0.27)", 
+    width: 400,
+    height: 470,
     position: "absolute",
   },
   groupChild: {
@@ -853,11 +858,11 @@ const styles = StyleSheet.create({
     left: 0,
   },
   groupParent: {
-    top: 337,
+    top: 290,
     left: 11,
   },
   element2: {
-    top: 130,
+    top: 128,
     left: 102,
     height: 20,
   },
@@ -870,7 +875,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   rectangleLineargradient: {
-    top: 220,
+    top: 180,
     borderRadius: Border.br_5xs,
     width: 391,
     height: 97,
@@ -1066,8 +1071,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   groupContainer: {
-    top: 536,
-    left: 216,
+    top: 500,
+    left: 210,
   },
   groupIcon: {
     top: 3,
@@ -1131,7 +1136,9 @@ const styles = StyleSheet.create({
   icon: {
     height: "100%",
     width: "100%",
-    right:10,
+    right:0,
+    top:-20,
+    position:"absolute"
     
   },
   wrapper: {
@@ -1172,10 +1179,10 @@ const styles = StyleSheet.create({
     left: 164,
   },
   printer2Icon: {
-    top: 743,
+    top: 722,
   },
   icbaselineShareIcon: {
-    top: 691,
+    top: 672,
   },
   rectangleIcon: {
     top: -6,

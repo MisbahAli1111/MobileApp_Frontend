@@ -1,47 +1,66 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text,TextInput, View, Pressable } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import BusinessList from "../components/BusinessList";
+import SwitchBusiness from "./SwitchBusiness";
 const BusinessInfo = () => {
   const navigation = useNavigation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [location, setlocation] = useState('');
-  const[city,setCity] = useState('');
-  const[country,setCountry] = useState('');
-  const[countryCode,setCountryCode] = useState('');
-  const[phoneNumber,setPhonenumber] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [countryCode, setCountryCode] = useState('');
+  const [phoneNumber, setPhonenumber] = useState('');
 
   const [nameFocused, setNameFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [locationFocused, setlocationFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
 
-
-  const [EMessage, setEMessage] =useState('');
-  const [CMessage , setCMessage] = useState('');
+  const [ accessToken, setAccessToken]=('');
+  const [EMessage, setEMessage] = useState('');
+  const [CMessage, setCMessage] = useState('');
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
+//   const token='';
+//   const fetchToekn = async () => {
+  
+//  };
+
+//   useEffect(() => {
+//     fetchToekn();
+//     },[]);
+
 
 
   const handleSignUp = () => {
+    AsyncStorage.getItem("accessToken")
+    .then(accessTokens => {
+    token =  'Bearer ' + accessTokens;
+   })
+
+
     let isValid = true;
-  
+
     if (!name) {
       setNameError(true);
       isValid = false;
     } else {
       setNameError(false);
     }
-  
+
     if (!countryCode) {
       setPLError('Please select Country Code');
       setNumberError(true);
@@ -55,7 +74,7 @@ const BusinessInfo = () => {
         setNumberError(false);
       }
     }
-  
+
     if (!email) {
       setEMessage('Please provide an Email');
       setEmailError(true);
@@ -70,7 +89,7 @@ const BusinessInfo = () => {
         setEmailError(false);
       }
     }
-  
+
     if (!city) {
       setCMessage('Please select City');
       setCountryError(true);
@@ -85,15 +104,17 @@ const BusinessInfo = () => {
         setCountryError(false);
       }
     }
-  
+
     if (!location) {
       setLocationError(true);
       isValid = false;
     } else {
       setLocationError(false);
     }
-  
+
     if (isValid) {
+     
+       
       let data = JSON.stringify({
         "businessName": name,
         "businessAddress": location,
@@ -102,38 +123,39 @@ const BusinessInfo = () => {
         "businessCountry": country,
         "businessCity": city
       });
-      
+
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'http://192.168.100.71:8080/api/business/add-business/',
-        headers: { 
-          'Content-Type': 'application/json', 
-          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6WyJST0xFX09XTkVSIiwiUk9MRV9DVVNUT01FUiJdLCJwZXJtaXNzaW9ucyI6W10sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbiIsInBlcm1pc3Npb25CaXRzIjpbXSwiZXhwIjoxNjkxNzQ1NDQxfQ.gS3UkoTBtN47n0VNdXA30GEhQYP7RoRdsX1TMWUUydU'
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
         },
-        data : data
+        data: data
       };
-      
+
       axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      
+        .then((response) => {
+          // console.log(JSON.stringify(response.data));
+          navigation.navigate(SwitchBusiness);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
     }
   };
-  
 
-  const [NameEror,setNameError]=useState(false);
-  const [EmailEror,setEmailError]=useState(false);
-  const [LocationEror,setLocationError]=useState(false);
- const [CountryError,setCountryError]=useState(false);
-  const [PLEror,setPLError]=useState('');
-  const [NumberEror,setNumberError]=useState(false);
-  
-  
+
+  const [NameEror, setNameError] = useState(false);
+  const [EmailEror, setEmailError] = useState(false);
+  const [LocationEror, setLocationError] = useState(false);
+  const [CountryError, setCountryError] = useState(false);
+  const [PLEror, setPLError] = useState('');
+  const [NumberEror, setNumberError] = useState(false);
+
+
 
   const [countryShowDropdown, setCountryShowDropdown] = useState(false);
   const [cityShowDropdown, setCityShowDropdown] = useState(false);
@@ -160,9 +182,9 @@ const BusinessInfo = () => {
     "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
     "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
   ]
-  
+
   const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
-  
+
   const cities = [
     "Kabul", "Tirana", "Algiers", "Andorra la Vella", "Luanda", "St. John's", "Buenos Aires", "Yerevan", "Canberra", "Vienna",
     "Baku", "Nassau", "Manama", "Dhaka", "Bridgetown", "Minsk", "Brussels", "Belmopan", "Porto-Novo", "Thimphu",
@@ -186,36 +208,36 @@ const BusinessInfo = () => {
     "Ankara", "Ashgabat", "Funafuti", "Kampala", "Kyiv", "Abu Dhabi", "London", "Washington, D.C.", "Montevideo",
     "Tashkent", "Port Vila", "Vatican City", "Caracas", "Hanoi", "Sana'a", "Lusaka", "Harare"
   ];
-  
-  
-  
-  
-    const toggleCountryDropdown = () => {
-      setCountryShowDropdown(!countryShowDropdown);
-    };
 
-    const toggleCityDropdown = () => {
-      setCityShowDropdown(!cityShowDropdown);
-    };
 
-    const toggleCodeDropdown = () => {
-      setCodeShowDropdown(!codeShowDropdown);
-    };
-  
-    const handleCountrySelect = (code) => {
-      setCountry(code);
-      setCountryShowDropdown(false);
-    };
 
-    const handleCodeSelect = (code) => {
-      setCountryCode(code);
-      setCodeShowDropdown(false);
-    };
 
-    const handleCitySelect = (code) => {
-      setCity(code);
-      setCityShowDropdown(false);
-    };
+  const toggleCountryDropdown = () => {
+    setCountryShowDropdown(!countryShowDropdown);
+  };
+
+  const toggleCityDropdown = () => {
+    setCityShowDropdown(!cityShowDropdown);
+  };
+
+  const toggleCodeDropdown = () => {
+    setCodeShowDropdown(!codeShowDropdown);
+  };
+
+  const handleCountrySelect = (code) => {
+    setCountry(code);
+    setCountryShowDropdown(false);
+  };
+
+  const handleCodeSelect = (code) => {
+    setCountryCode(code);
+    setCodeShowDropdown(false);
+  };
+
+  const handleCitySelect = (code) => {
+    setCity(code);
+    setCityShowDropdown(false);
+  };
 
 
   return (
@@ -225,20 +247,20 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
- <Text style={[styles.businessInfo1, styles.nextTypo]}>Business Info</Text>
+      <Text style={[styles.businessInfo1, styles.nextTypo]}>Business Info</Text>
       <Text
         style={[styles.letsRegister, styles.letsPosition]}
       >{`Let’s Register `}</Text>
       <Text style={[styles.letsLevelUp, styles.letsPosition]}>
         Let’s level up your business, together.
       </Text>
-      
+
 
 
       {/* Name  */}
-     
+
       <TextInput style={[styles.davidDaniel, styles.davidDanielTypo]}
-      placeholder="Name"
+        placeholder="Name"
         value={name}
         onFocus={() => setNameFocused(true)}
         onBlur={() => setNameFocused(false)}
@@ -251,18 +273,18 @@ const BusinessInfo = () => {
       />
       <Image
         style={[
-         NameEror ? styles.businessInfoChildR : styles.businessInfoChild
+          NameEror ? styles.businessInfoChildR : styles.businessInfoChild
           , styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-11.png")}
       />
-      
-      {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null }
 
-      
+      {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
+
+
       {/* Email  */}
       <TextInput style={[styles.daviddaniel33outlookcom, styles.davidDanielTypoE]}
-      placeholder="Email"
+        placeholder="Email"
         value={email}
         onFocus={() => setEmailFocused(true)}
         onBlur={() => setEmailFocused(false)}
@@ -275,17 +297,17 @@ const BusinessInfo = () => {
       />
       <Image
         style={[
-          EmailEror ? styles.businessInfoItemR : styles.businessInfoItem ,
-           styles.businessChildLayout]}
+          EmailEror ? styles.businessInfoItemR : styles.businessInfoItem,
+          styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-21.png")}
       />
-{EmailEror ? <Text style={styles.nameError}>{EMessage}</Text> : null }
+      {EmailEror ? <Text style={styles.nameError}>{EMessage}</Text> : null}
 
-      
+
       {/* Location  */}
       <TextInput style={[styles.h218GulshanKarachi, styles.davidDanielTypo]}
-      placeholder="location"
+        placeholder="location"
         value={location}
         onFocus={() => setlocationFocused(true)}
         onBlur={() => setlocationFocused(false)}
@@ -298,76 +320,76 @@ const BusinessInfo = () => {
       />
       <Image
         style={[
-          LocationEror ? styles.businessInfoInnerR :styles.businessInfoInner
+          LocationEror ? styles.businessInfoInnerR : styles.businessInfoInner
           , styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-31.png")}
       />
-      {LocationEror ? <Text style={styles.nameError}>Please Enter a Valid Location</Text> : null }
+      {LocationEror ? <Text style={styles.nameError}>Please Enter a Valid Location</Text> : null}
 
 
       {/* City  */}
       <TextInput style={[styles.karachi, styles.karachiTypo]}
-      placeholder="city"
-      value={city}
-      editable={false}
+        placeholder="city"
+        value={city}
+        editable={false}
       />
-     <TextInput style={[styles.pakistan, styles.karachiTypo]}
-       placeholder="country"
-       value={country}
-      editable={false}
-     />
-     <Pressable>
-      <Image
-        style={[styles.businessInfoChild4, styles.businessChildPosition]}
-        contentFit="cover"
-        source={require("../assets/vector-6.png")}
+      <TextInput style={[styles.pakistan, styles.karachiTypo]}
+        placeholder="country"
+        value={country}
+        editable={false}
       />
+      <Pressable>
+        <Image
+          style={[styles.businessInfoChild4, styles.businessChildPosition]}
+          contentFit="cover"
+          source={require("../assets/vector-6.png")}
+        />
       </Pressable>
-      { 
-        <View  style={styles.CityClick}>
-        <Picker
-          selectedValue={city}
-          onValueChange={(itemValue) => handleCitySelect(itemValue)}
-        >
-          <Picker.Item     value="Karachi" />
-          {cities.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
+      {
+        <View style={styles.CityClick}>
+          <Picker
+            selectedValue={city}
+            onValueChange={(itemValue) => handleCitySelect(itemValue)}
+          >
+            <Picker.Item value="Karachi" />
+            {cities.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
         </View>
       }
 
       <Pressable
-      onPress={toggleCountryDropdown}>
-      <Image
-        style={[styles.businessInfoChild5, styles.businnessChildPosition]}
-        contentFit="cover"
-        source={require("../assets/vector-7.png")}
-      />
+        onPress={toggleCountryDropdown}>
+        <Image
+          style={[styles.businessInfoChild5, styles.businnessChildPosition]}
+          contentFit="cover"
+          source={require("../assets/vector-7.png")}
+        />
       </Pressable>
       {(
         <View style={styles.CountryClick} >
-        <Picker
-          selectedValue={country}
-          onValueChange={(itemValue) => handleCountrySelect(itemValue)}
-        >
-          <Picker.Item  label="Select Country " value="Pakistan" />
-          {countries.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
+          <Picker
+            selectedValue={country}
+            onValueChange={(itemValue) => handleCountrySelect(itemValue)}
+          >
+            <Picker.Item label="Select Country " value="Pakistan" />
+            {countries.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
         </View>
       )}
       <Image
         style={[
-          CountryError ? styles.businessInfoInnerR :styles.businessInfoInner
+          CountryError ? styles.businessInfoInnerR : styles.businessInfoInner
           , styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-31.png")}
       />
-      {CountryError ? <Text style={styles.nameError}>{CMessage}</Text> : null }
-      
+      {CountryError ? <Text style={styles.nameError}>{CMessage}</Text> : null}
+
 
 
 
@@ -381,31 +403,31 @@ const BusinessInfo = () => {
         onChangeText={setPhonenumber}
       />
       <TextInput style={[styles.pk, styles.pkPosition]}
-      placeholder='PK'
+        placeholder='PK'
         value={countryCode}
         editable={false}
       />
 
       <Pressable
-      onPress = {toggleCodeDropdown}>
-      <Image
-        style={styles.vectorIcon}
-        contentFit="cover"
-        source={require("../assets/vector-21.png")}
-      />
-      
+        onPress={toggleCodeDropdown}>
+        <Image
+          style={styles.vectorIcon}
+          contentFit="cover"
+          source={require("../assets/vector-21.png")}
+        />
+
       </Pressable>
-      { (
+      {(
         <View style={styles.codeClick} >
-        <Picker
-          selectedValue={countryCode}
-          onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-        >
-          <Picker.Item   label="Select Country Code" value="PK" />
-          {countryCodes.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
+          <Picker
+            selectedValue={countryCode}
+            onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+          >
+            <Picker.Item label="Select Country Code" value="PK" />
+            {countryCodes.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
         </View>
       )}
       <Image
@@ -413,9 +435,9 @@ const BusinessInfo = () => {
         contentFit="cover"
         source={require("../assets/phone-1.png")}
       />
-     <Image
+      <Image
         style={[
-         NumberEror ?  styles.businessInfoChild2R : styles.businessInfoChild2
+          NumberEror ? styles.businessInfoChild2R : styles.businessInfoChild2
           , styles.businessChildLayout]}
         contentFit="cover"
         source={require("../assets/line-4.png")}
@@ -423,7 +445,7 @@ const BusinessInfo = () => {
 
       <Pressable
         style={[styles.groupParent, styles.groupLayout]}
-        onPress= {handleSignUp}
+        onPress={handleSignUp}
       >
         <Image
           style={[styles.groupChild, styles.groupLayout]}
@@ -432,11 +454,11 @@ const BusinessInfo = () => {
         />
         <Text style={[styles.next, styles.nextTypo]}>Next</Text>
       </Pressable>
-      {NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null }
-      
-      
-      
-      
+      {NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null}
+
+
+
+
     </View>
   );
 };
@@ -445,16 +467,16 @@ const styles = StyleSheet.create({
   groupChildPosition: {
     left: 0,
     top: 0,
-  
+
   },
-  nameWrap:{},
-  wrap:{
-    flex:1,
+  nameWrap: {},
+  wrap: {
+    flex: 1,
     // backgroundColor:'red',
   },
   davidDanielTypo: {
     height: 28,
-    top:2,
+    top: 2,
     textAlign: "left",
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
@@ -462,10 +484,10 @@ const styles = StyleSheet.create({
     marginLeft: 66,
     position: "relative",
   },
-  nameError:{
-    marginTop:12,
-    marginLeft:50,
-    color:'red',
+  nameError: {
+    marginTop: 12,
+    marginLeft: 50,
+    color: 'red',
   },
   davidDanielTypoE: {
     height: 28,
@@ -481,13 +503,13 @@ const styles = StyleSheet.create({
     width: 370,
     left: 20,
     position: "relative",
-    marginTop:10,
+    marginTop: 10,
   },
   pkPosition: {
     width: 30,
     height: 27,
-    marginTop:-35,
-    marginBottom:8,
+    marginTop: -35,
+    marginBottom: 8,
     textAlign: "left",
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
@@ -495,7 +517,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   karachiTypo: {
-    
+
     height: 27,
     textAlign: "left",
     color: Color.darkslateblue,
@@ -503,14 +525,14 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     position: "relative",
   },
-  cityTouch:{
+  cityTouch: {
     top: 500,
     height: 10,
     width: 16,
     position: "absolute",
   },
   businessChildPosition: {
-    marginTop:-20,
+    marginTop: -20,
     height: 10,
     width: 16,
     position: "relative",
@@ -550,36 +572,36 @@ const styles = StyleSheet.create({
     top: 0,
   },
   davidDaniel: {
-    marginTop:330,
+    marginTop: 330,
     width: 181,
   },
   daviddaniel33outlookcom: {
-    marginTop:20,
+    marginTop: 20,
     width: 231,
-    marginLeft:10,
+    marginLeft: 10,
   },
   businessInfoChild: {
-   marginTop:10,
+    marginTop: 10,
   },
   businessInfoChildR: {
-    marginTop:10,
-    backgroundColor:'red',
-   },
- 
+    marginTop: 10,
+    backgroundColor: 'red',
+  },
+
   businessInfoItem: {
-    marginTop:10,
+    marginTop: 10,
   },
   businessInfoItemR: {
-    marginTop:10,
-    backgroundColor:'red',
+    marginTop: 10,
+    backgroundColor: 'red',
   },
-  
+
   businessInfoInner: {
-    
+
   },
   businessInfoInnerR: {
-    backgroundColor:'red',
-  },  
+    backgroundColor: 'red',
+  },
   text: {
     left: 109,
     width: 176,
@@ -597,9 +619,9 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    position:'relative',
-    marginTop:20,
-    marginBottom:8,
+    position: 'relative',
+    marginTop: 20,
+    marginBottom: 8,
   },
   pk: {
     color: Color.textTxtPrimary,
@@ -613,64 +635,64 @@ const styles = StyleSheet.create({
   },
   vectorIcon: {
     // backgroundColor:'red',
-    marginTop:-28,
-    marginLeft:12,
+    marginTop: -28,
+    marginLeft: 12,
     left: 83,
     height: 10,
     width: 16,
     position: "relative",
-    overflow:"hidden",
+    overflow: "hidden",
   },
   pk1: {
     color: Color.darkslateblue,
   },
   h218GulshanKarachi: {
     width: 282,
-    marginTop:20,    
+    marginTop: 20,
   },
   businessInfoChild2R: {
-   backgroundColor:'red',
+    backgroundColor: 'red',
   },
   businessInfoChild3: {
   },
   karachi: {
     width: 90,
     marginLeft: 35,
-    marginTop:25,
+    marginTop: 25,
   },
   businessInfoChild4: {
-    marginLeft:130,
-    position:'relative',
+    marginLeft: 130,
+    position: 'relative',
   },
   pakistan: {
     marginLeft: 175,
     width: 120,
-    marginTop:-25,
+    marginTop: -25,
   },
   businessInfoChild5: {
     marginLeft: 300,
-    marginTop:-30,
+    marginTop: -30,
   },
   CountryClick: {
     marginLeft: 252,
-    marginTop:-50,
-    width:80,
-    height:40,
+    marginTop: -50,
+    width: 80,
+    height: 40,
     // backgroundColor:'red',
   },
   CityClick: {
-    marginTop:-40,
-    marginLeft:110,
+    marginTop: -40,
+    marginLeft: 110,
     // backgroundColor:'red',
-    height:50,
-    width:50,
+    height: 50,
+    width: 50,
   },
-  codeClick:{
-    marginTop:-48,
-    marginBottom:10,
-    marginLeft:77,
-    height:50,
-    width:50,
+  codeClick: {
+    marginTop: -48,
+    marginBottom: 10,
+    marginLeft: 77,
+    height: 50,
+    width: 50,
   },
   businessInfo1: {
     top: 281,
@@ -719,22 +741,22 @@ const styles = StyleSheet.create({
     left: 10,
   },
   mapPin1Icon: {
-    marginTop:-25,
-    marginLeft:10,
-    marginBottom:10,
+    marginTop: -25,
+    marginLeft: 10,
+    marginBottom: 10,
   },
   user1Icon: {
-    marginTop:-25,
-    marginLeft:8,
+    marginTop: -25,
+    marginLeft: 8,
   },
   atSign1Icon: {
-    marginTop:-25,
-    marginLeft:10,
+    marginTop: -25,
+    marginLeft: 10,
   },
   phone1Icon: {
-   marginTop:-44,
-   marginLeft:15,
-   marginBottom:8,
+    marginTop: -44,
+    marginLeft: 15,
+    marginBottom: 8,
   },
   groupIcon: {
     top: 3,

@@ -5,8 +5,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = () => {
+const Login =  () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +15,7 @@ const Login = () => {
   const [Merror, setMError]=useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setMError(false);
     setEmailError(false); 
     setPasswordError(false); 
@@ -42,13 +43,20 @@ const Login = () => {
       };
 
       axios.request(config)
-        .then((response) => {
+        .then((response)  => {
           console.log(JSON.stringify(response.data));
           if (response.data === 'Invalid Credentials!') {
             setError(response.data);
             setMError(true)
           } else {
-            navigation.navigate('Home');
+            const accessToken = response.data.accessToken;
+            AsyncStorage.setItem("accessToken",accessToken);
+    //         AsyncStorage.getItem("accessToken")
+    // .then(accessTokens => {
+    //   console.log(accessTokens); 
+    // })
+    navigation.navigate('SwitchBusiness');
+
           }
         })
         .catch((error) => {

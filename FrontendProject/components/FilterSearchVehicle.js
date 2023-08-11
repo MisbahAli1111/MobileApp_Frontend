@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
-const FilterSearch = ({onFilterSelect}) => {
+const FilterSearchVehicle = ({onFilterSelect}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = useState([]);
   const [sortOrder, setSortOrder] = useState('');
@@ -36,7 +36,7 @@ const FilterSearch = ({onFilterSelect}) => {
                     setSelectedAttributes([...selectedAttributes, 'name']);
                   }
                 }}
-                color={selectedAttributes.includes('name') ? Color.white : undefined}
+                color={selectedAttributes.includes('name') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Contact"
@@ -49,7 +49,7 @@ const FilterSearch = ({onFilterSelect}) => {
                     setSelectedAttributes([...selectedAttributes, 'contact']);
                   }
                 }}
-                color={selectedAttributes.includes('contact') ? Color.white : undefined}
+                color={selectedAttributes.includes('contact') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Registration Number"
@@ -62,7 +62,7 @@ const FilterSearch = ({onFilterSelect}) => {
                     setSelectedAttributes([...selectedAttributes, 'registrationNumber']);
                   }
                 }}
-                color={selectedAttributes.includes('registrationNumber') ? Color.white : undefined}
+                color={selectedAttributes.includes('registrationNumber') ? Color.steelblue_100 : undefined}
               />
             </View>
           </View>
@@ -74,14 +74,14 @@ const FilterSearch = ({onFilterSelect}) => {
                 value="ascending"
                 status={sortOrder === 'ascending' ? 'checked' : 'unchecked'}
                 onPress={() => setSortOrder('ascending')}
-                color={sortOrder === 'ascending' ? Color.white : undefined}
+                color={sortOrder === 'ascending' ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Descending"
                 value="descending"
                 status={sortOrder === 'descending' ? 'checked' : 'unchecked'}
                 onPress={() => setSortOrder('descending')}
-                color={sortOrder === 'descending' ? Color.white : undefined}
+                color={sortOrder === 'descending' ? Color.steelblue_100 : undefined}
               />
             </View>
           </View>
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 100,
-    backgroundColor: Color.steelblue_300,
+    backgroundColor: Color.white,
     borderRadius: 10,
     borderWidth: 0.5,
     borderColor: 'black',
@@ -143,4 +143,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FilterSearch;
+export default FilterSearchVehicle;

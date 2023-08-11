@@ -195,7 +195,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-              /> 
+              />  */}
             
             
             <Stack.Screen
@@ -207,9 +207,9 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            /> */}
+            />
             
-              <Stack.Screen
+              {/* <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               initialParams={{
@@ -255,7 +255,7 @@ const App = () => {
                 onBackPress:'AddVehicle',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />  
+            />   */}
             
           </Stack.Navigator>
         ) : null}

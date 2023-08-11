@@ -4,6 +4,8 @@ import { StyleSheet, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import BusinessList from "../components/BusinessList";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const SwitchBusiness = () => {
   const navigation = useNavigation();
 

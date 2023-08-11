@@ -585,4 +585,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OwnerInfo;
+export default OwnerInfo

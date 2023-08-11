@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from  "../components/MaintenanceRecordList";
-import FilterSearch from "../components/FilterSearch";
+import FilterSearchRecord from "../components/FilterSearchRecord";
 
 
 const MaintenanceRecord = () => {
@@ -73,7 +73,7 @@ const addFilterInState = (attribute, sort) => {
                 Filter
                 </Text>
               </Pressable>
-              {filterSearchClicked && <FilterSearch onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
+              {filterSearchClicked && <FilterSearchRecord onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
             </View>
             
             

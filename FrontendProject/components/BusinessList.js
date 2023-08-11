@@ -1,58 +1,94 @@
-
 import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View,Button,TextInput, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Button, TextInput, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-
+import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { set } from "react-native-reanimated";
 function BusinessList({ }) {
     const navigation = useNavigation();
     const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
-    
-    const Business = [
-        {
-            Name: "sABC",
-            lastSigend: "2 hours ago",
-        },
-        {
-            Name: "Business XYZ",
-            lastSigend: "5 hours ago",
-        },
-        {
-            Name: "Business KLM",
-            lastSigend: "1 hours ago",
-        },
-        {
-            Name: "Business YES",
-            lastSigend: "1 hours ago",
-        },
+    const [Business,setBusiness] = useState(['']);
+    // const Business = [
+    //     {
+    //         Name: "sABC",
+    //         lastSigend: "2 hours ago",
+    //     },
+    //     {
+    //         Name: "Business XYZ",
+    //         lastSigend: "5 hours ago",
+    //     },
+    //     {
+    //         Name: "Business KLM",
+    //         lastSigend: "1 hours ago",
+    //     },
+    //     {
+    //         Name: "Business YES",
+    //         lastSigend: "1 hours ago",
+    //     },
 
-    ];
+    // ];
 
     const fetchData = async () => {
-        const index = parseInt(await AsyncStorage.getItem("index"));      
+
+        const index = parseInt(await AsyncStorage.getItem("Business_id"));
         setCurrentPressedIndex(index);
-     };
+        
+    };
 
     useEffect(() => {
-      fetchData();
-      },[]);
+        fetchData();
+        getData();
+    }, []);
 
-      useEffect(() => {
-        
-      }, [currentPressedIndex]);
+    getData = () => {
+        AsyncStorage.getItem("accessToken")
+        .then(accessTokens => {
+        token =  'Bearer ' + accessTokens;
+       })
+       
+    
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
+            headers: {
+                'Authorization': token, 
+            },
+        };
+
+        axios.request(config)
+        .then((response) => {
+          const responseData = response.data;
+      
+          if (responseData.status === "OK") {
+            const businesses = responseData.data;
+            setBusiness(businesses);
+          } else {
+            console.log("Error: " + responseData.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      
+    }
+
+    useEffect(() => {
+
+    }, [currentPressedIndex]);
 
 
     const handlePress = async (index) => {
         setCurrentPressedIndex(index);
-        await AsyncStorage.setItem("index",index.toString());
+        
+        await AsyncStorage.setItem("Business_id", index.toString());
         setTimeout(() => {
             navigation.navigate("Home");
-          }, 1);
+        }, 1);
     };
 
 
@@ -64,7 +100,7 @@ function BusinessList({ }) {
     //     const name = await AsyncStorage.getItem("name");
     //     console.warn(name);
     //   };
-      
+
     //   const removeData = async () => {
     //     await AsyncStorage.removeItem("name");
     //   };
@@ -77,29 +113,29 @@ function BusinessList({ }) {
         // <Button title='Remove data' onPress={removeData} />
         // </View>
         <View>
-         {Business.map((BusinessB, index) => (
-                <View  key={index} style={[styles.groupParent, styles.groupParentLayout]}>
-                    <View key={`pressable-${index}`}>
+            {Business.map((BusinessB) => (
+                <View key={BusinessB.id} style={[styles.groupParent, styles.groupParentLayout]}>
+                    <View key={`pressable-${BusinessB.id}`}>
                         <Pressable
-                            onPress={() => handlePress(index)}
+                            onPress={() => handlePress(BusinessB.id)}
                             style={[styles.vectorParent, styles.groupParentLayout]}
                         >
                             <Image
                                 style={[styles.groupChild, styles.groupParentLayout]}
                                 contentFit="cover"
                                 source={
-                                    currentPressedIndex === index ? require("../assets/rectangle-69.png") : require("../assets/rectangle-691.png")}
+                                    currentPressedIndex === BusinessB.id ? require("../assets/rectangle-69.png") : require("../assets/rectangle-691.png")}
                             />
                             <View style={styles.abcBusinessParent}>
                                 <Text style={[
-                                    currentPressedIndex === index ? styles.abcBusiness : styles.abcBusiness1
+                                    currentPressedIndex === BusinessB.id ? styles.abcBusiness : styles.abcBusiness1
                                     , styles.abcPosition1]}>
-                                    {BusinessB.Name}
+                                    {BusinessB.businessName}
                                 </Text>
                                 <Text style={[
-                                    currentPressedIndex === index ? styles.signedIn : styles.lastSignedIn2, styles.signedTypo]}>
+                                    currentPressedIndex === BusinessB.id ? styles.signedIn : styles.lastSignedIn2, styles.signedTypo]}>
                                     {
-                                        currentPressedIndex === index ? "Signed In" : BusinessB.lastSigend}
+                                        currentPressedIndex === BusinessB.id ? "Signed In" : BusinessB.lastSigend}
                                 </Text>
                             </View>
                             <Image

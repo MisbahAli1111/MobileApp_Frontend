@@ -7,7 +7,7 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import VehicleRecords from "../components/VehicleRecords";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
-import FilterSearch from "../components/FilterSearch";
+import FilterSearchVehicle from "../components/FilterSearchVehicle";
 
 
 const Vehicles = () => {
@@ -93,7 +93,7 @@ const Vehicles = () => {
             <Text style={styles.filterText}>Filter</Text>
             </Pressable>
           </View>
-          {filterSearchClicked && <FilterSearch onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
+          {filterSearchClicked && <FilterSearchVehicle onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
       </View>
         </View>
       
