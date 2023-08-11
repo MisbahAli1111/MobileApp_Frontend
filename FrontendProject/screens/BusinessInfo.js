@@ -32,100 +32,99 @@ const BusinessInfo = () => {
   };
 
 
-  // API Call 
-  let data = JSON.stringify({
-    "firstName": "Misbah",
-    "lastName": "Ali",
-    "email": "ali@gmail.com",
-    "password": "12345678"
-  });
-  
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: 'http://localhost:8080/api/users/register/owner',
-    headers: { 
-      'Content-Type': 'application/json'
-    },
-    data : data
-  };
-  
-  axios.request(config)
-  .then((response) => {
-    console.log(JSON.stringify(response.data));
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-
-
   const handleSignUp = () => {
-
-    if(!name){
+    let isValid = true;
+  
+    if (!name) {
       setNameError(true);
-    }else{
+      isValid = false;
+    } else {
       setNameError(false);
     }
-
-    if(!countryCode){
+  
+    if (!countryCode) {
       setPLError('Please select Country Code');
       setNumberError(true);
-    }else{
+      isValid = false;
+    } else {
       setPLError('');
-      if(!phoneNumber){
-        setPLError("Please provide Contact Number")
-      }
-      else{
+      if (!phoneNumber) {
+        setPLError('Please provide Contact Number');
+        isValid = false;
+      } else {
         setNumberError(false);
       }
-      
     }
-    
-    if(!email){
+  
+    if (!email) {
       setEMessage('Please provide an Email');
       setEmailError(true);
-    }else{
+      isValid = false;
+    } else {
       setEMessage('');
-      if(!isValidEmail(email))
-      {
+      if (!isValidEmail(email)) {
         setEMessage('Please provide a Valid Email');
         setEmailError(true);
-        return;
-      }else{
+        isValid = false;
+      } else {
         setEmailError(false);
       }
     }
-
-    if(!city){
+  
+    if (!city) {
       setCMessage('Please select City');
       setCountryError(true);
-    }else{
+      isValid = false;
+    } else {
       setCMessage('');
-      if(!country)
-      {
+      if (!country) {
         setCMessage('Please select Country');
         setCountryError(true);
-      }else{
+        isValid = false;
+      } else {
         setCountryError(false);
       }
-      
     }
-
-    if(!location){
+  
+    if (!location) {
       setLocationError(true);
-    }
-    else{
+      isValid = false;
+    } else {
       setLocationError(false);
     }
-
-
-    if(name && email && location && city && country && countryCode && phoneNumber)
-    {
-      navigation.navigate('OwnerInfo');
+  
+    if (isValid) {
+      let data = JSON.stringify({
+        "businessName": name,
+        "businessAddress": location,
+        "businessPhoneNumber": phoneNumber,
+        "businessEmail": email,
+        "businessCountry": country,
+        "businessCity": city
+      });
+      
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://192.168.100.71:8080/api/business/add-business/',
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6WyJST0xFX09XTkVSIiwiUk9MRV9DVVNUT01FUiJdLCJwZXJtaXNzaW9ucyI6W10sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbiIsInBlcm1pc3Npb25CaXRzIjpbXSwiZXhwIjoxNjkxNzQ1NDQxfQ.gS3UkoTBtN47n0VNdXA30GEhQYP7RoRdsX1TMWUUydU'
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
     }
-    
   };
+  
 
   const [NameEror,setNameError]=useState(false);
   const [EmailEror,setEmailError]=useState(false);

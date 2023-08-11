@@ -73,7 +73,7 @@ const App = () => {
           title: 'Login', 
           showBackArrow: true, 
           profileImage: require('./assets/mask-group1.png'), 
-          }}/>
+          }}/> */}
 
           <Stack.Screen
               name="Home"
@@ -83,7 +83,7 @@ const App = () => {
           showBackArrow: false,
           profileImage: require('./assets/mask-group1.png'),
               }}
-            /> */}
+            /> 
 
            <Stack.Screen
               name="AddRecord"
@@ -163,7 +163,7 @@ const App = () => {
             {/* Yaha tak useless hai  */}
             
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
@@ -171,11 +171,11 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
-            /> */}
+            />
 
             
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="OwnerInfo"
               component={OwnerInfo}
               initialParams={{
@@ -230,7 +230,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
 
 
              <Stack.Screen 
@@ -246,7 +246,7 @@ const App = () => {
 
 
 
-             {/* <Stack.Screen 
+             <Stack.Screen 
               name="VehicleDetails"
               component={VehicleDetails}
               initialParams={{
@@ -255,7 +255,7 @@ const App = () => {
                 onBackPress:'AddVehicle',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
             
           </Stack.Navigator>
         ) : null}

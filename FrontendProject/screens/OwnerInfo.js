@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from 'react';
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, Text, TextInput, View, Pressable, TouchableOpacity, Alert, ImageBackground } from "react-native";
+import { StyleSheet, Text,ScrollView, TextInput, View, Pressable, TouchableOpacity, Alert, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 import axios from 'axios';
@@ -19,6 +19,9 @@ const OwnerInfo = () => {
   const [phoneNumber, setPhonenumber] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
+
+
+
 
   const [nameFocused, setNameFocused] = useState(false);
   const [cnicFocused, setcnicFocused] = useState(false);
@@ -45,18 +48,19 @@ const OwnerInfo = () => {
   };
 
   const handleSignUp = () => {
-    const axios = require('axios');
+
+   
     let data = JSON.stringify({
-      "firstName": "Misbah",
-      "lastName": "Ali",
-      "email": "yes@gmail.com",
-      "password": "12345678"
+      "firstName": name,
+      "lastName": name,
+      "email": email,
+      "password": Password
     });
     
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://localhost:8080/api/users/register/owner',
+      url: 'http://192.168.100.71:8080/api/users/register/owner',
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -79,6 +83,15 @@ const OwnerInfo = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
+       <Text
+        style={[styles.letsRegister, styles.letsPosition]}
+      >{`Let’s Register `}</Text>
+      <Text style={[styles.letsLevelUp, styles.letsPosition]}>
+        Let’s level up your business, together.
+      </Text>
+
+    <ScrollView style={styles.wrap}>
+
       <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
         placeholder="Name"
         value={name}
@@ -86,6 +99,13 @@ const OwnerInfo = () => {
         onBlur={() => setNameFocused(false)}
         onChangeText={setName}
       />
+      <Image
+        style={[styles.ownerInfoChild, styles.ownerChildLayout]}
+        contentFit="cover"
+        source={require("../assets/line-12.png")}
+      />
+
+
       <TextInput style={[styles.daviddaniel33outlookcom, styles.david1Typo]}
         placeholder="Email"
         value={email}
@@ -97,7 +117,7 @@ const OwnerInfo = () => {
 
 
       <TextInput style={[styles.david, styles.textTypo]}
-        placeholder="Password"
+        placeholder="Passwod"
         secureTextEntry={passwordVisible}
         value={Password}
         onFocus={() => setPasswordFocused(true)}
@@ -122,11 +142,7 @@ const OwnerInfo = () => {
         onBlur={() => setcnicFocused(false)}
         onChangeText={setcnic}
       />
-      <Image
-        style={[styles.ownerInfoChild, styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-12.png")}
-      />
+      
       <Image
         style={[styles.ownerInfoItem, styles.ownerChildLayout]}
         contentFit="cover"
@@ -195,12 +211,7 @@ const OwnerInfo = () => {
 
 
       <Text style={[styles.ownerInfo1, styles.registerTypo]}>Owner Info</Text>
-      <Text
-        style={[styles.letsRegister, styles.letsPosition]}
-      >{`Let’s Register `}</Text>
-      <Text style={[styles.letsLevelUp, styles.letsPosition]}>
-        Let’s level up your business, together.
-      </Text>
+     
 
       {/* show Password */}
       <Pressable
@@ -226,7 +237,7 @@ const OwnerInfo = () => {
         />
       </Pressable>
 
-
+      </ScrollView>
 
 
       <Pressable
@@ -301,6 +312,13 @@ const styles = StyleSheet.create({
     left: "12.79%",
     position: "absolute",
   },
+  wrap:{
+    // backgroundColor:'red',
+    marginTop:200,
+    marginVertical:150,
+    overflow:'hidden',
+    
+  },
   ownerChildLayout: {
     maxHeight: "100%",
     maxWidth: "100%",
@@ -308,7 +326,11 @@ const styles = StyleSheet.create({
     width: "90.7%",
     height: "0.22%",
     left: "4.65%",
-    position: "absolute",
+    position: "relative",
+    borderTopWidth: 2,
+    borderColor: "#cbcbcb",
+    borderStyle: "solid",
+    
     overflow: "hidden",
   },
   textPosition: {
@@ -391,12 +413,13 @@ const styles = StyleSheet.create({
   },
   davidDaniel: {
     width: "30%",
-    top: "35.3%",
+    top: "53%",
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     left: "12.79%",
     textAlign: "left",
-    position: "absolute",
+   
+    position: "relative",
   },
   daviddaniel33outlookcom: {
     width: "55.81%",
@@ -415,7 +438,7 @@ const styles = StyleSheet.create({
     top: "42.17%",
   },
   ownerInfoChild: {
-    top: "39.48%",
+    marginTop: "1.48%",
     bottom: "60.3%",
   },
   ownerInfoItem: {

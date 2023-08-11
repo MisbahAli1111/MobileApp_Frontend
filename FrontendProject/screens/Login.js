@@ -1,29 +1,60 @@
 import React from "react";
 import { Image } from "expo-image";
-import {ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import { ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
-
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [error ,setError] = useState('');
+  const [Merror, setMError]=useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [passwordError , setPasswordError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const handleLogin = () => {
-   if(!email){
-    setEmailError(true);
-   }else{
-    setEmailError(false);
-   }
+    setMError(false);
+    setEmailError(false); 
+    setPasswordError(false); 
 
-   if(!password){
-    setPasswordError(true);
-   }else{
-    setPasswordError(false);
-   }
+    if (!email) {
+      setEmailError(true);
+    }
+    if (!password) {
+      setPasswordError(true);
+    }
+
+    if (email && password) {
+      const data = new FormData();
+      data.append('email', email);
+      data.append('password', password);
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://192.168.100.71:8080/login',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: data,
+      };
+
+      axios.request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          if (response.data === 'Invalid Credentials!') {
+            setError(response.data);
+            setMError(true)
+          } else {
+            navigation.navigate('Home');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   return (
@@ -36,7 +67,7 @@ const Login = () => {
         value={email}
       />
       {emailError ? <Text style={styles.nameError}>Please provide Email</Text> : null}
-
+      
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -44,17 +75,18 @@ const Login = () => {
         onChangeText={text => setPassword(text)}
         value={password}
       />
-{passwordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
-<View style={[styles.vectorParent, styles.groupItemLayout]}>
-      <Pressable onPress={handleLogin}>
+      {passwordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
+      {Merror ? <Text style={styles.nameError}>{error}</Text> : null}
+      <View style={[styles.vectorParent, styles.groupItemLayout]}>
+        <Pressable onPress={handleLogin}>
           <Image
             style={[styles.groupItem, styles.groupItemLayout]}
             contentFit="cover"
             source={require("../assets/rectangle-73.png")}
           />
           <Text style={styles.save}>Save</Text>
-          </Pressable>
-        </View>
+        </Pressable>
+      </View>
 
     </View>
   );
@@ -65,16 +97,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#dfeef2',
+    backgroundColor: '#dfeef2',
   },
-  login:{
-    height:50,
-    width:100,
+  login: {
+    height: 50,
+    width: 100,
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
-    
+
   },
   input: {
     borderBottomWidth: 2,
@@ -88,7 +120,7 @@ const styles = StyleSheet.create({
     height: 45,
     width: 381,
     position: "absolute",
-    top:400,
+    top: 400,
 
   },
   groupItem: {
@@ -97,15 +129,15 @@ const styles = StyleSheet.create({
     top: 0,
   },
   nameError: {
-    
+
     color: 'red',
   },
   save: {
     top: 445,
     left: 171,
-    
+
     color: Color.snow,
-    marginTop:-35,
+    marginTop: -35,
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
     textAlign: "left",
