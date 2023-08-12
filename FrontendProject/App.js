@@ -1,7 +1,6 @@
 const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-
 import { useFonts } from "expo-font";
 import Home from "./screens/Home";
 import AddRecord from "./screens/AddRecord";
@@ -24,6 +23,7 @@ import VehicleDetails from  "./screens/VehiclesDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import Header from "./components/Header";
+import ChangePassword from "./screens/ChangePassword";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -48,15 +48,16 @@ const App = () => {
         {hideSplashScreen ? (
           <Stack.Navigator  screenOptions={({ route, navigation }) => ({
         header: ({ previous }) => {
-          // Set default values for header options
-          const { title = route.name, showBackArrow = previous !== undefined,onBackPress = route.name, profileImage } = route.params;
-          // const onBackPress = options.onBackPress || (() => navigation.goBack())
-          // Render the custom header with the provided options
+          
+          const { title = route.name, showBackArrow = previous !== undefined,onBackPress = "Home", profileImage } = route.params;
+          console.log("title:", title);
+      console.log("showBackArrow:", showBackArrow);
+      console.log("onBackPress:", onBackPress);
           return (
             <Header
               title={title}
               showBackArrow={showBackArrow}
-               onBackPress={onBackPress}
+               onBackPress={() => navigation.navigate(onBackPress)}
               profileImage={profileImage}
               
             />
@@ -66,14 +67,14 @@ const App = () => {
         },
       })}
       >
-          <Stack.Screen
+          {/* <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: 'Login', 
-          showBackArrow: true, 
-          profileImage: require('./assets/mask-group1.png'), 
-          }}/>
+          // showBackArrow: true, 
+          // profileImage: require('./assets/mask-group1.png'), 
+          }}/> */}
 
           <Stack.Screen
               name="Home"
@@ -84,8 +85,17 @@ const App = () => {
           profileImage: require('./assets/mask-group1.png'),
               }}
             /> 
+            <Stack.Screen
+              name="ChangePassword"
+              component={ChangePassword}
+              initialParams={{
+                title: '',
+              showBackArrow: true,
+              onBackPress:'Home',
+              }}
+            /> 
 
-           <Stack.Screen
+           {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               initialParams={{
@@ -127,7 +137,7 @@ const App = () => {
               initialParams={{
               title: ' ', 
               showBackArrow: true, 
-              onBackPress:'Vehicles',
+              onBackPress:'Home',
               }}
             />
 
@@ -138,9 +148,9 @@ const App = () => {
               initialParams={{
               title: ' ', 
               showBackArrow: true, 
-              onBackPress:'Vehicles',
+              onBackPress:'Home',
               }}
-            />
+            /> */}
 
             {/* Useless screens hain  */}
 
@@ -163,7 +173,7 @@ const App = () => {
             {/* Yaha tak useless hai  */}
             
 
-            <Stack.Screen
+            {/* <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
@@ -171,11 +181,11 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
-            />
+            /> */}
 
             
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="OwnerInfo"
               component={OwnerInfo}
               initialParams={{
@@ -183,10 +193,10 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
-          /> 
+          />  */}
 
 
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="CreateInvoice"
                 component={CreateInvoice}
                 initialParams={{
@@ -255,7 +265,7 @@ const App = () => {
                 onBackPress:'AddVehicle',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />  
+            />   */}
             
           </Stack.Navigator>
         ) : null}

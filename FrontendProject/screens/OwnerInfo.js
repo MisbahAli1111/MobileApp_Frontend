@@ -19,17 +19,6 @@ const OwnerInfo = () => {
   const [phoneNumber, setPhonenumber] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
-
-
-
-
-  const [nameFocused, setNameFocused] = useState(false);
-  const [cnicFocused, setcnicFocused] = useState(false);
-  const [emailFocused, setemailFocused] = useState(false);
-  const [PasswordFocused, setPasswordFocused] = useState(false);
-  const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
-  const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
-  const [countryCodeFocused, setCountryCodeFocused] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
 

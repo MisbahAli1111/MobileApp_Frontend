@@ -23,14 +23,16 @@ const ProfileDropdown = () => {
           onPress={() => navigation.navigate("AddEmployee")}>
             <Text style={styles.text}>Add Employee</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item1}>
+          <TouchableOpacity style={styles.item1}
+          onPress={() => navigation.navigate("ChangePassword")}>
             <Text style={styles.text}>Change Password</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.item1}
           onPress={() => navigation.navigate("SwitchBusiness")}>
             <Text style={styles.text}>Switch Business</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item2}>
+          <TouchableOpacity style={styles.item2}
+          onPress={() => navigation.navigate("Login")}>
             <Text style={styles.text}>Logout</Text>
           </TouchableOpacity>
         </View>
