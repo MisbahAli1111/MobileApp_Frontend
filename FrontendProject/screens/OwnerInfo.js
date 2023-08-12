@@ -90,7 +90,7 @@ const OwnerInfo = () => {
         Let’s level up your business, together.
       </Text>
 
-    <ScrollView style={styles.wrap}>
+    
 
       <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
         placeholder="Name"
@@ -237,7 +237,7 @@ const OwnerInfo = () => {
         />
       </Pressable>
 
-      </ScrollView>
+     
 
 
       <Pressable
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     width: "90.7%",
     height: "0.22%",
     left: "4.65%",
-    position: "relative",
+    position: "absolute",
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
@@ -413,13 +413,13 @@ const styles = StyleSheet.create({
   },
   davidDaniel: {
     width: "30%",
-    top: "53%",
+    top: "35.0%",
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     left: "12.79%",
     textAlign: "left",
    
-    position: "relative",
+    position: "absolute",
   },
   daviddaniel33outlookcom: {
     width: "55.81%",

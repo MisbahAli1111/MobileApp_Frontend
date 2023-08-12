@@ -6,12 +6,14 @@ import { StyleSheet, View, Button, TextInput, Text, Pressable, TouchableOpacity 
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
+import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { set } from "react-native-reanimated";
 function BusinessList({ }) {
     const navigation = useNavigation();
     const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
-    const [Business,setBusiness] = useState(['']);
+    const [Business, setBusiness] = useState(['']);
+    const [loginTime, setLoginTime] = useState(null);
     // const Business = [
     //     {
     //         Name: "sABC",
@@ -33,59 +35,104 @@ function BusinessList({ }) {
     // ];
 
     const fetchData = async () => {
-
         const index = parseInt(await AsyncStorage.getItem("Business_id"));
         setCurrentPressedIndex(index);
-        
+    };
+
+
+    const fetchTime = async (index) => {
+        try {
+            const storedLoginTime = await AsyncStorage.getItem(`BusinessId_${index}`);
+            if (storedLoginTime) {
+                // console.warn(storedLoginTime);
+                const parsedLoginTime = JSON.parse(storedLoginTime);
+                const timeDifferenceText = getTimeElapsedString(Date.now() - parsedLoginTime);
+                // console.warn(timeDifferenceText); 
+                return timeDifferenceText; 
+            } else {
+                // console.warn(`No login time found for Business ID ${index}`);
+                return '';
+            }
+        } catch (error) {
+            // console.error('Error fetching login time:', error);
+            return '';
+        }
+    };
+
+
+
+
+
+    const getTimeElapsedString = (timeDifference) => {
+        const duration = moment.duration(timeDifference);
+        if (duration.asSeconds() < 60) {
+            return "Just now";
+        } else if (duration.asMinutes() < 60) {
+            return `${Math.floor(duration.asMinutes())} minutes ago`;
+        } else if (duration.asHours() < 24) {
+            return `${Math.floor(duration.asHours())} hours ago`;
+        } else if (duration.asDays() < 7) {
+            return `${Math.floor(duration.asDays())} days ago`;
+        } else {
+            return moment(storedTime).fromNow(); 
+        }
     };
 
     useEffect(() => {
         fetchData();
         getData();
+
     }, []);
 
     getData = () => {
         AsyncStorage.getItem("accessToken")
-        .then(accessTokens => {
-        token =  'Bearer ' + accessTokens;
-       })
-       
-    
-        let config = {
-            method: 'get',
-            maxBodyLength: Infinity,
-            url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
-            headers: {
-                'Authorization': token, 
-            },
-        };
+            .then(accessTokens => {
+                const token = 'Bearer ' + accessTokens;
 
-        axios.request(config)
-        .then((response) => {
-          const responseData = response.data;
-      
-          if (responseData.status === "OK") {
-            const businesses = responseData.data;
-            setBusiness(businesses);
-          } else {
-            console.log("Error: " + responseData.message);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      
+                let config = {
+                    method: 'get',
+                    maxBodyLength: Infinity,
+                    url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
+                    headers: {
+                        'Authorization': token,
+                    },
+                };
+
+                axios.request(config)
+                    .then((response) => {
+                        const responseData = response.data;
+
+                        if (responseData.status === "OK") {
+                            const businesses = responseData.data;
+                            setBusiness(businesses);
+                        } else {
+                            console.log("Error: " + responseData.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
+
 
     useEffect(() => {
 
     }, [currentPressedIndex]);
 
 
-    const handlePress = async (index) => {
+
+    const handlePress = (index) => {
+        const loginTime = new Date().getTime();
+        AsyncStorage.setItem("BusinessId_"+index, JSON.stringify(loginTime));
+        // fetchTime(1);
+        // const storedLoginTime = await AsyncStorage.getItem(`BusinessId_${5}`);
+
         setCurrentPressedIndex(index);
-        
-        await AsyncStorage.setItem("Business_id", index.toString());
+       
         setTimeout(() => {
             navigation.navigate("Home");
         }, 1);
@@ -105,17 +152,28 @@ function BusinessList({ }) {
     //     await AsyncStorage.removeItem("name");
     //   };
 
+    const [fetchedTimes, setFetchedTimes] = useState({});
+ 
+    useEffect(() => {
+        const fetchAllTimes = async () => {
+            const times = {};
+            for (const business of Business) {
+                times[business.id] = await fetchTime(business.id);
+            }
+            setFetchedTimes(times);
+        };
 
-    return (
-        // <View>
-        // <Button title='Set data' onPress={setData} />
-        // <Button title='Get data' onPress={getData} />
-        // <Button title='Remove data' onPress={removeData} />
-        // </View>
-        <View>
-            {Business.map((BusinessB) => (
+        fetchAllTimes();
+    }, );
+
+  return (
+    <View>
+        {Business.map((BusinessB) => {
+            const timeDifferenceText = fetchTime(BusinessB.id);
+
+            return (
                 <View key={BusinessB.id} style={[styles.groupParent, styles.groupParentLayout]}>
-                    <View key={`pressable-${BusinessB.id}`}>
+                    <View>
                         <Pressable
                             onPress={() => handlePress(BusinessB.id)}
                             style={[styles.vectorParent, styles.groupParentLayout]}
@@ -132,10 +190,17 @@ function BusinessList({ }) {
                                     , styles.abcPosition1]}>
                                     {BusinessB.businessName}
                                 </Text>
-                                <Text style={[
-                                    currentPressedIndex === BusinessB.id ? styles.signedIn : styles.lastSignedIn2, styles.signedTypo]}>
-                                    {
-                                        currentPressedIndex === BusinessB.id ? "Signed In" : BusinessB.lastSigend}
+                                <Text
+                                    style={[
+                                        currentPressedIndex === BusinessB.id
+                                            ? styles.signedIn
+                                            : styles.lastSignedIn2,
+                                        styles.signedTypo,
+                                    ]}
+                                >
+                                    {currentPressedIndex === BusinessB.id
+                                        ? 'Signed In'
+                                        : fetchedTimes[BusinessB.id] }
                                 </Text>
                             </View>
                             <Image
@@ -145,12 +210,12 @@ function BusinessList({ }) {
                             />
                         </Pressable>
                     </View>
-
                 </View>
+            );
+        })}
+    </View>
+);
 
-            ))}
-        </View>
-    );
 }
 const styles = StyleSheet.create({
     switchBusinessItemPosition: {
