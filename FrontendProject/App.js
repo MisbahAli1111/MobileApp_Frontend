@@ -24,6 +24,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import Header from "./components/Header";
 import ChangePassword from "./screens/ChangePassword";
+import EditProfile from "./screens/EditProfile";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -50,9 +51,9 @@ const App = () => {
         header: ({ previous }) => {
           
           const { title = route.name, showBackArrow = previous !== undefined,onBackPress = "Home", profileImage } = route.params;
-          console.log("title:", title);
-      console.log("showBackArrow:", showBackArrow);
-      console.log("onBackPress:", onBackPress);
+      //     console.log("title:", title);
+      // console.log("showBackArrow:", showBackArrow);
+      // console.log("onBackPress:", onBackPress);
           return (
             <Header
               title={title}
@@ -67,16 +68,16 @@ const App = () => {
         },
       })}
       >
-          <Stack.Screen
+          {/* <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: 'Login', 
           // showBackArrow: true, 
           // profileImage: require('./assets/mask-group1.png'), 
-          }}/>
+          }}/> */}
 
-          <Stack.Screen
+          {/* <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
@@ -84,7 +85,18 @@ const App = () => {
           showBackArrow: false,
           profileImage: require('./assets/mask-group1.png'),
               }}
-            /> 
+            />  */}
+
+          <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          initialParams={{
+          title: 'Edit Profile', 
+          showBackArrow: true, 
+          // profileImage: require('./assets/mask-group1.png'), 
+          }}/>
+
+          {/* 
             <Stack.Screen
               name="ChangePassword"
               component={ChangePassword}
@@ -150,7 +162,7 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            />
+            /> */}
 
             {/* Useless screens hain  */}
 

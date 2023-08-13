@@ -16,7 +16,8 @@ const ProfileDropdown = () => {
           <View style={styles.item}>
             <Text style={styles.text}>Shayan Hassan Shayan@example.com</Text>
           </View>
-          <TouchableOpacity style={styles.item1}>
+          <TouchableOpacity style={styles.item1}
+          onPress={() => navigation.navigate("EditProfile")}>
             <Text style={styles.text}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.item1}
