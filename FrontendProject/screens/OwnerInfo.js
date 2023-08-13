@@ -62,7 +62,7 @@ const OwnerInfo = () => {
   };
 
   const handleSignUp = () => {
-    
+
     let hasErrors = false;
     setErrorM(false);
     if (!name) {
@@ -71,21 +71,21 @@ const OwnerInfo = () => {
     } else {
       setNameError(false);
     }
-  
+
     if (!cnic) {
       setCNICError(true);
       hasErrors = true;
     } else {
       setCNICError(false);
     }
-  
+
     if (!email || !isValidEmail(email)) {
       setEmailError(true);
       hasErrors = true;
     } else {
       setEmailError(false);
     }
-  
+
     if (!selectedCode) {
       setPLError('Please select Country Code');
       setNumberError(true);
@@ -95,19 +95,19 @@ const OwnerInfo = () => {
         hasErrors = true;
         setNumberError(true);
         setPLError('Please provide Contact Number');
-        
+
       } else {
         setNumberError(false);
       }
     }
-  
+
     if (!Password) {
       setPasswordError(true);
       hasErrors = true;
     } else {
       setPasswordError(false);
-    } 
-  
+    }
+
     if (!ConfirmPassword) {
       setCPasswordError(true);
       setCError('Please provide Confirm password');
@@ -124,13 +124,13 @@ const OwnerInfo = () => {
       }
     }
 
-   
-    if(!hasErrors){
+
+    if (!hasErrors) {
       let data = JSON.stringify({
         "firstName": name,
         "lastName": name,
         "phone_number": phoneNumber,
-        "cnicNumber":cnic,
+        "cnicNumber": cnic,
         "email": email,
         "password": Password
       });
@@ -178,8 +178,172 @@ const OwnerInfo = () => {
 
 
 
+      <View style={styles.wrap}>
 
-      <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
+        <View style={styles.contwwrap}>
+          <Image
+            style={[styles.user1Icon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/user-1.png")}
+          />
+          <TextInput style={[
+           NameEror ? styles.davidDanielR :styles.davidDaniel
+            , styles.registerTypo1]}
+            placeholder="Name"
+            value={name}
+            onFocus={() => setNameFocused(true)}
+            onBlur={() => setNameFocused(false)}
+            onChangeText={setName}
+          />
+        </View>
+        {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
+        <View style={styles.contwwrap}>
+
+          <TextInput style={[
+           CNICEror ? styles.davidDanielcR :styles.davidDanielc
+          , styles.registerTypo1]}
+            placeholder="CNIC Number"
+            value={cnic}
+            keyboardType="numeric"
+            maxLength={13}
+            onFocus={() => setcnicFocused(true)}
+            onBlur={() => setcnicFocused(false)}
+            onChangeText={setcnic}
+          />
+        </View>
+        {CNICEror ? <Text style={styles.nameError}>Please Enter a Valid CNIC number</Text> : null}
+
+        <View style={styles.contwwrap}>
+          <Image
+            style={[styles.phone1Icon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/phone-1.png")}
+          />
+          <TextInput style={[
+           NumberEror ? styles.pkR : styles.pk
+            , styles.registerTypo1]}
+            placeholder='PK'
+            value={selectedCode}
+            editable={false}
+          />
+          <Pressable
+            style={styles.countryCode}
+            onPress={toggleDropdown}
+          >
+            <Image
+              style={[styles.vectorIcon, styles.vectorIconLayout]}
+              contentFit="cover"
+              source={require("../assets/vector-12.png")}
+            />
+          </Pressable>
+          {(
+            <View style={styles.code} >
+              <Picker
+                selectedValue={selectedCode}
+                onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+              >
+                <Picker.Item label="Select Country Code" value="" />
+                {countryCodes.map((code) => (
+                  <Picker.Item key={code} label={code} value={code} />
+                ))}
+              </Picker>
+            </View>
+          )}
+          <TextInput style={[
+           NumberEror ? styles.davidDanielpR : styles.davidDanielp
+            , styles.registerTypo1]}
+            placeholder="Phone Number"
+            value={phoneNumber}
+            keyboardType="numeric"
+            maxLength={11}
+            onFocus={() => setPhoneNumberFocused(true)}
+            onBlur={() => setPhoneNumberFocused(false)}
+            onChangeText={setPhonenumber}
+          />
+        </View>
+        {NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null}
+        <View style={styles.contwwrap}>
+          <Image
+            style={[styles.atSign1Icon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/atsign-1.png")}
+          />
+          <TextInput style={[
+          EmailEror ? styles.davidDanieleR : styles.davidDaniele
+          , styles.registerTypo1]}
+            placeholder="Email"
+            value={email}
+            onFocus={() => setemailFocused(true)}
+            onBlur={() => setemailFocused(false)}
+            onChangeText={setemail}
+
+          />
+        </View>
+        {EmailEror ? <Text style={styles.nameError}>Please Provide Valid Email</Text> : null}
+        <View style={styles.contwwrap}>
+          <Image
+            style={[styles.key1Icon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/key-1.png")}
+          />
+          <TextInput style={[
+           PasswordError ? styles.davidDanieleR : styles.davidDaniele
+            , styles.registerTypo1]}
+            placeholder="Passwod"
+            secureTextEntry={passwordVisible}
+            value={Password}
+            onFocus={() => setPasswordFocused(true)}
+            onBlur={() => setPasswordFocused(false)}
+            onChangeText={setPassword}
+          />
+          <Pressable
+            onPress={
+              () => { setPasswordVisible((prev) => !prev); }
+            }>
+            <Image
+
+              style={[styles.vectorIcon1, styles.vectorIconPosition]}
+              contentFit="cover"
+              source={require("../assets/vector9.png")}
+            />
+          </Pressable>
+        </View>
+        {PasswordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
+        <View style={styles.contwwrap}>
+          <Image
+            style={[styles.key1Icon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/key-1.png")}
+          />
+          <TextInput style={[
+           CPasswordError ? styles.davidDanieleR : styles.davidDaniele
+            , styles.registerTypo1]}
+            placeholder="Confirm Password"
+            secureTextEntry={ConfirmPasswordVisible}
+            value={ConfirmPassword}
+            onFocus={() => setConfirmPasswordFocused(true)}
+            onBlur={() => setConfirmPasswordFocused(false)}
+            onChangeText={setConfirmPassword}
+          />
+          <Pressable
+            onPress={
+              () => { setConfirmPasswordVisible((prev) => !prev); }
+            }
+          >
+            <Image
+              style={[styles.vectorIcon2, styles.vectorIconPosition]}
+              contentFit="cover"
+              source={require("../assets/vector10.png")}
+            />
+          </Pressable>
+        </View>
+        {CPasswordError ? <Text style={styles.nameError}>{CError}</Text> : null}
+      {ErrorM ? <Text style={styles.nameError}>{errorMessage}</Text> : null} 
+
+      </View>
+
+
+      {/* <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
         placeholder="Name"
         value={name}
         onFocus={() => setNameFocused(true)}
@@ -187,7 +351,9 @@ const OwnerInfo = () => {
         onChangeText={setName}
       />
       <Image
-        style={[styles.ownerInfoChild, styles.ownerChildLayout]}
+        style={[
+         NameEror ? styles.ownerInfoChildR: styles.ownerInfoChild
+          , styles.ownerChildLayout]}
         contentFit="cover"
         source={require("../assets/line-12.png")}
       />
@@ -208,7 +374,9 @@ const OwnerInfo = () => {
         onChangeText={setcnic}
       />
       <Image
-        style={[styles.ownerInfoItem, styles.ownerChildLayout]}
+        style={[
+         CNICEror ? styles.ownerInfoItemR: styles.ownerInfoItem
+          , styles.ownerChildLayout]}
         contentFit="cover"
         source={require("../assets/line-22.png")}
       />
@@ -253,7 +421,9 @@ const OwnerInfo = () => {
         onChangeText={setPhonenumber}
       />
       <Image
-        style={[styles.ownerInfoInner, styles.ownerChildLayout]}
+        style={[
+         NumberEror ? styles.ownerInfoInnerR: styles.ownerInfoInner
+          , styles.ownerChildLayout]}
         contentFit="cover"
         source={require("../assets/line-81.png")}
       />
@@ -279,7 +449,9 @@ const OwnerInfo = () => {
         source={require("../assets/atsign-1.png")}
       />
       <Image
-        style={[styles.lineIcon, styles.ownerChildLayout]}
+        style={[
+         EmailEror ? styles.lineIconR :styles.lineIcon
+          , styles.ownerChildLayout]}
         contentFit="cover"
         source={require("../assets/line-91.png")}
       />
@@ -311,7 +483,9 @@ const OwnerInfo = () => {
         />
       </Pressable>
       <Image
-        style={[styles.ownerInfoChild1, styles.ownerChildLayout]}
+        style={[
+         PasswordError ? styles.ownerInfoChild1R :styles.ownerInfoChild1
+          , styles.ownerChildLayout]}
         contentFit="cover"
         source={require("../assets/line-72.png")}
       />
@@ -337,12 +511,14 @@ const OwnerInfo = () => {
       </Pressable>
 
       <Image
-        style={[styles.ownerInfoChild2, styles.ownerChildLayout]}
+        style={[
+         CPasswordError ?  styles.ownerInfoChild2R :styles.ownerInfoChild2
+          , styles.ownerChildLayout]}
         contentFit="cover"
         source={require("../assets/line-32.png")}
       />
 {CPasswordError ? <Text style={styles.cError}>{CError}</Text> : null}
-      {ErrorM ? <Text style={styles.cError}>{errorMessage}</Text> : null}
+      {ErrorM ? <Text style={styles.cError}>{errorMessage}</Text> : null} */}
 
 
 
@@ -377,43 +553,44 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   nameError: {
-    marginTop: 14,
     marginLeft: 30,
-    marginBottom:-20,
     color: 'red',
+  },
+  contwwrap: {
+    flexDirection: 'row',
   },
   numberError: {
     top: -180,
     marginLeft: 30,
-    marginBottom:5,
+    marginBottom: 5,
     color: 'red',
     // position:'relative',
   },
   passwordError: {
-    top: -175,
+    top: -90,
     marginLeft: 30,
-    marginBottom:2,
+    marginBottom: 2,
     color: 'red',
     // position:'relative',
   },
   cError: {
-    top: -150,
+    top: -95,
     marginLeft: 30,
-    marginBottom:2,
+    marginBottom: 2,
     color: 'red',
     // position:'relative',
   },
   emailError: {
     top: -170,
     marginLeft: 30,
-    marginBottom:5,
+    marginBottom: 5,
     color: 'red',
     // position:'relative',
   },
   cnicError: {
     marginTop: 40,
     marginLeft: 30,
-    marginBottom:-35,
+    marginBottom: -35,
     color: 'red',
   },
   registerTypo1: {
@@ -432,30 +609,87 @@ const styles = StyleSheet.create({
   code:
   {
     width: 80,
-    top: -130,
-    left: 31.5,
+    left: -50,
+  },
 
-  },
-  wrap: {
-    height: "60%",
-    backgroundColor: 'red',
-    width: "100%",
-  },
   textTypo: {
     height: "2.9%",
-    textAlign: "left",
+
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    left: "16.09%",
-    position: "relative",
+
+
   },
   wrap: {
-    // backgroundColor:'red',
-    marginTop: 200,
-    marginVertical: 150,
-    overflow: 'hidden',
-
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'left', 
+    paddingTop: '65%', 
+    paddingBottom: '10%',
+    paddingHorizontal: '5%',
+  },
+  davidDanielpR: {
+    width: "30%",
+    marginLeft: -60,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    marginBottom: 10,
+    width: '72%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanieleR: {
+    width: "30%",
+    marginLeft: 4,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    marginBottom: 10,
+    width: '90%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanielcR: {
+    width: "30%",
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    paddingLeft:15,
+    marginBottom: 10,
+    width: '97%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanielR: {
+    width: "30%",
+    paddingLeft: 10,
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    marginBottom: 10,
+    width: '93%',
+    fontSize: 15,
+    padding: 6,
+  },
+  pkR: {
+    color: Color.textTxtPrimary,
+    left: 8,
+    width: '8%',
+    marginBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
   },
   ownerChildLayout: {
     maxHeight: "100%",
@@ -467,7 +701,7 @@ const styles = StyleSheet.create({
     left: "4.65%",
     position: "relative",
     borderTopWidth: 2,
-    borderColor: "#cbcbcb",
+
     borderStyle: "solid",
     overflow: "hidden",
   },
@@ -482,19 +716,8 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   pkPosition: {
-    width: 33,
-    top: "6.80%",
-    height: "3%",
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    left: "12.79%",
-    position: "relative",
-  },
-  vectorIconLayout: {
     height: "10%",
     width: "20%",
-    top: 33,
     right: "85.19%",
     bottom: "62.51%",
     left: "0.23%",
@@ -503,17 +726,12 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
+  vectorIconLayout: {
+
+  },
   countryCode: {
-    height: "16%",
-    width: "16%",
-    top: 4,
-    right: "85.19%",
-    bottom: "62.51%",
-    left: "19.23%",
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "relative",
-    overflow: "hidden",
+    height: 20,
+    width: 20,
   },
   registerTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -527,12 +745,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vectorIconPosition: {
-    left: 360,
+    top: 10,
+    left: -25,
     width: 20,
-    // maxHeight: "100%",
-    // maxWidth: "100%",
     position: "relative",
-    // overflow: "hidden",
   },
   groupLayout: {
     height: 45,
@@ -542,9 +758,9 @@ const styles = StyleSheet.create({
   iconLayout: {
     height: 20,
     width: 20,
-    left: 26,
-    position: "relative",
-    overflow: "hidden",
+
+    // position: "relative",
+    // overflow: "hidden",
   },
   lightTexture22341Icon: {
     top: 0,
@@ -553,64 +769,153 @@ const styles = StyleSheet.create({
   },
   davidDaniel: {
     width: "30%",
-    top: "29.0%",
+    paddingLeft: 10,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsRegular,
-    left: "14.99%",
     textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 10,
+    width: '93%',
+    fontSize: 15,
+    padding: 6,
+  },
+  pk: {
+    color: Color.textTxtPrimary,
+    left: 8,
+    width: '8%',
+    marginBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+  },
+  davidDanielp: {
+    width: "30%",
+    marginLeft: -60,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 10,
+    width: '75%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDaniele: {
+    width: "30%",
+    marginLeft: 4,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 10,
+    width: '90%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanielc: {
+    width: "30%",
+    paddingLeft: 20,
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
 
-    position: "relative",
+    marginBottom: 10,
+    width: '95%',
+    fontSize: 15,
+    padding: 6,
   },
   daviddaniel33outlookcom: {
     width: "55.81%",
-    top: "-16.99%",
+
   },
   david: {
     width: "20.7%",
-    top: "-16.00%",
+    top: "-6.50%",
   },
   david1: {
     width: "38.84%",
-    top: "-16.35%",
+    top: "-9.00%",
   },
   text: {
-    width: "63.95%",
-    top: 35,
+
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 20,
+    width: '80%',
+    fontSize: 16,
+    padding: 8,
   },
   ownerInfoChild: {
-    top: 0,
-    marginTop: 275,
     bottom: "60.3%",
+    borderColor: "#cbcbcb",
+  },
+  ownerInfoChildR: {
+    bottom: "60.3%",
+    borderColor: 'red',
   },
   ownerInfoItem: {
     top: 38,
     bottom: "40.14%",
+    borderColor: "#cbcbcb",
+  },
+  ownerInfoItemR: {
+    top: 38,
+    bottom: "40.14%",
+    borderColor: "red",
   },
   ownerInfoInner: {
     top: "-17.55%",
     bottom: "33.23%",
+    borderColor: "#cbcbcb",
+  },
+  ownerInfoInnerR: {
+    top: "-17.55%",
+    bottom: "33.23%",
+    borderColor: "red",
   },
   lineIcon: {
     top: "-18.86%",
     bottom: "27.33%",
+    borderColor: "#cbcbcb",
+  },
+  lineIconR: {
+    top: "-18.86%",
+    bottom: "27.33%",
+    borderColor: "red",
   },
   ownerInfoChild1: {
-    top: "-18.93%",
+    top: "-10.00%",
     bottom: "53.95%",
+    borderColor: "#cbcbcb",
+  },
+  ownerInfoChild1R: {
+    top: "-10.00%",
+    bottom: "53.95%",
+    borderColor: "red",
   },
   ownerInfoChild2: {
-    top: "-16.98%",
+    top: "-10.72%",
     bottom: "47.05%",
+    borderColor: "#cbcbcb",
+  },
+  ownerInfoChild2R: {
+    top: "-10.72%",
+    bottom: "47.05%",
+    borderColor: "red",
   },
   text1: {
     color: "#0096c7",
   },
-  pk: {
-    color: Color.textTxtPrimary,
-  },
+
   vectorIcon: {
-    right: "77.05%",
-    left: "19.14%",
+
   },
   text2: {
     color: Color.darkslateblue,
@@ -625,14 +930,14 @@ const styles = StyleSheet.create({
   ownerInfo1: {
     height: "3.54%",
     width: "37.21%",
-    top: "23.15%",
+    top: "17.15%",
     left: "31.4%",
     fontSize: FontSize.size_3xl,
     textAlign: "center",
     color: Color.darkslateblue,
   },
   letsRegister: {
-    top: "12.00%",
+    top: "9.00%",
     fontSize: FontSize.size_8xl,
     fontWeight: "600",
     fontFamily: FontFamily.poppinsSemibold,
@@ -640,14 +945,14 @@ const styles = StyleSheet.create({
   letsLevelUp: {
     height: "2.58%",
     width: "68.6%",
-    top: "15.99%",
+    top: "13.40%",
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     left: "4.65%",
   },
   vectorIcon1: {
     height: 15,
-    top: -190,
+
   },
   touchableOpacity: {
     position: 'absolute',
@@ -660,7 +965,7 @@ const styles = StyleSheet.create({
 
   vectorIcon2: {
     height: 15,
-    top: -175,
+    top: -110,
 
   },
   rectangleView: {
@@ -694,21 +999,21 @@ const styles = StyleSheet.create({
     left: 10,
   },
   atSign1Icon: {
-    top: "-19.78%",
+    top: 10,
+    marginLeft: 4,
   },
   phone1Icon: {
-    top: "-21%",
+    top: 15,
   },
   key1Icon: {
-    top: -180,
+    top: 6,
+    marginLeft: 5,
   },
   // key2Icon: {
   //   top: 650,
   // },
   user1Icon: {
-    top: 0,
-    marginTop: -32,
-
+    top: 10,
   },
   ownerInfoChild5: {
     top: 3,
@@ -720,10 +1025,11 @@ const styles = StyleSheet.create({
   ownerInfo: {
     backgroundColor: Color.white,
     flex: 1,
-    width: "100%",
+    // width: "100%",
     overflow: "hidden",
+    justifyContent: 'center',
     height: 932,
-    position: 'absolute',
+    position: 'relative',
   },
 });
 

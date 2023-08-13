@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { Image } from "expo-image";
+import { Picker } from "@react-native-picker/picker";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
@@ -19,7 +20,8 @@ const AddEmployee = () => {
   const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
   const [NameEror, setNameError] = useState(false);
   const [CNICEror, setCNICError] = useState(false);
-
+  const [showDropdown, setShowDropdown] = useState(false);
+  
   const [EmailEror, setEmailError] = useState(false);
   const [LocationEror, setLocationError] = useState(false);
   const [PasswordError, setPasswordError] = useState(false);
@@ -37,12 +39,22 @@ const AddEmployee = () => {
   const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [countryCodeFocused, setCountryCodeFocused] = useState(false);
+  const [selectedCode, setSelectedCode] = useState('');
+
   const [errorMessage, setErrorMessage] = useState('');
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
+  const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
 
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+  const handleCodeSelect = (code) => {
+    setSelectedCode(code);
+    setShowDropdown(false);
+  };
 
   const handleSignUp = () => {
     let hasErrors = false;
@@ -68,7 +80,7 @@ const AddEmployee = () => {
       setEmailError(false);
     }
 
-    if (!countryCode) {
+    if (!selectedCode) {
       setPLError('Please select Country Code');
       setNumberError(true);
       hasErrors = true;
@@ -148,8 +160,173 @@ const AddEmployee = () => {
       />
 
 
+<View style={styles.wrap}>
 
-      <TextInput style={[styles.name, styles.passwordTypo]}
+<View style={styles.contwwrap}>
+  <Image
+    style={[styles.user1Icon, styles.iconLayout]}
+    contentFit="cover"
+    source={require("../assets/user-1.png")}
+  />
+  <TextInput style={[
+   NameEror ? styles.davidDanielR :styles.davidDaniel
+  , styles.registerTypo1]}
+    placeholder="Name"
+    value={name}
+    onFocus={() => setNameFocused(true)}
+    onBlur={() => setNameFocused(false)}
+    onChangeText={setName}
+  />
+</View>
+{NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
+<View style={styles.contwwrap}>
+
+  <TextInput style={[
+   CNICEror ? styles.davidDanielcR : styles.davidDanielc
+  , styles.registerTypo1]}
+    placeholder="CNIC Number"
+    value={cnic}
+    keyboardType="numeric"
+    maxLength={13}
+    onFocus={() => setcnicFocused(true)}
+    onBlur={() => setcnicFocused(false)}
+    onChangeText={setcnic}
+  />
+</View>
+{CNICEror ? <Text style={styles.nameError}>Please Enter a Valid CNIC number</Text> : null}
+
+ <View style={styles.contwwrap}>
+  <Image
+    style={[styles.phone1Icon, styles.iconLayout]}
+    contentFit="cover"
+    source={require("../assets/phone-1.png")}
+  />
+  <TextInput style={[
+   NumberEror ? styles.pkR : styles.pk
+  , styles.registerTypo1]}
+    placeholder='PK'
+    value={selectedCode}
+    editable={false}
+  />
+  <Pressable
+    style={styles.countryCode}
+    onPress={toggleDropdown}
+  >
+    <Image
+      style={[styles.vectorIcon, styles.vectorIconLayout]}
+      contentFit="cover"
+      source={require("../assets/vector-12.png")}
+    />
+  </Pressable>
+  {(
+    <View style={styles.code} >
+      <Picker
+        selectedValue={selectedCode}
+        onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+      >
+        <Picker.Item label="Select Country Code" value="" />
+        {countryCodes.map((code) => (
+          <Picker.Item key={code} label={code} value={code} />
+        ))}
+      </Picker>
+    </View>
+  )}
+  <TextInput style={[
+    NumberEror ? styles.davidDanielpR : styles.davidDanielp
+    , styles.registerTypo1]}
+    placeholder="Phone Number"
+    value={phoneNumber}
+    keyboardType="numeric"
+    maxLength={11}
+    onFocus={() => setPhoneNumberFocused(true)}
+    onBlur={() => setPhoneNumberFocused(false)}
+    onChangeText={setPhonenumber}
+  />
+</View> 
+{NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null}
+<View style={styles.contwwrap}>
+  <Image
+    style={[styles.atSign1Icon, styles.iconLayout]}
+    contentFit="cover"
+    source={require("../assets/atsign-1.png")}
+  />
+  <TextInput style={[
+   EmailEror ? styles.davidDanieleR : styles.davidDaniele
+  , styles.registerTypo1]}
+    placeholder="Email"
+    value={email}
+    onFocus={() => setemailFocused(true)}
+    onBlur={() => setemailFocused(false)}
+    onChangeText={setemail}
+
+  />
+</View>
+{EmailEror ? <Text style={styles.nameError}>Please Provide Valid Email</Text> : null}
+<View style={styles.contwwrap}>
+  <Image
+    style={[styles.key1Icon, styles.iconLayout]}
+    contentFit="cover"
+    source={require("../assets/key-1.png")}
+  />
+  <TextInput style={[
+   PasswordError ?  styles.davidDanieleR : styles.davidDaniele
+  , styles.registerTypo1]}
+    placeholder="Passwod"
+    secureTextEntry={passwordVisible}
+    value={Password}
+    onFocus={() => setPasswordFocused(true)}
+    onBlur={() => setPasswordFocused(false)}
+    onChangeText={setPassword}
+  />
+  <Pressable
+    onPress={
+      () => { setPasswordVisible((prev) => !prev); }
+    }>
+    <Image
+
+      style={[styles.vectorIcon1, styles.vectorIconPosition]}
+      contentFit="cover"
+      source={require("../assets/vector9.png")}
+    />
+  </Pressable>
+</View>
+{PasswordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
+<View style={styles.contwwrap}>
+  <Image
+    style={[styles.key1Icon, styles.iconLayout]}
+    contentFit="cover"
+    source={require("../assets/key-1.png")}
+  />
+  <TextInput style={[
+   CPasswordError ? styles.davidDanieleR : styles.davidDaniele
+  , styles.registerTypo1]}
+    placeholder="Confirm Password"
+    secureTextEntry={ConfirmPasswordVisible}
+    value={ConfirmPassword}
+    onFocus={() => setConfirmPasswordFocused(true)}
+    onBlur={() => setConfirmPasswordFocused(false)}
+    onChangeText={setConfirmPassword}
+  />
+  <Pressable
+    onPress={
+      () => { setConfirmPasswordVisible((prev) => !prev); }
+    }
+  >
+    <Image
+      style={[styles.vectorIcon2, styles.vectorIconPosition]}
+      contentFit="cover"
+      source={require("../assets/vector10.png")}
+    />
+  </Pressable>
+</View>
+{CPasswordError ? <Text style={styles.nameError}>{CError}</Text> : null}
+{ErrorM ? <Text style={styles.nameError}>{errorMessage}</Text> : null} 
+
+</View>
+
+
+
+      {/* <TextInput style={[styles.name, styles.passwordTypo]}
         placeholder="Name"
         value={name}
         onFocus={() => setNameFocused(true)}
@@ -284,7 +461,7 @@ const AddEmployee = () => {
         source={require("../assets/line-3.png")}
       />
       {CPasswordError ? <Text style={styles.nameError}>{CError}</Text> : null}
-      {ErrorM ? <Text style={styles.nameError}>{errorMessage}</Text> : null}
+      {ErrorM ? <Text style={styles.nameError}>{errorMessage}</Text> : null} */}
 
 
 
@@ -345,10 +522,20 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     position: "relative",
   },
+  phone1Icon: {
+    top: 15,
+  },
+  atSign1Icon: {
+    top: 10,
+    marginLeft: 4,
+  },
   nameError: {
-    marginTop: 12,
-    marginLeft: 25,
+    marginLeft: 30,
     color: 'red',
+  },
+  countryCode: {
+    height: 20,
+    width: 20,
   },
   addChildLayout: {
     marginTop: 6,
@@ -361,6 +548,128 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
+  registerTypo1: {
+    textAlign: "left",
+    fontSize: FontSize.size_base,
+  },
+  davidDanielp: {
+    width: "30%",
+    marginLeft: -60,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 10,
+    width: '72%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanielpR: {
+    width: "30%",
+    marginLeft: -60,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    marginBottom: 10,
+    width: '72%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDaniele: {
+    width: "30%",
+    marginLeft: 4,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 10,
+    width: '90%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanieleR: {
+    width: "30%",
+    marginLeft: 4,
+    alignContent: 'flex-start',
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    marginBottom: 10,
+    width: '90%',
+    fontSize: 15,
+    padding: 6,
+  },
+  
+  davidDanielc: {
+    width: "30%",
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    paddingLeft:15,
+    marginBottom: 10,
+    width: '97%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanielcR: {
+    width: "30%",
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    paddingLeft:15,
+    marginBottom: 10,
+    width: '97%',
+    fontSize: 15,
+    padding: 6,
+  },
+  code:
+  {
+    width: 80,
+    left: -50,
+  },
+  davidDaniel: {
+    width: "30%",
+    paddingLeft: 10,
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+    marginBottom: 10,
+    width: '93%',
+    fontSize: 15,
+    padding: 6,
+  },
+  davidDanielR: {
+    width: "30%",
+    paddingLeft: 10,
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "left",
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    marginBottom: 10,
+    width: '93%',
+    fontSize: 15,
+    padding: 6,
+  },
+  key1Icon: {
+    top: 6,
+    marginLeft: 5,
+  },
   addChildLayoutR: {
     marginTop: 6,
     left: "4.73%",
@@ -372,6 +681,22 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
     backgroundColor: 'red',
+  },
+  iconLayout: {
+    height: 20,
+    width: 20,
+
+  },
+  contwwrap: {
+    flexDirection: 'row',
+  },
+  wrap: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'left',
+    paddingTop: '80%', 
+    paddingBottom: '10%', 
+    paddingHorizontal: '8%',
   },
   groupLayout: {
     height: 45,
@@ -389,6 +714,9 @@ const styles = StyleSheet.create({
     // maxHeight: "100%",
     // maxWidth: "100%",
     position: "relative",
+  },
+  user1Icon: {
+    top: 10,
   },
   lightTexture22341Icon: {
     top: 0,
@@ -457,16 +785,20 @@ const styles = StyleSheet.create({
     color: Color.dimgray_100,
   },
   pk: {
-    width: 35,
     color: Color.textTxtPrimary,
-    top: 0,
-    marginTop: 30,
-    height: "2.9%",
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    left: "7.23%",
-    position: "relative",
+    left: 8,
+    width: '8%',
+    marginBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "#60b9d1",
+  },
+  pkR: {
+    color: Color.textTxtPrimary,
+    left: 8,
+    width: '8%',
+    marginBottom: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
   },
   addEmployeeChild: {
     height: "0.98%",
@@ -578,10 +910,11 @@ const styles = StyleSheet.create({
   addEmployee: {
     backgroundColor: Color.white,
     flex: 1,
-    width: "100%",
+    // width: "100%",
     overflow: "hidden",
-    height: 932,
-    position: 'absolute',
+    justifyContent: 'center',
+    // height: 932,
+    position: 'relative',
   },
 });
 

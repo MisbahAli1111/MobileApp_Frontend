@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   nameError: {
-    marginTop: 12,
+    marginTop: 6,
     marginLeft: 50,
     color: 'red',
   },
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
     width: 370,
     left: 20,
     position: "relative",
-    marginTop: 10,
+    marginTop: 4,
   },
   pkPosition: {
     width: 30,
@@ -572,7 +572,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   davidDaniel: {
-    marginTop: 330,
+    marginTop: 320,
     width: 181,
   },
   daviddaniel33outlookcom: {
@@ -581,18 +581,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   businessInfoChild: {
-    marginTop: 10,
+    marginTop: 6,
   },
   businessInfoChildR: {
-    marginTop: 10,
+    marginTop: 6,
     backgroundColor: 'red',
   },
 
   businessInfoItem: {
-    marginTop: 10,
+    marginTop: 6,
   },
   businessInfoItemR: {
-    marginTop: 10,
+    marginTop: 6,
     backgroundColor: 'red',
   },
 
@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     position: 'relative',
-    marginTop: 20,
+    marginTop: 15,
     marginBottom: 8,
   },
   pk: {
@@ -648,7 +648,7 @@ const styles = StyleSheet.create({
   },
   h218GulshanKarachi: {
     width: 282,
-    marginTop: 20,
+    marginTop: 15,
   },
   businessInfoChild2R: {
     backgroundColor: 'red',
@@ -658,7 +658,7 @@ const styles = StyleSheet.create({
   karachi: {
     width: 90,
     marginLeft: 35,
-    marginTop: 25,
+    marginTop: 15,
   },
   businessInfoChild4: {
     marginLeft: 130,
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
     width: 50,
   },
   businessInfo1: {
-    top: 281,
+    top: 200,
     left: 135,
     fontSize: FontSize.size_3xl,
     textAlign: "center",
@@ -703,13 +703,13 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
   },
   letsRegister: {
-    top: 133,
+    top: 100,
     fontSize: FontSize.size_8xl,
     fontWeight: "600",
     fontFamily: FontFamily.poppinsSemibold,
   },
   letsLevelUp: {
-    top: 177,
+    top: 140,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     left: 20,
@@ -768,9 +768,11 @@ const styles = StyleSheet.create({
   businessInfo: {
     backgroundColor: Color.white,
     flex: 1,
-    width: "100%",
+   
     overflow: "hidden",
-    height: 932,
+    justifyContent: 'center',
+   
+    position: 'relative',
   },
 });
 
