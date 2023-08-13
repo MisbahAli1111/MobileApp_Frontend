@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
-
+import axios from "axios";
 const AddEmployee = () => {
   const navigation = useNavigation();
   const [name, setName] = useState('');
@@ -24,12 +24,12 @@ const AddEmployee = () => {
   const [LocationEror, setLocationError] = useState(false);
   const [PasswordError, setPasswordError] = useState(false);
   const [CPasswordError, setCPasswordError] = useState(false);
-  const [NoError,setNoError]=useState(false);
+  const [NoError, setNoError] = useState(false);
   const [PLEror, setPLError] = useState('');
   const [NumberEror, setNumberError] = useState(false);
-
-const [LPasswordError,setLPasswordError] = useState(false);
-const [CError , setCError] = useState('');
+  const [ErrorM, setErrorM] = useState(false);
+  const [LPasswordError, setLPasswordError] = useState(false);
+  const [CError, setCError] = useState('');
   const [nameFocused, setNameFocused] = useState(false);
   const [cnicFocused, setcnicFocused] = useState(false);
   const [emailFocused, setemailFocused] = useState(false);
@@ -37,7 +37,7 @@ const [CError , setCError] = useState('');
   const [ConfirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [countryCodeFocused, setCountryCodeFocused] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState('');
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
@@ -46,28 +46,28 @@ const [CError , setCError] = useState('');
 
   const handleSignUp = () => {
     let hasErrors = false;
-
+    setErrorM(false);
     if (!name) {
       setNameError(true);
       hasErrors = true;
     } else {
       setNameError(false);
     }
-  
+
     if (!cnic) {
       setCNICError(true);
       hasErrors = true;
     } else {
       setCNICError(false);
     }
-  
+
     if (!email || !isValidEmail(email)) {
       setEmailError(true);
       hasErrors = true;
     } else {
       setEmailError(false);
     }
-  
+
     if (!countryCode) {
       setPLError('Please select Country Code');
       setNumberError(true);
@@ -75,20 +75,21 @@ const [CError , setCError] = useState('');
     } else {
       setPLError('');
       if (!phoneNumber) {
+        setNumberError(true);
         setPLError('Please provide Contact Number');
         hasErrors = true;
       } else {
         setNumberError(false);
       }
     }
-  
+
     if (!Password) {
       setPasswordError(true);
       hasErrors = true;
     } else {
       setPasswordError(false);
     }
-  
+
     if (!ConfirmPassword) {
       setCPasswordError(true);
       setCError('Please provide Confirm password');
@@ -104,9 +105,37 @@ const [CError , setCError] = useState('');
         setCPasswordError(false);
       }
     }
-  
+
     if (!hasErrors) {
-      navigation.navigate('MaintenanceRecord');
+      let data = JSON.stringify({
+        "firstName": name,
+        "lastName": name,
+        "phone_number": phoneNumber,
+        "email": email,
+        "password": Password
+      });
+
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://192.168.100.71:8080/api/users/register/employee',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: data
+      };
+
+      axios.request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          if (response.data.status === 'OK') {
+            navigation.navigate('Home');
+          }
+        })
+        .catch((error) => {
+          setErrorM(true);
+          setErrorMessage("Email Already Exist!");
+        });
     }
   };
 
@@ -129,8 +158,8 @@ const [CError , setCError] = useState('');
       />
       <Image
         style={[styles.addEmployeeItem,
-          NameEror ?  styles.addChildLayoutR :styles.addChildLayout
-          ]}
+        NameEror ? styles.addChildLayoutR : styles.addChildLayout
+        ]}
         contentFit="cover"
         source={require("../assets/line-1.png")}
       />
@@ -146,8 +175,8 @@ const [CError , setCError] = useState('');
       />
       <Image
         style={[styles.addEmployeeInner,
-          CNICEror ?  styles.addChildLayoutR :styles.addChildLayout
-          ]}
+        CNICEror ? styles.addChildLayoutR : styles.addChildLayout
+        ]}
         contentFit="cover"
         source={require("../assets/line-2.png")}
       />
@@ -177,8 +206,8 @@ const [CError , setCError] = useState('');
       />
       <Image
         style={[styles.lineIcon,
-          NumberEror ?  styles.addChildLayoutR :styles.addChildLayout
-          ]}
+        NumberEror ? styles.addChildLayoutR : styles.addChildLayout
+        ]}
         contentFit="cover"
         source={require("../assets/line-8.png")}
       />
@@ -194,12 +223,12 @@ const [CError , setCError] = useState('');
       />
       <Image
         style={[styles.addEmployeeChild1,
-          EmailEror ?  styles.addChildLayoutR :styles.addChildLayout
-          ]}
+        EmailEror ? styles.addChildLayoutR : styles.addChildLayout
+        ]}
         contentFit="cover"
         source={require("../assets/line-9.png")}
       />
-    {EmailEror ? <Text style={styles.nameError}>Please Provide a valid Email</Text> : null}
+      {EmailEror ? <Text style={styles.nameError}>Please Provide a valid Email</Text> : null}
 
       <TextInput style={[styles.password, styles.passwordTypo]}
         placeholder="Password"
@@ -221,9 +250,9 @@ const [CError , setCError] = useState('');
       </Pressable>
       <Image
         style={[styles.addEmployeeChild2,
-          PasswordError ?  styles.addChildLayoutR :styles.addChildLayout
-         
-          ]}
+        PasswordError ? styles.addChildLayoutR : styles.addChildLayout
+
+        ]}
         contentFit="cover"
         source={require("../assets/line-7.png")}
       />
@@ -249,13 +278,13 @@ const [CError , setCError] = useState('');
       </Pressable>
       <Image
         style={[
-          styles.addEmployeeChild3, 
-        CPasswordError ?  styles.addChildLayoutR :styles.addChildLayout ]}
+          styles.addEmployeeChild3,
+          CPasswordError ? styles.addChildLayoutR : styles.addChildLayout]}
         contentFit="cover"
         source={require("../assets/line-3.png")}
       />
       {CPasswordError ? <Text style={styles.nameError}>{CError}</Text> : null}
-
+      {ErrorM ? <Text style={styles.nameError}>{errorMessage}</Text> : null}
 
 
 
@@ -318,7 +347,7 @@ const styles = StyleSheet.create({
   },
   nameError: {
     marginTop: 12,
-    marginLeft: 22,
+    marginLeft: 25,
     color: 'red',
   },
   addChildLayout: {
@@ -342,7 +371,7 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     position: "relative",
     overflow: "hidden",
-    backgroundColor:'red',
+    backgroundColor: 'red',
   },
   groupLayout: {
     height: 45,
