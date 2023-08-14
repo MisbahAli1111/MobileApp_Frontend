@@ -54,6 +54,7 @@ const Login = () => {
 
             AsyncStorage.setItem("accessToken", accessToken);
             AsyncStorage.setItem("userId", userId);
+            
             // console.log(userId);
             //         AsyncStorage.getItem("accessToken")
             // .then(accessTokens => {

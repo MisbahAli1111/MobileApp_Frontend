@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Alert, ImageBackground, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -61,7 +62,7 @@ const ChangePassword = () => {
     }
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     let hasErrors = false;
     const newErrors = { ...errors };
 
@@ -87,9 +88,31 @@ const ChangePassword = () => {
     }
 
 
-    if (hasErrors) {
-      setErrors(newErrors);
-      return;
+    if (!hasErrors) {
+      const userId = await AsyncStorage.getItem("userId");
+
+      let data = JSON.stringify({
+        "oldPassword": currentPassword,
+        "newPassword": newPassword
+      });
+      
+      let config = {
+        method: 'put',
+        maxBodyLength: Infinity,
+        url: `http://192.168.100.71:8080/api/users/update-password/${userId}`,
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     }
 
     if (!isPasswordValid(newPassword)) {

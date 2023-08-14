@@ -8,6 +8,7 @@ import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import * as ImagePicker from 'expo-image-picker';
 const windowWidth = Dimensions.get('window');
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddEmployee = () => {
   const navigation = useNavigation();
@@ -101,7 +102,7 @@ const AddEmployee = () => {
     setShowDropdown(false);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     let hasErrors = false;
     setErrorM(false);
     if (!name) {
@@ -164,20 +165,26 @@ const AddEmployee = () => {
     }
 
     if (!hasErrors) {
+      const Business_id = await AsyncStorage.getItem("Business_id");
+      let token= await AsyncStorage.getItem("accessToken");
+      const accessToken = 'Bearer ' + token;
+      // console.log(accessToken);
       let data = JSON.stringify({
         "firstName": name,
         "lastName": name,
-        "phone_number": phoneNumber,
+        "phoneNumber": phoneNumber,
+        "cnicNumber": cnic,
+        "countryCode":selectedCode,
         "email": email,
         "password": Password
       });
-
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://192.168.100.71:8080/api/users/register/employee',
+        url: `http://192.168.100.71:8080/api/users/register/employee/${Business_id}`,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': accessToken
         },
         data: data
       };
@@ -193,7 +200,7 @@ const AddEmployee = () => {
           setErrorM(true);
           setErrorMessage("Email Already Exist!");
         });
-    }
+     }
   };
 
   return (

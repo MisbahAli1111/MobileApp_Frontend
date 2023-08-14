@@ -173,8 +173,9 @@ const OwnerInfo = () => {
       let data = JSON.stringify({
         "firstName": name,
         "lastName": name,
-        "phone_number": phoneNumber,
+        "phoneNumber": phoneNumber,
         "cnicNumber": cnic,
+        "countryCode":selectedCode,
         "email": email,
         "password": Password
       });

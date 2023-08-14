@@ -105,6 +105,7 @@ const EditProfile = () => {
         setCnic(response.data.cnicNumber);
         setPhoneNumber(response.data.phone_number);
         setEmail(response.data.email);
+        setCountryCode(response.data.countryCode);
       })
       .catch((error) => {
         console.log(error);
@@ -119,36 +120,37 @@ const EditProfile = () => {
 
   const handleSave = async () => {
 
-    if(profileImage){
-      saveImageToDirectory(profileImage);
-    }
-    // const userId = await AsyncStorage.getItem("userId");
+    // if(profileImage){
+    //   saveImageToDirectory(profileImage);
+    // }
+    const userId = await AsyncStorage.getItem("userId");
 
-    // let data = JSON.stringify({
-    //   "firstName": name,
-    //   "lastName": name,
-    //   "email": email,
-    //   "phone_number": phoneNumber,
-    //   "cnicNumber": cnic
-    // });
+    let data = JSON.stringify({
+      "firstName": name,
+      "lastName": name,
+      "email": email,
+      "phone_number": phoneNumber,
+      "cnicNumber": cnic,
+      "countryCode":countryCode
+    });
     
-    // let config = {
-    //   method: 'put',
-    //   maxBodyLength: Infinity,
-    //   url: `http://192.168.100.71:8080/api/users/update-user/${userId}`,
-    //   headers: { 
-    //     'Content-Type': 'application/json'
-    //   },
-    //   data : data
-    // };
+    let config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/users/update-user/${userId}`,
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
     
-    // axios.request(config)
-    // .then((response) => {
-    //   console.log(JSON.stringify(response.data));
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
 
 
