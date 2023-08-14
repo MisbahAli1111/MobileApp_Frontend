@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal,View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ImageBackground } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import { Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
 const windowWidth = Dimensions.get('window').width;
-
+import axios from 'axios';
 const EditProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState('');
@@ -60,8 +62,96 @@ const EditProfile = () => {
     setImageModalVisible(false);
   };
 
-  const handleSave = () => {
-    // ... (handleSave logic remains the same)
+  const generateUniqueName = () => {
+    const timestamp = new Date().getTime(); // Use a timestamp for uniqueness
+    const randomString = Math.random().toString(36).substring(7); // Generate a random string
+    return `image_${timestamp}_${randomString}`;
+  };
+  const saveImageToDirectory = async (imageUri) => {
+    try {
+      const uniqueName = generateUniqueName(); // Generate a unique name for the image
+      const destinationUri = `${FileSystem.documentDirectory}${uniqueName}.jpeg`;
+  
+      // Copy the image to the specified destination
+      await FileSystem.copyAsync({
+        from: imageUri,
+        to: destinationUri,
+      });
+  
+      console.log('Image saved to:', destinationUri);
+    } catch (error) {
+      console.error('Error saving image:', error);
+    }
+  };
+  
+
+
+  // console.log(profileImage);
+
+  getData = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/users/${userId}`, // Use backticks
+      headers: {}
+    };
+  
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setName(response.data.firstName);
+        setCnic(response.data.cnicNumber);
+        setPhoneNumber(response.data.phone_number);
+        setEmail(response.data.email);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  
+
+  useEffect(() => {
+    getData();
+   }, []);
+  
+
+  const handleSave = async () => {
+
+    if(profileImage){
+      saveImageToDirectory(profileImage);
+    }
+    // const userId = await AsyncStorage.getItem("userId");
+
+    // let data = JSON.stringify({
+    //   "firstName": name,
+    //   "lastName": name,
+    //   "email": email,
+    //   "phone_number": phoneNumber,
+    //   "cnicNumber": cnic
+    // });
+    
+    // let config = {
+    //   method: 'put',
+    //   maxBodyLength: Infinity,
+    //   url: `http://192.168.100.71:8080/api/users/update-user/${userId}`,
+    //   headers: { 
+    //     'Content-Type': 'application/json'
+    //   },
+    //   data : data
+    // };
+    
+    // axios.request(config)
+    // .then((response) => {
+    //   console.log(JSON.stringify(response.data));
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // });
+
+
+
   };
 
   const validateEmail = () => {
@@ -81,14 +171,14 @@ const EditProfile = () => {
       setNameError('');
     }
   };
-  const validateCNIC = () => {
-    const cnicRegex = /^[0-9]{13}$/;
-    if (!cnic.match(cnicRegex)) {
-      setCnicError('Invalid CNIC format');
-    } else {
-      setCnicError('');
-    }
-  };
+  // const validateCNIC = () => {
+  //   const cnicRegex = /^[0-9]{13}$/;
+  //   if (!cnic.match(cnicRegex)) {
+  //     setCnicError('Invalid CNIC format');
+  //   } else {
+  //     setCnicError('');
+  //   }
+  // };
 
   const validatePhoneNumber = () => {
     const phoneNumberRegex = /^[0-9]{10,15}$/;
@@ -141,7 +231,7 @@ const EditProfile = () => {
             setCnic(text);
             setCnicError('');
           }}
-          onBlur={validateCNIC}
+          // onBlur={validateCNIC}
           maxLength={13}
         />
         {cnicError ? <Text style={styles.errorText}>{cnicError}</Text> : null}

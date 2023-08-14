@@ -7,18 +7,18 @@ import { useState } from "react";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login =  () => {
+const Login = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error ,setError] = useState('');
-  const [Merror, setMError]=useState(false);
+  const [error, setError] = useState('');
+  const [Merror, setMError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const handleLogin = async () => {
     setMError(false);
-    setEmailError(false); 
-    setPasswordError(false); 
+    setEmailError(false);
+    setPasswordError(false);
 
     if (!email) {
       setEmailError(true);
@@ -43,19 +43,24 @@ const Login =  () => {
       };
 
       axios.request(config)
-        .then((response)  => {
+        .then((response) => {
           console.log(JSON.stringify(response.data));
           if (response.data === 'Invalid Credentials!') {
             setError(response.data);
             setMError(true)
           } else {
             const accessToken = response.data.accessToken;
-            AsyncStorage.setItem("accessToken",accessToken);
-    //         AsyncStorage.getItem("accessToken")
-    // .then(accessTokens => {
-    //   console.log(accessTokens); 
-    // })
-    navigation.navigate('SwitchBusiness');
+            const userId = response.data.userId;
+
+            AsyncStorage.setItem("accessToken", accessToken);
+            AsyncStorage.setItem("userId", userId);
+            // console.log(userId);
+            //         AsyncStorage.getItem("accessToken")
+            // .then(accessTokens => {
+            //   console.log(accessTokens); 
+            // })
+
+            navigation.navigate('SwitchBusiness');
 
           }
         })
@@ -75,7 +80,7 @@ const Login =  () => {
         value={email}
       />
       {emailError ? <Text style={styles.nameError}>Please provide Email</Text> : null}
-      
+
       <TextInput
         style={styles.input}
         placeholder="Password"
