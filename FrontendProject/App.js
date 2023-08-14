@@ -77,7 +77,7 @@ const App = () => {
           // profileImage: require('./assets/mask-group1.png'), 
           }}/> */}
 
-          {/* <Stack.Screen
+          <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
@@ -85,9 +85,9 @@ const App = () => {
           showBackArrow: false,
           profileImage: require('./assets/mask-group1.png'),
               }}
-            />  */}
+            /> 
 
-          {/* <Stack.Screen
+          <Stack.Screen
           name="EditProfile"
           component={EditProfile}
           initialParams={{
@@ -140,7 +140,7 @@ const App = () => {
           profileImage: require('./assets/mask-group1.png'),
               }}
                
-              />   */}
+              />  
                
             
             <Stack.Screen
@@ -154,7 +154,7 @@ const App = () => {
             />
 
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
@@ -162,30 +162,12 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            /> */}
-
-            {/* Useless screens hain  */}
-
-            {/* <Stack.Screen
-              name="SwitchBusiness1"
-              component={SwitchBusiness1}
             />
-             <Stack.Screen
-              name="SwitchBusiness3"
-              component={SwitchBusiness3}
-              options={{ headerShown: false }}
-            /> 
 
-            <Stack.Screen
-              name="SwitchBusiness2"
-              component={SwitchBusiness2}
-              options={{ headerShown: false }}
-            /> */}
-
-            {/* Yaha tak useless hai  */}
+           
             
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
@@ -193,11 +175,11 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
-            /> */}
+            />
 
             
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="OwnerInfo"
               component={OwnerInfo}
               initialParams={{
@@ -264,7 +246,7 @@ const App = () => {
                 onBackPress:'Add Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
 
 
 

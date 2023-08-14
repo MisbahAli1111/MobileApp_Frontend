@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
+    alignItems:"center"
   },
   backButton: {
     paddingHorizontal: 15,
