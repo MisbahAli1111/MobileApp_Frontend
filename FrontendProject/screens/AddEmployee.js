@@ -2,11 +2,13 @@ import * as React from "react";
 import { useState } from "react";
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {TouchableOpacity,Modal,Dimensions, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
-import { Alert } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
+const windowWidth = Dimensions.get('window');
 import axios from "axios";
+
 const AddEmployee = () => {
   const navigation = useNavigation();
   const [name, setName] = useState('');
@@ -40,8 +42,51 @@ const AddEmployee = () => {
   const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
   const [countryCodeFocused, setCountryCodeFocused] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
-
   const [errorMessage, setErrorMessage] = useState('');
+  const [profileImage, setProfileImage] = useState(null);
+  const [isImageModalVisible,setImageModalVisible]= useState('false');
+  const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
+
+  const handleImageUpload = () => {
+    setImageModalVisible(true);
+  };
+  
+  const handleShowProfile = () =>{
+    if (profileImage) {
+      setFullImageModalVisible(true);
+    }
+  }; 
+
+  const handleImageFromCamera = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets.length > 0) {
+      setProfileImage(result.assets[0].uri);
+    }
+    
+
+    setImageModalVisible(false);
+  };
+
+  const handleImageFromGallery = async () => {
+    // ... (handleImageUpload logic remains the same)
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets.length > 0) {
+      setProfileImage(result.assets[0].uri);
+    }
+    
+    setImageModalVisible(false);
+  };
+
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
@@ -158,6 +203,69 @@ const AddEmployee = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
+
+<View style={styles.profileImageContainer}>
+      <TouchableOpacity onPress={handleShowProfile}>
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          ) : (
+            
+            <View style={styles.profileImagePlaceholder}>
+            </View>
+            
+          )}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleImageUpload}  style={styles.uploadButton}>
+          <Text style={styles.uploadButtonText}>Upload</Text>
+              </TouchableOpacity>
+        </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isFullImageModalVisible}
+          onRequestClose={() => setFullImageModalVisible(false)}
+        >
+          <View style={styles.imageModalContainer}>
+          <View style={styles.fullImageContainer}>
+            {profileImage && (
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.fullImage}
+                resizeMode="contain"
+              />
+            )}
+            </View>
+            <TouchableOpacity
+              style={styles.imageModalButton}
+              onPress={() => setFullImageModalVisible(false)}
+            >
+              <Text style={styles.imageModalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isImageModalVisible}
+          onRequestClose={() => setImageModalVisible(false)}
+        >
+          <View style={styles.imageModalContainer}>
+            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
+              <Text style={styles.imageModalButtonText}>Take a Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
+              <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.imageModalButton}
+              onPress={() => setImageModalVisible(false)}
+            >
+              <Text style={styles.imageModalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
 
 
 <View style={styles.wrap}>
@@ -694,7 +802,7 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'left',
-    paddingTop: '80%', 
+    paddingTop: '0%', 
     paddingBottom: '10%', 
     paddingHorizontal: '8%',
   },
@@ -915,6 +1023,137 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // height: 932,
     position: 'relative',
+  },
+  profileImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    top:120,
+    flex:1,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
+  profileImagePlaceholder: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  countryCodeInput: {
+    top: 4,
+    fontWeight: '500',
+  },
+  input: {
+    borderBottomWidth: 1.5,
+    borderColor: 'rgba(203, 203, 203, 1)',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  phonePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  SelectedPickerItem: {
+    fontWeight: 'bold',
+  },
+  SelectedPickerItem1: {
+    fontWeight: '100',
+  },
+  phoneInput: {
+    flex: 3,
+    borderBottomWidth: 1.5,
+    borderColor: 'rgba(203, 203, 203, 1)',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 200,
+  },
+  button: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    paddingVertical: 15,
+    paddingHorizontal: 150,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  pickerContainer: {
+    width: 30,
+    marginLeft: 10,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+  },
+  imageModalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', //rgba(255, 255, 255, 0.5)
+  },
+  imageModalButton: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 5,
+    marginVertical: 10,
+    width: 250,
+    alignItems: 'center',
+  },
+  imageModalButtonText: {
+    color: 'rgba(3, 29, 68, 1)',
+    fontSize: 16,
+  },
+  uploadText: {
+    marginTop:10,
+    color: 'rgba(3, 29, 68, 1)',
+    fontSize: 16,
+  },
+  fullImage: {
+    width: '100%',
+    height: '100%',
+  },
+  formContainer: {
+    flex: 1,
+    width: windowWidth * 0.9,
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  uploadTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullImageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxHeight: '100%', 
+    width: '100%',// Adjust this value as needed
+  },
+  uploadButton: {
+    backgroundColor: Color.darkslateblue,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  uploadButtonText: {
+    color: Color.white,
+    fontSize: FontSize.size_base,
   },
 });
 
