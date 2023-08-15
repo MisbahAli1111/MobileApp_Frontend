@@ -37,6 +37,7 @@ function BusinessList({ }) {
     const fetchData = async () => {
         const index = parseInt(await AsyncStorage.getItem("Business_id"));
         setCurrentPressedIndex(index);
+        
     };
 
 

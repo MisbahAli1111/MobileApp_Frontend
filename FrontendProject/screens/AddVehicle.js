@@ -11,8 +11,11 @@ import {Video} from "expo-av";
 import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-
+//172.20.64.1 shayan ip
+//192.168.100.71 misbah ip
 
 const AddVehicle = () => {
   const navigation = useNavigation();
@@ -74,6 +77,12 @@ const AddVehicle = () => {
       </TouchableOpacity>
     </View>
   );
+
+  const fetchData = async () => {
+    const index = parseInt(await AsyncStorage.getItem("Business_id"));
+    setCurrentPressedIndex(index);
+    
+  };
 
   const handlePlayButton = async () => {
     if (video.current) {
@@ -184,11 +193,37 @@ const AddVehicle = () => {
       }
     
       if (isValid) {
-        navigation.navigate('Vehicles');
-      } else {
-        alert('Fill all Fields');
-      }
+        let data = JSON.stringify({
+          "type": vehicleType,
+          "model": vehicleModel,
+          "make": "kj",
+          "year": Registration,
+          "registrationNumber": Registration,
+          "color": Vehiclecolor,
+          "ownerId": "2",
+          "carkilometerDriven": km
+        });
+        
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'http://localhost:8080/api/vehicle/1/add-vehicle',
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        
+        axios.request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        
     }
+  };
     
 
   
@@ -324,7 +359,7 @@ const AddVehicle = () => {
 
       
       <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
-      placeholder="Modal "
+      placeholder="Model "
       value={vehicleModel}
       editable={false}  
         />
@@ -334,7 +369,7 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/vector-61.png")}
       />
-      {(
+      {/* {(
       <View  style={styles.vehicleModelPicker}>
         <Picker
           selectedValue={vehicleModel}
@@ -346,7 +381,7 @@ const AddVehicle = () => {
           ))}
         </Picker>
         </View>
-      )}
+      )} */}
 <View style={[styles.addVehicleChild1,
  vehicleTypeError  ? styles.childBorderR :styles.childBorder
    ]} />
@@ -712,7 +747,7 @@ video: {
 },
 wrap:{
   // backgroundColor:'red',
-  marginTop:350,
+  marginTop:380,
   // marginBottom:5,
   marginVertical:245,
   flex:1,
@@ -1059,7 +1094,7 @@ wrap:{
     borderColor: "#cbcbcb",
     borderStyle: "solid",
     left: 23,
-    top: 0,
+    top: -17,
   },
   addVehicleChild1: {
     left: 220,
@@ -1156,11 +1191,11 @@ wrap:{
     color: Color.darkslateblue,
   },
   lineParent: {
-    top: 0,
-    marginTop:10,
+    top: 10,
+    marginTop:40,
   },
   lineGroup: {
-    marginTop:15,
+    marginTop:10,
   },
   lineContainer: {
     top: 687,

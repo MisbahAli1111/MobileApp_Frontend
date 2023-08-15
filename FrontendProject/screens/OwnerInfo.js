@@ -183,7 +183,7 @@ const OwnerInfo = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://192.168.100.71:8080/api/users/register/owner',
+        url: 'http://172.20.64.1:8080/api/users/register/owner',
         headers: {
           'Content-Type': 'application/json'
         },
