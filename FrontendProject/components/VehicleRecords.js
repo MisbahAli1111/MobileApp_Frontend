@@ -5,7 +5,9 @@ import { Image } from "expo-image";
 import { StyleSheet, View, Text,TextInput, ScrollView,TouchableOpacity, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Vehicles from "../screens/Vehicles";
 function VehicleRecords({dsearch,type}) {
     const navigation = useNavigation();
     const [search, setSearch] = useState('');
@@ -13,65 +15,8 @@ function VehicleRecords({dsearch,type}) {
     
     const [data, setData] = useState([]);
     const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-    
-    const vehicles = [
-        {
-            id: "65dfs6",
-            vehicleName: "LAND CRUISER V8 2021",
-            ownerName: "Ali",
-            contact: "+9223213515",
-            registrationNumber: "SDs5454",
-            type:"Car",
-        },
-        {
-            id: "sf52sdf",
-            vehicleName: "CIVIC 2022",
-            ownerName: "Maaz",
-            contact: "+9223213515",
-            registrationNumber: "f524sdf",
-            type:"Bike",
-        },
-        {
-            id: "s6df4s6",
-            vehicleName: "TOYOTA 2022",
-            ownerName: "Maaz",
-            contact: "+9223213515",
-            registrationNumber: "sdf52f",
-            type:"Car",
-        },
-        {
-            id: "as52ds74",
-            vehicleName: "TRUCK 2023",
-            ownerName: "Khan",
-            contact: "+9223213515",
-            registrationNumber: "sd52sfds",
-            type:"Truck",
-        },
-        {
-            id: "as52ds74",
-            vehicleName: "TRUCK 2023",
-            ownerName: "Khan",
-            contact: "+9223213515",
-            registrationNumber: "sd52sfds",
-            type:"Truck",
-        },
-        {
-            id: "as52ds74",
-            vehicleName: "TRUCK 2023",
-            ownerName: "Khan",
-            contact: "+9223213515",
-            registrationNumber: "sd52sfds",
-            type:"Truck",
-        },
-        {
-            id: "as52ds74",
-            vehicleName: "TRUCK 2023",
-            ownerName: "Khan",
-            contact: "+9223213515",
-            registrationNumber: "sd52sfds",
-            type:"Truck",
-        },
-    ];
+    const [ vehicles, setVehicles]= useState([]);
+
 
     const displayedVehicles = useMemo(() => {
         if (search) {
@@ -85,73 +30,107 @@ function VehicleRecords({dsearch,type}) {
         }
       }, [search, data, vehicles, VehicleType]);
 
-
-    const handlePress = (index, vehicleId) => {
-        setCurrentPressedIndex(index);
+      
+    const handlePress = ( vehicleId) => {
+        setCurrentPressedIndex(vehicleId);
+        console.log(vehicleId);
           navigation.navigate("VehicleDetails");
     };
 
     useEffect(() => {
         setSearch(dsearch);
-        const formattedQuery = dsearch.trim().toUpperCase();
+      
+        const formattedQuery = dsearch.trim().toUpperCase(); // Convert to uppercase for case-insensitive comparison
       
         if (VehicleType === "default") {
           const maintained = vehicles.filter(
             (vehicle) =>
-              vehicle.vehicleName.includes(formattedQuery) &&
-              (vehicle.type === "Car" || vehicle.type === "Bike" ||  vehicle.type === "Truck" ||vehicle.type === "Auto")
+              vehicle.model.toUpperCase().includes(formattedQuery) && // Convert to uppercase for case-insensitive comparison
+              (vehicle.type === "Car" || vehicle.type === "Bike" || vehicle.type === "Truck" || vehicle.type === "Auto")
           );
           setData(maintained);
         } else {
           const maintained = vehicles.filter(
             (vehicle) =>
-              vehicle.vehicleName.includes(formattedQuery) &&
+              vehicle.model.toUpperCase().includes(formattedQuery) && // Convert to uppercase for case-insensitive comparison
               vehicle.type === VehicleType
           );
           setData(maintained);
         }
       }, [dsearch, VehicleType]);
       
+      
+
+      getData = async () =>{
+
+        const Business_id = await AsyncStorage.getItem("Business_id");
+        let token= await AsyncStorage.getItem("accessToken");
+        const accessToken = 'Bearer ' + token;
+        
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/get-all-vehicles`,
+            headers: { 
+              'Authorization': accessToken
+            }
+          };
+          axios.request(config)
+          .then((response) => {
+            // console.log(JSON.stringify(response.data));
+            setVehicles(response.data.data); 
+            
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          
+        
+      };
+
 
       useEffect(() => {
         setVehicleType(type);
-        
+        getData();
       }, [type]);
+
+
+      console.log(displayedVehicles);
 
     return (
 
         <ScrollView style={styles.scroll}>
-            {displayedVehicles.map((vehicle, index) => (
+            {displayedVehicles.map((vehicle) => (
                 <Pressable
                 style={[styles.groupFrame, styles.groupParentLayout]}
-                    onPress={() => handlePress(index, vehicle.id)}
+                    onPress={() => handlePress(vehicle.registration_number)}
                 >
                     <View style={[styles.groupParent1, styles.groupParentLayout]}>
                         {/* blue  */}
                         <View style={[styles.vehiclesInner,
-                            currentPressedIndex === index ? styles.innerLayoutW : styles.innerLayout,
+                            currentPressedIndex === vehicle.id ? styles.innerLayoutW : styles.innerLayout,
                              ]} />
 
                         <View style={[styles.frameParent1, styles.frameParentLayout]}>
                             <View style={[styles.nameParent, styles.parentFlexBox]}>
                                 <Text style={[
                                      styles.name,
-                                     currentPressedIndex === index ? styles.name:styles.name1Clr
+                                     currentPressedIndex === vehicle.id ? styles.name:styles.name1Clr
                                      ]}>Name</Text>
                                 <Text style={
-                                    currentPressedIndex === index ? styles.text1Typo :styles.text2Typo
+                                    currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
                                     }>{vehicle.ownerName}</Text>
                                 <Image
                                     style={[styles.frameIconn, styles.frameIconPositionn]}
                                     contentFit="cover"
                                      source={
-                                        currentPressedIndex === index ? require("../assets/frame.png") :   require("../assets/frame2.png")}
+                                        currentPressedIndex === vehicle.id ? require("../assets/frame.png") :   require("../assets/frame2.png")}
                                 />
                             </View>
                             <Text style={[styles.landCruiserV8,
-                                 currentPressedIndex === index ? styles.name:styles.name1Clr
+                                 currentPressedIndex === vehicle.id ? styles.name:styles.name1Clr
                                  ]}>
-                                {vehicle.vehicleName}
+                                {vehicle.make}  {vehicle.model}  {vehicle.year}
                             </Text>
 
                         </View>
@@ -171,14 +150,14 @@ function VehicleRecords({dsearch,type}) {
                                 style={[styles.frameIcon, styles.frameIconPosition]}
                                 contentFit="cover"
                                 source={
-                                    currentPressedIndex === index ? require("../assets/materialsymbolspermcontactcalendaroutline.png") : require("../assets/materialsymbolspermcontactcalendaroutline1.png")}
+                                    currentPressedIndex === vehicle.id ? require("../assets/materialsymbolspermcontactcalendaroutline.png") : require("../assets/materialsymbolspermcontactcalendaroutline1.png")}
                             />
                             <View style={[styles.contactParent, styles.filterPosition]}>
                                 <Text style={[styles.name1,
-                                     currentPressedIndex === index ? styles.name:styles.name1Clr
+                                     currentPressedIndex === vehicle.id ? styles.name:styles.name1Clr
                                      ]}>Contact</Text>
                                 <Text style={
-                                    currentPressedIndex === index ? styles.text1Typo :styles.text2Typo
+                                    currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
                                     }>{vehicle.contact}</Text>
                             </View>
                         </View>
@@ -187,12 +166,12 @@ function VehicleRecords({dsearch,type}) {
                                 style={[styles.registrationNumberParent, styles.groupIconPosition]}
                             >
                                 <Text style={[styles.name1,
-                                     currentPressedIndex === index ? styles.name:styles.name1Clr
+                                     currentPressedIndex === vehicle.id ? styles.name:styles.name1Clr
                                      ]}>
                                     Registration Number
                                 </Text>
                                 <Text style={[styles.sa20021,
-                                 currentPressedIndex === index ? styles.text1Typo :styles.text2Typo
+                                 currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
                                 ]}>{vehicle.registrationNumber}</Text>
                             </View>
                             <Image
@@ -202,7 +181,7 @@ function VehicleRecords({dsearch,type}) {
                                 ]}
                                 contentFit="cover"
                                 source={
-                                    currentPressedIndex === index ? require("../assets/licenseplatenumbersvgrepocom-11.png")  :  require("../assets/licenseplatenumbersvgrepocom-12.png")
+                                    currentPressedIndex === vehicle.id ? require("../assets/licenseplatenumbersvgrepocom-11.png")  :  require("../assets/licenseplatenumbersvgrepocom-12.png")
                                 }
                             />
                         </View>
