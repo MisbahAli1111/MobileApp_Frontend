@@ -132,6 +132,7 @@ function BusinessList({ }) {
         // fetchTime(1);
         // const storedLoginTime = await AsyncStorage.getItem(`BusinessId_${5}`);
 
+        AsyncStorage.setItem("Business_id",JSON.stringify(index));
         setCurrentPressedIndex(index);
        
         setTimeout(() => {

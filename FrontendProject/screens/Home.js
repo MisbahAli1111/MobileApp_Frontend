@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Image } from "expo-image";
+import { useEffect, useState } from "react";
 import { StyleSheet, View,TextInput, Button, Text, Pressable, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
@@ -13,15 +14,43 @@ import HomeVehicleTypes from "../components/HomeVehicleTypes";
 import ProfilePopDown from "../components/ProfilePopDown";
 import DashboardGraph from "../components/DashboardGraph";
 import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
   const navigation = useNavigation();
-  //data=[];
+  const [totalEmployees , setTotalEmployees] = useState('');
   const invoices = null;
   //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
 
   const data = [10, 20, 5, 25, 15, 30, 12];
 
+  getEmployee = async () =>{
 
+    const Business_id = await AsyncStorage.getItem("Business_id");
+      
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/users/get-employees/${Business_id}`,
+      headers: { }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setTotalEmployees(response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }
+
+
+
+  useEffect(() => {
+    getEmployee();
+   });
 
   return (
     <View style={styles.home}>
@@ -47,7 +76,7 @@ const Home = () => {
         Total Employees
       </Text>
       <View style={styles.wrapper}>
-        <Text style={[styles.text1, styles.text1Typo]}>009</Text>
+        <Text style={[styles.text1, styles.text1Typo]}>{totalEmployees}</Text>
       </View>
       <View style={[styles.rectangleParent, styles.groupChildLayout2]}>
         <Pressable
@@ -411,10 +440,11 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     left: 300,
-    width: 37,
+    width: 100,
     height: 29,
     top: 265,
     position: "absolute",
+    justifyContent:'center',
   },
   groupChild: {
     width: 392,

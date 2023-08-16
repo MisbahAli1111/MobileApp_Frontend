@@ -26,7 +26,7 @@ const AddVehicle = () => {
   const [Vehiclecolor,setvehiclecolor]=useState("");
   const [phoneNumber, setphoneNumber]=useState('');
   const [km, setKm]=useState('');
-
+  const [Nmsg,setNmsg]= useState('');
   const [vehicleTypeError, setvehicleTypeError]=useState(false);
   const [vehicleModelError, setvehicleModelError]=useState(false);
   const [RegistrationError, setRegistrationError]=useState(false);
@@ -36,7 +36,9 @@ const AddVehicle = () => {
   const [kmError, setKmError]=useState(false);
   const [Msg, setMsg ]=useState('');
   const [RMsg, setRMsg ]=useState('');
-  
+  const [make, setMake]= useState('');
+  const [year, setYear]= useState('');
+    const [ makeError, setMakeError] = useState(false);
   const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
   const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
    const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
@@ -48,8 +50,8 @@ const AddVehicle = () => {
   const [status, setStatus] = useState({});
   const video = React.useRef(null);
 
+ 
 
-  
    const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
       {item.type === "image" ? (
@@ -142,7 +144,8 @@ const AddVehicle = () => {
 
     function saveVehicle() {
       let isValid = true;
-    
+      // console.log("err");
+  
       if (!vehicleType) {
         setMsg('Please Enter Vehicle Type');
         setvehicleTypeError(true);
@@ -170,6 +173,13 @@ const AddVehicle = () => {
           setRegistrationError(false);
         }
       }
+
+      if(!make || !year){
+        setMakeError(true);
+        setNmsg('Please provide make and Year of vehicle');
+      }else{
+        setMakeError(false);
+      }
     
       if (!name) {
         setNameError(true);
@@ -192,7 +202,7 @@ const AddVehicle = () => {
         setKmError(false);
       }
     
-      if (isValid) {
+      if (!isValid) {
         let data = JSON.stringify({
           "type": vehicleType,
           "model": vehicleModel,
@@ -224,7 +234,7 @@ const AddVehicle = () => {
         
     }
   };
-    
+
 
   
   return (
@@ -441,6 +451,31 @@ const AddVehicle = () => {
         </View>
       </View>
       {RegistrationError ? <Text style={styles.nameError}>{RMsg}</Text> : null}
+      
+      
+      <View style={[styles.lineParentm, styles.lineParentLayout]}>
+         <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput style={[
+             makeError ? styles.davidDanielmR : styles.davidDanielm
+              ,
+               styles.vehicleTypo]}    onChange={setMake} placeholder="Make">
+          
+            </TextInput>
+            <TextInput style={[
+              makeError ? styles.davidDanielmR : styles.davidDanielm
+              , 
+              styles.vehicleTypo
+              ]}    onChange={setYear} placeholder="Year">
+          
+            </TextInput>
+            
+          </View>
+        </View>
+      </View>
+      {makeError ? <Text style={styles.nameError}>{Nmsg}</Text> : null}
+     
+      
       <View style={[styles.lineParent, styles.lineParentLayout]}>
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
@@ -479,8 +514,7 @@ const AddVehicle = () => {
       <View style={[
         styles.groupInner
         , 
-        styles.groupInnerLayout
-        ]} />
+        phoneNumberError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {phoneNumberError ? <Text style={styles.nameError}>Please Provide Contact Number</Text> : null}
      
       <View style={[styles.lineGroup, styles.lineParentLayout]}>
@@ -500,7 +534,7 @@ const AddVehicle = () => {
       />
       <View style={[
         styles.groupInner, 
-        styles.groupInnerLayout]} />
+        kmError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {kmError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
       </ScrollView>
 
@@ -747,7 +781,7 @@ video: {
 },
 wrap:{
   // backgroundColor:'red',
-  marginTop:380,
+  marginTop:375,
   // marginBottom:5,
   marginVertical:245,
   flex:1,
@@ -1171,7 +1205,7 @@ wrap:{
   },
   frameParent: {
     top: 0,
-    marginTop:8,
+    marginTop:18,
   },
   groupInner: {
     left:20,
@@ -1185,14 +1219,35 @@ wrap:{
     marginBottom:5,
     borderColor: "red",
   },
+  davidDanielm: {
+    width: 168,
+    fontSize: FontSize.size_base,
+    color: Color.darkslateblue,
+    borderBottomWidth: 2,
+    borderBottomColor: "#c4bfbe",
+    width: '49%',
+  },
+  davidDanielmR: {
+    width: 168,
+    fontSize: FontSize.size_base,
+    color: Color.darkslateblue,
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    width: '49%',
+  },
   davidDaniel: {
     width: 168,
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
+ 
   },
   lineParent: {
-    top: 10,
-    marginTop:40,
+    top: 0,
+    marginTop:18,
+  },
+  lineParentm: {
+    top: 0,
+    marginTop:18,
   },
   lineGroup: {
     marginTop:10,
