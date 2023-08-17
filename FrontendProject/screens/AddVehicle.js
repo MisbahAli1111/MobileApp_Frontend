@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { Modal,StyleSheet, View, Text,ScrollView,TextInput, Pressable,TouchableOpacity } from "react-native";
+import {Button, Modal,StyleSheet, View, Text,ScrollView,TextInput, Pressable,TouchableOpacity,FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -38,10 +38,10 @@ const AddVehicle = () => {
   const [RMsg, setRMsg ]=useState('');
   const [make, setMake]= useState('');
   const [year, setYear]= useState('');
-    const [ makeError, setMakeError] = useState(false);
+  const [ makeError, setMakeError] = useState(false);
   const vehicleCategories = ['Bike','Car','Truck','Richshaw'];
   const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
-   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
+  const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
   const [selectedImage,setSelectedImage] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -49,7 +49,39 @@ const AddVehicle = () => {
   const [originalUri, setOriginalUri] = useState('');
   const [status, setStatus] = useState({});
   const video = React.useRef(null);
+  const [customers , setCustomers] = useState([]);
+  const [showCustomerList, setShowCustomerList] = useState(false);
+  const u = ["shayan","hassan","pirani","ali","hassan","abbas","fahad"];
 
+  const getCustomer = async () =>{
+
+    const Business_id = await AsyncStorage.getItem("Business_id");
+      
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://172.20.64.1:8080/api/users/get-customer/${Business_id}`,
+      headers: { }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setCustomers(response.data.data);
+      console.log(customers);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }
+
+
+
+  useEffect(() => {
+    getCustomer();
+   });
  
 
    const renderCarouselItem = ({ item, index }) => (
@@ -80,6 +112,19 @@ const AddVehicle = () => {
     </View>
   );
 
+  const handleNameChange = (text) => {
+    setShowCustomerList(true);
+    
+  };
+
+  const handleCustomerSelect = (customerId, customerName) => {
+    setName(customerId);
+    setShowCustomerList(false);
+  };
+
+  const handleAddCustomer =() =>{
+    navigation.navigate('AddCustomer');
+  };
   const fetchData = async () => {
     const index = parseInt(await AsyncStorage.getItem("Business_id"));
     setCurrentPressedIndex(index);
@@ -379,19 +424,7 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/vector-61.png")}
       />
-      {/* {(
-      <View  style={styles.vehicleModelPicker}>
-        <Picker
-          selectedValue={vehicleModel}
-          onValueChange={(itemValue) =>handleVechileModelSelect(itemValue)}
-        >
-          <Picker.Item label="Select Vehicle Model" value="" />
-          {modelCategories.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )} */}
+      
 <View style={[styles.addVehicleChild1,
  vehicleTypeError  ? styles.childBorderR :styles.childBorder
    ]} />
@@ -424,29 +457,7 @@ const AddVehicle = () => {
               />
               
             
-            {/* <View style={styles.carParent1}>
-              <Text style={[styles.car, styles.vehicleTypo]}>Black</Text>
-              <Image
-                style={[styles.frameChild, styles.childLayout]}
-                contentFit="cover"
-                source={require("../assets/vector-61.png")}
-              />
-              
-             {( <View  style={styles.vechileColor}>
-        <Picker
-          selectedValue={Vehiclecolor}
-          onValueChange={(itemValue) =>handleVechileColorSelect(itemValue)}
-        >
-          <Picker.Item label="Select Vehicle Colour" value="" />
-          {colorCategories.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )}
-
-
-            </View> */}
+            
           </View>
         </View>
       </View>
@@ -479,8 +490,8 @@ const AddVehicle = () => {
       <View style={[styles.lineParent, styles.lineParentLayout]}>
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.davidDaniel, styles.vehicleTypo]}    onChange={setName} placeholder="Name">
-          
+            <TextInput style={[styles.davidDaniel, styles.vehicleTypo]} 
+            onChange={handleNameChange} placeholder="Name">
             </TextInput>
           </View>
         </View>
@@ -494,6 +505,26 @@ const AddVehicle = () => {
         styles.groupInner,
         nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
+
+      {showCustomerList &&(
+        <FlatList
+  data={u}
+  renderItem={({ item }) => (
+    <TouchableOpacity onPress={() => handleCustomerSelect(item.id, item)}>
+      <Text style={styles.customerName}>
+        {item}
+      </Text>
+    </TouchableOpacity>
+  )}
+  keyExtractor={(item, index) => index.toString()}
+  style={styles.customerList}
+  ListFooterComponent={
+    <Button title="Add Customer" onPress={handleAddCustomer} />
+  }
+/>
+
+      )}
+
      
 
       <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
@@ -1492,6 +1523,38 @@ wrap:{
     fontWeight: "500",
     position: "absolute",
   },
+  customerName: {
+    fontSize: 16,
+    paddingVertical: 5,
+  },
+  customerList: {
+    width: '100%',
+    marginTop: 10,
+    maxHeight: 150,
+  },
+  selectedCustomer: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  customerName: {
+    fontSize: 16,
+    paddingVertical: 5,
+  },
+  customerList: {
+    width: '100%',
+    marginTop: 10,
+  },
+  customerListHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  selectedCustomer: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
 });
 
 export default AddVehicle;
