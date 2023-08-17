@@ -8,11 +8,13 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Vehicles from "../screens/Vehicles";
-function VehicleRecords({dsearch,type}) {
+function VehicleRecords({dsearch,type,searchType,searchOrder}) {
     const navigation = useNavigation();
     const [search, setSearch] = useState('');
     const [VehicleType, setVehicleType] = useState('');
-    
+    const [SearchType, setSearchType]= useState('');
+    const [SearchOrder, setSearchOrder]= useState('');
+
     const [data, setData] = useState([]);
     const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
     const [ vehicles, setVehicles]= useState([]);
@@ -39,25 +41,34 @@ function VehicleRecords({dsearch,type}) {
 
     useEffect(() => {
         setSearch(dsearch);
-      
-        const formattedQuery = dsearch.trim().toUpperCase(); // Convert to uppercase for case-insensitive comparison
-      
+        setSearchType(searchType);
+        setSearchOrder(searchOrder);
+    
+        const formattedQuery = dsearch.trim().toUpperCase();
+    
         if (VehicleType === "default") {
-          const maintained = vehicles.filter(
-            (vehicle) =>
-              vehicle.model.toUpperCase().includes(formattedQuery) && // Convert to uppercase for case-insensitive comparison
-              (vehicle.type === "Car" || vehicle.type === "Bike" || vehicle.type === "Truck" || vehicle.type === "Auto")
-          );
-          setData(maintained);
+            console.log(searchType);
+            const maintained = vehicles.filter((vehicle) => {
+                const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery);
+                const searchTypeMatches = searchType.length > 0 && vehicle[searchType] && vehicle[searchType].toUpperCase().includes(formattedQuery);
+    
+                return modelMatches && (searchType.length === 0 || searchTypeMatches);
+            });
+    
+            setData(maintained);
         } else {
-          const maintained = vehicles.filter(
-            (vehicle) =>
-              vehicle.model.toUpperCase().includes(formattedQuery) && // Convert to uppercase for case-insensitive comparison
-              vehicle.type === VehicleType
-          );
-          setData(maintained);
+            const maintained = vehicles.filter((vehicle) => {
+                const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery);
+                const searchTypeMatches = searchType.length > 0 && vehicle[searchType] && vehicle[searchType].toUpperCase().includes(formattedQuery);
+    
+                return modelMatches && (searchType.length === 0 || searchTypeMatches) && vehicle.type === VehicleType;
+            });
+    
+            setData(maintained);
         }
-      }, [dsearch, VehicleType]);
+    }, [dsearch, VehicleType, searchType]);
+    
+    
       
       
 
@@ -77,7 +88,7 @@ function VehicleRecords({dsearch,type}) {
           };
           axios.request(config)
           .then((response) => {
-            // console.log(JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
             setVehicles(response.data.data); 
             
           })
@@ -158,7 +169,7 @@ function VehicleRecords({dsearch,type}) {
                                      ]}>Contact</Text>
                                 <Text style={
                                     currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
-                                    }>{vehicle.contact}</Text>
+                                    }>{vehicle.phoneNumber}</Text>
                             </View>
                         </View>
                         <View style={[styles.frameGroup, styles.frameGroupPosition]}>

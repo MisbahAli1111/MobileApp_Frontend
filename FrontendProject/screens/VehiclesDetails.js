@@ -7,13 +7,14 @@ import Footer from "../components/Footer";
 import VehicleDetails from "../components/VehicleDetail";
 import { useRoute } from "@react-navigation/native";
 
-const VehicleDetailView = () => {
+const VehicleDetailView = ({route}) => {
   const navigation = useNavigation();
-  const route = useRoute();
+  // const route = useRoute();
 
   // contains the record id details
-  const recordId = route.params?.recordId;
-  // console.warn(recordId);
+  const vehicleId = route.params.vehicleId;
+  // console.log("here");
+  
   
   
   return (
@@ -46,7 +47,7 @@ const VehicleDetailView = () => {
         <Text style={[styles.record, styles.kmTypo]}>Vehicle</Text>
       </View>
 
-      <VehicleDetails />
+      <VehicleDetails prop={vehicleId} />
 
       {/* face icon  */}
       

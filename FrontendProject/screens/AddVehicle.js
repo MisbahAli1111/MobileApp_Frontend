@@ -54,22 +54,26 @@ const AddVehicle = () => {
   const u = ["shayan","hassan","pirani","ali","hassan","abbas","fahad"];
 
   const getCustomer = async () =>{
-
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
     const Business_id = await AsyncStorage.getItem("Business_id");
-      
+ 
 
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://172.20.64.1:8080/api/users/get-customer/${Business_id}`,
-      headers: { }
+      url: `http://192.168.100.71:8080/api/users/get-customer/${Business_id}`,
+      headers: { 
+        'Authorization': accessToken
+      }
     };
     
     axios.request(config)
     .then((response) => {
+
       console.log(JSON.stringify(response.data));
-      setCustomers(response.data.data);
-      console.log(customers);
+      // setCustomers(response.data.data);
+      // console.log(customers);
     })
     .catch((error) => {
       console.log(error);

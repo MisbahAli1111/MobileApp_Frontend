@@ -27,29 +27,29 @@ const FilterSearchVehicle = ({onFilterSelect}) => {
             <View style={styles.radioButtonGroup}>
               <RadioButton.Item
                 label="Name"
-                value="name"
-                status={selectedAttributes.includes('name') ? 'checked' : 'unchecked'}
+                value="model"
+                status={selectedAttributes.includes('model') ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (selectedAttributes.includes('name')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'name'));
+                  if (selectedAttributes.includes('model')) {
+                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'model'));
                   } else {
-                    setSelectedAttributes([...selectedAttributes, 'name']);
+                    setSelectedAttributes([...selectedAttributes, 'model']);
                   }
                 }}
-                color={selectedAttributes.includes('name') ? Color.steelblue_100 : undefined}
+                color={selectedAttributes.includes('model') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Contact"
-                value="contact"
-                status={selectedAttributes.includes('contact') ? 'checked' : 'unchecked'}
+                value="phoneNumber"
+                status={selectedAttributes.includes('phoneNumber') ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (selectedAttributes.includes('contact')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'contact'));
+                  if (selectedAttributes.includes('phoneNumber')) {
+                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'phoneNumber'));
                   } else {
-                    setSelectedAttributes([...selectedAttributes, 'contact']);
+                    setSelectedAttributes([...selectedAttributes, 'phoneNumber']);
                   }
                 }}
-                color={selectedAttributes.includes('contact') ? Color.steelblue_100 : undefined}
+                color={selectedAttributes.includes('phoneNumber') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Registration Number"

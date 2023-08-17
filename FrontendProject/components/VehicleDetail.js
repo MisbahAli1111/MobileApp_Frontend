@@ -5,22 +5,53 @@ import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
+import Vehicles from "../screens/Vehicles";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function VehicleDetails({route}) {
+function VehicleDetails(props) {
 
   const navigation = useNavigation();
-  // const {vehicleId} = route.params;
-  console.log(route);
+  const [vehicleId,setVehicleId] = useState('');
+  const [vechileDetails, setVehicleDetails]= useState([]);
+
+  // console.log(vehicleId);
+
+  getData = async () => {
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+   
+    // console.log(vehicleId);
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/vehicle/${vehicleId}`,
+      headers: { 
+        'Authorization': accessToken
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      // console.log(JSON.stringify(response.data));
+        setVehicleDetails(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
+
   useEffect(() => {
-    // setVehicleType(type);
+    setVehicleId(props.prop);
+    // console.log(vehicleId);
     getData();
-  }, []);
+  });
 
 
   return (
     <View>
         <View>
-            <Text style={styles.heading}>Corolla GLI 2016</Text>
+            <Text style={styles.heading}>{vechileDetails.make}  {vechileDetails.model}  {vechileDetails.year}</Text>
         </View>
 
       {/* blue div  */}
@@ -38,7 +69,7 @@ function VehicleDetails({route}) {
             </View>
           </View>
           <View style={[styles.kmWrapper, styles.jan2023Position]}>
-            <Text style={[styles.km, styles.kmTypo]}>137,000 km</Text>
+            <Text style={[styles.km, styles.kmTypo]}>{vechileDetails.phoneNumber}</Text>
           </View>
         </View>
         <View style={[styles.frameContainer, styles.waleedAliPosition]}>
@@ -46,12 +77,12 @@ function VehicleDetails({route}) {
         </View>
         <Text
           style={[styles.registrationNumber, styles.dateTypo]}>{`Registration Number `}</Text>
-        <Text style={[styles.abc1231, styles.kmTypo]}>ABC-123</Text>
+        <Text style={[styles.abc1231, styles.kmTypo]}>{vechileDetails.registrationNumber}</Text>
         <Text style={[styles.maintainedBy, styles.dateTypo]}>
           Client Name
         </Text>
         <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
-          Waleed Ali
+        {vechileDetails.firstName} {vechileDetails.lastName}
         </Text>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>
@@ -60,19 +91,19 @@ function VehicleDetails({route}) {
           <Text style={[styles.date, styles.dateTypo]}>Transmision</Text>
         </View>
         <View style={styles.carWashParent}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>2010</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{vechileDetails.model}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Model</Text>
         </View>
         <View style={[styles.pmParent, styles.parentPosition]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>37000 km</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{vechileDetails.kilometerDriven}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Mileage</Text>
         </View>
         <View style={[styles.pmParent, styles.parentPositionn]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>White</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{vechileDetails.color}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Color</Text>
         </View>
         <View style={[styles.carWrapper, styles.typePosition]}>
-          <Text style={[styles.km, styles.kmTypo]}>{`Car `}</Text>
+          <Text style={[styles.km, styles.kmTypo]}>{vechileDetails.type}</Text>
         </View>
         <Text style={[styles.type, styles.typePosition]}>Type</Text>
       </View>
