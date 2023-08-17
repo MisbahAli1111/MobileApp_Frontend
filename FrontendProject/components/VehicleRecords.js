@@ -33,8 +33,8 @@ function VehicleRecords({dsearch,type}) {
       
     const handlePress = ( vehicleId) => {
         setCurrentPressedIndex(vehicleId);
-        console.log(vehicleId);
-          navigation.navigate("VehicleDetails");
+        // console.log(vehicleId);
+          navigation.navigate("VehicleDetails", { vehicleId });
     };
 
     useEffect(() => {
@@ -103,7 +103,7 @@ function VehicleRecords({dsearch,type}) {
             {displayedVehicles.map((vehicle) => (
                 <Pressable
                 style={[styles.groupFrame, styles.groupParentLayout]}
-                    onPress={() => handlePress(vehicle.registration_number)}
+                    onPress={() => handlePress(vehicle.id)}
                 >
                     <View style={[styles.groupParent1, styles.groupParentLayout]}>
                         {/* blue  */}
@@ -119,7 +119,7 @@ function VehicleRecords({dsearch,type}) {
                                      ]}>Name</Text>
                                 <Text style={
                                     currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
-                                    }>{vehicle.ownerName}</Text>
+                                    }>{vehicle.firstName}</Text>
                                 <Image
                                     style={[styles.frameIconn, styles.frameIconPositionn]}
                                     contentFit="cover"

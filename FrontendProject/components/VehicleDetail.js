@@ -6,10 +6,16 @@ import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-nativ
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
-function RecordDetails() {
-
+function VehicleDetails({route}) {
 
   const navigation = useNavigation();
+  // const {vehicleId} = route.params;
+  console.log(route);
+  useEffect(() => {
+    // setVehicleType(type);
+    getData();
+  }, []);
+
 
   return (
     <View>
@@ -603,4 +609,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default RecordDetails;
+export default VehicleDetails;

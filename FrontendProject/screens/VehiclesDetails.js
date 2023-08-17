@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import VehicleDetails from "../components/VehicleDetail";
 import { useRoute } from "@react-navigation/native";
 
-const MaintenanceDetailView = () => {
+const VehicleDetailView = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -546,4 +546,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MaintenanceDetailView;
+export default VehicleDetailView;
