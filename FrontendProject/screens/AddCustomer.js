@@ -166,9 +166,10 @@ const AddCustomer = () => {
 
     if (!hasErrors) {
       const Business_id = await AsyncStorage.getItem("Business_id");
+      console.log(Business_id);
       let token= await AsyncStorage.getItem("accessToken");
       const accessToken = 'Bearer ' + token;
-      // console.log(accessToken);
+      console.log(accessToken);
       let data = JSON.stringify({
         "firstName": name,
         "lastName": name,
@@ -181,7 +182,7 @@ const AddCustomer = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `http://192.168.100.71:8080/api/users/register/customer/${Business_id}`,
+        url: `http://172.20.64.1:8080/api/users/register/customer/${Business_id}`,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': accessToken
@@ -193,7 +194,7 @@ const AddCustomer = () => {
         .then((response) => {
           console.log(JSON.stringify(response.data));
           if (response.data.status === 'OK') {
-            navigation.navigate('Home');
+            navigation.navigate('AddVehicle');
           }
         })
         .catch((error) => {
@@ -605,7 +606,7 @@ const AddCustomer = () => {
       </View>
 
       <Text style={[styles.employeeInfo, styles.registerTypo]}>
-        Employee Info
+        Customer Info
       </Text>
 
 

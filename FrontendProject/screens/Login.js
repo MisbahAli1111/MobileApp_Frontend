@@ -37,7 +37,7 @@ const Login = () => {
         maxBodyLength: Infinity,
         // 172.20.64.1 shayan IP
         // 192.168.100.71 Misbah IP
-        url: 'http://192.168.100.71:8080/login',
+        url: 'http://172.20.64.1:8080/login',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -93,6 +93,10 @@ const Login = () => {
       />
       {passwordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
       {Merror ? <Text style={styles.nameError}>{error}</Text> : null}
+      <Pressable onPress={() => navigation.navigate("OwnerInfo")}>
+        <Text style={styles.signUpText}>Not registered? <Text style={styles.signUpLink}>Sign Up</Text></Text>
+      </Pressable>
+
       <View style={[styles.vectorParent, styles.groupItemLayout]}>
         <Pressable onPress={handleLogin}>
           <Image
@@ -109,6 +113,17 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
+  signUpText: {
+    marginTop: 10,
+    marginBottom: 20,
+    color: 'gray',
+  },
+  signUpLink:{
+    marginTop: 10,
+    marginBottom: 20,
+    color: 'blue',
+    textDecorationLine: 'underline',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

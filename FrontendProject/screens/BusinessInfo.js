@@ -136,7 +136,7 @@ const BusinessInfo = () => {
         url: 'http://172.20.64.1:8080/api/business/add-business/',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token
+          // 'Authorization': token
         },
         data: data
       };

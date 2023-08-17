@@ -51,7 +51,8 @@ const AddVehicle = () => {
   const video = React.useRef(null);
   const [customers , setCustomers] = useState([]);
   const [showCustomerList, setShowCustomerList] = useState(false);
-  const u = ["shayan","hassan","pirani","ali","hassan","abbas","fahad"];
+  const [selectedKey, setSelectedKey] = useState(null);
+  const [filteredNames, setFilteredNames] = useState([]);
 
   const getCustomer = async () =>{
     let token= await AsyncStorage.getItem("accessToken");
@@ -62,7 +63,7 @@ const AddVehicle = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/users/get-customer/${Business_id}`,
+      url: `http://172.20.64.1:8080/api/users/get-customer/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -117,18 +118,27 @@ const AddVehicle = () => {
   );
 
   const handleNameChange = (text) => {
+    setName(text);
     setShowCustomerList(true);
-    
+    // Filter names based on typed text
+    const filtered = customers.filter(
+      (nameObj) =>
+       nameObj.name.toString().includes(text.toString().toLowerCase())
+    );
+    setFilteredNames(filtered);
   };
 
-  const handleCustomerSelect = (customerId, customerName) => {
-    setName(customerId);
+  const handleNameSelect = (key,name) => {
+    setSelectedKey(key);
+    setName(name);
+    console.log(key);
     setShowCustomerList(false);
   };
 
   const handleAddCustomer =() =>{
     navigation.navigate('AddCustomer');
   };
+
   const fetchData = async () => {
     const index = parseInt(await AsyncStorage.getItem("Business_id"));
     setCurrentPressedIndex(index);
@@ -495,7 +505,8 @@ const AddVehicle = () => {
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.davidDaniel, styles.vehicleTypo]} 
-            onChange={handleNameChange} placeholder="Name">
+            value={name} onChange={handleNameChange} placeholder="Name"
+            >
             </TextInput>
           </View>
         </View>
@@ -512,21 +523,20 @@ const AddVehicle = () => {
 
       {showCustomerList &&(
         <FlatList
-  data={u}
-  renderItem={({ item }) => (
-    <TouchableOpacity onPress={() => handleCustomerSelect(item.id, item)}>
-      <Text style={styles.customerName}>
-        {item}
-      </Text>
-    </TouchableOpacity>
-  )}
-  keyExtractor={(item, index) => index.toString()}
-  style={styles.customerList}
-  ListFooterComponent={
-    <Button title="Add Customer" onPress={handleAddCustomer} />
-  }
-/>
-
+        data={customers}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleNameSelect(item.key,item.name)}>
+            <Text style={[styles.name, item.key === selectedKey && styles.selectedName]}>
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.key.toString()}
+        style={styles.nameList}
+        ListFooterComponent={
+          <Button title="Add Customer" onPress={handleAddCustomer} style = {styles.listButton}/>
+        }
+      />
       )}
 
      
@@ -1531,11 +1541,11 @@ wrap:{
     fontSize: 16,
     paddingVertical: 5,
   },
-  customerList: {
-    width: '100%',
-    marginTop: 10,
-    maxHeight: 150,
-  },
+  // customerList: {
+  //   width: '100%',
+  //   marginTop: 10,
+  //   maxHeight: 150,
+  // },
   selectedCustomer: {
     marginTop: 10,
     fontSize: 16,
@@ -1558,7 +1568,18 @@ wrap:{
     marginTop: 10,
     fontSize: 16,
     fontWeight: 'bold',
-  }
+  },
+  listButton:{
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
+  centeredFlatList:{
+    // alignSelf:"center",
+
+  },
+
 });
 
 export default AddVehicle;

@@ -20,6 +20,7 @@ import Vehicles from "./screens/Vehicles";
 import AddVehicle from "./screens/AddVehicle";
 import Login from "./screens/Login";
 import VehicleDetails from  "./screens/VehiclesDetails";
+import AddCustomer from "./screens/AddCustomer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import Header from "./components/Header";
@@ -68,14 +69,14 @@ const App = () => {
         },
       })}
       >
-          {/* <Stack.Screen
+          <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: 'Login', 
           // showBackArrow: true, 
           // profileImage: require('./assets/mask-group1.png'), 
-          }}/> */}
+          }}/>
 
           <Stack.Screen
               name="Home"
@@ -248,15 +249,15 @@ const App = () => {
                 }}
             />  
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="AddCustomer"
               component={AddCustomer}
               initialParams={{
-              title: 'Add Customer', 
+              title: ' ', 
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            /> */}
+            />
 
 
 
