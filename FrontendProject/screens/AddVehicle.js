@@ -73,8 +73,8 @@ const AddVehicle = () => {
     .then((response) => {
 
       console.log(JSON.stringify(response.data));
-      // setCustomers(response.data.data);
-      // console.log(customers);
+      setCustomers(response.data.data);
+      console.log(customers);
     })
     .catch((error) => {
       console.log(error);
@@ -131,7 +131,7 @@ const AddVehicle = () => {
   const handleNameSelect = (key,name) => {
     setSelectedKey(key);
     setName(name);
-    console.log(key);
+    // console.log(key);
     setShowCustomerList(false);
   };
 
@@ -285,10 +285,10 @@ const AddVehicle = () => {
         
         axios.request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
+          // console.log(JSON.stringify(response.data));
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
         
     }
