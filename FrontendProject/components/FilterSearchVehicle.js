@@ -27,16 +27,16 @@ const FilterSearchVehicle = ({onFilterSelect}) => {
             <View style={styles.radioButtonGroup}>
               <RadioButton.Item
                 label="Name"
-                value="model"
-                status={selectedAttributes.includes('model') ? 'checked' : 'unchecked'}
+                value="firstName"
+                status={selectedAttributes.includes('firstName') ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (selectedAttributes.includes('model')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'model'));
+                  if (selectedAttributes.includes('firstName')) {
+                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'firstName'));
                   } else {
-                    setSelectedAttributes([...selectedAttributes, 'model']);
+                    setSelectedAttributes([...selectedAttributes, 'firstName']);
                   }
                 }}
-                color={selectedAttributes.includes('model') ? Color.steelblue_100 : undefined}
+                color={selectedAttributes.includes('firstName') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Contact"

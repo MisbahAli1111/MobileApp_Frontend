@@ -11,7 +11,7 @@ import Vehicles from "../screens/Vehicles";
 function VehicleRecords({dsearch,type,searchType,searchOrder}) {
     const navigation = useNavigation();
     const [search, setSearch] = useState('');
-    const [VehicleType, setVehicleType] = useState('');
+    const [VehicleType, setVehicleType] = useState([]);
     const [SearchType, setSearchType]= useState('');
     const [SearchOrder, setSearchOrder]= useState('');
 
@@ -21,16 +21,32 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
 
 
     const displayedVehicles = useMemo(() => {
+        let filteredVehicles;
+    
         if (search) {
-          return data;
+            filteredVehicles = data;
         } else {
-          if (VehicleType!='default') {
-            return vehicles.filter((vehicle) => vehicle.type === VehicleType);
-          } else {
-            return vehicles;
-          }
+            if (VehicleType !== 'default') {
+                filteredVehicles = vehicles.filter((vehicle) => vehicle.type === VehicleType);
+            } else {
+                filteredVehicles = vehicles;
+            }
         }
-      }, [search, data, vehicles, VehicleType]);
+        // console.log(searchOrder);
+        const sortedVehicles = filteredVehicles.slice().sort((a, b) => {
+            const dateA = new Date(a.dateCreated);
+            const dateB = new Date(b.dateCreated);
+            
+            if (searchOrder === "ascending") {
+                return dateA - dateB;
+            } else {
+                return dateB - dateA;
+            }
+        });
+    
+        return sortedVehicles;
+    }, [search, data, vehicles, VehicleType, searchOrder]);
+    
 
       
     const handlePress = ( vehicleId) => {
@@ -43,30 +59,68 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
         setSearch(dsearch);
         setSearchType(searchType);
         setSearchOrder(searchOrder);
-    
+        console.log(searchType);
         const formattedQuery = dsearch.trim().toUpperCase();
-    
+        
         if (VehicleType === "default") {
-            console.log(searchType);
             const maintained = vehicles.filter((vehicle) => {
-                const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery);
-                const searchTypeMatches = searchType.length > 0 && vehicle[searchType] && vehicle[searchType].toUpperCase().includes(formattedQuery);
-    
-                return modelMatches && (searchType.length === 0 || searchTypeMatches);
+                if (!searchType.length > 0) {
+                    const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery);
+                    const makeMatches = vehicle.make.toUpperCase().includes(formattedQuery);
+                    const yearMatches = vehicle.year.includes(formattedQuery);
+                    const nameMatches = vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery);
+                    return modelMatches || makeMatches || yearMatches || nameMatches;
+                } else {
+                    const searchTypeMatches = searchType.some(property => {
+                        
+                        if (property === "firstName") {
+                            // console.warn("sdfsf");
+                            const nameMatches = vehicle.firstName.toUpperCase().includes(formattedQuery);
+                            const nnameMatches = vehicle.lastName.toUpperCase().includes(formattedQuery);
+                             return nameMatches || nnameMatches;
+                        }
+                        if (vehicle[property]) {
+                            return vehicle[property].toUpperCase().includes(formattedQuery);
+                        }
+                        return false;
+                    });
+                    return searchTypeMatches;
+                }
             });
     
             setData(maintained);
         } else {
             const maintained = vehicles.filter((vehicle) => {
-                const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery);
-                const searchTypeMatches = searchType.length > 0 && vehicle[searchType] && vehicle[searchType].toUpperCase().includes(formattedQuery);
-    
-                return modelMatches && (searchType.length === 0 || searchTypeMatches) && vehicle.type === VehicleType;
+                const s = searchType;
+                if (!searchType.length > 0) {
+                    const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery) && vehicle.type === VehicleType;
+                    const makeMatches = vehicle.make.toUpperCase().includes(formattedQuery) && vehicle.type === VehicleType;
+                    const yearMatches = vehicle.year.includes(formattedQuery) && vehicle.type === VehicleType;
+                    const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery)) && vehicle.type === VehicleType;
+                    return modelMatches || makeMatches || yearMatches || nameMatches;
+                } else {
+                    const searchTypeMatches = searchType.some(property => {
+                        if (property === "name") {
+                            const nameMatches = vehicle.firstName.toUpperCase().includes(formattedQuery)   && vehicle.type === VehicleType;
+                           const nnameMatches = vehicle.lastName.toUpperCase().includes(formattedQuery) && vehicle.type === VehicleType;
+                            return nameMatches || nnameMatches;
+                        }
+                        if (vehicle[property]) {
+                            return vehicle[property].toUpperCase().includes(formattedQuery);
+                        }
+                        return false;
+                    });
+                    return searchTypeMatches && vehicle.type === VehicleType;
+                }
             });
     
             setData(maintained);
         }
-    }, [dsearch, VehicleType, searchType]);
+        
+    }, [dsearch, VehicleType, searchType, searchOrder]);
+    
+
+    
     
     
       
@@ -130,7 +184,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
                                      ]}>Name</Text>
                                 <Text style={
                                     currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
-                                    }>{vehicle.firstName}</Text>
+                                    }>{vehicle.firstName} {vehicle.lastName}</Text>
                                 <Image
                                     style={[styles.frameIconn, styles.frameIconPositionn]}
                                     contentFit="cover"

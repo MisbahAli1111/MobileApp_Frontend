@@ -16,7 +16,7 @@ const Vehicles = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [filterSearchClicked,setFilterSearchClicked] =useState(false);
-  const [searchType , setSearchType] = useState('');
+  const [searchType , setSearchType] = useState([]);
   const [searchOrder , setSearchOrder] = useState('');
   const handleQuery = (query) => {
     setSearch(query);
@@ -29,11 +29,11 @@ const Vehicles = () => {
   const addFilterInState = (attribute = ['default'], sort = 'default') => {
   
     setFilterSearchClicked(false);
-    setSearchType(attribute[0]);
+    setSearchType(attribute);
     setSearchOrder(sort);
 
-    console.log('Selected Filters:', attribute[0])
-    console.log('selected Sort: ',sort)
+    // console.log('Selected Filters:', attribute[0])
+    // console.log('selected Sort: ',sort)
   };
    
 

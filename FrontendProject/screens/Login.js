@@ -37,7 +37,7 @@ const Login = () => {
         maxBodyLength: Infinity,
         // 172.20.64.1 shayan IP
         // 192.168.100.71 Misbah IP
-        url: 'http://172.20.64.1:8080/login',
+        url: 'http://192.168.100.71:8080/login',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
