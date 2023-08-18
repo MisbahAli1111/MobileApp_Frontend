@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import { Image } from "expo-image";
 import {Button, Modal,StyleSheet, View, Text,ScrollView,TextInput, Pressable,TouchableOpacity,FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -50,9 +50,11 @@ const AddVehicle = () => {
   const [status, setStatus] = useState({});
   const video = React.useRef(null);
   const [customers , setCustomers] = useState([]);
-  const [showCustomerList, setShowCustomerList] = useState(false);
-  const [selectedKey, setSelectedKey] = useState(null);
-  const [filteredNames, setFilteredNames] = useState([]);
+  const [search, setSearch] = useState('');
+  const [clicked, setClicked] = useState(false);
+  const [data, setData] = useState(customer);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const searchRef = useRef();
 
   const getCustomer = async () =>{
     let token= await AsyncStorage.getItem("accessToken");
@@ -72,9 +74,9 @@ const AddVehicle = () => {
     axios.request(config)
     .then((response) => {
 
-      console.log(JSON.stringify(response.data));
-      setCustomers(response.data.data);
-      console.log(customers);
+      JSON.stringify(response.data);
+      setCustomers(response.data);
+      // console.log(customers);
     })
     .catch((error) => {
       console.log(error);
@@ -117,24 +119,17 @@ const AddVehicle = () => {
     </View>
   );
 
-  const handleNameChange = (text) => {
-    setName(text);
-    setShowCustomerList(true);
-    // Filter names based on typed text
-    const filtered = customers.filter(
-      (nameObj) =>
-       nameObj.name.toString().includes(text.toString().toLowerCase())
-    );
-    setFilteredNames(filtered);
-  };
-
-  const handleNameSelect = (key,name) => {
-    setSelectedKey(key);
-    setName(name);
-    // console.log(key);
-    setShowCustomerList(false);
-  };
-
+  
+  const onSearch = search => {
+    if (search !== '') {
+      let tempData = data.filter(item => {
+        return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+      });
+      setData(tempData);
+    } else {
+      setData(customer);
+    }
+  }
   const handleAddCustomer =() =>{
     navigation.navigate('AddCustomer');
   };
@@ -294,6 +289,11 @@ const AddVehicle = () => {
     }
   };
 
+  const customer = customers.map(customer => ({
+    key: customer.id.toString(),
+    value: customer.name,
+  }));
+
 
   
   return (
@@ -433,11 +433,7 @@ const AddVehicle = () => {
       editable={false}  
         />
       {/* <Text style={[styles.text2, styles.vehicleTypo]}>{`2011 `}</Text> */}
-      <Image
-        style={[styles.addVehicleChild2, styles.childLayout]}
-        contentFit="cover"
-        source={require("../assets/vector-61.png")}
-      />
+      
       
 <View style={[styles.addVehicleChild1,
  vehicleTypeError  ? styles.childBorderR :styles.childBorder
@@ -505,7 +501,7 @@ const AddVehicle = () => {
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.davidDaniel, styles.vehicleTypo]} 
-            value={name} onChange={handleNameChange} placeholder="Name"
+            value={name}  placeholder="Name"
             >
             </TextInput>
           </View>
@@ -521,23 +517,86 @@ const AddVehicle = () => {
         nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
 
-      {showCustomerList &&(
-        <FlatList
-        data={customers}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleNameSelect(item.key,item.name)}>
-            <Text style={[styles.name, item.key === selectedKey && styles.selectedName]}>
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.key.toString()}
-        style={styles.nameList}
-        ListFooterComponent={
-          <Button title="Add Customer" onPress={handleAddCustomer} style = {styles.listButton}/>
-        }
-      />
-      )}
+      <View>
+      {/* <TouchableOpacity
+        style={{
+          width: '90%',
+          height: 50,
+          borderRadius: 10,
+          borderWidth: 0.5,
+          alignSelf: 'center',
+          marginTop: 100,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingLeft: 15,
+          paddingRight: 15,
+        }}
+        onPress={() => {
+          setClicked(!clicked);
+        }}>
+        <Text style={{fontWeight:'600'}}>
+          {selectedCountry == '' ? 'Select Country' : selectedCountry}
+        </Text>
+      </TouchableOpacity> */}
+      {clicked ? (
+        <View
+          style={{
+            elevation: 5,
+            marginTop: 20,
+            height: 300,
+            alignSelf: 'center',
+            width: '90%',
+            backgroundColor: '#fff',
+            borderRadius: 10,
+          }}>
+          <TextInput
+            placeholder="Search.."
+            value={search}
+            ref={searchRef}
+            onChangeText={txt => {
+              onSearch(txt);
+              setSearch(txt);
+            }}
+            style={{
+              width: '90%',
+              height: 50,
+              alignSelf: 'center',
+              borderWidth: 0.2,
+              borderColor: '#8e8e8e',
+              borderRadius: 7,
+              marginTop: 20,
+              paddingLeft: 20,
+            }}
+          />
+
+          <FlatList
+            data={customers}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: '85%',
+                    alignSelf: 'center',
+                    height: 50,
+                    justifyContent: 'center',
+                    borderBottomWidth: 0.5,
+                    borderColor: '#8e8e8e',
+                  }}
+                  onPress={() => {
+                    setSelectedCountry(item.country);
+                    setClicked(!clicked);
+                    onSearch('');
+                    setSearch('');
+                  }}>
+                  <Text style={{fontWeight: '600'}}>{item.country}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+      ) : null}
+    </View>
 
      
 

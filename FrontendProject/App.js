@@ -69,7 +69,7 @@ const App = () => {
         },
       })}
       >
-          <Stack.Screen
+          {/* <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
@@ -235,7 +235,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />  
+            />   */}
 
 
              <Stack.Screen 
