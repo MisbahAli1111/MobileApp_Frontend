@@ -74,10 +74,10 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
                     const searchTypeMatches = searchType.some(property => {
                         
                         if (property === "firstName") {
-                            // console.warn("sdfsf");
-                            const nameMatches = vehicle.firstName.toUpperCase().includes(formattedQuery);
-                            const nnameMatches = vehicle.lastName.toUpperCase().includes(formattedQuery);
-                             return nameMatches || nnameMatches;
+                            
+                            const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery));
+                            return nameMatches;
+                            
                         }
                         if (vehicle[property]) {
                             return vehicle[property].toUpperCase().includes(formattedQuery);
@@ -101,9 +101,8 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
                 } else {
                     const searchTypeMatches = searchType.some(property => {
                         if (property === "name") {
-                            const nameMatches = vehicle.firstName.toUpperCase().includes(formattedQuery)   && vehicle.type === VehicleType;
-                           const nnameMatches = vehicle.lastName.toUpperCase().includes(formattedQuery) && vehicle.type === VehicleType;
-                            return nameMatches || nnameMatches;
+                            const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery)) && vehicle.type ==  VehicleType;
+                            return nameMatches;
                         }
                         if (vehicle[property]) {
                             return vehicle[property].toUpperCase().includes(formattedQuery);
