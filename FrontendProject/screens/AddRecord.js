@@ -12,8 +12,8 @@ import Footer from "../components/Footer";
 import Carousel,{Pagination} from "react-native-snap-carousel";
 import {Video} from "expo-av";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-
-
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AddRecord = () => {
   const navigation = useNavigation();
@@ -62,7 +62,7 @@ const [Msg,setMsg]=useState('');
   const [originalUri, setOriginalUri] = useState('');
   const [status, setStatus] = useState({});
   const video = React.useRef(null);
-
+  const [ RegMsg , setRegMsg ]=useState('');
 
   
    const renderCarouselItem = ({ item, index }) => (
@@ -170,37 +170,68 @@ const [Msg,setMsg]=useState('');
   };
 
 
+  getCustomer = async ()=>{
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/pak`,
+      headers: { 
+        'Authorization': accessToken
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
 
 
 
 
-  const handleSave = () => {
+  const handleSave = async () => {
     let hasErrors = false; // Initialize the flag
-  
+    setNumberError(false);
     if (!carNumber) {
       setNumberError(true);
+      setRegMsg('Please provide Vehicle Registration Number');
       hasErrors = true;
     } else {
       setNumberError(false);
     }
   
-    if (!date) {
+    // console.log(selectedDate);
+    // console.log(selectedImage);
+    
+    if (!selectedDate) {
+      
       setDateError(true);
+      setTimeError(true);
       setMsg('Please provide Date');
       hasErrors = true;
     } else {
-      if (!time) {
+
+      setTimeError(false);
+      setDateError(false); // Clear any previous date errors
+      
+      if (!selectedTime) {
+        console.log(selectedTime);
         setDateError(true);
         setMsg('Please provide Time');
         hasErrors = true;
       }
-      setDateError(false);
     }
   
     if (!user) {
       setNameError(true);
       hasErrors = true;
     } else {
+      getCustomer();
       setNameError(false);
     }
   
@@ -225,10 +256,45 @@ const [Msg,setMsg]=useState('');
       setDetailError(false);
     }
   
-   
     if (!hasErrors) {
-      navigation.navigate('MaintenanceRecord');
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+        const accessToken = 'Bearer ' + token;
+    
+        // const axios = require('axios');
+        const data = {
+          "kilometerDriven": driven,
+          "service": selectedCode,
+          "maintanenceDetail": details,
+          "registrationNumber": carNumber
+        };
+          
+        const config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'http://192.168.100.71:8080/api/maintenance-record/add-record',
+          headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': accessToken
+          },
+          data: data
+        };
+          
+        const response = await axios.request(config);
+        // console.log(JSON.stringify(response.data));
+        if(response.data.status=="EXPECTATION_FAILED"){
+         setRegMsg(JSON.stringify(response.data.message));
+        setNumberError(true);
+        }else{
+          navigation.navigate("MaintenanceRecord");
+        }
+        
+        
+      } catch (error) {
+        console.error(error);
+      }
     }
+    
   };
   
 
@@ -282,7 +348,7 @@ const [Msg,setMsg]=useState('');
       <View style={[styles.addRecordChild3,
           NumberError ? styles.childLayoutR :styles.childLayout
          ]} />
-      {NumberError ? <Text style={styles.nameError}>Please provide valid car Number</Text> : null}
+      {NumberError ? <Text style={styles.nameError}>{RegMsg}</Text> : null}
 
 
       <TextInput style={[styles.text2, styles.pmTypo]}
@@ -307,7 +373,9 @@ const [Msg,setMsg]=useState('');
           onChange={handleDateChange}
         />
       )}
-      <View style={[styles.addRecordItem, styles.addPosition]} />
+      <View style={[styles.addRecordItem, 
+         TimeError ? styles.addPositionR:styles.addPosition
+        ]} />
 
 
       <TextInput style={[styles.pm, styles.pmTypo]}
@@ -331,7 +399,9 @@ const [Msg,setMsg]=useState('');
           onChange={handleTimeChange}
         />
       )}
-      <View style={[styles.addRecordInner, styles.addPosition]} />
+      <View style={[styles.addRecordInner,
+        DateError ? styles.addPositionR:styles.addPosition
+         ]} />
       {DateError ? <Text style={styles.nameError}>{Msg}</Text> : null}
 
 
@@ -790,7 +860,15 @@ video: {
 marginTop:5,
     position: "relative",
   },
-
+  addPositionR: {
+    height: 2,
+    borderTopWidth: 2,
+    borderColor: "red",
+    borderStyle: "solid",
+    top: 0,
+marginTop:5,
+    position: "relative",
+  },
 
 
   childLayout: {
@@ -828,7 +906,7 @@ marginTop:5,
     top: 0,
     width: 80,
     left: 323,
-    marginTop:-38,
+    marginTop:-45,
     marginBottom:6,
 
   },
@@ -845,15 +923,17 @@ marginTop:5,
 
   wrap:{
     // backgroundColor:'red',
-    marginVertical:225,
-    marginTop:170,
+    marginVertical:90,
+    marginTop:190,
     flex:1,
     overflow:'hidden',
+    
+    // justifyContent: 'center',
   },
   groupItemLayout: {
     height: 45,
     width: 381,
-    position: "relative",
+    position: "absolute",
   },
   groupItem2Layout: {
     height: 45,
@@ -978,7 +1058,7 @@ marginTop:5,
   text2: {
     left: 24,
     top: 0,
-    marginTop: 25,
+    marginTop: 18,
     fontFamily: FontFamily.poppinsRegular,
   },
   addRecordItem: {
@@ -989,7 +1069,7 @@ marginTop:5,
   addRecordInner: {
     left: 220,
     width: 182,
-    marginTop:25,
+    marginTop:16,
   },
   pm: {
     left: 221,
@@ -999,25 +1079,25 @@ marginTop:5,
   },
   loritaDaniel: {
     top: 0,
-    marginTop:25,
+    marginTop:16,
     marginBottom:6,
     left: 24,
   },
   kmDriven: {
     top: 0,
     left: 24,
-    marginTop:25,
+    marginTop:16,
     marginBottom:5,
   },
   oilChange: {
     top: 0,
-    left: 24,
+    left: 14,
     marginTop:25,
   },
   lineView: {
     top: 0,
     left: 23,
-    marginTop:10,
+    marginTop:5,
   },
   addRecordChild1: {
     top: 0,
@@ -1093,6 +1173,7 @@ marginTop:5,
   enterDetail: {
     left: 0,
     top: 0,
+    paddingHorizontal: 20,
   },
   groupChild: {
     top: 0,
@@ -1135,7 +1216,7 @@ marginTop:5,
     left: 171,
     
     color: Color.snow,
-    marginTop:-35,
+    marginTop:10,
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
     textAlign: "left",
@@ -1143,7 +1224,7 @@ marginTop:5,
     position: "relative",
   },
   vectorParent: {
-    top: -190,
+    top: 695,
     left: 18,
   },
   addRecordChild4: {
@@ -1316,8 +1397,8 @@ marginTop:5,
   vectorIcon3: {
     height: "4.00%",
     width: "4.00%",
-    top: 0,
-    marginTop:-20,
+    top: -10,
+    marginTop:-15,
     marginBottom:5,
     right: "7.67%",
     bottom: "55.39%",
@@ -1329,7 +1410,9 @@ marginTop:5,
     overflow: "hidden",
     height: 932,
     width: "100%",
-    position: "absolute"
+    position: "relative",
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
 });
 

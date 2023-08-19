@@ -76,7 +76,7 @@ const App = () => {
           title: 'Login', 
           // showBackArrow: true, 
           // profileImage: require('./assets/mask-group1.png'), 
-          }}/>
+          }}/> */}
 
           <Stack.Screen
               name="Home"
@@ -235,7 +235,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
 
 
              <Stack.Screen 

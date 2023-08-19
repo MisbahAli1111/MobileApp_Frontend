@@ -4,75 +4,75 @@ import { Image } from "expo-image";
 import { StyleSheet, TouchableOpacity,TextInput, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-
-
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 function RecordList({dsearch}) {
 const navigation = useNavigation();
 const [search, setSearch] = useState('');
 const [data, setData] = useState([]);
-
+const [records,setRecords]= useState([]);
 
   
 const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
-const records = [
-  {
-    id:"erwecs",
-    maintainedOn: "sdbfgljb",
-    maintainedBy: "yess",
-    mileage: "137,000",
-    service: "Service Details 1",
-  },
-  {
-    id:"cnaojos",
-    maintainedOn: "2nd January 2023",
-    maintainedBy: "ggggg",
-    mileage: "150,000",
-    service: "Service Details 2",
+// const records = [
+//   {
+//     id:"erwecs",
+//     maintainedOn: "sdbfgljb",
+//     maintainedBy: "yess",
+//     mileage: "137,000",
+//     service: "Service Details 1",
+//   },
+//   {
+//     id:"cnaojos",
+//     maintainedOn: "2nd January 2023",
+//     maintainedBy: "ggggg",
+//     mileage: "150,000",
+//     service: "Service Details 2",
 
-  },
-  {
-    id:"wsncds",
-    maintainedOn: "2nd January 2023",
-    maintainedBy: "no",
-    mileage: "150,000",
-    service: "Service Details 2",
+//   },
+//   {
+//     id:"wsncds",
+//     maintainedOn: "2nd January 2023",
+//     maintainedBy: "no",
+//     mileage: "150,000",
+//     service: "Service Details 2",
 
-  },
-  {
-    id:"cnaojos",
-    maintainedOn: "2nd January 2023",
-    maintainedBy: "ggggg",
-    mileage: "150,000",
-    service: "Service Details 2",
+//   },
+//   {
+//     id:"cnaojos",
+//     maintainedOn: "2nd January 2023",
+//     maintainedBy: "ggggg",
+//     mileage: "150,000",
+//     service: "Service Details 2",
 
-  },
-  {
-    id:"wsncds",
-    maintainedOn: "2nd January 2023",
-    maintainedBy: "no",
-    mileage: "150,000",
-    service: "Service Details 2",
+//   },
+//   {
+//     id:"wsncds",
+//     maintainedOn: "2nd January 2023",
+//     maintainedBy: "no",
+//     mileage: "150,000",
+//     service: "Service Details 2",
 
-  },
-  {
-    id:"cnaojos",
-    maintainedOn: "2nd January 2023",
-    maintainedBy: "ggggg",
-    mileage: "150,000",
-    service: "Service Details 2",
+//   },
+//   {
+//     id:"cnaojos",
+//     maintainedOn: "2nd January 2023",
+//     maintainedBy: "ggggg",
+//     mileage: "150,000",
+//     service: "Service Details 2",
 
-  },
-  {
-    id:"wsncds",
-    maintainedOn: "2nd January 2023",
-    maintainedBy: "no",
-    mileage: "150,000",
-    service: "Service Details 2",
+//   },
+//   {
+//     id:"wsncds",
+//     maintainedOn: "2nd January 2023",
+//     maintainedBy: "no",
+//     mileage: "150,000",
+//     service: "Service Details 2",
 
-  },
+//   },
  
-];
+// ];
 
 const displayedRecords = search ? data : records;
 
@@ -81,12 +81,47 @@ const handlePress = (index,recordId) => {
   navigation.navigate("MaintenanceDetailView",{recordId:recordId});
 };
 
+
+
+getData = async () =>{
+
+  let token= await AsyncStorage.getItem("accessToken");
+  const accessToken = 'Bearer ' + token;
+  // 192.168.100.71
+
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'http://192.168.100.71:8080/api/maintenance-record/get-records',
+    headers: { 
+      'Authorization': accessToken
+    }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    setRecords(response.data);
+    
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+};
+
 useEffect(() => {
-  setSearch(dsearch);
-  const formattedQuery = dsearch.trim().toLowerCase();
-  const maintained=records.filter((record) => record.maintainedBy.includes(formattedQuery))
-  setData(maintained);
-}, [dsearch]);
+
+  getData();
+});
+
+
+// useEffect(() => {
+//   setSearch(dsearch);
+//   const formattedQuery = dsearch.trim().toLowerCase();
+//   const maintained=records.filter((record) => record.maintainedBy.includes(formattedQuery))
+//   setData(maintained);
+// }, [dsearch]);
 
 
   return (
@@ -123,7 +158,7 @@ displayedRecords.map((record, index) => (
                   styles.stJanuary2023,
                   currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
                 ]}>
-                  {record.maintainedOn}
+                  {record.maintanenceDateTime}
                 </Text>
               </View>
               <View
@@ -174,9 +209,9 @@ displayedRecords.map((record, index) => (
                 currentPressedIndex === index ? require("../assets/vehicleservicessvgrepocom-12.png") : require("../assets/vehicleservicessvgrepocom-11.png")}
             />
             <Text style={[
-               currentPressedIndex === index ? styles.carWashW :styles.carWash, styles.carPosition]}>Car Wash</Text>
+               currentPressedIndex === index ? styles.carWashW :styles.carWash, styles.carPosition]}>{record.service}</Text>
             <Text style={[
-              currentPressedIndex === index ? styles.text2W: styles.text2, styles.textPosition]}>137,000</Text>
+              currentPressedIndex === index ? styles.text2W: styles.text2, styles.textPosition]}>{record.kilometerDriven}</Text>
 
           </Pressable>
         </View>
@@ -317,13 +352,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   carPosition: {
-    left: 96,
-    top: 101,
+    left: 100,
+    top: 98,
     position: "absolute",
   },
   textPosition: {
-    left: 101,
-    top: 73,
+    left: 111,
+    top: 70,
     position: "absolute",
   },
   text2: {

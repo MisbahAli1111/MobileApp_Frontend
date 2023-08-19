@@ -12,27 +12,9 @@ import { set } from "react-native-reanimated";
 function BusinessList({ }) {
     const navigation = useNavigation();
     const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
-    const [Business, setBusiness] = useState(['']);
+    const [Business, setBusiness] = useState([]);
     const [loginTime, setLoginTime] = useState(null);
-    // const Business = [
-    //     {
-    //         Name: "sABC",
-    //         lastSigend: "2 hours ago",
-    //     },
-    //     {
-    //         Name: "Business XYZ",
-    //         lastSigend: "5 hours ago",
-    //     },
-    //     {
-    //         Name: "Business KLM",
-    //         lastSigend: "1 hours ago",
-    //     },
-    //     {
-    //         Name: "Business YES",
-    //         lastSigend: "1 hours ago",
-    //     },
 
-    // ];
 
     const fetchData = async () => {
         const index = parseInt(await AsyncStorage.getItem("Business_id"));
@@ -93,7 +75,7 @@ function BusinessList({ }) {
                 let config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://172.20.64.1:8080/api/business/get-my-businesses',
+                    url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
                     headers: {
                         'Authorization': token,
                     },
