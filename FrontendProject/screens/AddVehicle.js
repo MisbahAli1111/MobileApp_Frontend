@@ -23,6 +23,7 @@ const AddVehicle = () => {
   const [vehicleModel, setvehicleModel]=React.useState('');
   const [Registration, setRegistration]=React.useState('');
   const [name,setName]=useState('');
+  const [keyCustomer,setKeyCustomer] = useState('');
   const [Vehiclecolor,setvehiclecolor]=useState("");
   const [phoneNumber, setphoneNumber]=useState('');
   const [km, setKm]=useState('');
@@ -52,7 +53,7 @@ const AddVehicle = () => {
   const [customers , setCustomers] = useState([]);
   const [search, setSearch] = useState('');
   const [clicked, setClicked] = useState(false);
-  const [data, setData] = useState(customer);
+  const [data, setData] = useState(transformedResponse);
   const [selectedCountry, setSelectedCountry] = useState('');
   const searchRef = useRef();
 
@@ -60,8 +61,8 @@ const AddVehicle = () => {
     let token= await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
     const Business_id = await AsyncStorage.getItem("Business_id");
- 
 
+    
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -90,6 +91,13 @@ const AddVehicle = () => {
     getCustomer();
    });
  
+   const transformedResponse = customers.map(item => {
+    const { id, name } = item;
+    return {
+      name: name,
+      id: id
+    };
+  });
 
    const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
@@ -121,15 +129,20 @@ const AddVehicle = () => {
 
   
   const onSearch = search => {
-    if (search !== '') {
-      let tempData = data.filter(item => {
+    if (search != '') {
+      let tempData = transformedResponse.filter(item => {
         return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
       });
       setData(tempData);
     } else {
-      setData(customer);
+      setData(transformedResponse);
     }
   }
+
+  const handleClick = () => {
+    setClicked(!clicked);
+
+  };
   const handleAddCustomer =() =>{
     navigation.navigate('AddCustomer');
   };
@@ -189,16 +202,12 @@ const AddVehicle = () => {
       
     };
 
-    const handleVechileModelSelect = (code) => {
-      setvehicleModel(code);
-      
-    };
+    
 
 
 
-    function saveVehicle() {
+    const  saveVehicle= async () => {
       let isValid = true;
-      // console.log("err");
   
       if (!vehicleType) {
         setMsg('Please Enter Vehicle Type');
@@ -235,7 +244,7 @@ const AddVehicle = () => {
         setMakeError(false);
       }
     
-      if (!name) {
+      if (!keyCustomer) {
         setNameError(true);
         isValid = false;
       } else {
@@ -256,34 +265,40 @@ const AddVehicle = () => {
         setKmError(false);
       }
     
-      if (!isValid) {
+      if (isValid) {
+        let token= await AsyncStorage.getItem("accessToken");
+        const accessToken = 'Bearer ' + token;
+        const Business_id = await AsyncStorage.getItem("Business_id");
+        
+
         let data = JSON.stringify({
           "type": vehicleType,
           "model": vehicleModel,
-          "make": "kj",
-          "year": Registration,
+          "make": make,
+          "year": year,
           "registrationNumber": Registration,
           "color": Vehiclecolor,
-          "ownerId": "2",
+          "ownerId": keyCustomer,
           "carkilometerDriven": km
         });
         
         let config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://localhost:8080/api/vehicle/1/add-vehicle',
+          url: `http://172.20.64.1:8080/api/vehicle/${Business_id}/add-vehicle`,
           headers: { 
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': accessToken
           },
           data : data
         };
         
         axios.request(config)
         .then((response) => {
-          // console.log(JSON.stringify(response.data));
+          console.log(JSON.stringify(response.data));
         })
         .catch((error) => {
-          // console.log(error);
+          console.log(error);
         });
         
     }
@@ -429,10 +444,11 @@ const AddVehicle = () => {
       
       <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
       placeholder="Model "
+      onChangeText={text => setvehicleModel(text)}
       value={vehicleModel}
-      editable={false}  
+        
         />
-      {/* <Text style={[styles.text2, styles.vehicleTypo]}>{`2011 `}</Text> */}
+     
       
       
 <View style={[styles.addVehicleChild1,
@@ -449,7 +465,8 @@ const AddVehicle = () => {
             <TextInput
               style={[styles.vehicleType, styles.vehicleTypo]}
             placeholder="Registration Number     "
-            onChange={setRegistration}
+            onChangeText={text => setRegistration(text)}
+            value={Registration}
             ></TextInput>
           </View>
         </View>
@@ -463,7 +480,8 @@ const AddVehicle = () => {
           <View style={styles.vehicleTypeParent}>
             <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
               placeholder="Vehicle Color   " 
-              onChange={Vehiclecolor}
+              onChangeText={text => setvehiclecolor(text)}
+              value={Vehiclecolor}
               />
               
             
@@ -480,14 +498,14 @@ const AddVehicle = () => {
             <TextInput style={[
              makeError ? styles.davidDanielmR : styles.davidDanielm
               ,
-               styles.vehicleTypo]}    onChange={setMake} placeholder="Make">
+               styles.vehicleTypo]} value={make} onChangeText={text => setMake(text)} placeholder="Make">
           
             </TextInput>
             <TextInput style={[
               makeError ? styles.davidDanielmR : styles.davidDanielm
               , 
               styles.vehicleTypo
-              ]}    onChange={setYear} placeholder="Year">
+              ]}  value={year} onChangeText={text => setYear(text)}placeholder="Year">
           
             </TextInput>
             
@@ -496,17 +514,19 @@ const AddVehicle = () => {
       </View>
       {makeError ? <Text style={styles.nameError}>{Nmsg}</Text> : null}
      
-      
+      <TouchableOpacity
+      onPress={handleClick}>
       <View style={[styles.lineParent, styles.lineParentLayout]}>
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.davidDaniel, styles.vehicleTypo]} 
-            value={name}  placeholder="Name"
-            >
-            </TextInput>
+            <Text style={[styles.davidDaniel, styles.vehicleTypo]} 
+            
+            >{selectedCountry == '' ? 'Select Customer' : selectedCountry}</Text>
+            
           </View>
         </View>
       </View>
+      </TouchableOpacity>
       <Image
         style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
         contentFit="cover"
@@ -517,29 +537,9 @@ const AddVehicle = () => {
         nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
 
-      <View>
-      {/* <TouchableOpacity
-        style={{
-          width: '90%',
-          height: 50,
-          borderRadius: 10,
-          borderWidth: 0.5,
-          alignSelf: 'center',
-          marginTop: 100,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingLeft: 15,
-          paddingRight: 15,
-        }}
-        onPress={() => {
-          setClicked(!clicked);
-        }}>
-        <Text style={{fontWeight:'600'}}>
-          {selectedCountry == '' ? 'Select Country' : selectedCountry}
-        </Text>
-      </TouchableOpacity> */}
+      
       {clicked ? (
+        <View>
         <View
           style={{
             elevation: 5,
@@ -571,7 +571,7 @@ const AddVehicle = () => {
           />
 
           <FlatList
-            data={customers}
+            data={data}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -584,28 +584,50 @@ const AddVehicle = () => {
                     borderColor: '#8e8e8e',
                   }}
                   onPress={() => {
-                    setSelectedCountry(item.country);
+                    setSelectedCountry(item.name);
+                    setKeyCustomer(item.id);
                     setClicked(!clicked);
                     onSearch('');
                     setSearch('');
                   }}>
-                  <Text style={{fontWeight: '600'}}>{item.country}</Text>
+                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
                 </TouchableOpacity>
               );
             }}
           />
+          </View>
+          <TouchableOpacity
+          style={{
+            backgroundColor: 'rgba(3, 29, 68, 1)',
+            paddingVertical: 10,
+            alignSelf:"center",
+            borderRadius: 5,
+            paddingLeft:10,
+            width:"50%",
+            marginTop: 10,
+          }}
+          onPress={handleAddCustomer}
+        >
+          <Text style={{
+            fontSize: FontSize.size_sm,
+            fontFamily: FontFamily.poppinsMedium,
+            color: 'white',
+            textAlign: 'center',
+          }}>Add Customer</Text>
+        </TouchableOpacity>
         </View>
       ) : null}
-    </View>
+    
 
      
 
       <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
           <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    
-          onChange={setphoneNumber} placeholder="Phone Number    "
+         onChangeText={text => setphoneNumber(text)} placeholder="Phone Number    "
           keyboardType="numeric"
-          maxLength={11}>
+          maxLength={11}
+          value={phoneNumber}>
            
           </TextInput>
         </View>
@@ -624,8 +646,9 @@ const AddVehicle = () => {
       <View style={[styles.lineGroup, styles.lineParentLayout]}>
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    onChange={setKm} placeholder="Km Driven   "
-            keyboardType="numeric"> 
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}
+            onChangeText={text => setKm(text)} placeholder="Km Driven   "
+            keyboardType="numeric" value={km}> 
             </TextInput>
           </View>
         </View>
@@ -655,7 +678,7 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/odometersvgrepocom-1.png")}
       />
-      <Pressable
+      <TouchableOpacity
         style={[styles.groupParent, styles.groupLayout]}
         onPress= {saveVehicle}
       >
@@ -665,7 +688,7 @@ const AddVehicle = () => {
           source={require("../assets/group-166.png")}
         />
         <Text style={[styles.savebutton, styles.saveTypo]}>Save</Text>
-      </Pressable>
+      </TouchableOpacity>
       
       
       {/* <Image
@@ -1342,7 +1365,7 @@ wrap:{
   davidDaniel: {
     width: 168,
     fontSize: FontSize.size_base,
-    color: Color.darkslateblue,
+    color: 'black',
  
   },
   lineParent: {
