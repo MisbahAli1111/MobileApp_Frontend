@@ -11,9 +11,7 @@ const FilterSearchRecord = ({onFilterSelect}) => {
 
 
   const applyFilter = () => {
-    // Here, you can handle the logic for applying the filter
     onFilterSelect(selectedAttributes, sortOrder);
-    
   };
 
   return (
@@ -27,29 +25,29 @@ const FilterSearchRecord = ({onFilterSelect}) => {
             <View style={styles.radioButtonGroup}>
               <RadioButton.Item
                 label="Date"
-                value="date"
-                status={selectedAttributes.includes('date') ? 'checked' : 'unchecked'}
+                value="maintanenceDateTime"
+                status={selectedAttributes.includes('maintanenceDateTime') ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (selectedAttributes.includes('date')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'date'));
+                  if (selectedAttributes.includes('maintanenceDateTime')) {
+                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'maintanenceDateTime'));
                   } else {
-                    setSelectedAttributes([...selectedAttributes, 'date']);
+                    setSelectedAttributes([...selectedAttributes, 'maintanenceDateTime']);
                   }
                 }}
-                color={selectedAttributes.includes('date') ? Color.steelblue_100 : undefined}
+                color={selectedAttributes.includes('maintanenceDateTime') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
-                label="Employees"
-                value="employee"
-                status={selectedAttributes.includes('employee') ? 'checked' : 'unchecked'}
+                label="Maintained By"
+                value="name"
+                status={selectedAttributes.includes('name') ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (selectedAttributes.includes('employee')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'employee'));
+                  if (selectedAttributes.includes('name')) {
+                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'name'));
                   } else {
-                    setSelectedAttributes([...selectedAttributes, 'employee']);
+                    setSelectedAttributes([...selectedAttributes, 'name']);
                   }
                 }}
-                color={selectedAttributes.includes('employee') ? Color.steelblue_100 : undefined}
+                color={selectedAttributes.includes('name') ? Color.steelblue_100 : undefined}
               />
               <RadioButton.Item
                 label="Service"
@@ -66,16 +64,16 @@ const FilterSearchRecord = ({onFilterSelect}) => {
               />
               <RadioButton.Item
                 label="Mileage"
-                value="mileage"
-                status={selectedAttributes.includes('mileage') ? 'checked' : 'unchecked'}
+                value="kilometerDriven"
+                status={selectedAttributes.includes('kilometerDriven') ? 'checked' : 'unchecked'}
                 onPress={() => {
-                  if (selectedAttributes.includes('mileage')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'mileage'));
+                  if (selectedAttributes.includes('kilometerDriven')) {
+                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'kilometerDriven'));
                   } else {
-                    setSelectedAttributes([...selectedAttributes, 'mileage']);
+                    setSelectedAttributes([...selectedAttributes, 'kilometerDriven']);
                   }
                 }}
-                color={selectedAttributes.includes('mileage') ? Color.steelblue_100 : undefined}
+                color={selectedAttributes.includes('kilometerDriven') ? Color.steelblue_100 : undefined}
               />
             </View>
           </View>

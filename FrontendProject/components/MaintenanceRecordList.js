@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useMemo } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, TouchableOpacity,TextInput, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -25,24 +25,9 @@ const handlePress = (index,recordId) => {
   navigation.navigate("MaintenanceDetailView",{recordId:recordId});
 };
 
-const getUser = async  (userId ) =>{
-  let config = {
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: `http://192.168.100.71:8080/api/users/${userId}`,
-    headers: { }
-  };
-  
-  axios.request(config)
-  .then((response) => {
-    // console.log(JSON.stringify(response.data));
-    // console.log(response.data.firstName);
-    return(response.data.firstName);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-};
+
+
+
 
 getData = async () =>{
 
@@ -61,8 +46,9 @@ getData = async () =>{
   
   axios.request(config)
   .then((response) => {
-    // console.log(JSON.stringify(response.data));
+    console.log(JSON.stringify(response.data));
     setRecords(response.data);
+
     return response.data;
   })
   .catch((error) => {
@@ -80,11 +66,39 @@ useEffect(() => {
 useEffect(() => {
   setSearch(dsearch);
 
-  console.log(searchType);
-  const formattedQuery = dsearch.trim().toLowerCase();
-  const maintained=records.filter((record) => record.service.includes(formattedQuery))
-  setData(maintained);
-}, [dsearch,searchType,searchOrder]);
+  const formattedQuery = dsearch.trim().toUpperCase();
+
+  const maintained = records.filter((record) => {
+    if (!searchType.length > 0) {
+      const field1Matches = record.service.toUpperCase().includes(formattedQuery);
+      return field1Matches;
+    } else {
+      const searchTypeMatches = searchType.some(property => {
+        const propertyValue = record[property];
+
+        if (property === "maintenanceDateTime") {
+          const formattedDate = new Date(propertyValue).toDateString().toUpperCase();
+          return formattedDate.includes(formattedQuery);
+        } else {
+          const propertyAsString = propertyValue.toString();
+          return propertyAsString.toUpperCase().includes(formattedQuery);
+        }
+      });
+      return searchTypeMatches;
+    }
+  });
+
+
+ 
+}, [dsearch, searchType, searchOrder]);
+
+
+
+
+
+
+
+
 
 const formatDateTime = (isoDateTime) => {
   return new Date(isoDateTime).toLocaleString('en-US', {
@@ -101,7 +115,7 @@ const formatDateTime = (isoDateTime) => {
     {
 displayedRecords.map((record, index) => {
   
-   const user = getUser(record.maintainedById);
+  
     // console.log(user);
       return(
       <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
@@ -150,9 +164,7 @@ displayedRecords.map((record, index) => {
                   styles.stJanuary2023,
                   currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
                 ]}>
-                
-                  
-                  {/* {getUser(record.maintainedById)} */}
+                 {record.name}
                 </Text>
               </View>
               <View style={[styles.mileageWrapper, styles.wrapperPosition]}>

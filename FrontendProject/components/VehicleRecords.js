@@ -59,7 +59,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
         setSearch(dsearch);
         setSearchType(searchType);
         setSearchOrder(searchOrder);
-        console.log(searchType);
+        // console.log(searchType);
         const formattedQuery = dsearch.trim().toUpperCase();
         
         if (VehicleType === "default") {

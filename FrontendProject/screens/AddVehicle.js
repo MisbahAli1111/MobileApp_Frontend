@@ -539,7 +539,14 @@ const AddVehicle = () => {
 
       
       {clicked ? (
-        <View>
+        <Modal transparent={true} animationType="slide">
+        <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }}>
         <View
           style={{
             elevation: 5,
@@ -569,9 +576,10 @@ const AddVehicle = () => {
               paddingLeft: 20,
             }}
           />
-
+          <ScrollView>
           <FlatList
             data={data}
+            style={styles.FlatList}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -595,7 +603,7 @@ const AddVehicle = () => {
               );
             }}
           />
-          </View>
+          </ScrollView>
           <TouchableOpacity
           style={{
             backgroundColor: 'rgba(3, 29, 68, 1)',
@@ -605,6 +613,9 @@ const AddVehicle = () => {
             paddingLeft:10,
             width:"50%",
             marginTop: 10,
+            position:"fixed",
+            zIndex:999,
+            bottom:5,
           }}
           onPress={handleAddCustomer}
         >
@@ -615,7 +626,31 @@ const AddVehicle = () => {
             textAlign: 'center',
           }}>Add Customer</Text>
         </TouchableOpacity>
-        </View>
+          </View>
+          <TouchableOpacity
+        style={{
+          backgroundColor: 'red',
+          paddingVertical: 10,
+          alignSelf: 'center',
+          borderRadius: 5,
+          width: '30%',
+          marginTop: 10,
+        }}
+        onPress={
+          handleClick
+        }>
+        <Text
+          style={{
+            fontSize: FontSize.size_sm,
+            fontFamily: FontFamily.poppinsMedium,
+            color: 'white',
+            textAlign: 'center',
+          }}>
+          Close
+        </Text>
+      </TouchableOpacity>
+        </View>  
+          </Modal>
       ) : null}
     
 
@@ -753,6 +788,9 @@ const AddVehicle = () => {
 };
 
 const styles = StyleSheet.create({
+  FlatList:{
+    overflow:"scroll",
+  },
   videoContainer1: {
     flex: 1,
     alignItems: 'center',

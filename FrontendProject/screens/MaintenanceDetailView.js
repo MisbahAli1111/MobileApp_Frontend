@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState,useEffect,useMemo } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -7,8 +8,8 @@ import Footer from "../components/Footer";
 import RecordDetails from "../components/RecordDetails";
 import { useRoute } from "@react-navigation/native";
 import ProfileDropdown from "../components/ProfilePopDown";
-
-
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const MaintenanceDetailView = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -17,6 +18,7 @@ const MaintenanceDetailView = () => {
   const recordId = route.params?.recordId;
   // console.warn(recordId);
   
+
   
   return (
     <View style={styles.maintenanceDetailView}>
@@ -62,7 +64,7 @@ const MaintenanceDetailView = () => {
         <Text style={[styles.record, styles.kmTypo]}>Record</Text>
       </View>
 
-      <RecordDetails />
+      <RecordDetails recordId={recordId} />
 
     
       

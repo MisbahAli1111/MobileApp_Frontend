@@ -5,9 +5,47 @@ import { Image } from "expo-image";
 import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+function RecordDetails({recordId}) {
 
-function RecordDetails() {
 
+  const [data , setData]=useState([]);
+  const [name, setName]=useState('');
+  const [Mileage,setMileage]=useState('');
+  const [service,setService]=useState('');
+  const [type,setTyoe]=useState('');
+  useEffect(() => {
+  
+    getData();
+  },[recordId]);
+
+  getData=async()=>{
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'http://192.168.100.71:8080/api/maintenance-record/get-records/10',
+      headers: { 
+        'Authorization':accessToken
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      // setData(response.data);
+      setName(response.data[0].name);
+      setMileage(response.data[0].kilometerDriven);
+      setService(response.data[0].service);
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    
+  };
 
   const navigation = useNavigation();
 
@@ -19,9 +57,7 @@ function RecordDetails() {
       <View style={styles.detailsParent}>
         <Text style={[styles.details, styles.abc123Clr]}>Details</Text>
         <Text style={[styles.carWasMaintained, styles.jan2023Position]}>
-          Car was maintained on 01 January 2023 by Waleed Ali. he changed spark
-          plugs and tuned car also changed oil and oil filter. The car was fully
-          maintained.
+          {/* {data.maintanenceDetail} */}
         </Text>
       </View>
 
@@ -40,7 +76,7 @@ function RecordDetails() {
             </View>
           </View>
           <View style={[styles.kmWrapper, styles.jan2023Position]}>
-            <Text style={[styles.km, styles.kmTypo]}>137,000 km</Text>
+            <Text style={[styles.km, styles.kmTypo]}>{Mileage} km</Text>
           </View>
         </View>
         <View style={[styles.frameContainer, styles.waleedAliPosition]}>
@@ -53,7 +89,7 @@ function RecordDetails() {
           Maintained By
         </Text>
         <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
-          Waleed Ali
+          {name}
         </Text>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>
@@ -62,7 +98,7 @@ function RecordDetails() {
           <Text style={[styles.date, styles.dateTypo]}>Date</Text>
         </View>
         <View style={styles.carWashParent}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>Car Wash</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{service}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Service</Text>
         </View>
         <View style={[styles.pmParent, styles.parentPosition]}>
