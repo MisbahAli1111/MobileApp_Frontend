@@ -10,7 +10,8 @@ import FilterSearchRecord from "../components/FilterSearchRecord";
 
 const MaintenanceRecord = () => {
   const navigation = useNavigation();
-
+  const [searchType , setSearchType] = useState([]);
+  const [searchOrder , setSearchOrder] = useState('');
   const [search, setSearch] = useState('');
   const [filterSearchClicked,setFilterSearchClicked] =useState(false);
   
@@ -22,8 +23,10 @@ const MaintenanceRecord = () => {
 const addFilterInState = (attribute, sort) => {
   
     setFilterSearchClicked(false);
-    console.log('Selected Filters:', attribute)
-    console.log('selected Sort: ',sort)
+    setSearchType(attribute);
+    setSearchOrder(sort);
+    // console.log('Selected Filters:', attribute)
+    // console.log('selected Sort: ',sort)
   }; 
 
   const handleQuery= (query) => {
@@ -134,7 +137,7 @@ const addFilterInState = (attribute, sort) => {
       </View>
 
     <View style={styles.boxContianer}>
-    <MaintenanceRecordList dsearch={search} />
+    <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} />
     </View>
       
       
@@ -159,13 +162,11 @@ const styles = StyleSheet.create({
   },
   cont:{
     marginLeft:1,
+    zIndex:999,
   },
   boxContianer :{
-    flex:1,
-    flexWrap:"wrap",
     marginTop:220,
-    marginLeft: 10,
-    marginBottom:90,
+    marginLeft: 10, 
     // alignItems: 'flex-end', 
   },
   iconLayout1: {
@@ -471,6 +472,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
+    zIndex:1,
   },
 });
 

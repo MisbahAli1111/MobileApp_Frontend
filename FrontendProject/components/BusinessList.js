@@ -93,7 +93,7 @@ function BusinessList({ }) {
                 let config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://172.20.64.1:8080/api/business/get-my-businesses',
+                    url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
                     headers: {
                         'Authorization': token,
                     },

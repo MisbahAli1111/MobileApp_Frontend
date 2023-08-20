@@ -159,7 +159,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
       }, [type]);
 
 
-      console.log(displayedVehicles);
+    //   console.log(displayedVehicles);
 
     return (
 

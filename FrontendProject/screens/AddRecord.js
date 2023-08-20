@@ -1,9 +1,9 @@
-import React from "react";
+import {React} from "react";
 import { Image } from "expo-image";
 import {Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useState } from "react";
+import { useState,useEffect,useRef } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
 import ImagePickerCamera from "../components/ImagePickerCamera";
@@ -57,11 +57,11 @@ const [Msg,setMsg]=useState('');
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
  const [selectedImage,setSelectedImage] = useState([]);
  const [activeSlide, setActiveSlide] = useState(0);
-
+  const [OwnerName,setOwnerName]= useState('');
  const [modalVisible, setModalVisible] = useState(false);
   const [originalUri, setOriginalUri] = useState('');
   const [status, setStatus] = useState({});
-  const video = React.useRef(null);
+  const video = useRef(null);
   const [ RegMsg , setRegMsg ]=useState('');
 
   
@@ -170,13 +170,14 @@ const [Msg,setMsg]=useState('');
   };
 
 
-  getCustomer = async ()=>{
+  getCustomer = async (carNumber)=>{
+    
     let token= await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/pak`,
+      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -184,17 +185,23 @@ const [Msg,setMsg]=useState('');
     
     axios.request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      // console.log(JSON.stringify(response.data));
+      const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
+      setUser(Name);
     })
     .catch((error) => {
       console.log(error);
     });
   };
 
-
+  useEffect(() => {
+    setUser('No Customer Found');
+    getCustomer(carNumber);
+  },[carNumber]);
 
 
   const handleSave = async () => {
+    
     let hasErrors = false; // Initialize the flag
     setNumberError(false);
     if (!carNumber) {
@@ -202,10 +209,12 @@ const [Msg,setMsg]=useState('');
       setRegMsg('Please provide Vehicle Registration Number');
       hasErrors = true;
     } else {
+      
       setNumberError(false);
     }
   
-    // console.log(selectedDate);
+    // console.log(selectedDate.toDateString());
+    // console.log(selectedTime.toTimeString());
     // console.log(selectedImage);
     
     if (!selectedDate) {
@@ -231,7 +240,8 @@ const [Msg,setMsg]=useState('');
       setNameError(true);
       hasErrors = true;
     } else {
-      getCustomer();
+    
+      
       setNameError(false);
     }
   
@@ -258,6 +268,7 @@ const [Msg,setMsg]=useState('');
   
     if (!hasErrors) {
       try {
+        const dateTime=`${selectedDate.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`;
         const token = await AsyncStorage.getItem("accessToken");
         const accessToken = 'Bearer ' + token;
     
@@ -266,7 +277,8 @@ const [Msg,setMsg]=useState('');
           "kilometerDriven": driven,
           "service": selectedCode,
           "maintanenceDetail": details,
-          "registrationNumber": carNumber
+          "registrationNumber": carNumber,
+          "maintanenceDateTime": dateTime
         };
           
         const config = {
@@ -410,7 +422,7 @@ const [Msg,setMsg]=useState('');
         value={user}
         onFocus={() => setUserFocused(true)}
         onBlur={() => setUserFocused(false)}
-        onChangeText={setUser}
+        editable={false}
       ></TextInput>
     <Image
         style={[styles.vectorIcon1, styles.iconLayout]}
@@ -418,10 +430,9 @@ const [Msg,setMsg]=useState('');
         source={require("../assets/vector1.png")}
       />
       <View style={[styles.groupChild,
-          NameError ? styles.childLayoutR :styles.childLayout
+          styles.childLayout
          ]} />
-      {NameError ? <Text style={styles.nameError}>Please provide User Name</Text> : null}
-
+     
 
       <TextInput style={[styles.kmDriven, styles.pmTypo]}
         placeholder="KM Driven"

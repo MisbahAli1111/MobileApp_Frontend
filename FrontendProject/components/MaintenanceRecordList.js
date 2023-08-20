@@ -6,7 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-function RecordList({dsearch}) {
+
+
+const  RecordList =  ({dsearch,searchType,searchOrder})=> {
 const navigation = useNavigation();
 const [search, setSearch] = useState('');
 const [data, setData] = useState([]);
@@ -15,64 +17,6 @@ const [records,setRecords]= useState([]);
   
 const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
-// const records = [
-//   {
-//     id:"erwecs",
-//     maintainedOn: "sdbfgljb",
-//     maintainedBy: "yess",
-//     mileage: "137,000",
-//     service: "Service Details 1",
-//   },
-//   {
-//     id:"cnaojos",
-//     maintainedOn: "2nd January 2023",
-//     maintainedBy: "ggggg",
-//     mileage: "150,000",
-//     service: "Service Details 2",
-
-//   },
-//   {
-//     id:"wsncds",
-//     maintainedOn: "2nd January 2023",
-//     maintainedBy: "no",
-//     mileage: "150,000",
-//     service: "Service Details 2",
-
-//   },
-//   {
-//     id:"cnaojos",
-//     maintainedOn: "2nd January 2023",
-//     maintainedBy: "ggggg",
-//     mileage: "150,000",
-//     service: "Service Details 2",
-
-//   },
-//   {
-//     id:"wsncds",
-//     maintainedOn: "2nd January 2023",
-//     maintainedBy: "no",
-//     mileage: "150,000",
-//     service: "Service Details 2",
-
-//   },
-//   {
-//     id:"cnaojos",
-//     maintainedOn: "2nd January 2023",
-//     maintainedBy: "ggggg",
-//     mileage: "150,000",
-//     service: "Service Details 2",
-
-//   },
-//   {
-//     id:"wsncds",
-//     maintainedOn: "2nd January 2023",
-//     maintainedBy: "no",
-//     mileage: "150,000",
-//     service: "Service Details 2",
-
-//   },
- 
-// ];
 
 const displayedRecords = search ? data : records;
 
@@ -81,7 +25,24 @@ const handlePress = (index,recordId) => {
   navigation.navigate("MaintenanceDetailView",{recordId:recordId});
 };
 
-
+const getUser = async  (userId ) =>{
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `http://192.168.100.71:8080/api/users/${userId}`,
+    headers: { }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    // console.log(JSON.stringify(response.data));
+    // console.log(response.data.firstName);
+    return(response.data.firstName);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+};
 
 getData = async () =>{
 
@@ -100,9 +61,9 @@ getData = async () =>{
   
   axios.request(config)
   .then((response) => {
-    console.log(JSON.stringify(response.data));
+    // console.log(JSON.stringify(response.data));
     setRecords(response.data);
-    
+    return response.data;
   })
   .catch((error) => {
     console.log(error);
@@ -111,23 +72,38 @@ getData = async () =>{
 };
 
 useEffect(() => {
-
+  
   getData();
-});
+},[]);
 
 
-// useEffect(() => {
-//   setSearch(dsearch);
-//   const formattedQuery = dsearch.trim().toLowerCase();
-//   const maintained=records.filter((record) => record.maintainedBy.includes(formattedQuery))
-//   setData(maintained);
-// }, [dsearch]);
+useEffect(() => {
+  setSearch(dsearch);
 
+  console.log(searchType);
+  const formattedQuery = dsearch.trim().toLowerCase();
+  const maintained=records.filter((record) => record.service.includes(formattedQuery))
+  setData(maintained);
+}, [dsearch,searchType,searchOrder]);
 
+const formatDateTime = (isoDateTime) => {
+  return new Date(isoDateTime).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric'
+  });
+};
   return (
     <ScrollView style={styles.wrap}>
     {
-displayedRecords.map((record, index) => (
+displayedRecords.map((record, index) => {
+  
+   const user = getUser(record.maintainedById);
+    // console.log(user);
+      return(
       <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
         <View style={[styles.groupFrame]}>
           <Pressable
@@ -158,7 +134,7 @@ displayedRecords.map((record, index) => (
                   styles.stJanuary2023,
                   currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
                 ]}>
-                  {record.maintanenceDateTime}
+                  {formatDateTime(record.maintanenceDateTime)}
                 </Text>
               </View>
               <View
@@ -174,7 +150,9 @@ displayedRecords.map((record, index) => (
                   styles.stJanuary2023,
                   currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
                 ]}>
-                  {record.maintainedBy}
+                
+                  
+                  {/* {getUser(record.maintainedById)} */}
                 </Text>
               </View>
               <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
@@ -216,7 +194,8 @@ displayedRecords.map((record, index) => (
           </Pressable>
         </View>
       </View>
-    ))}
+      );
+    })}
      </ScrollView>
   );
 }
@@ -236,7 +215,9 @@ const styles = StyleSheet.create({
   },
   wrap:{
   width:385,
-  marginLeft:1,  
+  marginLeft:1,
+  // backgroundColor:'red',
+   height:552,
   
   },
   text2Typo: {
