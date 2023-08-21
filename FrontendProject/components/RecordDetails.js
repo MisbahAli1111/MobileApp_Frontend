@@ -7,14 +7,19 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native";
 function RecordDetails({recordId}) {
 
 
-  const [data , setData]=useState([]);
+  const [detail , setDetail]=useState('');
   const [name, setName]=useState('');
   const [Mileage,setMileage]=useState('');
   const [service,setService]=useState('');
   const [type,setTyoe]=useState('');
+  const [dateTime,setDateTime]=useState('');
+
+  const [datePart, timePart] = dateTime.split('T');
+  const [registrationNumber,setRegistrationNumber]=useState('');
   useEffect(() => {
   
     getData();
@@ -35,11 +40,14 @@ function RecordDetails({recordId}) {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      // setData(response.data);
+      setDetail(response.data[0].maintanenceDetail);
       setName(response.data[0].name);
       setMileage(response.data[0].kilometerDriven);
       setService(response.data[0].service);
-      
+      setRegistrationNumber(response.data[0].registrationNumber);
+      setTyoe(response.data[0].type);
+      setDateTime(response.data[0].maintanenceDateTime);
+     
     })
     .catch((error) => {
       console.log(error);
@@ -50,25 +58,41 @@ function RecordDetails({recordId}) {
   const navigation = useNavigation();
 
   return (
-    <View>
+    <ScrollView style={styles.wrap}>
 
       {/* details  */}
-
+{/* car image  */}
+      <Image
+        style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
+        contentFit="cover"
+        source={require("../assets/group-114.png")}
+      />
+       <Image
+        style={[styles.vectorIcon1, styles.vectorIconLayout]}
+        contentFit="cover"
+        source={require("../assets/vector4.png")}
+      />
+      <Image
+        style={[styles.vectorIcon2, styles.vectorIconLayout]}
+        contentFit="cover"
+        source={require("../assets/vector5.png")}
+      />
+      <Image
+        style={styles.maintenanceDetailViewChild3}
+        contentFit="cover"
+        source={require("../assets/group-83.png")}
+      />
       <View style={styles.detailsParent}>
         <Text style={[styles.details, styles.abc123Clr]}>Details</Text>
-        <Text style={[styles.carWasMaintained, styles.jan2023Position]}>
-          {/* {data.maintanenceDetail} */}
+        <Text style={[styles.carWasMaintained, styles.jan2023Positionn]}>
+        {detail}
         </Text>
       </View>
 
       {/* blue div  */}
 
       <View style={[styles.vectorGroup, styles.vectorGroupLayout]}>
-        <Image
-          style={[styles.rectangleIcon, styles.vectorGroupLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-66.png")}
-        />
+
         <View style={[styles.frameParent, styles.frameParentPosition]}>
           <View style={styles.frameWrapper}>
             <View style={styles.mileageWrapper}>
@@ -84,7 +108,7 @@ function RecordDetails({recordId}) {
         </View>
         <Text
           style={[styles.registrationNumber, styles.dateTypo]}>{`Registration Number `}</Text>
-        <Text style={[styles.abc1231, styles.kmTypo]}>ABC-123</Text>
+        <Text style={[styles.abc1231, styles.kmTypo]}>{registrationNumber}</Text>
         <Text style={[styles.maintainedBy, styles.dateTypo]}>
           Maintained By
         </Text>
@@ -93,7 +117,7 @@ function RecordDetails({recordId}) {
         </Text>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>
-            01/Jan/2023
+            {datePart}
           </Text>
           <Text style={[styles.date, styles.dateTypo]}>Date</Text>
         </View>
@@ -102,41 +126,18 @@ function RecordDetails({recordId}) {
           <Text style={[styles.date, styles.dateTypo]}>Service</Text>
         </View>
         <View style={[styles.pmParent, styles.parentPosition]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>3:00 PM</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{timePart}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Time</Text>
         </View>
         <View style={[styles.carWrapper, styles.typePosition]}>
-          <Text style={[styles.km, styles.kmTypo]}>{`Car `}</Text>
+          <Text style={[styles.km, styles.kmTypo]}>{type}</Text>
         </View>
         <Text style={[styles.type, styles.typePosition]}>{`Type `}</Text>
       </View>
 
-      {/* car image  */}
-      <Image
-        style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
-        contentFit="cover"
-        source={require("../assets/group-114.png")}
-      />
 
 
-      <Image
-        style={styles.maintenanceDetailViewChild3}
-        contentFit="cover"
-        source={require("../assets/group-83.png")}
-      />
-      <Image
-        style={[styles.vectorIcon1, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector4.png")}
-      />
-      <Image
-        style={[styles.vectorIcon2, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector5.png")}
-      />
-
-
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   childViewPosition: {
     width: 430,
     left: -6.5,
-    position: "absolute",
+    position: "relative",
   },
   cont:{
     padding:6,
@@ -160,6 +161,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
   },
+  wrap:{
+    marginTop:0,
+    // height:538,
+    marginLeft:8,
+    width:385,
+    zIndex:1,
+    overflow:"hidden",
+  },
   textFlexBox: {
     textAlign: "left",
     color: Color.textTxtPrimary,
@@ -167,7 +176,7 @@ const styles = StyleSheet.create({
   abc123Clr: {
     color: Color.darkslateblue,
     textAlign: "left",
-    position: "absolute",
+    position: "relative",
   },
   kmTypo: {
     fontFamily: FontFamily.poppinsRegular,
@@ -179,8 +188,16 @@ const styles = StyleSheet.create({
   },
   vectorGroupLayout: {
     height: 301,
+    width: 400,
+    marginTop:20,
+    position: "relative",
+    backgroundColor:"#c2e0f2",
+  },
+  vectorGroupLayoutt: {
+    height: 301,
     width: 392,
-    position: "absolute",
+    
+    position: "relative",
   },
   frameParentPosition: {
     top: 25,
@@ -188,7 +205,12 @@ const styles = StyleSheet.create({
   },
   jan2023Position: {
     top: 26,
-    position: "absolute",
+    position: "relative",
+  },
+  jan2023Positionn: {
+    top: 0,
+    marginTop:5,
+    position: "relative",
   },
   waleedAliPosition: {
     top: 51,
@@ -241,7 +263,7 @@ const styles = StyleSheet.create({
   },
   vectorIconLayout: {
     bottom: "68.68%",
-    top: "29.17%",
+    top: 0,
     width: "2.74%",
     height: "2.15%",
     maxHeight: "100%",
@@ -473,7 +495,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   vectorGroup: {
-    top: 480,
     left: 10,
   },
   details: {
@@ -483,12 +504,12 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     color: Color.Black,
     left: 0,
-    top: 0,
+    
   },
   carWasMaintained: {
     left: 1,
     width: 392,
-    top: 26,
+    top: 0,
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     color: Color.Black,
@@ -496,11 +517,11 @@ const styles = StyleSheet.create({
     fontWeight:700,
   },
   detailsParent: {
-    top: 385,
+    top: 0,
     width: 393,
-    height: 122,
+
     left: 20,
-    position: "absolute",
+    position: "relative",
   },
   maintenanceDetailViewChild: {
     top: 3,
@@ -598,15 +619,15 @@ const styles = StyleSheet.create({
     left: 287,
   },
   maintenanceDetailViewChild2: {
-    top: 150,
+    top: 0,
     height: 223,
   },
   maintenanceDetailViewChild3: {
-    top: 378,
+    top: 0,
     left: 182,
     width: 55,
     height: 9,
-    position: "absolute",
+    position: "relative",
   },
   vectorIcon1: {
     right: "6.77%",

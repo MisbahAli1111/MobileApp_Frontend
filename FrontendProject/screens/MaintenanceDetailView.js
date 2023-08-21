@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState,useEffect,useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View,ScrollView, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -63,14 +63,18 @@ const MaintenanceDetailView = () => {
         </View>
         <Text style={[styles.record, styles.kmTypo]}>Record</Text>
       </View>
-
-      <RecordDetails recordId={recordId} />
-
-    
+      
+      
+        {/* <View style={styles.wrap}></View> */}
+      
       
       <View style={[styles.cont]}>
       <Footer  prop={"Home"} />
         </View>
+        <View style={styles.wrap}>
+      <RecordDetails recordId={recordId} />
+      </View>
+     
     </View>
   );
 };
@@ -81,11 +85,20 @@ const styles = StyleSheet.create({
     left: -6.5,
     position: "absolute",
   },
+  wrap:{
+    height:600,
+    // marginVertical:190,
+    marginBottom:110,
+    
+    // backgroundColor:'yellow',
+  },
   cont:{
-    padding:6,
-    top:-10,
-    right:5,
+    padding:0,
+    top:-30,
+    position:'relative',
+    right:0,
     zIndex:999,
+    flex:1,
   },
   groupInnerLayout: {
     height: 43,
@@ -300,7 +313,7 @@ const styles = StyleSheet.create({
     width: 149,
     height: 20,
     left: 19,
-    position: "absolute",
+    position: "relative",
   },
   text2: {
     fontSize: FontSize.size_lg,
