@@ -69,7 +69,7 @@ const MaintenanceDetailView = () => {
       
       
       <View style={[styles.cont]}>
-      <Footer  prop={"Home"} />
+      <Footer  prop={"MaintenanceRecord"} />
         </View>
         <View style={styles.wrap}>
       <RecordDetails recordId={recordId} />

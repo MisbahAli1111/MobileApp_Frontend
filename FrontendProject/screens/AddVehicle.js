@@ -338,66 +338,376 @@ const AddVehicle = () => {
       
     
       {/* Image Upload  */}
-     <View style={styles.noImageFoundParent}>
+ 
+      <ScrollView style={styles.wrap}>
+      <View style={styles.noImageFoundParent}>
+
+
+      <View style={styles.container}>
+     {selectedImage.length > 0 && (
+       <View style={styles.imageContainer}>
+         <Carousel
+           data={selectedImage}
+           renderItem={renderCarouselItem}
+           sliderWidth={350}
+           itemWidth={400}
+           onSnapToItem={(index) => setActiveSlide(index)}
+           sliderHeight={100}
+         />
+         <Pagination
+           dotsLength={selectedImage.length}
+           activeDotIndex={activeSlide}
+           containerStyle={styles.paginationContainer}
+           dotColor="#007aff"
+           dotStyle={styles.paginationDot}
+           inactiveDotColor="#ccc"
+           inactiveDotOpacity={0.4}
+           inactiveDotScale={0.6}
+         />
+         
+       </View>
+     )}
+     
+     
+     
+   </View>    
+
+
        
-      <View style={[styles.uploadParent, styles.uploadPosition]}>
-        <TouchableOpacity
-        onPress={handleGalleryIconClick}>
-          <Text style={[styles.upload]}  >Upload</Text>
-          </TouchableOpacity>
-         <TouchableOpacity
-         onPress={handleCameraIconClick}
-         >
-          <Image
-            style={[styles.vectorIcon1]}
-            contentFit="cover"
-            source={require("../assets/vector16.png")}
-          />
-          </TouchableOpacity>
+       <View style={[styles.uploadParent, styles.uploadPosition]}>
 
-          {showCameraImagePicker && (
-          <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
-        )}
-        {showGalleryImagePicker && (
-          <ImagePickerGallery onImageSelected={(uri, type) => handleGalleryImageSelected(uri, type)} />
-        )}
-      
-        </View>
-        <View style={styles.container}>
-    {selectedImage.length > 0 && (
-      <View style={styles.imageContainer}>
-        <Carousel
-          data={selectedImage}
-          renderItem={renderCarouselItem}
-          sliderWidth={350}
-          itemWidth={400}
-          onSnapToItem={(index) => setActiveSlide(index)}
-          sliderHeight={100}
-        />
-        <Pagination
-          dotsLength={selectedImage.length}
-          activeDotIndex={activeSlide}
-          containerStyle={styles.paginationContainer}
-          dotColor="#007aff"
-          dotStyle={styles.paginationDot}
-          inactiveDotColor="#ccc"
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-        />
-        
-      </View>
-    )}
-    
-    
-    
-  </View>    
-  
+ 
+           {showCameraImagePicker && (
+           <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
+         )}
+         {showGalleryImagePicker && (
+           <ImagePickerGallery onImageSelected={(uri, type) => handleGalleryImageSelected(uri, type)} />
+         )}
+                <TouchableOpacity
+         onPress={handleGalleryIconClick}>
+           <Text style={[styles.upload]}  >Upload</Text>
+           </TouchableOpacity>
+          <TouchableOpacity
+          onPress={handleCameraIconClick}
+          >
+           <Image
+             style={[styles.vectorIcon1]}
+             contentFit="cover"
+             source={require("../assets/vector16.png")}
+           />
+           </TouchableOpacity>
+         </View>
+
+   
+             
+       
+         
+       </View>
+
+        {/* form start */}
+      <View style={styles.formWrap}>
+      <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
+        <View style={styles.vehicleTypeParent}>
+          <TextInput
+            style={[styles.vehicleType, styles.vehicleTypo] }
+            placeholder="Vehicle Type   "
             
-      
-        
-      </View>
+        value={vehicleType}
+        editable={false}
+          ></TextInput>
+          <View style={styles.carParent}>
+          
+            <Image
+              style={[styles.frameChild, styles.childLayout]}
+              contentFit="cover"
+              source={require("../assets/vector-61.png")}
+            />
+          
+            { (
+        <View  style={styles.vechilePicker}>
+        <Picker
+        style={styles.picker}
+          selectedValue={vehicleType}
+          onValueChange={(itemValue) =>handleVechileTypeSelect(itemValue)}
+        >
+          <Picker.Item label="Select Vehicle Type" value="" />
+          {vehicleCategories.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+      )}
 
+
+          </View>
+        </View>
+      </View>
+      <View style={[styles.lineView,
+        vehicleTypeError  ? styles.childBorderR :styles.childBorder
+         ]} />
+      
+
+
+      
+      <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
+      placeholder="Model "
+      onChangeText={text => setvehicleModel(text)}
+      value={vehicleModel}
+        
+        />
+     
+      
+      
+<View style={[styles.addVehicleChild1,
+ vehicleTypeError  ? styles.childBorderR :styles.childBorder
+   ]} />
+
+{vehicleTypeError ? <Text style={styles.nameError}>{Msg}</Text> : null}
+
+
+
+      <View style={[styles.frameParent, styles.lineParentLayout]}>
+        <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput
+              style={[styles.vehicleType, styles.vehicleTypo]}
+            placeholder="Registration Number     "
+            onChangeText={text => setRegistration(text)}
+            value={Registration}
+            ></TextInput>
+          </View>
+        </View>
+        <View style={[
+         RegistrationError ? styles.groupChildR : styles.groupChild
+          , styles.groupPosition]} />
+        <View style={[
+         RegistrationError ?  styles.groupItemR: styles.groupItem 
+          , styles.savePosition]} />
+        <View style={styles.frameContainer}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
+              placeholder="Vehicle Color   " 
+              onChangeText={text => setvehiclecolor(text)}
+              value={Vehiclecolor}
+              />
+              
+            
+            
+          </View>
+        </View>
+      </View>
+      {RegistrationError ? <Text style={styles.nameError}>{RMsg}</Text> : null}
+      
+      
+      <View style={[styles.lineParentm, styles.lineParentLayout]}>
+         <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput style={[
+             makeError ? styles.davidDanielmR : styles.davidDanielm
+              ,
+               styles.vehicleTypo]} value={make} onChangeText={text => setMake(text)} placeholder="Make">
+          
+            </TextInput>
+            <TextInput style={[
+              makeError ? styles.davidDanielmR : styles.davidDanielm
+              , 
+              styles.vehicleTypo
+              ]}  value={year} onChangeText={text => setYear(text)}placeholder="Year">
+          
+            </TextInput>
+            
+          </View>
+        </View>
+      </View>
+      {makeError ? <Text style={styles.nameError}>{Nmsg}</Text> : null}
+     
+      <TouchableOpacity
+      onPress={handleClick}>
+      <View style={[styles.lineParent, styles.lineParentLayout]}>
+         <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <Text style={[styles.davidDaniel, styles.vehicleTypo]} 
+            
+            >{selectedCountry == '' ? 'Select Customer' : selectedCountry}</Text>
+            
+          </View>
+        </View>
+      </View>
+      </TouchableOpacity>
+      <Image
+        style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/mdiusercircleoutline.png")}
+      />
+      <View style={[
+        styles.groupInner,
+        nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
+      {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
+
+      
+      {clicked ? (
+        <Modal transparent={true} animationType="slide">
+        <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }}>
+        <View
+          style={{
+            elevation: 5,
+            marginTop: 20,
+            height: 300,
+            alignSelf: 'center',
+            width: '90%',
+            backgroundColor: '#fff',
+            borderRadius: 10,
+          }}>
+          <TextInput
+            placeholder="Search.."
+            value={search}
+            ref={searchRef}
+            onChangeText={txt => {
+              onSearch(txt);
+              setSearch(txt);
+            }}
+            style={{
+              width: '90%',
+              height: 50,
+              alignSelf: 'center',
+              borderWidth: 0.2,
+              borderColor: '#8e8e8e',
+              borderRadius: 7,
+              marginTop: 20,
+              paddingLeft: 20,
+            }}
+          />
+          <ScrollView>
+          <FlatList
+            data={data}
+            style={styles.FlatList}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: '85%',
+                    alignSelf: 'center',
+                    height: 50,
+                    justifyContent: 'center',
+                    borderBottomWidth: 0.5,
+                    borderColor: '#8e8e8e',
+                  }}
+                  onPress={() => {
+                    setSelectedCountry(item.name);
+                    setKeyCustomer(item.id);
+                    setClicked(!clicked);
+                    onSearch('');
+                    setSearch('');
+                  }}>
+                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+          </ScrollView>
+          <TouchableOpacity
+          style={{
+            backgroundColor: 'rgba(3, 29, 68, 1)',
+            paddingVertical: 10,
+            alignSelf:"center",
+            borderRadius: 5,
+            paddingLeft:10,
+            width:"50%",
+            marginTop: 10,
+            position:"fixed",
+            zIndex:999,
+            bottom:5,
+          }}
+          onPress={handleAddCustomer}
+        >
+          <Text style={{
+            fontSize: FontSize.size_sm,
+            fontFamily: FontFamily.poppinsMedium,
+            color: 'white',
+            textAlign: 'center',
+          }}>Add Customer</Text>
+        </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+        style={{
+          backgroundColor: 'red',
+          paddingVertical: 10,
+          alignSelf: 'center',
+          borderRadius: 5,
+          width: '30%',
+          marginTop: 10,
+        }}
+        onPress={
+          handleClick
+        }>
+        <Text
+          style={{
+            fontSize: FontSize.size_sm,
+            fontFamily: FontFamily.poppinsMedium,
+            color: 'white',
+            textAlign: 'center',
+          }}>
+          Close
+        </Text>
+      </TouchableOpacity>
+        </View>  
+          </Modal>
+      ) : null}
     
+
+     
+
+      <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
+        <View style={styles.vehicleTypeParent}>
+          <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    
+         onChangeText={text => setphoneNumber(text)} placeholder="Phone Number    "
+          keyboardType="numeric"
+          maxLength={11}
+          value={phoneNumber}>
+           
+          </TextInput>
+        </View>
+      </View>
+      <Image
+        style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/materialsymbolspermcontactcalendaroutline2.png")}
+      />
+      <View style={[
+        styles.groupInner
+        , 
+        phoneNumberError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
+      {phoneNumberError ? <Text style={styles.nameError}>Please Provide Contact Number</Text> : null}
+     
+      <View style={[styles.lineGroup, styles.lineParentLayout]}>
+         <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}
+            onChangeText={text => setKm(text)} placeholder="Km Driven   "
+            keyboardType="numeric" value={km}> 
+            </TextInput>
+          </View>
+        </View>
+      </View>
+      {/* odometersvgrepocom-1@3x */}
+      <Image
+        style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
+        contentFit="cover"
+        source={require("../assets/odometersvgrepocom-1.png")}
+      />
+      <View style={[
+        styles.groupInner, 
+        kmError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
+      {kmError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
+      </View>
+      </ScrollView>
+
       
       
 
@@ -548,6 +858,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
   },
+  formWrap:{
+    marginTop:30,
+    position:'relative',
+    // backgroundColor:'red',
+  },
 video: {
     width: "100%",
     height:"100%",
@@ -575,12 +890,14 @@ video: {
   },
   container: {
     flex: 1,
+    marginTop:-50,
     alignItems: 'center',
     justifyContent: 'center',
+    position:'relative',
   },
   imageContainer: {
     alignItems: 'center',
-    marginTop: 0,
+    marginTop: -180,
     // position: 'relative',
     width: "100%",
     height: "100%",
@@ -629,9 +946,8 @@ video: {
 },
 wrap:{
   // backgroundColor:'red',
-  marginTop:375,
-  // marginBottom:5,
-  marginVertical:245,
+  marginTop:145,
+  marginVertical:225,
   flex:1,
   overflow:'hidden',
 },
@@ -900,18 +1216,20 @@ wrap:{
     color: Color.textTxtPrimary,
   },
   upload: {
-    top:295,
+    top:170,
     left:35,
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
     color: Color.textTxtPrimary,
     fontWeight: "500",
+    position:'relative',
   },
   vectorIcon1: {
     height: "39.67%",
     width: "26.09%",
-    top: 270,
+    top: 148,
+
     right: "73.91%",
     bottom: "16.67%",
     left: "18%",
@@ -924,12 +1242,11 @@ wrap:{
     left: "10.34%",
   },
   noImageFoundParent: {
-  
     top: 147,
       left: 157,
       width: 116,
       height: 200,
-      position: "absolute",
+      position: "relative",
   },
   vehicleType: {
     fontSize: FontSize.size_base,

@@ -82,7 +82,7 @@ function VehicleDetails(props) {
           Client Name
         </Text>
         <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
-        {vechileDetails.firstName} {vechileDetails.lastName}
+        {vechileDetails.name}
         </Text>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>

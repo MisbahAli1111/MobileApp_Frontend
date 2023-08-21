@@ -72,10 +72,10 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
                     return modelMatches || makeMatches || yearMatches || nameMatches;
                 } else {
                     const searchTypeMatches = searchType.some(property => {
-                        
+                        console.log(property);
                         if (property === "firstName") {
                             
-                            const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery));
+                            const nameMatches = (vehicle.name.toUpperCase().toString().includes(formattedQuery));
                             return nameMatches;
                             
                         }
@@ -100,8 +100,8 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
                     return modelMatches || makeMatches || yearMatches || nameMatches;
                 } else {
                     const searchTypeMatches = searchType.some(property => {
-                        if (property === "name") {
-                            const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery)) && vehicle.type ==  VehicleType;
+                        if (property === "firstName") {
+                            const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) )&& vehicle.type ==  VehicleType;
                             return nameMatches;
                         }
                         if (vehicle[property]) {
@@ -117,13 +117,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
         }
         
     }, [dsearch, VehicleType, searchType, searchOrder]);
-    
-
-    
-    
-    
-      
-      
+       
 
       getData = async () =>{
 
@@ -183,7 +177,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
                                      ]}>Name</Text>
                                 <Text style={
                                     currentPressedIndex === vehicle.id ? styles.text1Typo :styles.text2Typo
-                                    }>{vehicle.firstName} {vehicle.lastName}</Text>
+                                    }>{vehicle.name}</Text>
                                 <Image
                                     style={[styles.frameIconn, styles.frameIconPositionn]}
                                     contentFit="cover"
