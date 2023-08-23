@@ -8,12 +8,12 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const  RecordList =  ({dsearch,searchType,searchOrder})=> {
+const  RecordList =  ({dsearch,searchType,searchOrder,fromPreviousScreen})=> {
 const navigation = useNavigation();
 const [search, setSearch] = useState('');
 const [data, setData] = useState([]);
 const [records,setRecords]= useState([]);
-
+const [InvoiceScreen, setInvoiceScreen]=useState(true);
   
 const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
@@ -21,8 +21,15 @@ const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 const displayedRecords = search ? data : records;
 
 const handlePress = (index,recordId) => {
-  setCurrentPressedIndex(index);
-  navigation.navigate("MaintenanceDetailView",{recordId:recordId});
+  if(!InvoiceScreen){
+  
+  }else{
+    setCurrentPressedIndex(index);
+    navigation.navigate("MaintenanceDetailView",{recordId:recordId});
+ 
+ }
+
+
 };
 
 
@@ -62,6 +69,12 @@ useEffect(() => {
   getData();
 },[]);
 
+useEffect(() => {
+  setInvoiceScreen(false);
+  if(fromPreviousScreen == 1){
+    setInvoiceScreen(true);
+  }
+},[fromPreviousScreen]);
 
 useEffect(() => {
   setSearch(dsearch);

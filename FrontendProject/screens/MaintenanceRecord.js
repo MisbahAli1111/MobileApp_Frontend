@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet,TextInput, TouchableWithoutFeedback, View, Text, Pressable } from "react-native";
+import { StyleSheet,TextInput, TouchableOpacity, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -8,7 +8,8 @@ import MaintenanceRecordList from  "../components/MaintenanceRecordList";
 import FilterSearchRecord from "../components/FilterSearchRecord";
 
 
-const MaintenanceRecord = () => {
+const MaintenanceRecord = ({route}) => {
+  const { fromPreviousScreen } = route.params;
   const navigation = useNavigation();
   const [searchType , setSearchType] = useState([]);
   const [searchOrder , setSearchOrder] = useState('');
@@ -60,13 +61,10 @@ const addFilterInState = (attribute, sort) => {
               />
             </View>
             
-            {/* <View style={styles.elementPosition} /> */}
             <View style={styles.elementPosition}>
               <Text style={[styles.text, styles.davidTypo1]}>\</Text>
             </View>
-            {/* <View style={[styles.element2, styles.housefillFlexBox]}>
-              <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-            </View> */}
+        
             <View style={[styles.surface, styles.surfaceParentFlexBox]}>
               <Text style={styles.search}>Search</Text>
             </View>
@@ -104,29 +102,48 @@ const addFilterInState = (attribute, sort) => {
 
 
       {/* search */}
-      <View style={[styles.rectangleContainer, styles.rectangleLayout]}>
+      <View style={styles.rectangleContainer}>
+      {fromPreviousScreen ? (
+        <View style={styles.wrap}>
+
+        <View style={styles.blueContainer}>
+          <Text style={styles.blueText}>Select Record to Create Invoice</Text>
+        </View>
+        {/* onPress={handleSavePress} */}
+        <TouchableOpacity > 
+        <View style={styles.saveContainer}>
+        <Text style={styles.blueTextB}>Create</Text>
+        </View>
+        </TouchableOpacity>
+  
+        </View>
+      ) : (
+        <View>
         <Pressable
-          style={[styles.rectanglePressable, styles.rectanglePosition]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
+        style={[styles.rectanglePressable, styles.rectanglePosition]}
+        onPress={() => navigation.navigate("MaintenanceRecord")}
+      />
+        <TextInput
+          style={styles.davidDaniel}
+          placeholder="David"
+          clearButtonMode="always"
+          value={search}
+          onChangeText={(query) => handleQuery(query)}
         />
-        <TextInput style={[styles.davidDaniel, styles.davidTypo]}
-        placeholder="David "
-        clearButtonMode="always"
-        value={search}
-        onChangeText={(query) => handleQuery(query)}
+        </View>
+      )}
+
+      <Pressable
+        style={styles.vector}
+        onPress={() => navigation.navigate("MaintenanceRecord")}
+      >
+        <Image
+          style={[styles.icon1, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/vector8.png")}
         />
-          
-        <Pressable
-          style={styles.vector}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={[styles.icon1, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector8.png")}
-          />
-        </Pressable>
-      </View>
+      </Pressable>
+    </View>
 
       
       
@@ -137,7 +154,7 @@ const addFilterInState = (attribute, sort) => {
       </View>
 
     <View style={styles.boxContianer}>
-    <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} />
+    <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} fromPreviousScreen={1} />
     </View>
       
       
@@ -218,7 +235,68 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     position: "absolute",
   },
+  rectangleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    top:50,
+  },
+  blueContainer: {
+    position: "absolute",
 
+    borderRadius:10,
+  },
+  saveContainer: {
+    height: 34,
+    width: 100,
+    marginTop:8,
+    marginLeft:275,
+    alignSelf:'baseline',
+    position: "absolute",
+    backgroundColor: Color.darkslateblue,
+    borderRadius:48,
+
+  },
+  blueText: {
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    marginTop:13,
+    color: Color.darkslateblue,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  blueTextB: {
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    marginTop:4,
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  wrap:{
+    
+    flexDirection:'row',
+  },
+  davidDaniel: {
+    flex: 1,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginRight: 10,
+  },
+  vector: {
+    // Your vector styles
+  },
+  icon1: {
+    // Your icon styles
+  },
+  iconLayout: {
+    // Your icon layout styles
+  },
   rectangleLayout: {
     height: 55,
     width: 385,
@@ -461,7 +539,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleContainer: {
-    top: 145,
+    top: 155,
     left: 20,
   },
 

@@ -166,7 +166,7 @@ const CreateInvoice = () => {
       />
 
 
-
+      
       <View style={[styles.element2, styles.elementFlexBox]}>
         <Text style={styles.textt}>\</Text>
       </View>

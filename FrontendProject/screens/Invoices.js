@@ -46,7 +46,7 @@ const Invoices = () => {
           </View>
           <Pressable
             style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
-            onPress={() => navigation.navigate("CreateInvoice")}
+            onPress={() => navigation.navigate("MaintenanceRecord", { fromPreviousScreen: true })}
           >
             <Text style={[styles.createInvoice, styles.text13Typo]}>
               Create Invoice
@@ -62,8 +62,7 @@ const Invoices = () => {
             style={[styles.rectanglePressable, styles.rectangleLayout]}
            
           />
-        
-          <TextInput style={[styles.searchInvoice, styles.paidTypo]}
+         <TextInput style={[styles.searchInvoice, styles.paidTypo]}
         placeholder="Search Invoice "
         clearButtonMode="always"
         value={search}
