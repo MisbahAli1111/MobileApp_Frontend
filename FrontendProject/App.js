@@ -78,7 +78,7 @@ const App = () => {
           // profileImage: require('./assets/mask-group1.png'), 
           }}/> */}
 
-          <Stack.Screen
+          {/* <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
@@ -106,7 +106,7 @@ const App = () => {
               showBackArrow: true,
               onBackPress:'Home',
               }}
-            /> 
+            />  */}
 
            <Stack.Screen
               name="AddRecord"

@@ -1,6 +1,6 @@
 import {React} from "react";
 import { Image } from "expo-image";
-import {Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import {Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput,FlatList  } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState,useEffect,useRef } from "react";
@@ -58,11 +58,17 @@ const [Msg,setMsg]=useState('');
  const [selectedImage,setSelectedImage] = useState([]);
  const [activeSlide, setActiveSlide] = useState(0);
   const [OwnerName,setOwnerName]= useState('');
- const [modalVisible, setModalVisible] = useState(false);
+  const [numberPlates,setNumberPlates] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [originalUri, setOriginalUri] = useState('');
   const [status, setStatus] = useState({});
   const video = useRef(null);
   const [ RegMsg , setRegMsg ]=useState('');
+  const [search, setSearch] = useState('');
+  const [clicked, setClicked] = useState(false);
+  const [data, setData] = useState(transformedResponse);
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const searchRef = useRef();
 
   
    const renderCarouselItem = ({ item, index }) => (
@@ -169,6 +175,40 @@ const [Msg,setMsg]=useState('');
     setShowDropdown(false);
   };
 
+  const handleAddCustomer =() =>{
+    navigation.navigate('AddCustomer');
+  };
+  
+  const getRegistrationNumber = async () =>{
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    const Business_id = await AsyncStorage.getItem("Business_id");
+    // console.log(Business_id);
+    // console.log(accessToken);
+    //172.16.82.53 shayan uni ip
+
+    
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://172.16.82.53:8080/api/maintenance-record/get-registration-number/${Business_id}`,
+      headers: { 
+        'Authorization': accessToken
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+
+      JSON.stringify(response.data);
+      setNumberPlates(response.data);
+      console.log(numberPlates);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }
 
   getCustomer = async (carNumber)=>{
     
@@ -177,7 +217,7 @@ const [Msg,setMsg]=useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `http://172.16.82.53:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -197,8 +237,32 @@ const [Msg,setMsg]=useState('');
   useEffect(() => {
     setUser('No Customer Found');
     getCustomer(carNumber);
+    getRegistrationNumber();
   },[carNumber]);
 
+  const transformedResponse = numberPlates.map(item => {
+    const { registration_number } = item;
+    return {
+      name: registration_number,
+      
+    };
+  });
+
+  const onSearch = search => {
+    if (search != '') {
+      let tempData = transformedResponse.filter(item => {
+        return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+      });
+      setData(tempData);
+    } else {
+      setData(transformedResponse);
+    }
+  }
+
+  const handleClick = () => {
+    setClicked(!clicked);
+
+  };
 
   const handleSave = async () => {
     
@@ -284,7 +348,7 @@ const [Msg,setMsg]=useState('');
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://192.168.100.71:8080/api/maintenance-record/add-record',
+          url: 'http://172.20.64.1:8080/api/maintenance-record/add-record',
           headers: { 
             'Content-Type': 'application/json', 
             'Authorization': accessToken
@@ -344,19 +408,133 @@ const [Msg,setMsg]=useState('');
 
 
       <ScrollView  style={styles.wrap}>
-      <TextInput style={[styles.jxc7789, styles.pmTypof]}
-        placeholder="JXC - 7789"
-        value={carNumber}
-        onFocus={() => setCarNumberFocused(true)}
-        onBlur={() => setCarNumberFocused(false)}
-        onChangeText={setCarNumber}
-      >
-      </TextInput>
+      <TouchableOpacity onPress={handleClick}>
+      <Text style={[styles.jxc7789, styles.pmTypof]}>
+       {selectedCountry == '' ? 'Select Number Plate' : selectedCountry}
+      
+      </Text>
       <Image
         style={styles.licensePlateNumberSvgrepoCIcon}
         contentFit="cover"
         source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
       />
+      </TouchableOpacity>
+
+{clicked ? (
+        <Modal transparent={true} animationType="slide">
+        <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    }}>
+        <View
+          style={{
+            elevation: 5,
+            marginTop: 20,
+            height: 300,
+            alignSelf: 'center',
+            width: '90%',
+            backgroundColor: '#fff',
+            borderRadius: 10,
+          }}>
+          <TextInput
+            placeholder="Search.."
+            value={search}
+            ref={searchRef}
+            onChangeText={txt => {
+              onSearch(txt);
+              setSearch(txt);
+            }}
+            style={{
+              width: '90%',
+              height: 50,
+              alignSelf: 'center',
+              borderWidth: 0.2,
+              borderColor: '#8e8e8e',
+              borderRadius: 7,
+              marginTop: 20,
+              paddingLeft: 20,
+            }}
+          />
+          <ScrollView>
+          <FlatList
+            data={data}
+            style={styles.FlatList}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: '85%',
+                    alignSelf: 'center',
+                    height: 50,
+                    justifyContent: 'center',
+                    borderBottomWidth: 0.5,
+                    borderColor: '#8e8e8e',
+                  }}
+                  onPress={() => {
+                    setSelectedCountry(item.name);
+                    setCarNumber(item.name)
+                    setClicked(!clicked);
+                    onSearch('');
+                    setSearch('');
+                  }}>
+                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+          </ScrollView>
+          <TouchableOpacity
+          style={{
+            backgroundColor: 'rgba(3, 29, 68, 1)',
+            paddingVertical: 10,
+            alignSelf:"center",
+            borderRadius: 5,
+            paddingLeft:10,
+            width:"50%",
+            marginTop: 10,
+            position:"fixed",
+            zIndex:999,
+            bottom:5,
+          }}
+          onPress={handleAddCustomer}
+        >
+          <Text style={{
+            fontSize: FontSize.size_sm,
+            fontFamily: FontFamily.poppinsMedium,
+            color: 'white',
+            textAlign: 'center',
+          }}>Add Customer</Text>
+        </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+        style={{
+          backgroundColor: 'red',
+          paddingVertical: 10,
+          alignSelf: 'center',
+          borderRadius: 5,
+          width: '30%',
+          marginTop: 10,
+        }}
+        onPress={
+          handleClick
+        }>
+        <Text
+          style={{
+            fontSize: FontSize.size_sm,
+            fontFamily: FontFamily.poppinsMedium,
+            color: 'white',
+            textAlign: 'center',
+          }}>
+          Close
+        </Text>
+      </TouchableOpacity>
+        </View>  
+          </Modal>
+      ) : null}
+
       <View style={[styles.addRecordChild3,
           NumberError ? styles.childLayoutR :styles.childLayout
          ]} />
