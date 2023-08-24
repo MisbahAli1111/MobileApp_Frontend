@@ -8,6 +8,9 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 // import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
+import ErrorPopup from "../components/ErrorPopup";
+import ErrorPopup2 from "../components/ErrorPopup2";
+
 import InvoiceDetailView from "./InvoiceDetailView";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CreateInvoiceForm from "../components/CreateInvoiceForm";
@@ -25,7 +28,7 @@ const CreateInvoice = (parans) => {
   // contains the record id details
   const recordId = route.params?.InvoiceRecord;
 
- 
+
 
 
   const [showPicker, setShowPicker] = useState(false);
@@ -46,37 +49,120 @@ const CreateInvoice = (parans) => {
   const [discount, setDiscount] = useState(['']);
   const [tax, setTax] = useState(['']);
 
-
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [showErrorPopups, setShowErrorPopups] = useState(false);
+  
+  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg2, setErrorMsg2] = useState('');
+  
   const invoiceStatus = ['Paid', 'Due'];
   const [Name, setName] = useState('');
   const [regNumber, setregNumber] = useState('');
   const [date, setDate] = useState('');
-  const [status,setStatus] = useState('');
+  const [status, setStatus] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
-  const [save,setSave] = useState(false);
+  const [save, setSave] = useState(false);
+  const [EmptyItem, setEmptyItem] = useState(false);
+  const [EmptyFeildsDesc, setEmptyFeildsDesc] = useState(false);
+  const [EmptyFeildsDisc, setEmptyFeildsDisc] = useState(false);
+  const [EmptyFeildsTax, setEmptyFeildsTax] = useState(false);
+  
   const handleItemsChange = (items) => {
     setDescription(items);
-  };
-  const handleInvoiceStatusSelect= (code) => {
-    setStatus(code);
+    setEmptyFeildsDesc(false);
+    setEmptyItem(false);
+    // console.log(items);
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const itemName = item.itemName;
+      const quantity = item.quantity;
+      const rate = item.rate;
+
+      if (!itemName && !quantity && !rate) {
+        console.log("Empty Description");
+        setEmptyItem(true);
+      }
+      if (
+        (!itemName && quantity && rate) ||
+        (itemName && !quantity && rate) ||
+        (itemName && quantity && !rate) ||
+        (itemName && !quantity && !rate) ||
+        (!itemName && !quantity && rate) ||
+        (!itemName && quantity && !rate)) {
+        console.log("Error Description");
+        setEmptyFeildsDesc(true);
+      }
+    }
   };
 
   const handleTaxChange = (items) => {
     setDiscount(items);
+    setEmptyFeildsDisc(false);
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const itemName = item.itemName;
+      const rate = item.rate;
+
+      if ((!itemName && rate) || (itemName && !rate)) {
+        console.log("Error discout");
+        setEmptyFeildsDisc(true);
+      }
+    }
   }
   const handleDiscount = (items) => {
     setTax(items);
+    setEmptyFeildsTax(false);
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const itemName = item.itemName;
+      const rate = item.rate;
+
+      if ((!itemName && rate) || (itemName && !rate)) {
+        console.log("Error Tax");
+        setEmptyFeildsTax(true);
+      }
+    }
   }
   const handleFormDataChange = (data) => {
     setName(data.name);
     setDate(data.date);
     setregNumber(data.regNumber);
-    setStatus(data.status)
+    setStatus(data.status);
+
+    // console.log(data);
+    // console.log(data.name);
+    // console.log(data.regNumber);
+    // console.log(data.status);
+    // console.log(data.selectedDate);
+    // console.log(data.selectedDueDate);
+
   };
 
   const handleSave = () => {
-
+    setErrorMsg('');
+    setErrorMsg2('');
     setSave(true);
+    if ( !Name || !regNumber || !status) {
+      console.log(date);
+      console.log(Name);
+      console.log(regNumber);
+      console.log(status);
+      
+    } 
+    else {
+      console.log("here");
+      if (EmptyFeildsDesc || EmptyFeildsTax || EmptyFeildsDisc) {
+        setErrorMsg2('Please provide complete detail for entered feild');
+        setShowErrorPopups(true);
+      
+      } else {
+        if (EmptyItem) {
+          setErrorMsg('You are about to create empty invoice. Are you sure you want to proceed?');
+          setShowErrorPopup(true);
+        }
+      }
+
+    }
 
     // const isDescriptionEmpty = Description.some(
     //   (item) => !item.itemName || !item.quantity || !item.rate
@@ -142,12 +228,13 @@ const CreateInvoice = (parans) => {
   return (
     <View style={styles.createInvoice}>
 
+
       <Image
         style={[styles.lightTexture22341Icon, styles.groupChildPosition]}
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      
+
       <View style={[styles.breadcrumbs, styles.element2Position]}>
         <View style={[styles.housefill, styles.elementFlexBox]}>
           <Image
@@ -163,8 +250,8 @@ const CreateInvoice = (parans) => {
         <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
       </View>
 
-     
-    
+
+
       {/* reg number  */}
       <Image
         style={[styles.groupIcon, styles.iconLayout]}
@@ -173,57 +260,48 @@ const CreateInvoice = (parans) => {
       />
 
 
-      
+
       <View style={[styles.element2, styles.elementFlexBox]}>
         <Text style={styles.textt}>\</Text>
       </View>
       <Text style={styles.createInvoice2}>Create Invoice</Text>
 
-
-      <View style={styles.form}>
-        <CreateInvoiceForm onFormDataChange={handleFormDataChange} save={save} setSave={setSave} />
-      </View>
-      <ScrollView style={styles.scroll}>
-        <View>
-          <InvoiceDescription onItemsChange={handleItemsChange} />
+      <ScrollView style={styles.wrap}>
+        <View style={styles.form}>
+          <CreateInvoiceForm onFormDataChange={handleFormDataChange} save={save} setSave={setSave} />
         </View>
-            <View style={styles.tableRow}>
-              <View style={styles.taxd}>
-                <InvoiceDiscount onItemsChange={handleDiscount} />
-              </View>
-              <View style={styles.taxdd}>
-                <InvoiceTax onItemsChange={handleTaxChange} />
-              </View>
+        <View style={styles.scroll}>
+          <View>
+            <InvoiceDescription onItemsChange={handleItemsChange} />
+          </View>
+          <View style={styles.tableRow}>
+            <View style={styles.taxd}>
+              <InvoiceDiscount onItemsChange={handleDiscount} />
             </View>
+            <View style={styles.taxdd}>
+              <InvoiceTax onItemsChange={handleTaxChange} />
+            </View>
+          </View>
+        </View>
       </ScrollView>
 
-      
+
 
 
 
       <View style={[styles.createInvoiceChild6, styles.createChildLayout1]} />
       <View style={[styles.createInvoiceChild7, styles.createChildPosition]} />
 
-  
+
       <View style={styles.group}>
         <Text style={[styles.text5, styles.text5Clr]}>-</Text>
         <Text style={[styles.total, styles.totalTypo]}>Total</Text>
         <Text style={[styles.rs3050, styles.text5Clr]}>Rs {totalAmount}</Text>
       </View>
-      
 
-      <View style={styles.picker}>
-        <Picker
-          selectedValue={invoiceStatus}
-          onValueChange={(itemValue) =>handleInvoiceStatusSelect(itemValue)}
-        >
-          <Picker.Item label="Select Invoice Status" value="" />
-          {invoiceStatus.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      
+
+
+
 
       {/* Submit Button  */}
       <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
@@ -241,12 +319,24 @@ const CreateInvoice = (parans) => {
         </TouchableOpacity>
 
       </View>
-      
+
       {/* footer  */}
       <View style={[styles.footer]}>
         <Footer prop={"Invoices"} />
       </View>
 
+      <ErrorPopup
+        visible={showErrorPopup}
+        message={errorMsg}
+        onConfirm={() => setShowErrorPopup(false)}
+        onCancel={() => setShowErrorPopup(false)}
+      />
+      <ErrorPopup2
+      visible={showErrorPopups}
+      message={errorMsg2}
+      onConfirm={() => setShowErrorPopups(false)}
+      onCancel={() => setShowErrorPopups(false)}
+    />
     </View>
 
   );
@@ -256,17 +346,20 @@ const styles = StyleSheet.create({
 
   tableRow: {
     flexDirection: 'row',
-    top:0,
+    top: 0,
+
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   form: {
     marginTop: 0,
+    position: 'relative',
+    // backgroundColor:'red',
   },
-  picker:{
-    top:-435,
-    left:360,
-    width:50,
+  picker: {
+    top: -685,
+    left: 360,
+    width: 50,
   },
   createChildLayout3: {
     height: 126,
@@ -284,8 +377,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: 'absolute',
-    paddingRight:10,
-    left:8,
+    paddingRight: 10,
+    left: 8,
   },
   tablewrapper: {
     flex: 1,
@@ -294,9 +387,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scroll: {
-    marginTop: 300,
-    flex:1,
-    height: 350,
+    flex: 1,
+    // maxHeight: 300,
+
+    position: 'relative',
+    // marginTop:0,
+    // backgroundColor:'red',
   },
   groupChildPosition: {
     width: 430,
@@ -310,8 +406,16 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   element2Position: {
-    top: 130,
+    top: 120,
     height: 20,
+  },
+  wrap: {
+    marginTop: 160,
+    height: 480,
+    flexGrow: 1,
+    // flex:1,
+    // overflow:'hidden',
+    // backgroundColor:'red',
   },
   elementFlexBox: {
     justifyContent: "center",
@@ -705,10 +809,10 @@ const styles = StyleSheet.create({
   element2: {
     left: 110,
     height: 20,
-    top: 130,
+    top: 120,
   },
   createInvoice2: {
-    top: 130,
+    top: 120,
     left: 130,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsSemibold,
@@ -1033,7 +1137,7 @@ const styles = StyleSheet.create({
     top: -25,
   },
   group: {
-    left: 279,
+    left: 320,
     width: 132,
     height: 0,
     top: 680,

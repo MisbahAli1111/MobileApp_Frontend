@@ -5,56 +5,111 @@ import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-
-
+import { Picker } from "@react-native-picker/picker";
+import DueDateTimePicker from '@react-native-community/datetimepicker';
+import ErrorPopup  from "../components/ErrorPopup";
 const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
 
+  const invoiceStatus = ['Paid', 'Due'];
   const [name, setName] = useState('');
   // console.warn(name);
   const [status, setStatus] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDueDatePicker, setShowDueDatePicker] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
   const [regNumber, setregNumber] = useState('');
-
+  // const [status,setStatus] = useState('');
+  
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDueDate, setSelectedDueDate] = useState(null);
+  
   const [date, setDate] = useState(new Date());
-
+  const [Duedate, setDueDate] = useState();
+  const [formHeight, setFormHeight] = useState(150);
+  const [msg, setmsg]= useState('');
+  const [msgg, setmsgg]= useState('');
+  const [ DueDateError , setDueDateError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [regNumberError, setregNumberError] = useState(false);
   const [DateError,setDataError] = useState(false);
-
+  const [showPicker, setShowPicker] = useState(false);
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
     if (date) {
       setSelectedDate(date);
+    }
+  };
+  const handleDueDateChange = (event, Duedate) => {
+    setShowDueDatePicker(false);
+    if (Duedate) {
+      setSelectedDueDate(Duedate,"Please Fill");
 
     }
   };
-
+  const openDueDatePicker = () => {
+    setShowDueDatePicker(true);
+  };
   const openDatePicker = () => {
     setShowDatePicker(true);
   };
+  const handleInvoiceStatusSelect= (code) => {
+    setStatus(code);
+  };
+
 
   useEffect(() => {
     if (save) {
+      setFormHeight(150);
+      setDueDateError(false);
       setDataError(false);
       setNameError(false);
       setregNumberError(false);
       setStatusError(false);
+      setmsg('');
+      setmsgg('');
+      
+   
 
       if(!name){
+        setFormHeight(200);
         setNameError(true);
+        setmsg('Please provide Name');
+      }else{
+        if(!regNumber){
+          setFormHeight(200);
+          setregNumberError(true);
+          setNameError(true);
+          setmsg('Please provide Registration Number');
+        }
       }
       if(!regNumber){
+        setFormHeight(200);
         setregNumberError(true);
       }
+
+      if(!selectedDate){
+        setFormHeight(200);
+        setDataError(true);
+        setmsgg('Provide Date');
+      }else{
+        if(!status){
+          setFormHeight(200);
+          setDataError(true);
+          setStatusError(true);
+          setmsgg('Provide Status');
+        }
+      }
       if(!status){
+        setFormHeight(200);
         setStatusError(true);
       }
-      // if(!selectedDate.toDateString){
-      //   setSelectedDate(true);
-      // }
+
+      if(!selectedDueDate){
+        setFormHeight(200);
+        setDueDateError(true);
+      }
 
     setSave(false);
     }
@@ -64,63 +119,54 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
 
   useEffect(() => {
     if (typeof onFormDataChange === 'function') {
-      onFormDataChange({ name, regNumber, date });
+      onFormDataChange({ name, regNumber, selectedDate,selectedDueDate,status });
     }
-  }, [name, regNumber, date, onFormDataChange]);
+  }, [name, regNumber, date, Duedate,status, onFormDataChange]);
 
   return (
-    <View style={styles.main}>
+    <View style={{ flex: 1, marginTop: 0, height: formHeight, overflow: 'hidden' }}>
+
+     
       {/* Name  */}
       <View style={styles.inLine}>
-      <TextInput style={[styles.lorita, styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
+      <TextInput style={[
+        nameError ? styles.loritaR :styles.lorita
+        , styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
       <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
-      <TextInput style={[styles.regNumber, styles.text5Clr]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput>
+      <TextInput style={[styles.regNumber,
+         regNumberError ? styles.text5ClrR :styles.text5Clr
+         ]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput>
       <Image
           style={styles.date2SvgrepoCom11R}
           contentFit="cover"
           source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
         />
       
-        {nameError ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
-
-      </View> 
       
+      </View> 
+      {nameError ? <Text style={styles.nameError}>{msg}</Text> : null}
+
       
       {/* date and status  */}
       <View style={styles.parent}>
 
         <TextInput
-          style={[styles.text1, styles.text1Typo]}
+          style={[
+           DateError ? styles.text1R : styles.text1
+            , styles.text1Typo]}
           value={selectedDate ? selectedDate.toDateString() : ''}
-          placeholder="Select a date"
+          placeholder="Select Creation date"
           editable={false}></TextInput>
 
-        <View style={[styles.groupInner, styles.lineViewPosition]} />
-
-
-
-        <TextInput style={[styles.statusPaiddue, styles.text1Typo]}
-          value={status}
-          editable={false}
-          placeholder="Status"
-        />
-        <View style={[styles.lineView, styles.lineViewPosition]} />
-
-        {/* vector-7@3x  */}
-        <Image
-          style={styles.pick}
-          contentFit="cover"
-          source={require("../assets/vector-7.png")}
-        />
         <Pressable
           onPress={openDatePicker}
         >
           <Image
-            style={styles.date2SvgrepoCom11}
+            style={styles.date2SvgrepoCom11C}
             contentFit="cover"
             source={require("../assets/date2svgrepocom-1-11.png")}
           />
@@ -133,19 +179,76 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
             onChange={handleDateChange}
           />
         )}
+        <TextInput style={[
+         statusError ?  styles.statusPaiddueR : styles.statusPaiddue 
+          , styles.text1Typo]}
+          value={status}
+          editable={false}
+          placeholder="Status"
+        />
+        
+       
+        <Image
+          style={styles.pick}
+          contentFit="cover"
+          source={require("../assets/vector-7.png")}
+        />
+  
+  <View style={styles.picker}>
+        <Picker
+          selectedValue={invoiceStatus}
+          onValueChange={(itemValue) =>handleInvoiceStatusSelect(itemValue)}
+        >
+          <Picker.Item label="Select Invoice Status" value="" />
+          {invoiceStatus.map((code) => (
+            <Picker.Item key={code} label={code} value={code} />
+          ))}
+        </Picker>
+        </View>
+        
+      
       </View>
+      {DateError ? <Text style={styles.nameError}>{msgg}</Text> : null}
+
+    
+      <View style={styles.parentp}>
+      <TextInput
+          style={[
+            DateError ? styles.text1R : styles.text1
+            , styles.text1Typo]}
+          value={selectedDueDate ? selectedDueDate.toDateString() : ''}
+          placeholder="Select Due date"
+          editable={false}></TextInput>
+
+        <Pressable
+          onPress={openDueDatePicker}
+        >
+          <Image
+            style={styles.date2SvgrepoCom11C}
+            contentFit="cover"
+            source={require("../assets/date2svgrepocom-1-11.png")}
+          />
+        </Pressable>
+        {showDueDatePicker && (
+          <DueDateTimePicker
+            value={selectedDueDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDueDateChange}
+          />
+        )}
+        </View>
+        {DueDateError ? <Text style={styles.nameError}>Provide Due Date for Invoice</Text> : null}
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-    // backgroundColor:'red',
-    marginTop:175,
-    height:150,
-  },
 
+  invoiceStatusPicker: {
+    top: 232
+  },
   // container:{
   //  // marginLeft:0,
   // },
@@ -154,6 +257,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
 
+  },
+  picker:{
+    left: 385,
+    height: 15,
+    width: 15,
+    top: 5,
+    position: "absolute",
+    overflow: "hidden",
   },
 
   createChildLayout3: {
@@ -168,20 +279,36 @@ const styles = StyleSheet.create({
   },
   inLine:{
     flexDirection:'row',
+    marginBottom:8,
   },
 
   pick: {
-    left: 359,
+    left: 385,
     height: 15,
     width: 15,
     top: 5,
     position: "absolute",
     overflow: "hidden",
   },
+  parent:{
+    flexDirection:'row',
+    marginTop:10,
+  },
+  parentp:{
+    flexDirection:'row',
+    marginTop:18,
+  },
+
   text5Clr:{
     borderBottomWidth: 2,
     width:"40%", 
     borderBottomColor: '#ccc', 
+    paddingHorizontal: 10,
+  },
+  text5ClrR:{
+    borderBottomWidth: 2,
+    width:"40%", 
+    borderBottomColor: 'red', 
     paddingHorizontal: 10,
   },
 
@@ -237,12 +364,12 @@ const styles = StyleSheet.create({
     left: 30,
   },
   text1Typo: {
-    top: 1,
+    top: 0,
     color: Color.dimgray_100,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     textAlign: "left",
-    position: "absolute",
+    position: "relative",
     width: 150,
   },
   lineViewPosition: {
@@ -261,6 +388,7 @@ const styles = StyleSheet.create({
   nameError: {
     marginLeft: 30,
     color: 'red',
+
   },
   rectangleViewBg: {
     backgroundColor: Color.steelblue_300,
@@ -335,6 +463,11 @@ const styles = StyleSheet.create({
       height: 3,
     },
     position: "absolute",
+  },
+  pickerr:{
+    top:0,
+    left:80,
+    width:50,
   },
   rateParentLayout: {
     height: 92,
@@ -553,7 +686,18 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   text1: {
-    left: 12,
+    left: 28,
+    width:"40%",
+    borderBottomWidth: 2, // Set the width of the underline
+    borderBottomColor: '#ccc', // Set the color of the underline
+    paddingHorizontal: 10,
+  },
+  text1R: {
+    left: 28,
+    width:"40%",
+    borderBottomWidth: 2, // Set the width of the underline
+    borderBottomColor: 'red', // Set the color of the underline
+    paddingHorizontal: 10,
   },
   invoiceStatusPicker: {
     top: 232
@@ -569,10 +713,29 @@ const styles = StyleSheet.create({
     top: 34,
   },
   statusPaiddue: {
-    left: 206,
+    marginLeft:65,
+    width:"38%",
+    borderBottomWidth: 2, // Set the width of the underline
+    borderBottomColor: '#ccc', // Set the color of the underline
+    paddingHorizontal: 10,
+  },
+  statusPaiddueR: {
+    marginLeft:65,
+    width:"38%",
+    borderBottomWidth: 2, // Set the width of the underline
+    borderBottomColor: 'red', // Set the color of the underline
+    paddingHorizontal: 10,
   },
   date2SvgrepoCom11: {
-    left: 10,
+    left: 18,
+    height: 25,
+    width: 25,
+    top: 0,
+    position: "relative",
+    overflow: "hidden",
+  },
+  date2SvgrepoCom11C: {
+    left: 30,
     height: 25,
     width: 25,
     top: 0,
@@ -587,13 +750,7 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
-  parent: {
-    top: 225,
-    height: 35,
-    width: 392,
-    left: 19,
-    position: "absolute",
-  },
+
   element2: {
     left: 110,
     height: 20,
@@ -885,6 +1042,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2, 
     width:"39%",
     borderBottomColor: '#ccc', 
+    paddingHorizontal: 10,
+  },
+  loritaR: {
+    fontFamily: FontFamily.poppinsRegular,
+    color: Color.dimgray_100,
+    fontSize: FontSize.size_base,
+    borderBottomWidth: 2, 
+    width:"39%",
+    borderBottomColor: "red", 
     paddingHorizontal: 10,
   },
   loritaWrapper: {
