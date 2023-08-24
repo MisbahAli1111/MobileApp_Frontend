@@ -1,88 +1,112 @@
 import React from 'react';
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
-import { View, StyleSheet,Text,TextInput,Pressable } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 
-const CreateInvoiceForm = ({onFormDataChange }) => {
+const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
 
-    const [name, setName]=useState('');
-    // console.warn(name);
-    const [status, setStatus]=useState('');
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [regNumber,setregNumber]=useState('');
+  const [name, setName] = useState('');
+  // console.warn(name);
+  const [status, setStatus] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [regNumber, setregNumber] = useState('');
 
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [date, setDate]=useState(new  Date());
-  
-    const handleDateChange = (event, date) => {
-        setShowDatePicker(false);
-        if (date) {
-          setSelectedDate(date);
-          
-        }
-      };
-    
-      const openDatePicker = () => {
-        setShowDatePicker(true);
-      };
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [date, setDate] = useState(new Date());
+
+  const [nameError, setNameError] = useState(false);
+  const [statusError, setStatusError] = useState(false);
+  const [regNumberError, setregNumberError] = useState(false);
+  const [DateError,setDataError] = useState(false);
+
+  const handleDateChange = (event, date) => {
+    setShowDatePicker(false);
+    if (date) {
+      setSelectedDate(date);
+
+    }
+  };
+
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+  };
+
+  useEffect(() => {
+    if (save) {
+      setDataError(false);
+      setNameError(false);
+      setregNumberError(false);
+      setStatusError(false);
+
+      if(!name){
+        setNameError(true);
+      }
+      if(!regNumber){
+        setregNumberError(true);
+      }
+      if(!status){
+        setStatusError(true);
+      }
+      // if(!selectedDate.toDateString){
+      //   setSelectedDate(true);
+      // }
+
+    setSave(false);
+    }
+  }, [save]);
 
 
-      useEffect(() => {
-        if (typeof onFormDataChange === 'function') {
-          onFormDataChange({ name, regNumber, date });
-        }
-      }, [name, regNumber, date, onFormDataChange]);
+
+  useEffect(() => {
+    if (typeof onFormDataChange === 'function') {
+      onFormDataChange({ name, regNumber, date });
+    }
+  }, [name, regNumber, date, onFormDataChange]);
 
   return (
     <View style={styles.main}>
-        {/* Name  */}
-        <View style={styles.frameView}>
-       <View style={styles.loritaWrapper}>
-          <TextInput style={[styles.lorita, styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
-        </View>
-         {/* frame2@3x */}
-        <Image
+      {/* Name  */}
+      <View style={styles.inLine}>
+      <TextInput style={[styles.lorita, styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
+      <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
-     
-      </View> 
-
-    {/* reg  */}
-    <View style={[styles.createInvoiceInner, styles.createLayout]} />
-      <TextInput style={[styles.regNumber, styles.text5Clr]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput> 
-      {/* licenseplatenumbersvgrepocom-12@3x  */}
-      <View style={styles.ss}>
+      <TextInput style={[styles.regNumber, styles.text5Clr]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput>
       <Image
-          style={styles.date2SvgrepoCom11}
+          style={styles.date2SvgrepoCom11R}
           contentFit="cover"
           source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
         />
-        </View>
-    <View style={[styles.createInvoiceChild8, styles.createLayout]} />
+      
+        {nameError ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
+
+      </View> 
+      
+      
       {/* date and status  */}
       <View style={styles.parent}>
 
-        <TextInput 
-        style={[styles.text1, styles.text1Typo]}
-        value={selectedDate ? selectedDate.toDateString() : ''}
-        placeholder="Select a date"
-        editable={false}></TextInput>
-         
+        <TextInput
+          style={[styles.text1, styles.text1Typo]}
+          value={selectedDate ? selectedDate.toDateString() : ''}
+          placeholder="Select a date"
+          editable={false}></TextInput>
+
         <View style={[styles.groupInner, styles.lineViewPosition]} />
-        
-        
-        
+
+
+
         <TextInput style={[styles.statusPaiddue, styles.text1Typo]}
-         value={status} 
-         editable={false}
-         placeholder="Status"
+          value={status}
+          editable={false}
+          placeholder="Status"
         />
         <View style={[styles.lineView, styles.lineViewPosition]} />
 
@@ -93,21 +117,21 @@ const CreateInvoiceForm = ({onFormDataChange }) => {
           source={require("../assets/vector-7.png")}
         />
         <Pressable
-        onPress={openDatePicker}
+          onPress={openDatePicker}
         >
-        <Image
-          style={styles.date2SvgrepoCom11}
-          contentFit="cover"
-          source={require("../assets/date2svgrepocom-1-11.png")}
-        />
+          <Image
+            style={styles.date2SvgrepoCom11}
+            contentFit="cover"
+            source={require("../assets/date2svgrepocom-1-11.png")}
+          />
         </Pressable>
         {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
+          <DateTimePicker
+            value={selectedDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
         )}
       </View>
     </View>
@@ -117,15 +141,17 @@ const CreateInvoiceForm = ({onFormDataChange }) => {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-
+    // backgroundColor:'red',
+    marginTop:175,
+    height:150,
   },
 
   // container:{
   //  // marginLeft:0,
   // },
-  tableRow:{
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+  tableRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
 
   },
@@ -136,19 +162,27 @@ const styles = StyleSheet.create({
     width: 186,
   },
 
-  ss:{
-    top:176,
-    left:215,
+  ss: {
+    top: 176,
+    left: 215,
+  },
+  inLine:{
+    flexDirection:'row',
   },
 
-
-  pick:{
+  pick: {
     left: 359,
     height: 15,
     width: 15,
     top: 5,
     position: "absolute",
     overflow: "hidden",
+  },
+  text5Clr:{
+    borderBottomWidth: 2,
+    width:"40%", 
+    borderBottomColor: '#ccc', 
+    paddingHorizontal: 10,
   },
 
   groupChildPosition: {
@@ -196,10 +230,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   text5ClrName: {
-    top:5,
+    top: 0,
+    position:'relative',
     color: Color.dimgray_100,
     textAlign: "left",
-    left:12,
+    left: 30,
   },
   text1Typo: {
     top: 1,
@@ -208,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     textAlign: "left",
     position: "absolute",
-    width:150,
+    width: 150,
   },
   lineViewPosition: {
     top: 34,
@@ -222,6 +257,10 @@ const styles = StyleSheet.create({
     height: 164,
     width: 392,
     position: "absolute",
+  },
+  nameError: {
+    marginLeft: 30,
+    color: 'red',
   },
   rectangleViewBg: {
     backgroundColor: Color.steelblue_300,
@@ -317,7 +356,7 @@ const styles = StyleSheet.create({
     width: 187,
     top: 535,
     height: 1,
-   
+
     borderColor: "#d9d9d9",
     borderStyle: "solid",
     position: "absolute",
@@ -326,7 +365,7 @@ const styles = StyleSheet.create({
     top: 569,
     width: 187,
     height: 1,
-  
+
     borderColor: "#d9d9d9",
     borderStyle: "solid",
     position: "absolute",
@@ -496,12 +535,13 @@ const styles = StyleSheet.create({
     left: 224,
   },
   regNumber: {
-    top: 175,
+    top: 0,
+    marginTop:0,
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
-    left: 225,
-    position: "absolute",
+    left: 50,
+    position: "relative",
   },
   groupIcon: {
     height: "2.25%",
@@ -510,13 +550,13 @@ const styles = StyleSheet.create({
     right: "4.42%",
     bottom: "79.19%",
     left: "86.28%",
-    position:"absolute",
+    position: "absolute",
   },
   text1: {
     left: 12,
   },
-  invoiceStatusPicker:{
-    top:232
+  invoiceStatusPicker: {
+    top: 232
   },
   groupInner: {
     left: 8,
@@ -532,11 +572,19 @@ const styles = StyleSheet.create({
     left: 206,
   },
   date2SvgrepoCom11: {
-    left: 159,
+    left: 10,
     height: 25,
     width: 25,
     top: 0,
-    position: "absolute",
+    position: "relative",
+    overflow: "hidden",
+  },
+  date2SvgrepoCom11R: {
+    left: 28,
+    height: 25,
+    width: 25,
+    top: 0,
+    position: "relative",
     overflow: "hidden",
   },
   parent: {
@@ -728,7 +776,7 @@ const styles = StyleSheet.create({
     left: 29,
   },
   taxRate: {
-    width:80,
+    width: 80,
     fontSize: FontSize.size_smi,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsMedium,
@@ -834,15 +882,20 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
+    borderBottomWidth: 2, 
+    width:"39%",
+    borderBottomColor: '#ccc', 
+    paddingHorizontal: 10,
   },
   loritaWrapper: {
+    position:'relative',
     //flexDirection: "row",
   },
   frameView: {
     top: 171,
     left: 20,
-    position: "absolute",
-    width:180 ,
+
+    width: 180,
   },
   vectorIcon4: {
     height: "2.68%",
@@ -851,7 +904,7 @@ const styles = StyleSheet.create({
     right: "52.79%",
     bottom: "79.08%",
     left: "41.4%",
-    position:"absolute",
+    position: "absolute",
   },
   text5: {
     left: 37,
@@ -878,9 +931,9 @@ const styles = StyleSheet.create({
   },
   group: {
     left: 279,
-    width: 132, 
+    width: 132,
     height: 0,
-    top:680,
+    top: 680,
     position: "absolute",
   },
   ellipseIcon: {
@@ -901,7 +954,7 @@ const styles = StyleSheet.create({
     color: Color.snow,
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.poppinsMedium,
-    alignContent:"center",
+    alignContent: "center",
   },
   vectorContainer: {
     top: 700,
@@ -1005,15 +1058,15 @@ const styles = StyleSheet.create({
     left: 287,
   },
   createInvoice: {
-  //   backgroundColor: Color.white,
-  //    //flex: 6,
-  //   //overflow: "hidden",
-  //    height: 1000,
-  //    width: "100%",
-      left:-8,
-   position:"absolute",
+    //   backgroundColor: Color.white,
+    //    //flex: 6,
+    //   //overflow: "hidden",
+    //    height: 1000,
+    //    width: "100%",
+    left: -8,
+    position: "absolute",
   },
 
- 
+
 });
 export default CreateInvoiceForm;

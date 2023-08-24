@@ -93,7 +93,7 @@ function BusinessList({ }) {
                 let config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://192.168.0.236:8080/api/business/get-my-businesses',
+                    url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
                     headers: {
                         'Authorization': token,
                     },
@@ -205,11 +205,13 @@ function BusinessList({ }) {
                                         : fetchedTimes[BusinessB.id] }
                                 </Text>
                             </View>
+                            {currentPressedIndex === BusinessB.id && (
                             <Image
                                 style={styles.checkCircleSvgrepoCom1Icon}
                                 contentFit="cover"
                                 source={require("../assets/checkcirclesvgrepocom-1.png")}
                             />
+                            )}
                         </Pressable>
                     </View>
                 </View>
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
     groupParentLayout: {
         height: 65,
         width: 393,
-        left: 2,
+        left: 0,
         position: "relative",
         alignItems: 'flex-start',
         flexWrap: "wrap",
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
 
     },
     signedIn: {
-        left: "2.68%",
+        left: "1%",
         color: Color.white,
         fontFamily: FontFamily.poppinsRegular,
         textAlign: "center",

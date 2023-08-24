@@ -1,11 +1,15 @@
 import React from "react";
 import { Image } from "expo-image";
-import { ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
+import { ImageBackground,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState } from "react";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -37,7 +41,7 @@ const Login = () => {
         maxBodyLength: Infinity,
         // 192.168.0.236 shayan IP
         // 192.168.100.71 Misbah IP
-        url: 'http://192.168.0.236:8080/login',
+        url: 'http://192.168.100.71:8080/login',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -56,13 +60,6 @@ const Login = () => {
 
             AsyncStorage.setItem("accessToken", accessToken);
             AsyncStorage.setItem("userId", userId);
-            
-            // console.log(userId);
-            //         AsyncStorage.getItem("accessToken")
-            // .then(accessTokens => {
-            //   console.log(accessTokens); 
-            // })
-
             navigation.navigate('SwitchBusiness');
 
           }
@@ -74,8 +71,12 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login Form</Text>
+    <ImageBackground
+      style={styles.container}
+      source={require("../assets/light-texture2234-1.png")}
+    >
+    
+      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -93,87 +94,101 @@ const Login = () => {
       />
       {passwordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
       {Merror ? <Text style={styles.nameError}>{error}</Text> : null}
+      
+      <View style={styles.signUpContainer}>
+      <Text style={styles.notRegisteredText}>Not registered?</Text>
       <Pressable onPress={() => navigation.navigate("OwnerInfo")}>
-        <Text style={styles.signUpText}>Not registered? <Text style={styles.signUpLink}>Sign Up</Text></Text>
+        <Text style={styles.signUpLink}>Sign Up</Text>
       </Pressable>
-
-      <View style={[styles.vectorParent, styles.groupItemLayout]}>
-        <TouchableOpacity onPress={handleLogin}>
-          <Image
-            style={[styles.groupItem, styles.groupItemLayout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-73.png")}
-          />
-          <Text style={styles.save}>Save</Text>
-        </TouchableOpacity>
       </View>
 
-    </View>
+
+      <View style={styles.buttonContainer}>
+        <Pressable onPress={handleLogin} style={styles.button}>
+          <Image
+            style={styles.buttonImage}
+            source={require('../assets/rectangle-73.png')}
+          />
+          <Text style={styles.buttonText}>Login</Text>
+        </Pressable>
+      </View>
+
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  signUpText: {
-    marginTop: 10,
-    marginBottom: 20,
-    color: 'gray',
-  },
-  signUpLink:{
-    marginTop: 10,
-    marginBottom: 20,
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#dfeef2',
-  },
-  login: {
-    height: 50,
-    width: 100,
+    justifyContent: 'center',
+    paddingHorizontal: widthPercentageToDP('10%'), // Responsive padding
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
-
+    fontWeight: 'bold',
+    marginBottom: heightPercentageToDP('2%'), // Responsive margin
   },
   input: {
-    borderBottomWidth: 2,
-    borderBottomColor: "#60b9d1",
-    marginBottom: 20,
-    width: '80%',
-    fontSize: 16,
-    padding: 8,
+    width: '100%',
+    height: heightPercentageToDP('6%'),
+    borderWidth: 0, // Removing the border here
+    borderBottomWidth: 1, // Adding a bottom border
+    borderColor: 'gray',
+    paddingHorizontal: widthPercentageToDP('3%'),
   },
-  groupItemLayout: {
-    height: 45,
-    width: 381,
-    position: "absolute",
-    top: 400,
-
-  },
-  groupItem: {
-    borderRadius: Border.br_7xs,
-    left: 0,
-    top: 0,
+  bottomBorder: {
+    borderBottomWidth: 1,
+    borderColor: 'gray',
   },
   nameError: {
-
     color: 'red',
+    marginBottom: heightPercentageToDP('2%'), // Responsive margin
   },
-  save: {
-    top: 445,
-    left: 171,
-
-    color: Color.snow,
-    marginTop: -35,
-    fontFamily: FontFamily.poppinsMedium,
-    fontSize: FontSize.size_base,
-    textAlign: "left",
-    fontWeight: "500",
-    position: "absolute",
+  signUpText: {
+    marginTop: heightPercentageToDP('2%'), // Responsive margin
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  signUpLink: {
+    color: '#007AFF',
+  },
+  buttonContainer: {
+    marginTop: heightPercentageToDP("3%"),
+    alignItems: "center",
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    borderRadius: 10,
+    width: '100%',
+    height: heightPercentageToDP('6%'),
+    paddingHorizontal: widthPercentageToDP('34%'),
+  },
+  buttonImage: {
+    width: widthPercentageToDP("10%"),
+    height: widthPercentageToDP("10%"),
+    // marginRight: widthPercentageToDP("2%"),
+  },
+  buttonText: {
+    fontSize: 16,
+    color: "white",
+    position: "absolute", // Added position absolute
+    textAlign: "center",
+  },
+  signUpContainer: {
+    flexDirection: 'row',
+    marginTop: heightPercentageToDP('2%'), // Responsive margin
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  notRegisteredText: {
+    fontSize: 16,
+    color: 'gray',
+    marginRight: 5,
   },
 });
 

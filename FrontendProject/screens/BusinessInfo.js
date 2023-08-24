@@ -133,10 +133,10 @@ const BusinessInfo = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://172.20.64.1:8080/api/business/add-business/',
+        url: 'http://192.168.0.236:8080/api/business/add-business/',
         headers: {
           'Content-Type': 'application/json',
-          // 'Authorization': token
+          'Authorization': token
         },
         data: data
       };
@@ -151,6 +151,7 @@ const BusinessInfo = () => {
         });
 
     }
+    navigation.navigate('SwitchBusiness');
   };
   
   const handleImageUpload = () => {

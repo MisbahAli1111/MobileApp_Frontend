@@ -1,109 +1,119 @@
 import * as React from "react";
-import { useState,useEffect,useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TouchableOpacity,TextInput, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const  RecordList =  ({dsearch,searchType,searchOrder,fromPreviousScreen})=> {
-const navigation = useNavigation();
-const [search, setSearch] = useState('');
-const [data, setData] = useState([]);
-const [records,setRecords]= useState([]);
-const [InvoiceScreen, setInvoiceScreen]=useState(true);
-  
-const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
+const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, create, setCreate }) => {
+  const navigation = useNavigation();
 
 
-const displayedRecords = search ? data : records;
+  const [search, setSearch] = useState('');
+  const [data, setData] = useState([]);
+  const [records, setRecords] = useState([]);
+  const [InvoiceScreen, setInvoiceScreen] = useState(false);
+  const [CreateInvoice, setCreateInvoice] = useState(false);
+  const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
+  const [ InvoiceIndex,setInvoiceIndex] = useState('');
+  const [InvoiceRecord, setInvoiceRecord] = useState('');
 
-const handlePress = (index,recordId) => {
-  if(!InvoiceScreen){
-  
-  }else{
-    setCurrentPressedIndex(index);
-    navigation.navigate("MaintenanceDetailView",{recordId:recordId});
- 
- }
+  const displayedRecords = search ? data : records;
 
-
-};
-
-
-
-
-
-getData = async () =>{
-
-  let token= await AsyncStorage.getItem("accessToken");
-  const accessToken = 'Bearer ' + token;
-  // 192.168.100.71
-
-  let config = {
-    method: 'get',
-    maxBodyLength: Infinity,
-    url: 'http://192.168.100.71:8080/api/maintenance-record/get-records',
-    headers: { 
-      'Authorization': accessToken
+  const handlePress = (index, recordId) => {
+    if (InvoiceScreen) {
+      setCurrentPressedIndex(index);
+      setInvoiceIndex(index);
+      setInvoiceRecord(recordId);
+    } else {
+      setCurrentPressedIndex(index);
+      navigation.navigate("MaintenanceDetailView", { recordId: recordId });
     }
   };
-  
-  axios.request(config)
-  .then((response) => {
-    console.log(JSON.stringify(response.data));
-    setRecords(response.data);
 
-    return response.data;
-  })
-  .catch((error) => {
-    console.log(error);
-  });
 
-};
 
-useEffect(() => {
-  
-  getData();
-},[]);
 
-useEffect(() => {
-  setInvoiceScreen(false);
-  if(fromPreviousScreen == 1){
-    setInvoiceScreen(true);
-  }
-},[fromPreviousScreen]);
 
-useEffect(() => {
-  setSearch(dsearch);
+  getData = async () => {
 
-  const formattedQuery = dsearch.trim().toUpperCase();
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    // 192.168.100.71
 
-  const maintained = records.filter((record) => {
-    if (!searchType.length > 0) {
-      const field1Matches = record.service.toUpperCase().includes(formattedQuery);
-      return field1Matches;
-    } else {
-      const searchTypeMatches = searchType.some(property => {
-        const propertyValue = record[property];
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'http://192.168.100.71:8080/api/maintenance-record/get-records',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
 
-        if (property === "maintenanceDateTime") {
-          const formattedDate = new Date(propertyValue).toDateString().toUpperCase();
-          return formattedDate.includes(formattedQuery);
-        } else {
-          const propertyAsString = propertyValue.toString();
-          return propertyAsString.toUpperCase().includes(formattedQuery);
-        }
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setRecords(response.data);
+
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      return searchTypeMatches;
+
+  };
+
+  useEffect(() => {
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    setInvoiceScreen(false);
+    setCreateInvoice(false);
+    if (fromPreviousScreen) {
+      setInvoiceScreen(true);
     }
-  });
+    if(create){
+      setCreate(false);
+      if(InvoiceRecord){
+        navigation.navigate("CreateInvoice", { InvoiceRecord: InvoiceRecord });   
+      }
+      // setCreateInvoice(true);
+    }
+},[create]);
+
+  useEffect(() => {
+    setSearch(dsearch);
+
+    const formattedQuery = dsearch.trim().toUpperCase();
+
+    const maintained = records.filter((record) => {
+      if (!searchType.length > 0) {
+        const field1Matches = record.service.toUpperCase().includes(formattedQuery);
+        return field1Matches;
+      } else {
+        const searchTypeMatches = searchType.some(property => {
+          const propertyValue = record[property];
+
+          if (property === "maintenanceDateTime") {
+            const formattedDate = new Date(propertyValue).toDateString().toUpperCase();
+            return formattedDate.includes(formattedQuery);
+          } else {
+            const propertyAsString = propertyValue.toString();
+            return propertyAsString.toUpperCase().includes(formattedQuery);
+          }
+        });
+        return searchTypeMatches;
+      }
+    });
 
 
- 
-}, [dsearch, searchType, searchOrder]);
+
+  }, [dsearch, searchType, searchOrder]);
 
 
 
@@ -113,137 +123,137 @@ useEffect(() => {
 
 
 
-const formatDateTime = (isoDateTime) => {
-  return new Date(isoDateTime).toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric'
-  });
-};
+  const formatDateTime = (isoDateTime) => {
+    return new Date(isoDateTime).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    });
+  };
   return (
     <ScrollView style={styles.wrap}>
-    {
-displayedRecords.map((record, index) => {
-  
-  
-    // console.log(user);
-      return(
-      <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
-        <View style={[styles.groupFrame]}>
-          <Pressable
-            style={[styles.groupFrame, styles.groupParentLayout]}
-            onPress={() => handlePress(index,record.id)}
-          >
-            {/* Image */}
-            <Image
-              style={[
-                styles.rectangleIcon,
-                styles.groupParentLayout,
-              ]}
-              contentFit="cover"
-              source={currentPressedIndex === index ? require("../assets/rectangle-541.png") : require("../assets/rectangle-54.png")}
-            />
-            <View style={[styles.frameParent, styles.frameParentLayout]}>
-              <View
-                style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
-              >
-                <Text
-                  style={[
-                    currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-                    styles.davidTypo,
-                  ]}>
-                  {`Maintained On `}</Text>
+      {
+        displayedRecords.map((record, index) => {
 
-                <Text style={[
-                  styles.stJanuary2023,
-                  currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
-                ]}>
-                  {formatDateTime(record.maintanenceDateTime)}
-                </Text>
-              </View>
-              <View
-                style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
-              >
-                <Text style={[
-                  currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-                  styles.davidTypo,
-                ]}>
-                  Maintained By
-                </Text>
-                <Text style={[
-                  styles.stJanuary2023,
-                  currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
-                ]}>
-                 {record.name}
-                </Text>
-              </View>
-              <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
-                <Text style={[
-                  currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-                  styles.davidTypo,
-                ]}>
-                  Mileage
-                </Text>
-              </View>
-              <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
-                <Text style={[
-                  currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-                  styles.davidTypo,
-                ]}>
-                  Service
-                </Text>
+
+          // console.log(user);
+          return (
+            <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
+              <View style={[styles.groupFrame]}>
+                <Pressable
+                  style={[styles.groupFrame, styles.groupParentLayout]}
+                  onPress={() => handlePress(index, record.id)}
+                >
+                  {/* Image */}
+                  <Image
+                    style={[
+                      styles.rectangleIcon,
+                      styles.groupParentLayout,
+                    ]}
+                    contentFit="cover"
+                    source={currentPressedIndex === index ? require("../assets/rectangle-541.png") : require("../assets/rectangle-54.png")}
+                  />
+                  <View style={[styles.frameParent, styles.frameParentLayout]}>
+                    <View
+                      style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
+                    >
+                      <Text
+                        style={[
+                          currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                          styles.davidTypo,
+                        ]}>
+                        {`Maintained On `}</Text>
+
+                      <Text style={[
+                        styles.stJanuary2023,
+                        currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
+                      ]}>
+                        {formatDateTime(record.maintanenceDateTime)}
+                      </Text>
+                    </View>
+                    <View
+                      style={[styles.maintainedByParent, styles.surfaceParentFlexBox]}
+                    >
+                      <Text style={[
+                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                        styles.davidTypo,
+                      ]}>
+                        Maintained By
+                      </Text>
+                      <Text style={[
+                        styles.stJanuary2023,
+                        currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
+                      ]}>
+                        {record.name}
+                      </Text>
+                    </View>
+                    <View style={[styles.mileageWrapper, styles.wrapperPosition]}>
+                      <Text style={[
+                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                        styles.davidTypo,
+                      ]}>
+                        Mileage
+                      </Text>
+                    </View>
+                    <View style={[styles.serviceWrapper, styles.wrapperPosition]}>
+                      <Text style={[
+                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                        styles.davidTypo,
+                      ]}>
+                        Service
+                      </Text>
+                    </View>
+                  </View>
+                  <Image
+                    style={[styles.groupIcon, styles.iconLayout1]}
+                    contentFit="cover"
+                    source={currentPressedIndex === index ? require("../assets/group-801.png") : require("../assets/group-80.png")}
+                  />
+                  <Image
+                    style={[
+                      styles.vehicleServicesSvgrepoCom1Icon,
+                      styles.vehicleIconLayout,
+                    ]}
+                    contentFit="cover"
+                    source={
+                      currentPressedIndex === index ? require("../assets/vehicleservicessvgrepocom-12.png") : require("../assets/vehicleservicessvgrepocom-11.png")}
+                  />
+                  <Text style={[
+                    currentPressedIndex === index ? styles.carWashW : styles.carWash, styles.carPosition]}>{record.service}</Text>
+                  <Text style={[
+                    currentPressedIndex === index ? styles.text2W : styles.text2, styles.textPosition]}>{record.kilometerDriven}</Text>
+
+                </Pressable>
               </View>
             </View>
-            <Image
-              style={[styles.groupIcon, styles.iconLayout1]}
-              contentFit="cover"
-              source={currentPressedIndex === index ? require("../assets/group-801.png") : require("../assets/group-80.png")}
-            />
-            <Image
-              style={[
-                styles.vehicleServicesSvgrepoCom1Icon,
-                styles.vehicleIconLayout,
-              ]}
-              contentFit="cover"
-              source={
-                currentPressedIndex === index ? require("../assets/vehicleservicessvgrepocom-12.png") : require("../assets/vehicleservicessvgrepocom-11.png")}
-            />
-            <Text style={[
-               currentPressedIndex === index ? styles.carWashW :styles.carWash, styles.carPosition]}>{record.service}</Text>
-            <Text style={[
-              currentPressedIndex === index ? styles.text2W: styles.text2, styles.textPosition]}>{record.kilometerDriven}</Text>
-
-          </Pressable>
-        </View>
-      </View>
-      );
-    })}
-     </ScrollView>
+          );
+        })}
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   groupParentLayout: {
     height: 132,
     width: 375,
-    left:5,
+    left: 5,
     position: "relative",
     alignItems: 'flex-start',
-    flexWrap:"wrap",
-    marginBottom:20,
-    
+    flexWrap: "wrap",
+    marginBottom: 20,
+
   },
   serviceWrapper: {
     top: 84,
   },
-  wrap:{
-  width:385,
-  marginLeft:1,
-  // backgroundColor:'red',
-   height:552,
-  
+  wrap: {
+    width: 385,
+    marginLeft: 1,
+    // backgroundColor:'red',
+    height: 552,
+
   },
   text2Typo: {
     color: Color.gray_300,
@@ -257,7 +267,7 @@ const styles = StyleSheet.create({
     width: 209,
     left: 43,
   },
-  
+
   text2TypoW: {
     color: Color.white,
     fontSize: FontSize.size_smi,
@@ -282,13 +292,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
   },
- 
+
 
   maintainedByParent: {
     top: 28,
     left: 0,
   },
- 
+
 
   surfaceParentFlexBox: {
     flexDirection: "row",
@@ -317,7 +327,7 @@ const styles = StyleSheet.create({
     left: "3.83%",
     position: "absolute",
   },
- 
+
   iconLayout1: {
     maxHeight: "100%",
     maxWidth: "100%",

@@ -10,12 +10,13 @@ import FilterSearchRecord from "../components/FilterSearchRecord";
 
 const MaintenanceRecord = ({route}) => {
   const { fromPreviousScreen } = route.params;
+  
   const navigation = useNavigation();
   const [searchType , setSearchType] = useState([]);
   const [searchOrder , setSearchOrder] = useState('');
   const [search, setSearch] = useState('');
   const [filterSearchClicked,setFilterSearchClicked] =useState(false);
-  
+  const [create, setCreate]=useState(false);
 
   const functionFilterSearch = () =>{
     setFilterSearchClicked(true);
@@ -26,9 +27,11 @@ const addFilterInState = (attribute, sort) => {
     setFilterSearchClicked(false);
     setSearchType(attribute);
     setSearchOrder(sort);
-    // console.log('Selected Filters:', attribute)
-    // console.log('selected Sort: ',sort)
+
   }; 
+  const handleSavePress = () => {
+    setCreate(true);
+  };
 
   const handleQuery= (query) => {
     setSearch(query);
@@ -110,7 +113,7 @@ const addFilterInState = (attribute, sort) => {
           <Text style={styles.blueText}>Select Record to Create Invoice</Text>
         </View>
         {/* onPress={handleSavePress} */}
-        <TouchableOpacity > 
+        <TouchableOpacity onPress={handleSavePress} > 
         <View style={styles.saveContainer}>
         <Text style={styles.blueTextB}>Create</Text>
         </View>
@@ -154,7 +157,7 @@ const addFilterInState = (attribute, sort) => {
       </View>
 
     <View style={styles.boxContianer}>
-    <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} fromPreviousScreen={1} />
+    <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} fromPreviousScreen={fromPreviousScreen} create={create} setCreate={setCreate} />
     </View>
       
       

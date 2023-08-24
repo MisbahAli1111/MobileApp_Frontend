@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, View, Text, Pressable, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -16,12 +17,15 @@ import InvoiceDiscount from "../components/InvoiceTax";
 import { useRef } from "react";
 
 
-const CreateInvoice = () => {
-
-
-
+const CreateInvoice = (parans) => {
   const navigation = useNavigation();
 
+  const route = useRoute();
+
+  // contains the record id details
+  const recordId = route.params?.InvoiceRecord;
+
+ 
 
 
   const [showPicker, setShowPicker] = useState(false);
@@ -49,7 +53,7 @@ const CreateInvoice = () => {
   const [date, setDate] = useState('');
   const [status,setStatus] = useState('');
   const [totalAmount, setTotalAmount] = useState(0);
-
+  const [save,setSave] = useState(false);
   const handleItemsChange = (items) => {
     setDescription(items);
   };
@@ -71,13 +75,16 @@ const CreateInvoice = () => {
   };
 
   const handleSave = () => {
-    const isDescriptionEmpty = Description.some(
-      (item) => !item.itemName || !item.quantity || !item.rate
-    );
 
-    const isDiscountEmpty = discount.some((item) => !item.itemName || !item.rate);
+    setSave(true);
 
-    const isTaxEmpty = tax.some((item) => !item.itemName || !item.rate);
+    // const isDescriptionEmpty = Description.some(
+    //   (item) => !item.itemName || !item.quantity || !item.rate
+    // );
+
+    // const isDiscountEmpty = discount.some((item) => !item.itemName || !item.rate);
+
+    // const isTaxEmpty = tax.some((item) => !item.itemName || !item.rate);
 
 
     // if (!Name || !regNumber || isDescriptionEmpty || isDiscountEmpty || isTaxEmpty) {
@@ -85,7 +92,7 @@ const CreateInvoice = () => {
     // } else {
     //    
     // }
-    navigation.navigate('InvoiceDetailView');
+    // navigation.navigate('InvoiceDetailView');
   };
 
 
@@ -174,7 +181,7 @@ const CreateInvoice = () => {
 
 
       <View style={styles.form}>
-        <CreateInvoiceForm onFormDataChange={handleFormDataChange} />
+        <CreateInvoiceForm onFormDataChange={handleFormDataChange} save={save} setSave={setSave} />
       </View>
       <ScrollView style={styles.scroll}>
         <View>
