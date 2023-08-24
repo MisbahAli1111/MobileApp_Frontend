@@ -13,6 +13,7 @@ import ImagePickerGallery from "../components/ImagePickerGallery";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { AntDesign } from '@expo/vector-icons';
 
 //172.20.64.1 shayan ip
 //192.168.100.71 misbah ip
@@ -66,7 +67,7 @@ const AddVehicle = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://172.20.64.1:8080/api/users/get-customer/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/users/get-customer/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -558,7 +559,7 @@ const AddVehicle = () => {
           style={{
             elevation: 5,
             marginTop: 20,
-            height: 300,
+            height: 600,
             alignSelf: 'center',
             width: '90%',
             backgroundColor: '#fff',
@@ -636,25 +637,17 @@ const AddVehicle = () => {
           </View>
           <TouchableOpacity
         style={{
-          backgroundColor: 'red',
-          paddingVertical: 10,
-          alignSelf: 'center',
-          borderRadius: 5,
-          width: '30%',
-          marginTop: 10,
-        }}
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            zIndex: 999,
+          }}
         onPress={
           handleClick
         }>
-        <Text
-          style={{
-            fontSize: FontSize.size_sm,
-            fontFamily: FontFamily.poppinsMedium,
-            color: 'white',
-            textAlign: 'center',
-          }}>
-          Close
-        </Text>
+        
+        <AntDesign name="closecircle" size={24} color="red~~" />
+        
       </TouchableOpacity>
         </View>  
           </Modal>
@@ -1401,7 +1394,7 @@ wrap:{
     width: '49%',
   },
   davidDaniel: {
-    width: 168,
+    width: 350,
     fontSize: FontSize.size_base,
     color: 'black',
  

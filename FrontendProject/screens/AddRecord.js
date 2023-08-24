@@ -1,6 +1,7 @@
 import {React} from "react";
 import { Image } from "expo-image";
-import {Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput,FlatList  } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
+import {Dimensions,Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput,FlatList  } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { useState,useEffect,useRef } from "react";
@@ -14,6 +15,7 @@ import {Video} from "expo-av";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+const windowHeight = Dimensions.get('window').height;
 
 const AddRecord = () => {
   const navigation = useNavigation();
@@ -176,7 +178,7 @@ const [Msg,setMsg]=useState('');
   };
 
   const handleAddCustomer =() =>{
-    navigation.navigate('AddCustomer');
+    navigation.navigate('AddVehicle');
   };
   
   const getRegistrationNumber = async () =>{
@@ -191,7 +193,7 @@ const [Msg,setMsg]=useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://172.16.82.53:8080/api/maintenance-record/get-registration-number/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-registration-number/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -217,7 +219,7 @@ const [Msg,setMsg]=useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://172.16.82.53:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -433,7 +435,7 @@ const [Msg,setMsg]=useState('');
           style={{
             elevation: 5,
             marginTop: 20,
-            height: 300,
+            height: 600,
             alignSelf: 'center',
             width: '90%',
             backgroundColor: '#fff',
@@ -506,30 +508,23 @@ const [Msg,setMsg]=useState('');
             fontFamily: FontFamily.poppinsMedium,
             color: 'white',
             textAlign: 'center',
-          }}>Add Customer</Text>
+          }}>Add Vehicle</Text>
         </TouchableOpacity>
           </View>
-          <TouchableOpacity
-        style={{
-          backgroundColor: 'red',
-          paddingVertical: 10,
-          alignSelf: 'center',
-          borderRadius: 5,
-          width: '30%',
-          marginTop: 10,
-        }}
+        <TouchableOpacity
+           style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            zIndex: 999,
+          }}
         onPress={
           handleClick
         }>
-        <Text
-          style={{
-            fontSize: FontSize.size_sm,
-            fontFamily: FontFamily.poppinsMedium,
-            color: 'white',
-            textAlign: 'center',
-          }}>
-          Close
-        </Text>
+        
+        <AntDesign name="closecircle" size={24} color="red~~" />
+        {/* //rgba(3, 29, 68, 1) */}
+
       </TouchableOpacity>
         </View>  
           </Modal>
