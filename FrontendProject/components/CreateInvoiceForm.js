@@ -121,10 +121,10 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
     let date;
     let Duedate;
     if (selectedDate) {
-      date = selectedDate.toDateString();
+      date = selectedDate;
     }
     if(selectedDueDate){
-      Duedate = selectedDueDate.toDateString();
+      Duedate = selectedDueDate;
     }
     
     if (typeof onFormDataChange === 'function') {

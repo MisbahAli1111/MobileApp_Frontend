@@ -4,40 +4,64 @@ import { Image } from "expo-image";
 import { StyleSheet,TextInput, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
-
-
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 function Invoicelist({ dsearch }) {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
-
+const [Invoices,setInvoices] = useState([]);
   
 
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
-  const Invoices = [
-    {
-      InvoiceId: "I001",
-      Name: "Ali",
-      Date: "02/4/2023",
-      Status: "Paid",
-      Price:"3000"
-    },
-    {
-      InvoiceId: "I002",
-      Name: "Ahemed",
-      Date: "02/4/2023",
-      Status: "Due",
-      Price:"3000"
-    }, {
-      InvoiceId: "I003",
-      Name: "ABC",
-      Date: "02/4/2023",
-      Status: "Paid",
-      Price:"3000"
-    },
+  // const Invoices = [
+  //   {
+  //     InvoiceId: "I001",
+  //     Name: "Ali",
+  //     Date: "02/4/2023",
+  //     Status: "Paid",
+  //     Price:"3000"
+  //   },
+  //   {
+  //     InvoiceId: "I002",
+  //     Name: "Ahemed",
+  //     Date: "02/4/2023",
+  //     Status: "Due",
+  //     Price:"3000"
+  //   }, {
+  //     InvoiceId: "I003",
+  //     Name: "ABC",
+  //     Date: "02/4/2023",
+  //     Status: "Paid",
+  //     Price:"3000"
+  //   },
 
-  ];
+  // ];
+  const getData= async()=>{
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'http://192.168.100.71:8080/api/invoice/get-invoice',
+      headers: { 
+        'Authorization': accessToken
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setInvoices(response.data);
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    
+  };
 
   const displayedRecords = search ? data : Invoices;
 
@@ -46,13 +70,16 @@ function Invoicelist({ dsearch }) {
     navigation.navigate("InvoiceDetailView");
   };
 
-  useEffect(() => {
-    setSearch(dsearch);
-    const formattedQuery = dsearch.trim();
-    const maintained = Invoices.filter((record) => record.Name.includes(formattedQuery))
-    setData(maintained);
-  }, [dsearch]);
+  // useEffect(() => {
+  //   setSearch(dsearch);
+  //   const formattedQuery = dsearch.trim();
+  //   const maintained = Invoices.filter((record) => record.Name.includes(formattedQuery))
+  //   setData(maintained);
+  // }, [dsearch]);
 
+  useEffect(()=>{
+    getData();
+  },[]);
 
   return (
     <ScrollView style={styles.wrap}>
@@ -70,19 +97,20 @@ function Invoicelist({ dsearch }) {
                   styles.muhammadAli4,
                   currentPressedIndex === index ? styles.text4Typo :styles.paidTypo
                    ]}>
-                  {record.Name}
+                  {record.name}
+                  
                 </Text>
                 
                 <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
                   <Text style={[
                     currentPressedIndex === index ? styles.inv00014 : styles.inv0001, 
                     currentPressedIndex === index ? styles.text4Typo : styles.textTypo
-                    ]}>{record.InvoiceId}</Text>
+                    ]}>{record.id}</Text>
                   <Text style={[
                     currentPressedIndex === index ? styles.jan20234: styles.jan2023,
                     currentPressedIndex === index ? styles.text4Typo :styles.janPosition
                      ]}>
-                    {record.Date}
+                    {record.date}
                   </Text>
                   <Text style={[
                     currentPressedIndex === index ?  styles.text4 :styles.text, 
@@ -93,7 +121,7 @@ function Invoicelist({ dsearch }) {
                   currentPressedIndex === index ? styles.rs30004 :styles.rs3000,
                   , styles.rs3000Typo
                   ]}>
-                  {record.Price}</Text>
+                  {record.total}</Text>
                 <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
                   {record.Status === "Due" ? (
                 <View style={[styles.groupInner, styles.groupChildLayout]} />
@@ -423,6 +451,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
     left: 86,
     top: 1,
+    width:20,
   },
   text4: {
     left: 75,

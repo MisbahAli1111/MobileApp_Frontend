@@ -62,14 +62,15 @@ const CreateInvoice = (parans) => {
   const [regNumber, setregNumber] = useState('');
   const [date, setDate] = useState('');
   const [status, setStatus] = useState('');
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0.0);
   const [save, setSave] = useState(false);
   const [EmptyItem, setEmptyItem] = useState(false);
   const [EmptyFeildsDesc, setEmptyFeildsDesc] = useState(false);
   const [EmptyFeildsDisc, setEmptyFeildsDisc] = useState(false);
   const [EmptyFeildsTax, setEmptyFeildsTax] = useState(false);
   const [descriptionArray , setDescriptionArray]= useState([]);
-
+  const [  DiscountArray ,setDiscountArray] = useState([]);
+  const [TaxArray, setTaxArray] = useState([]);
   const handleItemsChange = (items) => {
     setDescription(items);
     setEmptyFeildsDesc(false);
@@ -95,8 +96,24 @@ const CreateInvoice = (parans) => {
        
         setEmptyFeildsDesc(true);
       }
+
+
+
     }
-    setDescriptionArray(items);
+
+    const filteredItems = items.filter(item => {
+      return !(item.rate === "" && item.quantity === "" && item.itemName === "");
+    });
+  
+    const descriptions = filteredItems.map(item => ({
+      item: item.itemName,
+      rate: parseFloat(item.rate),
+      quantity: parseInt(item.quantity),
+      amount: parseFloat(item.rate) * parseInt(item.quantity)
+    }));
+
+    setDescriptionArray(descriptions);
+ 
 
   };
 
@@ -113,6 +130,19 @@ const CreateInvoice = (parans) => {
         setEmptyFeildsDisc(true);
       }
     }
+
+   
+
+    const filteredItems = items.filter(item => {
+      return !(item.rate === "" && item.itemName === "");
+    });
+
+    const taxes = filteredItems.map(item => ({
+      item: item.itemName,
+      rate: parseFloat(item.rate)
+    }));
+
+    setDiscountArray(taxes);
   }
   const handleDiscount = (items) => {
     setTax(items);
@@ -127,7 +157,23 @@ const CreateInvoice = (parans) => {
         setEmptyFeildsTax(true);
       }
     }
+
+  
+
+    const filteredItems = items.filter(item => {
+      return !(item.rate === "" && item.itemName === "");
+    });
+
+    const taxes = filteredItems.map(item => ({
+      item: item.itemName,
+      rate: parseFloat(item.rate)
+    }));
+
+
+    setTaxArray(taxes);
+    
   }
+
   const handleFormDataChange = (data) => {
     setName(data.name);
     setDate(data.date);
@@ -167,59 +213,36 @@ const CreateInvoice = (parans) => {
 
 
   sendData = async () => {
-    // console.log("this");
-    // console.log(descriptionArray);
+
+  console.log(TaxArray);
     console.log("sendData d");
     const token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
+    let st;
+    if(status == "paid"){
+      st=true;
+    }else{
+      st=false;
+    }
+   
+
     let data = JSON.stringify({
-      "invoiceDue": "2023-08-31T00:00",
-      "date": "2023-08-31T00:00",
-      "registrationNumber": "pak",
-      "total": 1000.0,
-      "status":true,
+      "invoiceDue": Duedate,
+      "date": date,
+      "registrationNumber": regNumber,
+      "total": parseFloat(totalAmount),
+      "status":st,
     
-      "descriptions": [
-        {
-          "item": "Service A",
-          "rate": 50.0,
-          "quantity": 2,
-          "amount": 100.0
-        },
-        {
-          "item": "Service B",
-          "rate": 30.0,
-          "quantity": 3,
-          "amount": 90.0
-        }
-      ],
-      "discounts": [
-        {
-          "discountName": "Discount 1",
-          "discountRate": 10.0
-        },
-        {
-          "discountName": "Discount 2",
-          "discountRate": 5.0
-        }
-      ],
-      "taxes": [
-        {
-          "taxName": "Tax 1",
-          "taxRate": 8.0
-        },
-        {
-          "taxName": "Tax 2",
-          "taxRate": 5.5
-        }
-      ]
+      "descriptions": descriptionArray,
+      "discounts": DiscountArray,
+      "taxes": TaxArray
     });
 
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://192.168.100.71:8080/api/invoice/create-invoice/11',
+      url: `http://192.168.100.71:8080/api/invoice/create-invoice/${recordId}`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': accessToken
@@ -230,6 +253,7 @@ const CreateInvoice = (parans) => {
     axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        navigation.navigate('Invoices');
       })
       .catch((error) => {
         console.log(error);
@@ -245,42 +269,47 @@ const CreateInvoice = (parans) => {
   }, [Description, discount, tax]);
 
   const calculateTotalAmount = () => {
-    if (
-      Description.some((item) => !item.itemName || !item.quantity || !item.rate) ||
-      discount.length === 0 ||
-      tax.length === 0
-    ) {
+    if (Description.length === 0 || discount.length === 0 || tax.length === 0) {
       setTotalAmount(0.0);
       return;
     }
-
+  
     let totalAmount = 0.0;
-
+  
     for (const item of Description) {
-
       const itemAmount = parseFloat(item.quantity) * parseFloat(item.rate);
-      totalAmount += itemAmount;
-
+      totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
     }
-
+    
+    console.log("for descrition");
+    console.log(totalAmount);
+   
 
     let totalDiscount = 0.0;
     for (const disc of discount) {
-      totalDiscount += (parseFloat(disc.rate) / 100) * totalAmount; // Convert rate to decimal
+      const discountRate = parseFloat(disc.rate);
+      if (!isNaN(discountRate)) {
+        totalDiscount += (discountRate / 100) * totalAmount; // Convert rate to decimal
+      }
     }
+
 
     let totaltax = 0.0;
     for (const t of tax) {
-      totaltax += (parseFloat(t.rate) / 100) * totalAmount; // Convert rate to decimal
+      const taxRate = parseFloat(t.rate);
+      if (!isNaN(taxRate)) {
+        totaltax += (taxRate / 100) * totalAmount; // Convert rate to decimal
+      }
     }
-    totalAmount += totalDiscount;
-    totalAmount -= totaltax;
-
+    
+    totalAmount -= totalDiscount;
+    totalAmount += totaltax;
+  
     totalAmount = totalAmount.toFixed(2);
-
+  
     setTotalAmount(totalAmount);
-
   };
+  
 
   return (
     <View style={styles.createInvoice}>
