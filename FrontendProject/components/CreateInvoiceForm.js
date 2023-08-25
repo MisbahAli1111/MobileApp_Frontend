@@ -7,8 +7,8 @@ import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
 import DueDateTimePicker from '@react-native-community/datetimepicker';
-import ErrorPopup  from "../components/ErrorPopup";
-const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
+import ErrorPopup from "../components/ErrorPopup";
+const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
 
   const invoiceStatus = ['Paid', 'Due'];
   const [name, setName] = useState('');
@@ -20,20 +20,20 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
 
   const [regNumber, setregNumber] = useState('');
   // const [status,setStatus] = useState('');
-  
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
-  
+
   const [date, setDate] = useState(new Date());
   const [Duedate, setDueDate] = useState();
   const [formHeight, setFormHeight] = useState(150);
-  const [msg, setmsg]= useState('');
-  const [msgg, setmsgg]= useState('');
-  const [ DueDateError , setDueDateError] = useState(false);
+  const [msg, setmsg] = useState('');
+  const [msgg, setmsgg] = useState('');
+  const [DueDateError, setDueDateError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [statusError, setStatusError] = useState(false);
   const [regNumberError, setregNumberError] = useState(false);
-  const [DateError,setDataError] = useState(false);
+  const [DateError, setDataError] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
@@ -44,7 +44,7 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
   const handleDueDateChange = (event, Duedate) => {
     setShowDueDatePicker(false);
     if (Duedate) {
-      setSelectedDueDate(Duedate,"Please Fill");
+      setSelectedDueDate(Duedate, "Please Fill");
 
     }
   };
@@ -54,7 +54,7 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
   const openDatePicker = () => {
     setShowDatePicker(true);
   };
-  const handleInvoiceStatusSelect= (code) => {
+  const handleInvoiceStatusSelect = (code) => {
     setStatus(code);
   };
 
@@ -69,94 +69,103 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
       setStatusError(false);
       setmsg('');
       setmsgg('');
-      
-   
 
-      if(!name){
+
+
+      if (!name) {
         setFormHeight(200);
         setNameError(true);
         setmsg('Please provide Name');
-      }else{
-        if(!regNumber){
+      } else {
+        if (!regNumber) {
           setFormHeight(200);
           setregNumberError(true);
           setNameError(true);
           setmsg('Please provide Registration Number');
         }
       }
-      if(!regNumber){
+      if (!regNumber) {
         setFormHeight(200);
         setregNumberError(true);
       }
 
-      if(!selectedDate){
+      if (!selectedDate) {
         setFormHeight(200);
         setDataError(true);
         setmsgg('Provide Date');
-      }else{
-        if(!status){
+      } else {
+        if (!status) {
           setFormHeight(200);
           setDataError(true);
           setStatusError(true);
           setmsgg('Provide Status');
         }
       }
-      if(!status){
+      if (!status) {
         setFormHeight(200);
         setStatusError(true);
       }
 
-      if(!selectedDueDate){
+      if (!selectedDueDate) {
         setFormHeight(200);
         setDueDateError(true);
       }
 
-    setSave(false);
+      setSave(false);
     }
   }, [save]);
 
 
 
   useEffect(() => {
-    if (typeof onFormDataChange === 'function') {
-      onFormDataChange({ name, regNumber, selectedDate,selectedDueDate,status });
+    let date;
+    let Duedate;
+    if (selectedDate) {
+      date = selectedDate.toDateString();
     }
-  }, [name, regNumber, date, Duedate,status, onFormDataChange]);
+    if(selectedDueDate){
+      Duedate = selectedDueDate.toDateString();
+    }
+    
+    if (typeof onFormDataChange === 'function') {
+      onFormDataChange({ name, regNumber, date, Duedate, status });
+    }
+  }, [name, regNumber, date, Duedate, status, onFormDataChange]);
 
   return (
     <View style={{ flex: 1, marginTop: 0, height: formHeight, overflow: 'hidden' }}>
 
-     
+
       {/* Name  */}
       <View style={styles.inLine}>
-      <TextInput style={[
-        nameError ? styles.loritaR :styles.lorita
-        , styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
-      <Image
+        <TextInput style={[
+          nameError ? styles.loritaR : styles.lorita
+          , styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
+        <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
-      <TextInput style={[styles.regNumber,
-         regNumberError ? styles.text5ClrR :styles.text5Clr
-         ]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput>
-      <Image
+        <TextInput style={[styles.regNumber,
+        regNumberError ? styles.text5ClrR : styles.text5Clr
+        ]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput>
+        <Image
           style={styles.date2SvgrepoCom11R}
           contentFit="cover"
           source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
         />
-      
-      
-      </View> 
+
+
+      </View>
       {nameError ? <Text style={styles.nameError}>{msg}</Text> : null}
 
-      
+
       {/* date and status  */}
       <View style={styles.parent}>
 
         <TextInput
           style={[
-           DateError ? styles.text1R : styles.text1
+            DateError ? styles.text1R : styles.text1
             , styles.text1Typo]}
           value={selectedDate ? selectedDate.toDateString() : ''}
           placeholder="Select Creation date"
@@ -180,39 +189,39 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
           />
         )}
         <TextInput style={[
-         statusError ?  styles.statusPaiddueR : styles.statusPaiddue 
+          statusError ? styles.statusPaiddueR : styles.statusPaiddue
           , styles.text1Typo]}
           value={status}
           editable={false}
           placeholder="Status"
         />
-        
-       
+
+
         <Image
           style={styles.pick}
           contentFit="cover"
           source={require("../assets/vector-7.png")}
         />
-  
-  <View style={styles.picker}>
-        <Picker
-          selectedValue={invoiceStatus}
-          onValueChange={(itemValue) =>handleInvoiceStatusSelect(itemValue)}
-        >
-          <Picker.Item label="Select Invoice Status" value="" />
-          {invoiceStatus.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
+
+        <View style={styles.picker}>
+          <Picker
+            selectedValue={invoiceStatus}
+            onValueChange={(itemValue) => handleInvoiceStatusSelect(itemValue)}
+          >
+            <Picker.Item label="Select Invoice Status" value="" />
+            {invoiceStatus.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
         </View>
-        
-      
+
+
       </View>
       {DateError ? <Text style={styles.nameError}>{msgg}</Text> : null}
 
-    
+
       <View style={styles.parentp}>
-      <TextInput
+        <TextInput
           style={[
             DateError ? styles.text1R : styles.text1
             , styles.text1Typo]}
@@ -237,8 +246,8 @@ const CreateInvoiceForm = ({ onFormDataChange ,save ,setSave}) => {
             onChange={handleDueDateChange}
           />
         )}
-        </View>
-        {DueDateError ? <Text style={styles.nameError}>Provide Due Date for Invoice</Text> : null}
+      </View>
+      {DueDateError ? <Text style={styles.nameError}>Provide Due Date for Invoice</Text> : null}
 
     </View>
   );
@@ -258,7 +267,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
-  picker:{
+  picker: {
     left: 385,
     height: 15,
     width: 15,
@@ -277,9 +286,9 @@ const styles = StyleSheet.create({
     top: 176,
     left: 215,
   },
-  inLine:{
-    flexDirection:'row',
-    marginBottom:8,
+  inLine: {
+    flexDirection: 'row',
+    marginBottom: 8,
   },
 
   pick: {
@@ -290,25 +299,25 @@ const styles = StyleSheet.create({
     position: "absolute",
     overflow: "hidden",
   },
-  parent:{
-    flexDirection:'row',
-    marginTop:10,
+  parent: {
+    flexDirection: 'row',
+    marginTop: 10,
   },
-  parentp:{
-    flexDirection:'row',
-    marginTop:18,
+  parentp: {
+    flexDirection: 'row',
+    marginTop: 18,
   },
 
-  text5Clr:{
+  text5Clr: {
     borderBottomWidth: 2,
-    width:"40%", 
-    borderBottomColor: '#ccc', 
+    width: "40%",
+    borderBottomColor: '#ccc',
     paddingHorizontal: 10,
   },
-  text5ClrR:{
+  text5ClrR: {
     borderBottomWidth: 2,
-    width:"40%", 
-    borderBottomColor: 'red', 
+    width: "40%",
+    borderBottomColor: 'red',
     paddingHorizontal: 10,
   },
 
@@ -358,7 +367,7 @@ const styles = StyleSheet.create({
   },
   text5ClrName: {
     top: 0,
-    position:'relative',
+    position: 'relative',
     color: Color.dimgray_100,
     textAlign: "left",
     left: 30,
@@ -464,10 +473,10 @@ const styles = StyleSheet.create({
     },
     position: "absolute",
   },
-  pickerr:{
-    top:0,
-    left:80,
-    width:50,
+  pickerr: {
+    top: 0,
+    left: 80,
+    width: 50,
   },
   rateParentLayout: {
     height: 92,
@@ -669,7 +678,7 @@ const styles = StyleSheet.create({
   },
   regNumber: {
     top: 0,
-    marginTop:0,
+    marginTop: 0,
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
@@ -687,14 +696,14 @@ const styles = StyleSheet.create({
   },
   text1: {
     left: 28,
-    width:"40%",
+    width: "40%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: '#ccc', // Set the color of the underline
     paddingHorizontal: 10,
   },
   text1R: {
     left: 28,
-    width:"40%",
+    width: "40%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: 'red', // Set the color of the underline
     paddingHorizontal: 10,
@@ -713,15 +722,15 @@ const styles = StyleSheet.create({
     top: 34,
   },
   statusPaiddue: {
-    marginLeft:65,
-    width:"38%",
+    marginLeft: 65,
+    width: "38%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: '#ccc', // Set the color of the underline
     paddingHorizontal: 10,
   },
   statusPaiddueR: {
-    marginLeft:65,
-    width:"38%",
+    marginLeft: 65,
+    width: "38%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: 'red', // Set the color of the underline
     paddingHorizontal: 10,
@@ -1039,22 +1048,22 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
-    borderBottomWidth: 2, 
-    width:"39%",
-    borderBottomColor: '#ccc', 
+    borderBottomWidth: 2,
+    width: "39%",
+    borderBottomColor: '#ccc',
     paddingHorizontal: 10,
   },
   loritaR: {
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
-    borderBottomWidth: 2, 
-    width:"39%",
-    borderBottomColor: "red", 
+    borderBottomWidth: 2,
+    width: "39%",
+    borderBottomColor: "red",
     paddingHorizontal: 10,
   },
   loritaWrapper: {
-    position:'relative',
+    position: 'relative',
     //flexDirection: "row",
   },
   frameView: {

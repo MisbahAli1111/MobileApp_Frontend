@@ -8,11 +8,15 @@ const ErrorPopup = ({ visible, message, onConfirm, onCancel }) => {
                 <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
                     <Text>{message}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 4, marginTop: 30, borderRadius: 8 }}>
-                        <View style={{ marginRight: 10 }}>
-                            <Button title="Yes" onPress={onConfirm} />
+                        <View style={{ marginRight: 10,width:70 }}>
+                            <Button
+                             style={{ borderRadius:35 }}
+                            title="Yes" onPress={onConfirm} />
                         </View>
-                        <View style={{ marginLeft: 10 }}>
-                            <Button title="No" onPress={onCancel} />
+                        <View style={{ marginLeft: 10,width:70 }}>
+                            <Button
+                            style={{ borderRadius:35 }}
+                            title="No" onPress={onCancel} />
                         </View>
                     </View>
                 </View>

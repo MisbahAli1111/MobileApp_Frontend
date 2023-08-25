@@ -10,6 +10,7 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
+import { AntDesign } from '@expo/vector-icons';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -19,6 +20,8 @@ const Login = () => {
   const [Merror, setMError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [showPassword,setShowPassword] = useState(false);
+
   const handleLogin = async () => {
     setMError(false);
     setEmailError(false);
@@ -85,13 +88,18 @@ const Login = () => {
       />
       {emailError ? <Text style={styles.nameError}>Please provide Email</Text> : null}
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={text => setPassword(text)}
-        value={password}
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password"
+          secureTextEntry={!showPassword}
+          onChangeText={text => setPassword(text)}
+          value={password}
+        />
+        <Pressable onPress={() => setShowPassword(!showPassword)}>
+          <AntDesign name={showPassword ? "eye" : "eyeo"} size={24} color="black" />
+        </Pressable>
+      </View>
       {passwordError ? <Text style={styles.nameError}>Please provide Password</Text> : null}
       {Merror ? <Text style={styles.nameError}>{error}</Text> : null}
       
@@ -189,6 +197,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
     marginRight: 5,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    width: '100%',
+    height: heightPercentageToDP('6%'),
+  },
+  passwordInput: {
+    flex: 1,
+    paddingHorizontal: widthPercentageToDP('3%'),
   },
 });
 

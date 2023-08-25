@@ -6,6 +6,8 @@ import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, View, Text, Pressable, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
 import ErrorPopup from "../components/ErrorPopup";
@@ -51,10 +53,10 @@ const CreateInvoice = (parans) => {
 
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showErrorPopups, setShowErrorPopups] = useState(false);
-  
+
   const [errorMsg, setErrorMsg] = useState('');
   const [errorMsg2, setErrorMsg2] = useState('');
-  
+  const [Duedate, setDueDate] = useState('');
   const invoiceStatus = ['Paid', 'Due'];
   const [Name, setName] = useState('');
   const [regNumber, setregNumber] = useState('');
@@ -66,12 +68,13 @@ const CreateInvoice = (parans) => {
   const [EmptyFeildsDesc, setEmptyFeildsDesc] = useState(false);
   const [EmptyFeildsDisc, setEmptyFeildsDisc] = useState(false);
   const [EmptyFeildsTax, setEmptyFeildsTax] = useState(false);
-  
+  const [descriptionArray , setDescriptionArray]= useState([]);
+
   const handleItemsChange = (items) => {
     setDescription(items);
     setEmptyFeildsDesc(false);
     setEmptyItem(false);
-    // console.log(items);
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       const itemName = item.itemName;
@@ -79,7 +82,7 @@ const CreateInvoice = (parans) => {
       const rate = item.rate;
 
       if (!itemName && !quantity && !rate) {
-        console.log("Empty Description");
+   
         setEmptyItem(true);
       }
       if (
@@ -89,10 +92,12 @@ const CreateInvoice = (parans) => {
         (itemName && !quantity && !rate) ||
         (!itemName && !quantity && rate) ||
         (!itemName && quantity && !rate)) {
-        console.log("Error Description");
+       
         setEmptyFeildsDesc(true);
       }
     }
+    setDescriptionArray(items);
+
   };
 
   const handleTaxChange = (items) => {
@@ -104,7 +109,7 @@ const CreateInvoice = (parans) => {
       const rate = item.rate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
-        console.log("Error discout");
+  
         setEmptyFeildsDisc(true);
       }
     }
@@ -118,7 +123,7 @@ const CreateInvoice = (parans) => {
       const rate = item.rate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
-        console.log("Error Tax");
+     
         setEmptyFeildsTax(true);
       }
     }
@@ -126,15 +131,9 @@ const CreateInvoice = (parans) => {
   const handleFormDataChange = (data) => {
     setName(data.name);
     setDate(data.date);
+    setDueDate(data.Duedate);
     setregNumber(data.regNumber);
     setStatus(data.status);
-
-    // console.log(data);
-    // console.log(data.name);
-    // console.log(data.regNumber);
-    // console.log(data.status);
-    // console.log(data.selectedDate);
-    // console.log(data.selectedDueDate);
 
   };
 
@@ -142,43 +141,101 @@ const CreateInvoice = (parans) => {
     setErrorMsg('');
     setErrorMsg2('');
     setSave(true);
-    if ( !Name || !regNumber || !status) {
-      console.log(date);
-      console.log(Name);
-      console.log(regNumber);
-      console.log(status);
-      
-    } 
+    if (!Name || !regNumber || !status || !date || !Duedate) {
+
+
+    }
     else {
-      console.log("here");
+
       if (EmptyFeildsDesc || EmptyFeildsTax || EmptyFeildsDisc) {
         setErrorMsg2('Please provide complete detail for entered feild');
         setShowErrorPopups(true);
-      
+
       } else {
         if (EmptyItem) {
           setErrorMsg('You are about to create empty invoice. Are you sure you want to proceed?');
           setShowErrorPopup(true);
+        } else {
+          sendData();
         }
       }
 
     }
 
-    // const isDescriptionEmpty = Description.some(
-    //   (item) => !item.itemName || !item.quantity || !item.rate
-    // );
 
-    // const isDiscountEmpty = discount.some((item) => !item.itemName || !item.rate);
-
-    // const isTaxEmpty = tax.some((item) => !item.itemName || !item.rate);
+  };
 
 
-    // if (!Name || !regNumber || isDescriptionEmpty || isDiscountEmpty || isTaxEmpty) {
-    //   Alert.alert('Please fill all fields.');
-    // } else {
-    //    
-    // }
-    // navigation.navigate('InvoiceDetailView');
+  sendData = async () => {
+    // console.log("this");
+    // console.log(descriptionArray);
+    console.log("sendData d");
+    const token = await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+
+    let data = JSON.stringify({
+      "invoiceDue": "2023-08-31T00:00",
+      "date": "2023-08-31T00:00",
+      "registrationNumber": "pak",
+      "total": 1000.0,
+      "status":true,
+    
+      "descriptions": [
+        {
+          "item": "Service A",
+          "rate": 50.0,
+          "quantity": 2,
+          "amount": 100.0
+        },
+        {
+          "item": "Service B",
+          "rate": 30.0,
+          "quantity": 3,
+          "amount": 90.0
+        }
+      ],
+      "discounts": [
+        {
+          "discountName": "Discount 1",
+          "discountRate": 10.0
+        },
+        {
+          "discountName": "Discount 2",
+          "discountRate": 5.0
+        }
+      ],
+      "taxes": [
+        {
+          "taxName": "Tax 1",
+          "taxRate": 8.0
+        },
+        {
+          "taxName": "Tax 2",
+          "taxRate": 5.5
+        }
+      ]
+    });
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://192.168.100.71:8080/api/invoice/create-invoice/11',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      },
+      data: data
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+
   };
 
 
@@ -328,15 +385,19 @@ const CreateInvoice = (parans) => {
       <ErrorPopup
         visible={showErrorPopup}
         message={errorMsg}
-        onConfirm={() => setShowErrorPopup(false)}
+        onConfirm={() => {
+          setShowErrorPopup(false);
+          sendData();
+        }}
         onCancel={() => setShowErrorPopup(false)}
       />
+
       <ErrorPopup2
-      visible={showErrorPopups}
-      message={errorMsg2}
-      onConfirm={() => setShowErrorPopups(false)}
-      onCancel={() => setShowErrorPopups(false)}
-    />
+        visible={showErrorPopups}
+        message={errorMsg2}
+        onConfirm={() => setShowErrorPopups(false)}
+        onCancel={() => setShowErrorPopups(false)}
+      />
     </View>
 
   );

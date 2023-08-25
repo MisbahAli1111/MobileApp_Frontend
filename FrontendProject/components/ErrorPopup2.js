@@ -6,7 +6,7 @@ const ErrorPopup2 = ({ visible, message, onConfirm }) => {
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalContainer}>
         <View style={styles.popupContainer}>
-          <Text style={styles.message}>{message}</Text>
+        <Text style={styles.message} numberOfLines={1}>{message}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={onConfirm}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
@@ -28,7 +28,7 @@ const styles = {
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width: '80%',
+    width: '90%',
   },
   message: {
     marginBottom: 20,
