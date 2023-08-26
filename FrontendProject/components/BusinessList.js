@@ -79,7 +79,7 @@ function BusinessList({ }) {
                 let config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
+                    url: 'http://192.168.0.236:8080/api/business/get-my-businesses',
                     headers: {
                         'Authorization': token,
                     },
@@ -338,10 +338,10 @@ const styles = StyleSheet.create({
         top: 0,
     },
     checkCircleSvgrepoCom1Icon: {
-        top: heightPercentageToDP('2%'),
+        top: heightPercentageToDP('3%'),
         left: widthPercentageToDP('78%'),
         width: widthPercentageToDP('10%'),
-        height: heightPercentageToDP('7%'),
+        height: heightPercentageToDP('5%'),
         position: "absolute",
         overflow: "hidden",
     },

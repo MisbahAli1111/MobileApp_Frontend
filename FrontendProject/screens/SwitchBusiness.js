@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import BusinessList from "../components/BusinessList";
@@ -23,9 +23,11 @@ const SwitchBusiness = () => {
         Switch Business
       </Text>
 
-      <View style={styles.businessListContainer}>
+      <ScrollView style={styles.businessListContainer}>
+      <View >
         <BusinessList />
       </View>
+      </ScrollView>
 
       <Pressable
         style={[styles.createNewBusinessButton]}
@@ -63,8 +65,8 @@ const styles = StyleSheet.create({
   businessListContainer: {
     flex: 1,
     width: '90%',
-    alignItems: 'center',
-    height: heightPercentageToDP('70%'), 
+    // alignItems: 'center',
+    height: heightPercentageToDP('60%'), 
     marginTop: heightPercentageToDP('3%'),
   },
   createNewBusinessButton: {

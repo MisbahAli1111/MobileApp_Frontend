@@ -21,6 +21,7 @@ const AddRecord = () => {
   const navigation = useNavigation();
 
 const [Msg,setMsg]=useState('');
+const [userId,setUserId] = useState('');
   const [NumberError, setNumberError] = useState('');
   const [carNumber, setCarNumber] = useState('');
   const [date, setDate] = useState(new Date());
@@ -266,6 +267,46 @@ const [Msg,setMsg]=useState('');
 
   };
 
+  const uploadImage = async (recordId) => {
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    const imageData = new FormData();
+      // Iterate through the image array and append images to the FormData
+      try {
+        selectedImage.forEach((entry, index) => {
+          const image_uri = entry.uri;
+          imageData.append('files', {
+            uri: image_uri,
+            name: new Date() + ".jpeg",
+            type: 'image/jpeg',
+          });
+        });
+
+        console.log("formData: " ,imageData );
+
+        
+    
+        const response = await axios.post(
+          `http://192.168.0.236:8080/api/file/upload/record/${recordId}`,
+          imageData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+    
+        console.log('Response:', response.data);
+        if (response.data.status == 'OK') {
+          console.log("image uploaded");
+        }
+    
+        console.log('Images uploaded successfully');
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    };
+
   const handleSave = async () => {
     
     let hasErrors = false; // Initialize the flag
@@ -344,13 +385,13 @@ const [Msg,setMsg]=useState('');
           "service": selectedCode,
           "maintanenceDetail": details,
           "registrationNumber": carNumber,
-          "maintanenceDateTime": dateTime
+          "maintanenceDateTime": selectedDate
         };
           
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://172.20.64.1:8080/api/maintenance-record/add-record',
+          url: 'http://192.168.0.236:8080/api/maintenance-record/add-record',
           headers: { 
             'Content-Type': 'application/json', 
             'Authorization': accessToken
@@ -364,7 +405,19 @@ const [Msg,setMsg]=useState('');
          setRegMsg(JSON.stringify(response.data.message));
         setNumberError(true);
         }else{
-          navigation.navigate("MaintenanceRecord");
+          console.log(JSON.stringify(response.data));
+          if (response.data.status === 'OK') {
+          
+            const createdUserId = response.data.data;
+            console.log(response.data.data);
+            setUserId(createdUserId);
+            
+            // Perform logic using the updated userId here
+            if (createdUserId) {
+              uploadImage(createdUserId);
+            }
+            navigation.navigate('MaintenanceRecord');
+          }
         }
         
         
@@ -949,7 +1002,7 @@ video: {
     alignItems: 'center',
   },
   paginationContainer: {
-    top:-130,
+    top:-100,
     position:"relative"
   },
   paginationDot: {
@@ -1293,7 +1346,7 @@ marginTop:5,
   },
   addRecordChild22: {
     top: 0,
-    left: 0,
+    left: 12,
     marginTop:6,
     marginBottom:6,
   },
@@ -1364,7 +1417,7 @@ marginTop:5,
   },
   groupChild: {
     top: 0,
-    left: 18,
+    left: 22,
     marginTop:10,
   },
   gallerySvgrepoCom1Icon: {

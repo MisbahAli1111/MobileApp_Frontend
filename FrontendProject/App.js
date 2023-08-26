@@ -69,16 +69,16 @@ const App = () => {
         },
       })}
       >
-          {/* <Stack.Screen
+          <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: '', 
           // showBackArrow: true, 
           // profileImage : require('./assets/mask-group1.png'), 
-          }}/> */}
+          }}/>
 
-          {/* <Stack.Screen
+          <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
@@ -88,7 +88,7 @@ const App = () => {
               }}
             /> 
 
-          <Stack.Screen
+          {/* <Stack.Screen
           name="EditProfile"
           component={EditProfile}
           initialParams={{
@@ -106,9 +106,9 @@ const App = () => {
               showBackArrow: true,
               onBackPress:'Home',
               }}
-            /> 
+            />  */}
 
-           <Stack.Screen
+           {/* <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               initialParams={{
@@ -155,7 +155,7 @@ const App = () => {
             /> */}
 
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
@@ -163,7 +163,7 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            /> */}
+            />
 
            
             
@@ -238,7 +238,7 @@ const App = () => {
             />   */}
 
 
-             <Stack.Screen 
+             {/* <Stack.Screen 
               name="AddVehicle"
               component={AddVehicle}
               initialParams={{
@@ -247,7 +247,7 @@ const App = () => {
                 onBackPress:'Add Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />  
+            />   */}
 
             {/* <Stack.Screen
               name="AddCustomer"

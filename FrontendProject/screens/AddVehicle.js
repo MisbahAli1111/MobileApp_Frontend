@@ -212,36 +212,37 @@ const AddVehicle = () => {
       const imageData = new FormData();
         // Iterate through the image array and append images to the FormData
         try {
-          // selectedImage.forEach((uri, index) => {
-          //   formData.append('files', {
-          //     uri: uri,
-          //     name: new Date() + ".jpeg",
-          //     type: 'image/jpeg',
-          //   });
-          // });
-
-          imageData.append('files', {
-            uri: selectedImage,
-            name: new Date + "_profile"+".jpeg",
-            type: 'image/jpeg', // Adjust the MIME type as needed
+          selectedImage.forEach((entry, index) => {
+            const image_uri = entry.uri;
+            imageData.append('files', {
+              uri: image_uri,
+              name: new Date() + ".jpeg",
+              type: 'image/jpeg',
+            });
           });
+
+          // imageData.append('files', {
+          //   uri: selectedImage,
+          //   name: new Date + "_profile"+".jpeg",
+          //   type: 'image/jpeg', // Adjust the MIME type as needed
+          // });
           console.log("formData: " ,imageData );
 
           
       
           const response = await axios.post(
-            `http://192.168.0.236:8080/api/file/upload/profile/${vehicleId}`,
+            `http://192.168.0.236:8080/api/file/upload/vehicle/${vehicleId}`,
             imageData,
             {
               headers: {
                 'Content-Type': 'multipart/form-data',
-                // Authorization: accessToken, // Add your authorization token if required
               },
             }
           );
       
-          if (!response.data.success) {
-            throw new Error('API request failed');
+          console.log('Response:', response.data);
+          if (response.data.status == OK) {
+            console.log("image uploaded");
           }
       
           console.log('Images uploaded successfully');
