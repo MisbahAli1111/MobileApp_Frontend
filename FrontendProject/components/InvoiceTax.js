@@ -7,7 +7,7 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
 function InvoiceDiscount({ onItemsChange }) {
 const navigation = useNavigation();
-const [items, setItems] = useState([{ itemName: '', rate: ''}]);
+const [items, setItems] = useState([{ taxName: '', taxRate: ''}]);
 
 
   const renderItem =({ item, index })=>(
@@ -15,13 +15,13 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
     <TextInput
       style={[styles.addItem, styles.taxTypo1]}
       onChangeText={(text) => handleChangeItemName(text, index)}
-      value={item.itemName}
+      value={item.taxName}
       placeholder="Tax Name"
     />
     <TextInput
       style={[styles.addRate, styles.addTypo1]}
       onChangeText={(text) => handleChangeRate(text, index)}
-      value={item.rate}
+      value={item.taxRate}
       placeholder="Tax Rate"
       keyboardType="numeric"
     /> 
@@ -32,13 +32,13 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
   
   const handleChangeItemName = (text, index) => {
     const newItems = [...items];
-    newItems[index].itemName = text;
+    newItems[index].taxName = text;
     setItems(newItems);
   };
 
   const handleChangeRate = (text, index) => {
     const newItems = [...items];
-    newItems[index].rate = text;
+    newItems[index].taxRate = text;
     setItems(newItems);
   };
 
@@ -49,7 +49,7 @@ const [items, setItems] = useState([{ itemName: '', rate: ''}]);
   }, [items]);
 
   const handleAddRow = () => {
-    setItems([...items, { itemName: '', rate: ''}]);
+    setItems([...items, { taxName: '', taxRate: ''}]);
   };
 
   return (

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
 import { Modal,Dimensions,StyleSheet, Text, ScrollView, TextInput, View, Pressable, TouchableOpacity, Alert, ImageBackground } from "react-native";
@@ -8,6 +8,7 @@ import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 const windowWidth = Dimensions.get('window');
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OwnerInfo = () => {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ const OwnerInfo = () => {
   const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
+  const [userId, setUserId] = useState(null);
 
   const [EmailEror, setEmailError] = useState(false);
   const [LocationEror, setLocationError] = useState(false);
@@ -92,10 +94,42 @@ const OwnerInfo = () => {
     if (!result.canceled && result.assets.length > 0) {
       setProfileImage(result.assets[0].uri);
     }
-    
     setImageModalVisible(false);
   };
+    
+    
+    
+    
+  
 
+  const uploadImage = async (userId) =>{
+    console.log(userId);
+    const imageData = new FormData();
+    imageData.append('files', {
+       uri: profileImage,
+       name: new Date + "_profile"+".jpeg",
+       type: 'image/jpeg', // Adjust the MIME type as needed
+     });
+    
+    console.log("formData: " ,imageData );
+    
+
+
+    const response = await axios.post(
+      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      imageData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // Authorization: accessToken, // Add your authorization token if required
+        },
+      }
+    );
+
+    console.log('Upload response:', response.data);
+    console.log('Success', 'Files uploaded successfully');
+    };
+    
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -183,7 +217,7 @@ const OwnerInfo = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://172.20.64.1:8080/api/users/register/owner',
+        url: 'http://192.168.0.236:8080/api/users/register/owner',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -194,7 +228,16 @@ const OwnerInfo = () => {
         .then((response) => {
           console.log(JSON.stringify(response.data));
           if (response.data.status === 'OK') {
-            navigation.navigate('Home');
+          
+            const createdUserId = response.data.data;
+            console.log(response.data.data);
+            setUserId(createdUserId);
+            
+            // Perform logic using the updated userId here
+            if (createdUserId) {
+              uploadImage(createdUserId);
+            }
+            navigation.navigate('Login');
           }
         })
         .catch((error) => {
@@ -206,6 +249,7 @@ const OwnerInfo = () => {
 
 
   };
+
   return (
     <View style={styles.ownerInfo}>
       <Image
@@ -451,183 +495,6 @@ const OwnerInfo = () => {
       </View>
 
 
-      {/* <TextInput style={[styles.davidDaniel, styles.registerTypo1]}
-        placeholder="Name"
-        value={name}
-        onFocus={() => setNameFocused(true)}
-        onBlur={() => setNameFocused(false)}
-        onChangeText={setName}
-      />
-      <Image
-        style={[
-         NameEror ? styles.ownerInfoChildR: styles.ownerInfoChild
-          , styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-12.png")}
-      />
-      <Image
-        style={[styles.user1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/user-1.png")}
-      />
-      {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
-
-      <TextInput style={[styles.text, styles.textTypo]}
-        placeholder="CNIC Number"
-        value={cnic}
-        keyboardType="numeric"
-        maxLength={13}
-        onFocus={() => setcnicFocused(true)}
-        onBlur={() => setcnicFocused(false)}
-        onChangeText={setcnic}
-      />
-      <Image
-        style={[
-         CNICEror ? styles.ownerInfoItemR: styles.ownerInfoItem
-          , styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-22.png")}
-      />
-      {CNICEror ? <Text style={styles.cnicError}>Please Enter a Valid CNIC number</Text> : null}
-
-      <TextInput style={[styles.pk, styles.pkPosition]}
-        placeholder='PK'
-        value={selectedCode}
-        editable={false}
-      />
-
-      <Pressable
-        style={styles.countryCode}
-        onPress={toggleDropdown}
-      >
-        <Image
-          style={[styles.vectorIcon, styles.vectorIconLayout]}
-          contentFit="cover"
-          source={require("../assets/vector-12.png")}
-        />
-      </Pressable>
-      {(
-        <View style={styles.code} >
-          <Picker
-            selectedValue={selectedCode}
-            onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-          >
-            <Picker.Item label="Select Country Code" value="" />
-            {countryCodes.map((code) => (
-              <Picker.Item key={code} label={code} value={code} />
-            ))}
-          </Picker>
-        </View>
-      )}
-      <TextInput style={[styles.text2, styles.textPosition]}
-        placeholder="Phone Number"
-        value={phoneNumber}
-        keyboardType="numeric"
-        maxLength={11}
-        onFocus={() => setPhoneNumberFocused(true)}
-        onBlur={() => setPhoneNumberFocused(false)}
-        onChangeText={setPhonenumber}
-      />
-      <Image
-        style={[
-         NumberEror ? styles.ownerInfoInnerR: styles.ownerInfoInner
-          , styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-81.png")}
-      />
-      <Image
-        style={[styles.phone1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/phone-1.png")}
-      />
-      {NumberEror ? <Text style={styles.numberError}>{PLEror}</Text> : null}
-
-
-      <TextInput style={[styles.daviddaniel33outlookcom, styles.david1Typo]}
-        placeholder="Email"
-        value={email}
-        onFocus={() => setemailFocused(true)}
-        onBlur={() => setemailFocused(false)}
-        onChangeText={setemail}
-
-      />
-      <Image
-        style={[styles.atSign1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/atsign-1.png")}
-      />
-      <Image
-        style={[
-         EmailEror ? styles.lineIconR :styles.lineIcon
-          , styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-91.png")}
-      />
-{EmailEror ? <Text style={styles.emailError}>Please Provide a valid Email</Text> : null}
-
-      <TextInput style={[styles.david, styles.textTypo]}
-        placeholder="Passwod"
-        secureTextEntry={passwordVisible}
-        value={Password}
-        onFocus={() => setPasswordFocused(true)}
-        onBlur={() => setPasswordFocused(false)}
-        onChangeText={setPassword}
-      />
-      <Image
-        style={[styles.key1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/key-1.png")}
-      />
-
-      <Pressable
-        onPress={
-          () => { setPasswordVisible((prev) => !prev); }
-        }>
-        <Image
-
-          style={[styles.vectorIcon1, styles.vectorIconPosition]}
-          contentFit="cover"
-          source={require("../assets/vector9.png")}
-        />
-      </Pressable>
-      <Image
-        style={[
-         PasswordError ? styles.ownerInfoChild1R :styles.ownerInfoChild1
-          , styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-72.png")}
-      />
-{PasswordError ? <Text style={styles.passwordError}>Please provide Password</Text> : null}
-      <TextInput style={[styles.david1, styles.david1Typo]}
-        placeholder="Confirm Password"
-        secureTextEntry={ConfirmPasswordVisible}
-        value={ConfirmPassword}
-        onFocus={() => setConfirmPasswordFocused(true)}
-        onBlur={() => setConfirmPasswordFocused(false)}
-        onChangeText={setConfirmPassword}
-      />
-      <Pressable
-        onPress={
-          () => { setConfirmPasswordVisible((prev) => !prev); }
-        }
-      >
-        <Image
-          style={[styles.vectorIcon2, styles.vectorIconPosition]}
-          contentFit="cover"
-          source={require("../assets/vector10.png")}
-        />
-      </Pressable>
-
-      <Image
-        style={[
-         CPasswordError ?  styles.ownerInfoChild2R :styles.ownerInfoChild2
-          , styles.ownerChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-32.png")}
-      />
-{CPasswordError ? <Text style={styles.cError}>{CError}</Text> : null}
-      {ErrorM ? <Text style={styles.cError}>{errorMessage}</Text> : null} */}
-
 
 
 
@@ -652,7 +519,8 @@ const OwnerInfo = () => {
 
     </View>
   );
-};
+      };  
+
 
 const styles = StyleSheet.create({
   iconPosition: {

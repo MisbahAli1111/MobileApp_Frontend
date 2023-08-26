@@ -24,7 +24,7 @@ const AddCustomer = () => {
   const [NameEror, setNameError] = useState(false);
   const [CNICEror, setCNICError] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  
+  const [userId, setUserId] = useState(null);
   const [EmailEror, setEmailError] = useState(false);
   const [LocationEror, setLocationError] = useState(false);
   const [PasswordError, setPasswordError] = useState(false);
@@ -87,6 +87,34 @@ const AddCustomer = () => {
     
     setImageModalVisible(false);
   };
+
+  const uploadImage = async (userId) =>{
+    console.log(userId);
+    const imageData = new FormData();
+    imageData.append('files', {
+       uri: profileImage,
+       name: new Date + "_profile"+".jpeg",
+       type: 'image/jpeg', // Adjust the MIME type as needed
+     });
+    
+    console.log("formData: " ,imageData );
+    
+
+
+    const response = await axios.post(
+      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      imageData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: accessToken, // Add your authorization token if required
+        },
+      }
+    );
+
+    console.log('Upload response:', response.data);
+    console.log('Success', 'Files uploaded successfully');
+    };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -182,7 +210,7 @@ const AddCustomer = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `http://172.20.64.1:8080/api/users/register/customer/${Business_id}`,
+        url: `http://192.168.0.236:8080/api/users/register/customer/${Business_id}`,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': accessToken
@@ -194,6 +222,15 @@ const AddCustomer = () => {
         .then((response) => {
           console.log(JSON.stringify(response.data));
           if (response.data.status === 'OK') {
+          
+            const createdUserId = response.data.data;
+            console.log(response.data.data);
+            setUserId(createdUserId);
+            
+            // Perform logic using the updated userId here
+            if (createdUserId) {
+              uploadImage(createdUserId);
+            }
             navigation.navigate('AddVehicle');
           }
         })

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet,TextInput, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
@@ -10,64 +10,41 @@ function Invoicelist({ dsearch }) {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
-const [Invoices,setInvoices] = useState([]);
-  
+  const [Invoices, setInvoices] = useState([]);
 
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
-  // const Invoices = [
-  //   {
-  //     InvoiceId: "I001",
-  //     Name: "Ali",
-  //     Date: "02/4/2023",
-  //     Status: "Paid",
-  //     Price:"3000"
-  //   },
-  //   {
-  //     InvoiceId: "I002",
-  //     Name: "Ahemed",
-  //     Date: "02/4/2023",
-  //     Status: "Due",
-  //     Price:"3000"
-  //   }, {
-  //     InvoiceId: "I003",
-  //     Name: "ABC",
-  //     Date: "02/4/2023",
-  //     Status: "Paid",
-  //     Price:"3000"
-  //   },
-
-  // ];
-  const getData= async()=>{
-    let token= await AsyncStorage.getItem("accessToken");
+  const getData = async () => {
+    let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
-    
+
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: 'http://192.168.100.71:8080/api/invoice/get-invoice',
-      headers: { 
+      headers: {
         'Authorization': accessToken
       }
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      setInvoices(response.data);
-      
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setInvoices(response.data);
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
   };
 
   const displayedRecords = search ? data : Invoices;
 
   const handlePress = (index, recordId) => {
     setCurrentPressedIndex(index);
-    navigation.navigate("InvoiceDetailView");
+    // console.log(recordId);
+    navigation.navigate("InvoiceDetailView", { recordId });
   };
 
   // useEffect(() => {
@@ -77,9 +54,9 @@ const [Invoices,setInvoices] = useState([]);
   //   setData(maintained);
   // }, [dsearch]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getData();
-  },[]);
+  }, []);
 
   return (
     <ScrollView style={styles.wrap}>
@@ -89,61 +66,65 @@ const [Invoices,setInvoices] = useState([]);
             <View style={[styles.groupFrame]}>
               <Pressable
                 style={[styles.rectangleParent, styles.parentLayout]}
-                onPress={() => handlePress(index,record.id)}
+                onPress={() => handlePress(index, record.id)}
               >
                 <View style={[
-                currentPressedIndex === index ?  styles.groupChild4Bg : styles.groupItem, styles.groupChildLayout1,]} />
+                  currentPressedIndex === index ? styles.groupChild4Bg : styles.groupItem, styles.groupChildLayout1,]} />
                 <Text style={[
                   styles.muhammadAli4,
-                  currentPressedIndex === index ? styles.text4Typo :styles.paidTypo
-                   ]}>
+                  currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
+                ]}>
                   {record.name}
-                  
+
                 </Text>
-                
+
                 <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
                   <Text style={[
-                    currentPressedIndex === index ? styles.inv00014 : styles.inv0001, 
+                    currentPressedIndex === index ? styles.inv00014 : styles.inv0001,
                     currentPressedIndex === index ? styles.text4Typo : styles.textTypo
-                    ]}>{record.id}</Text>
+                  ]}>{record.id}</Text>
+
+
                   <Text style={[
-                    currentPressedIndex === index ? styles.jan20234: styles.jan2023,
-                    currentPressedIndex === index ? styles.text4Typo :styles.janPosition
-                     ]}>
-                    {record.date}
+                    currentPressedIndex === index ? styles.jan20234 : styles.jan2023,
+                    currentPressedIndex === index ? styles.text4Typo : styles.janPosition
+                  ]}>
+                    {record.invoiceDue}
                   </Text>
+
+
                   <Text style={[
-                    currentPressedIndex === index ?  styles.text4 :styles.text, 
-                    currentPressedIndex === index ?  styles.textPosition :styles.textPosition
+                    currentPressedIndex === index ? styles.text4 : styles.text,
+                    currentPressedIndex === index ? styles.textPosition : styles.textPosition
                   ]}>-</Text>
                 </View>
                 <Text style={[
-                  currentPressedIndex === index ? styles.rs30004 :styles.rs3000,
+                  currentPressedIndex === index ? styles.rs30004 : styles.rs3000,
                   , styles.rs3000Typo
-                  ]}>
+                ]}>
                   {record.total}</Text>
                 <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-                  {record.Status === "Due" ? (
-                <View style={[styles.groupInner, styles.groupChildLayout]} />
-                ) : (
-                  <View style={[styles.groupChild1, styles.groupChildLayout]} />
+                  {record.status === "true" ? (
+                    <View style={[styles.groupInner, styles.groupChildLayout]} />
+                  ) : (
+                    <View style={[styles.groupChild1, styles.groupChildLayout]} />
                   )}
-                  
-                  {record.Status === "Due" ? (
-                  <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-                ) : (
-                  <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
-                )}
-                 
+
+                  {record.status === "false" ? (
+                    <Text style={[styles.due, styles.paidTypo]}>Due</Text>
+                  ) : (
+                    <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
+                  )}
+
                 </View>
               </Pressable>
-              
+
             </View>
           </View>
-          
+
         ))}
     </ScrollView>
-    
+
   );
 }
 const styles = StyleSheet.create({
@@ -238,6 +219,7 @@ const styles = StyleSheet.create({
     color: Color.white,
     textAlign: "left",
     position: "absolute",
+    width:"110%",
   },
   iconChildPosition: {
     width: 430,
@@ -348,6 +330,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
+    width:"100%",
     position: "absolute",
   },
   text: {
@@ -451,7 +434,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
     left: 86,
     top: 1,
-    width:20,
+    width: "100%",
   },
   text4: {
     left: 75,

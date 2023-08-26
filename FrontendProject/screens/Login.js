@@ -145,6 +145,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, // Adding a bottom border
     borderColor: 'gray',
     paddingHorizontal: widthPercentageToDP('3%'),
+    fontSize: heightPercentageToDP('2%'),
+    fontFamily: FontFamily.poppinsMedium,
   },
   bottomBorder: {
     borderBottomWidth: 1,
@@ -176,11 +178,11 @@ const styles = StyleSheet.create({
     height: heightPercentageToDP('6%'),
     paddingHorizontal: widthPercentageToDP('34%'),
   },
-  buttonImage: {
-    width: widthPercentageToDP("10%"),
-    height: widthPercentageToDP("10%"),
-    // marginRight: widthPercentageToDP("2%"),
-  },
+  // buttonImage: {
+  //   width: widthPercentageToDP("10%"),
+  //   height: widthPercentageToDP("10%"),
+  //   // marginRight: widthPercentageToDP("2%"),
+  // },
   buttonText: {
     fontSize: 16,
     color: "white",
@@ -209,6 +211,8 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     paddingHorizontal: widthPercentageToDP('3%'),
+    fontSize: heightPercentageToDP('2%'),
+    fontFamily: FontFamily.poppinsMedium, 
   },
 });
 

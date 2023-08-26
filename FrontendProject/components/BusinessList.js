@@ -8,31 +8,17 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { set } from "react-native-reanimated";
+import {
+    widthPercentageToDP,
+    heightPercentageToDP,
+  } from 'react-native-responsive-screen';
+
 function BusinessList({ }) {
     const navigation = useNavigation();
     const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
     const [Business, setBusiness] = useState(['']);
     const [loginTime, setLoginTime] = useState(null);
-    // const Business = [
-    //     {
-    //         Name: "sABC",
-    //         lastSigend: "2 hours ago",
-    //     },
-    //     {
-    //         Name: "Business XYZ",
-    //         lastSigend: "5 hours ago",
-    //     },
-    //     {
-    //         Name: "Business KLM",
-    //         lastSigend: "1 hours ago",
-    //     },
-    //     {
-    //         Name: "Business YES",
-    //         lastSigend: "1 hours ago",
-    //     },
 
-    // ];
 
     const fetchData = async () => {
         const index = parseInt(await AsyncStorage.getItem("Business_id"));
@@ -241,9 +227,9 @@ const styles = StyleSheet.create({
     },
 
     groupParentLayout: {
-        height: 65,
-        width: 393,
-        left: 0,
+        height: heightPercentageToDP('10%'),
+        width: widthPercentageToDP('90%'),
+        // left: 0,
         position: "relative",
         alignItems: 'flex-start',
         flexWrap: "wrap",
@@ -352,10 +338,10 @@ const styles = StyleSheet.create({
         top: 0,
     },
     checkCircleSvgrepoCom1Icon: {
-        top: 25,
-        left: 342,
-        width: 33,
-        height: 33,
+        top: heightPercentageToDP('2%'),
+        left: widthPercentageToDP('78%'),
+        width: widthPercentageToDP('10%'),
+        height: heightPercentageToDP('7%'),
         position: "absolute",
         overflow: "hidden",
     },

@@ -119,11 +119,13 @@ const CreateInvoice = (parans) => {
 
   const handleTaxChange = (items) => {
     setDiscount(items);
+   
+    // console.log(items);
     setEmptyFeildsDisc(false);
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      const itemName = item.itemName;
-      const rate = item.rate;
+      const itemName = item.discountName;
+      const rate = item.discountRate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
   
@@ -131,26 +133,29 @@ const CreateInvoice = (parans) => {
       }
     }
 
-   
-
     const filteredItems = items.filter(item => {
-      return !(item.rate === "" && item.itemName === "");
+      return !(item.discountRate === "" && item.discountName === "");
     });
 
     const taxes = filteredItems.map(item => ({
-      item: item.itemName,
-      rate: parseFloat(item.rate)
+      discountName: item.discountName,
+      discountRate: parseFloat(item.discountRate)
     }));
-
+    // console.log("Discount");
+    // console.log(taxes);
     setDiscountArray(taxes);
   }
+
+
   const handleDiscount = (items) => {
+    console.log("tax");
+    console.log(items);
     setTax(items);
     setEmptyFeildsTax(false);
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      const itemName = item.itemName;
-      const rate = item.rate;
+      const itemName = item.taxName;
+      const rate = item.taxRate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
      
@@ -161,14 +166,13 @@ const CreateInvoice = (parans) => {
   
 
     const filteredItems = items.filter(item => {
-      return !(item.rate === "" && item.itemName === "");
+      return !(item.taxRate === "" && item.taxName === "");
     });
 
     const taxes = filteredItems.map(item => ({
-      item: item.itemName,
-      rate: parseFloat(item.rate)
+      taxName: item.taxName,
+      taxRate: parseFloat(item.taxRate)
     }));
-
 
     setTaxArray(taxes);
     

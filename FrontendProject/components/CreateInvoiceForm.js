@@ -146,9 +146,12 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
+
         <TextInput style={[styles.regNumber,
         regNumberError ? styles.text5ClrR : styles.text5Clr
-        ]} onChangeText={setregNumber} placeholder="Reg Number   "></TextInput>
+        ]} onChangeText={setregNumber} placeholder="Reg Number   ">
+
+        </TextInput>
         <Image
           style={styles.date2SvgrepoCom11R}
           contentFit="cover"

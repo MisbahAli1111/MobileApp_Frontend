@@ -56,14 +56,15 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   switchBusinessText: {
-    fontSize: 24,
+    fontSize: heightPercentageToDP('3%'),
     fontWeight: 'bold',
     marginTop: heightPercentageToDP('10%'),
   },
   businessListContainer: {
     flex: 1,
     width: '90%',
-    alignItems: 'center', 
+    alignItems: 'center',
+    height: heightPercentageToDP('70%'), 
     marginTop: heightPercentageToDP('3%'),
   },
   createNewBusinessButton: {

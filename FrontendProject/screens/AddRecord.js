@@ -410,6 +410,8 @@ const [Msg,setMsg]=useState('');
 
 
       <ScrollView  style={styles.wrap}>
+
+
       <TouchableOpacity onPress={handleClick}>
       <Text style={[styles.jxc7789, styles.pmTypof]}>
        {selectedCountry == '' ? 'Select Number Plate' : selectedCountry}
@@ -421,7 +423,6 @@ const [Msg,setMsg]=useState('');
         source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
       />
       </TouchableOpacity>
-
 {clicked ? (
         <Modal transparent={true} animationType="slide">
         <View
@@ -529,6 +530,7 @@ const [Msg,setMsg]=useState('');
         </View>  
           </Modal>
       ) : null}
+
 
       <View style={[styles.addRecordChild3,
           NumberError ? styles.childLayoutR :styles.childLayout

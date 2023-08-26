@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { Modal,Dimensions,TouchableOpacity,StyleSheet, Text, TextInput, View, Pressable } from "react-native";
+import { ScrollView,Modal,Dimensions,TouchableOpacity,StyleSheet, Text, TextInput, View, Pressable, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { Alert } from "react-native";
@@ -12,7 +12,11 @@ import BusinessList from "../components/BusinessList";
 import SwitchBusiness from "./SwitchBusiness";
 import * as ImagePicker from 'expo-image-picker';
 const windowWidth = Dimensions.get('window');
-
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
+import {AntDesign} from '@expo/vector-icons';
 
 const BusinessInfo = () => {
   const navigation = useNavigation();
@@ -22,14 +26,9 @@ const BusinessInfo = () => {
   const [location, setlocation] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
-  const [countryCode, setCountryCode] = useState('');
+  const[countryCode,setCountryCode] = useState('PK');
   const [phoneNumber, setPhonenumber] = useState('');
-
-  const [nameFocused, setNameFocused] = useState(false);
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [locationFocused, setlocationFocused] = useState(false);
-  const [phoneNumberFocused, setPhoneNumberFocused] = useState(false);
-
+const [userId,setUserId] = useState('');
   const [ accessToken, setAccessToken]=('');
   const [EMessage, setEMessage] = useState('');
   const [CMessage, setCMessage] = useState('');
@@ -51,11 +50,9 @@ const BusinessInfo = () => {
 
 
 
-  const handleSignUp = () => {
-    AsyncStorage.getItem("accessToken")
-    .then(accessTokens => {
-    token =  'Bearer ' + accessTokens;
-   })
+  const handleSignUp = async() => {
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
 
 
     let isValid = true;
@@ -136,15 +133,26 @@ const BusinessInfo = () => {
         url: 'http://192.168.0.236:8080/api/business/add-business/',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token
+          'Authorization': accessToken
         },
         data: data
       };
 
       axios.request(config)
         .then((response) => {
-          // console.log(JSON.stringify(response.data));
+          console.log(JSON.stringify(response.data));
+          if (response.data.status === 'OK') {
+          
+            const createdUserId = response.data.data;
+            console.log(response.data.data);
+            setUserId(createdUserId);
+            
+            // Perform logic using the updated userId here
+            if (createdUserId) {
+              uploadImage(createdUserId);
+            }
           navigation.navigate(SwitchBusiness);
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -189,10 +197,39 @@ const BusinessInfo = () => {
 
     if (!result.canceled && result.assets.length > 0) {
       setProfileImage(result.assets[0].uri);
-    }
+      console.log(profileImage);
     
+  }
     setImageModalVisible(false);
   };
+
+  const uploadImage = async (BusinessId) =>{
+    console.log(BusinessId);
+    const imageData = new FormData();
+    imageData.append('files', {
+       uri: profileImage,
+       name: new Date + "_profile"+".jpeg",
+       type: 'image/jpeg', // Adjust the MIME type as needed
+     });
+    
+    console.log("formData: " ,imageData );
+    
+
+
+    const response = await axios.post(
+      `http://192.168.0.236:8080/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
+      imageData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: accessToken, // Add your authorization token if required
+        },
+      }
+    );
+
+    console.log('Upload response:', response.data);
+    console.log('Success', 'Files uploaded successfully');
+    };
 
 
   const [NameEror, setNameError] = useState(false);
@@ -204,9 +241,6 @@ const BusinessInfo = () => {
 
 
 
-  const [countryShowDropdown, setCountryShowDropdown] = useState(false);
-  const [cityShowDropdown, setCityShowDropdown] = useState(false);
-  const [codeShowDropdown, setCodeShowDropdown] = useState(false);
   const countries = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
     "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
@@ -259,64 +293,128 @@ const BusinessInfo = () => {
 
 
 
-  const toggleCountryDropdown = () => {
-    setCountryShowDropdown(!countryShowDropdown);
-  };
 
-  const toggleCityDropdown = () => {
-    setCityShowDropdown(!cityShowDropdown);
-  };
-
-  const toggleCodeDropdown = () => {
-    setCodeShowDropdown(!codeShowDropdown);
-  };
-
-  const handleCountrySelect = (code) => {
-    setCountry(code);
-    setCountryShowDropdown(false);
-  };
-
-  const handleCodeSelect = (code) => {
-    setCountryCode(code);
-    setCodeShowDropdown(false);
-  };
-
-  const handleCitySelect = (code) => {
-    setCity(code);
-    setCityShowDropdown(false);
-  };
 
 
   return (
-    <View style={styles.businessInfo}>
-      <Image
-        style={[styles.lightTexture22341Icon, styles.groupChildPosition]}
-        contentFit="cover"
-        source={require("../assets/light-texture2234-1.png")}
-      />
-      <Text style={[styles.businessInfo1, styles.nextTypo]}>Business Info</Text>
-      <Text
-        style={[styles.letsRegister, styles.letsPosition]}
-      >{`Let’s Register `}</Text>
-      <Text style={[styles.letsLevelUp, styles.letsPosition]}>
-        Let’s level up your business, together.
-      </Text>
+      
+      
 
+      <ImageBackground
+      style={styles.container}
+      resizeMode="cover"
+      source={require("../assets/light-texture2234-1.png")}
+    >
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+
+      <Text style={styles.businessInfoText}>Business Info</Text>
+      
       <View style={styles.profileImageContainer}>
-      <TouchableOpacity onPress={handleShowProfile}>
+        <TouchableOpacity onPress={handleShowProfile}>
           {profileImage ? (
             <Image source={{ uri: profileImage }} style={styles.profileImage} />
           ) : (
-            
-            <View style={styles.profileImagePlaceholder}>
-            </View>
-            
+            <View style={styles.profileImagePlaceholder}></View>
           )}
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleImageUpload}  style={styles.uploadButton}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
           <Text style={styles.uploadButtonText}>Upload</Text>
-              </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
+
+    <View style={styles.formContainer}>
+      <View style={styles.inputContainer}>
+      <AntDesign name="user" style={styles.icon} />
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+      />
+      </View>
+      <View style={styles.inputContainer}>
+    <AntDesign name="mail" style={styles.icon} />
+    <TextInput
+      style={styles.input}
+      placeholder="Email"
+      value={email}
+      onChangeText={setEmail}
+    />
+  </View>
+  <View style={styles.inputContainer}>
+    <AntDesign name="home" style={styles.icon} />
+    <TextInput
+      style={styles.input}
+      placeholder="Location"
+      value={location}
+      onChangeText={setlocation}
+    />
+  </View>
+
+        <View style={styles.pickerRowContainer}>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={city}
+            onValueChange={(itemValue) => setCity(itemValue)}
+            style={styles.picker}
+          >
+             <Picker.Item label="City" value="" />
+            {cities.map((city) => (
+              <Picker.Item key={city} label={city} value={city} />
+            ))}
+          </Picker>
         </View>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={country}
+            onValueChange={(itemValue) => setCountry(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Country" value="" />
+            {countries.map((country) => (
+              <Picker.Item key={country} label={country} value={country} />
+            ))}
+          </Picker>
+        </View>
+      </View>
+
+      {/* Country Code and Phone Number */}
+      <View style={styles.phoneContainer}>
+      <View style={[styles.countryCodeContainer,{flex:0.3,marginRight: widthPercentageToDP('2%')}]}>
+      <AntDesign name="phone" style={styles.icon} />
+  <Picker
+    selectedValue={countryCode}
+    onValueChange={(itemValue) => setCountryCode(itemValue)}
+    style={styles.countryCodePicker}
+  >
+    <Picker.Item label="" value="" />
+    {countryCodes.map((countryCode) => (
+      <Picker.Item key={countryCode} label={countryCode} value={countryCode} />
+    ))}
+  </Picker>
+  
+</View>
+
+        <TextInput
+          style={[styles.phoneNumberInput,{flex:0.7}]}
+          placeholder="Phone Number"
+          value={phoneNumber}
+          keyboardType='numeric'
+          maxLength={15}
+          onChangeText={setPhonenumber}
+        />
+      </View>
+
+
+
+
+      <View style={styles.registerButtonContainer}>
+    <TouchableOpacity onPress={handleSignUp} style={styles.registerButton}>
+      <Text style={styles.registerButtonText}>Register</Text>
+    </TouchableOpacity>
+  </View>
+      </View>
+    
 
         <Modal
           animationType="slide"
@@ -330,7 +428,6 @@ const BusinessInfo = () => {
               <Image
                 source={{ uri: profileImage }}
                 style={styles.fullImage}
-                resizeMode="contain"
               />
             )}
             </View>
@@ -344,673 +441,205 @@ const BusinessInfo = () => {
         </Modal>
 
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isImageModalVisible}
-          onRequestClose={() => setImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
-              <Text style={styles.imageModalButtonText}>Take a Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
-              <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.imageModalButton}
-              onPress={() => setImageModalVisible(false)}
-            >
-              <Text style={styles.imageModalButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+  animationType="slide"
+  transparent={true}
+  visible={isImageModalVisible}
+  onRequestClose={() => setImageModalVisible(false)}
+>
+  <View style={styles.imageModalContainer}>
+    {/* Background Close Button */}
+    <TouchableOpacity
+      onPress={() => setImageModalVisible(false)}
+      style={styles.closeButton}
+    >
+      <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+    </TouchableOpacity>
 
-
-
-      {/* Name  */}
-      
-      <TextInput style={[styles.davidDaniel, styles.davidDanielTypo]}
-        placeholder="Name"
-        value={name}
-        onFocus={() => setNameFocused(true)}
-        onBlur={() => setNameFocused(false)}
-        onChangeText={setName}
-      />
-      <Image
-        style={[styles.user1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/user-1.png")}
-      />
-      <Image
-        style={[
-          NameEror ? styles.businessInfoChildR : styles.businessInfoChild
-          , styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-11.png")}
-      />
-
-      {NameEror ? <Text style={styles.nameError}>Please Enter a Valid Name</Text> : null}
-
-
-      {/* Email  */}
-      <TextInput style={[styles.daviddaniel33outlookcom, styles.davidDanielTypoE]}
-        placeholder="Email"
-        value={email}
-        onFocus={() => setEmailFocused(true)}
-        onBlur={() => setEmailFocused(false)}
-        onChangeText={setEmail}
-      />
-      <Image
-        style={[styles.atSign1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/atsign-1.png")}
-      />
-      <Image
-        style={[
-          EmailEror ? styles.businessInfoItemR : styles.businessInfoItem,
-          styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-21.png")}
-      />
-      {EmailEror ? <Text style={styles.nameError}>{EMessage}</Text> : null}
-
-
-      {/* Location  */}
-      <TextInput style={[styles.h218GulshanKarachi, styles.davidDanielTypo]}
-        placeholder="location"
-        value={location}
-        onFocus={() => setlocationFocused(true)}
-        onBlur={() => setlocationFocused(false)}
-        onChangeText={setlocation}
-      />
-      <Image
-        style={[styles.mapPin1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/mappin-1.png")}
-      />
-      <Image
-        style={[
-          LocationEror ? styles.businessInfoInnerR : styles.businessInfoInner
-          , styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-31.png")}
-      />
-      {LocationEror ? <Text style={styles.nameError}>Please Enter a Valid Location</Text> : null}
-
-
-      {/* City  */}
-      <TextInput style={[styles.karachi, styles.karachiTypo]}
-        placeholder="city"
-        value={city}
-        editable={false}
-      />
-      <TextInput style={[styles.pakistan, styles.karachiTypo]}
-        placeholder="country"
-        value={country}
-        editable={false}
-      />
-      <Pressable>
-        <Image
-          style={[styles.businessInfoChild4, styles.businessChildPosition]}
-          contentFit="cover"
-          source={require("../assets/vector-6.png")}
-        />
-      </Pressable>
-      {
-        <View style={styles.CityClick}>
-          <Picker
-            selectedValue={city}
-            onValueChange={(itemValue) => handleCitySelect(itemValue)}
-          >
-            <Picker.Item value="Karachi" />
-            {cities.map((code) => (
-              <Picker.Item key={code} label={code} value={code} />
-            ))}
-          </Picker>
-        </View>
-      }
-
-      <Pressable
-        onPress={toggleCountryDropdown}>
-        <Image
-          style={[styles.businessInfoChild5, styles.businnessChildPosition]}
-          contentFit="cover"
-          source={require("../assets/vector-7.png")}
-        />
-      </Pressable>
-      {(
-        <View style={styles.CountryClick} >
-          <Picker
-            selectedValue={country}
-            onValueChange={(itemValue) => handleCountrySelect(itemValue)}
-          >
-            <Picker.Item label="Select Country " value="Pakistan" />
-            {countries.map((code) => (
-              <Picker.Item key={code} label={code} value={code} />
-            ))}
-          </Picker>
-        </View>
-      )}
-      <Image
-        style={[
-          CountryError ? styles.businessInfoInnerR : styles.businessInfoInner
-          , styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-31.png")}
-      />
-      {CountryError ? <Text style={styles.nameError}>{CMessage}</Text> : null}
-
-
-
-
-      <TextInput style={styles.textInput}
-        placeholder="Phone Number"
-        value={phoneNumber}
-        keyboardType='numeric'
-        maxLength={15}
-        onFocus={() => setPhoneNumberFocused(true)}
-        onBlur={() => setPhoneNumberFocused(false)}
-        onChangeText={setPhonenumber}
-      />
-      <TextInput style={[styles.pk, styles.pkPosition]}
-        placeholder='PK'
-        value={countryCode}
-        editable={false}
-      />
-
-      <Pressable
-        onPress={toggleCodeDropdown}>
-        <Image
-          style={styles.vectorIcon}
-          contentFit="cover"
-          source={require("../assets/vector-21.png")}
-        />
-
-      </Pressable>
-      {(
-        <View style={styles.codeClick} >
-          <Picker
-            selectedValue={countryCode}
-            onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-          >
-            <Picker.Item label="Select Country Code" value="PK" />
-            {countryCodes.map((code) => (
-              <Picker.Item key={code} label={code} value={code} />
-            ))}
-          </Picker>
-        </View>
-      )}
-      <Image
-        style={[styles.phone1Icon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/phone-1.png")}
-      />
-      <Image
-        style={[
-          NumberEror ? styles.businessInfoChild2R : styles.businessInfoChild2
-          , styles.businessChildLayout]}
-        contentFit="cover"
-        source={require("../assets/line-4.png")}
-      />
-
-      <Pressable
-        style={[styles.groupParent, styles.groupLayout]}
-        onPress={handleSignUp}
-      >
-        <Image
-          style={[styles.groupChild, styles.groupLayout]}
-          contentFit="cover"
-          source={require("../assets/group-166.png")}
-        />
-        <Text style={[styles.next, styles.nextTypo]}>Next</Text>
-      </Pressable>
-      {NumberEror ? <Text style={styles.nameError}>{PLEror}</Text> : null}
-
-
+    {/* Content */}
+    <View style={styles.imageModalContent}>
+      {/* Image Source Options */}
+      <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
+        <Text style={styles.imageModalButtonText}>Take a Photo</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
+        <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
+      </TouchableOpacity>
     </View>
+  </View>
+</Modal>
+          
+
+
+</ScrollView>
+</ImageBackground>
   );
+
+    
+  
 };
 
 const styles = StyleSheet.create({
-  groupChildPosition: {
-    left: 0,
-    top: 0,
-
-  },
-  nameWrap: {},
-  wrap: {
+  container: {
     flex: 1,
-    // backgroundColor:'red',
-  },
-  davidDanielTypo: {
-    height: 28,
-    top: 2,
-    textAlign: "left",
-    color: Color.darkslateblue,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    marginLeft: 66,
-    position: "relative",
-  },
-  nameError: {
-    marginTop: 6,
-    marginLeft: 50,
-    color: 'red',
-  },
-  davidDanielTypoE: {
-    height: 28,
-    textAlign: "left",
-    color: Color.darkslateblue,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    left: 56,
-    position: "relative",
-  },
-  businessChildLayout: {
-    height: 2,
-    width: 370,
-    left: 20,
-    position: "relative",
-    marginTop: 4,
-  },
-  pkPosition: {
-    width: 30,
-    height: 27,
-    marginTop: -35,
-    marginBottom: 8,
-    textAlign: "left",
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    marginLeft: 65,
-    position: "relative",
-  },
-  karachiTypo: {
-
-    height: 27,
-    textAlign: "left",
-    color: Color.darkslateblue,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    position: "relative",
-  },
-  cityTouch: {
-    top: 500,
-    height: 10,
-    width: 16,
-    position: "absolute",
-  },
-  businessChildPosition: {
-    marginTop: -20,
-    height: 10,
-    width: 16,
-    position: "relative",
-  },
-  businnessChildPosition: {
-    height: 10,
-    width: 16,
-    position: "relative",
-  },
-  nextTypo: {
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
-  },
-  letsPosition: {
-    left: 20,
-    textAlign: "left",
-    color: Color.darkslateblue,
-    position: "absolute",
-  },
-  groupLayout: {
-    height: 45,
-    width: 391,
-    position: "absolute",
-  },
-  iconLayout: {
-    height: 20,
-    width: 20,
-    left: 20,
-    position: "relative",
-    overflow: "hidden",
-  },
-  lightTexture22341Icon: {
-    width: 430,
-    position: "absolute",
-    height: 932,
-    top: 0,
-  },
-  davidDaniel: {
-    marginTop: 210,
-    width: 181,
-  },
-  daviddaniel33outlookcom: {
-    marginTop: 20,
-    width: 231,
-    marginLeft: 10,
-  },
-  businessInfoChild: {
-    marginTop: 6,
-  },
-  businessInfoChildR: {
-    marginTop: 6,
-    backgroundColor: 'red',
-  },
-
-  businessInfoItem: {
-    marginTop: 6,
-  },
-  businessInfoItemR: {
-    marginTop: 6,
-    backgroundColor: 'red',
-  },
-
-  businessInfoInner: {
-
-  },
-  businessInfoInnerR: {
-    backgroundColor: 'red',
-  },
-  text: {
-    left: 109,
-    width: 176,
-    height: 27,
-    top: 586,
-    textAlign: "left",
-    color: Color.darkslateblue,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  textInput:
-  {
-    marginLeft: 130,
-    color: Color.darkslateblue,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    position: 'relative',
-    marginTop: 15,
-    marginBottom: 8,
-  },
-  pk: {
-    color: Color.textTxtPrimary,
-  },
-  PkPress: {
-    top: 570,
-    left: 87,
-    height: 20,
-    width: 16,
-    position: "absolute",
-  },
-  vectorIcon: {
-    // backgroundColor:'red',
-    marginTop: -28,
-    marginLeft: 12,
-    left: 83,
-    height: 10,
-    width: 16,
-    position: "relative",
-    overflow: "hidden",
-  },
-  pk1: {
-    color: Color.darkslateblue,
-  },
-  h218GulshanKarachi: {
-    width: 282,
-    marginTop: 15,
-  },
-  businessInfoChild2R: {
-    backgroundColor: 'red',
-  },
-  businessInfoChild3: {
-  },
-  karachi: {
-    width: 90,
-    marginLeft: 35,
-    marginTop: 15,
-  },
-  businessInfoChild4: {
-    marginLeft: 130,
-    position: 'relative',
-  },
-  pakistan: {
-    marginLeft: 175,
-    width: 120,
-    marginTop: -25,
-  },
-  businessInfoChild5: {
-    marginLeft: 300,
-    marginTop: -30,
-  },
-  CountryClick: {
-    marginLeft: 252,
-    marginTop: -50,
-    width: 80,
-    height: 40,
-    // backgroundColor:'red',
-  },
-  CityClick: {
-    marginTop: -40,
-    marginLeft: 110,
-    // backgroundColor:'red',
-    height: 50,
-    width: 50,
-  },
-  codeClick: {
-    marginTop: -48,
-    marginBottom: 10,
-    marginLeft: 77,
-    height: 50,
-    width: 50,
-  },
-  businessInfo1: {
-    top: 200,
-    left: 135,
-    fontSize: FontSize.size_3xl,
-    textAlign: "center",
-    width: 160,
-    color: Color.darkslateblue,
-  },
-  letsRegister: {
-    top: 100,
-    fontSize: FontSize.size_8xl,
-    fontWeight: "600",
-    fontFamily: FontFamily.poppinsSemibold,
-  },
-  letsLevelUp: {
-    top: 140,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    left: 20,
-  },
-  rectangleView: {
-    top: 9,
-    left: 138,
-    borderRadius: Border.br_11xl,
-    backgroundColor: Color.textTxtPrimary,
-    width: 154,
-    height: 6,
-    position: "absolute",
-  },
-  groupChild: {
-    left: 0,
-    top: 0,
-  },
-  next: {
-    top: 11,
-    left: 174,
-    color: Color.white,
-    width: 41,
-    textAlign: "left",
-    fontWeight: "500",
-    fontSize: FontSize.size_base,
-  },
-  groupParent: {
-    top: 800,
-    left: 10,
-  },
-  mapPin1Icon: {
-    marginTop: -25,
-    marginLeft: 10,
-    marginBottom: 10,
-  },
-  user1Icon: {
-    marginTop: -25,
-    marginLeft: 8,
-  },
-  atSign1Icon: {
-    marginTop: -25,
-    marginLeft: 10,
-  },
-  phone1Icon: {
-    marginTop: -44,
-    marginLeft: 15,
-    marginBottom: 8,
-  },
-  groupIcon: {
-    top: 3,
-    left: 30,
-    width: 372,
-    height: 44,
-    position: "absolute",
-  },
-  businessInfo: {
-    backgroundColor: Color.white,
-    flex: 1,
-   
-    overflow: "hidden",
+    alignItems: 'center',
     justifyContent: 'center',
-   
-    position: 'relative',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  businessInfoText: {
+    fontSize: widthPercentageToDP('6%'),
+    fontWeight: 'bold',
+    marginTop: heightPercentageToDP('10%'),
   },
   profileImageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    top:170,
+    marginTop: heightPercentageToDP('1%'),
   },
   profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: widthPercentageToDP('30%'),
+    height: widthPercentageToDP('30%'),
+    borderRadius: widthPercentageToDP('15%'),
   },
   profileImagePlaceholder: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: widthPercentageToDP('30%'),
+    height: widthPercentageToDP('30%'),
+    borderRadius: widthPercentageToDP('15%'),
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  countryCodeInput: {
-    top: 4,
-    fontWeight: '500',
+  uploadButton: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    paddingVertical: heightPercentageToDP('1.5%'),
+    paddingHorizontal: widthPercentageToDP('5%'),
+    borderRadius: widthPercentageToDP('2%'),
+    marginTop: heightPercentageToDP('1%'),
   },
-  input: {
-    borderBottomWidth: 1.5,
-    borderColor: 'rgba(203, 203, 203, 1)',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-    fontSize: 16,
+  uploadButtonText: {
+    color: 'white',
+    fontSize: widthPercentageToDP('4%'),
   },
-  phonePickerContainer: {
+  formContainer: {
+    width: widthPercentageToDP('90%'),
+    marginTop: heightPercentageToDP('4%'),
+    marginBottom: heightPercentageToDP('0%')
+  },
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    paddingVertical: heightPercentageToDP('1.5%'),
+    marginBottom: heightPercentageToDP('2%'),
   },
-  SelectedPickerItem: {
-    fontWeight: 'bold',
+  icon: {
+    fontSize: widthPercentageToDP('4%'),
+    marginRight: widthPercentageToDP('1%'),
   },
-  SelectedPickerItem1: {
-    fontWeight: '100',
+  input: {
+    flex:1,
+    fontSize: widthPercentageToDP('4%'),
+    fontFamily: FontFamily.poppinsMedium,
   },
-  phoneInput: {
-    flex: 3,
-    borderBottomWidth: 1.5,
-    borderColor: 'rgba(203, 203, 203, 1)',
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-  },
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    marginTop: 200,
-  },
-  button: {
-    backgroundColor: 'rgba(3, 29, 68, 1)',
-    paddingVertical: 15,
-    paddingHorizontal: 150,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
+  pickerRowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: heightPercentageToDP('2%'),
   },
   pickerContainer: {
-    width: 30,
-    marginLeft: 10,
+    flex: 1,
+    marginRight: widthPercentageToDP('2%'),
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    
   },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: 5,
+  picker: {
+    height: heightPercentageToDP('5%'),
+    width: '100%',
+    
+  },
+  pickerInput: {
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    paddingVertical: heightPercentageToDP('1.5%'),
+    marginBottom: heightPercentageToDP('2%'),
+  },
+  phoneContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: heightPercentageToDP('2%'),
+  },
+  countryCodeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: widthPercentageToDP('3%'),
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    marginBottom: heightPercentageToDP('1.5%'),
+  },
+  countryCodePicker: {
+    height: heightPercentageToDP('5%'),
+    width: '100%',
+  },
+  phoneNumberInput: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: 'gray',
+    height: heightPercentageToDP('4.75%'),
+    fontSize: widthPercentageToDP('4%'),
+    fontFamily: FontFamily.poppinsMedium,
+    marginLeft: widthPercentageToDP('3%')
+  },
+  registerButtonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems:"center",
+    marginTop: heightPercentageToDP('5%'),
+  },
+  registerButton: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    paddingVertical: heightPercentageToDP('2%'),
+    alignItems: 'center',
+    width: '100%',
+    borderRadius:widthPercentageToDP('2%'),
+  },
+  registerButtonText: {
+    color: 'white',
+    fontSize: widthPercentageToDP('4%'),
   },
   imageModalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', //rgba(255, 255, 255, 0.5)
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex:999,
+
+  },
+  imageModalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: 300,
+    alignItems: 'center',
   },
   imageModalButton: {
-    backgroundColor: 'white',
-    padding: 15,
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: 12,
     borderRadius: 5,
     marginVertical: 10,
-    width: 250,
+    width: '100%',
     alignItems: 'center',
   },
   imageModalButtonText: {
-    color: 'rgba(3, 29, 68, 1)',
+    color: 'white',
     fontSize: 16,
-  },
-  uploadText: {
-    marginTop:10,
-    color: 'rgba(3, 29, 68, 1)',
-    fontSize: 16,
-  },
-  fullImage: {
-    width: '100%',
-    height: '100%',
-  },
-  formContainer: {
-    flex: 1,
-    width: windowWidth * 0.9,
-    alignSelf: 'center',
-    marginTop: 20,
-  },
-  uploadTextContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fullImageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    maxHeight: '100%', 
-    width: '100%',// Adjust this value as needed
-  },
-  uploadButton: {
-    backgroundColor: Color.darkslateblue,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  uploadButtonText: {
-    color: Color.white,
-    fontSize: FontSize.size_base,
   },
 });
 

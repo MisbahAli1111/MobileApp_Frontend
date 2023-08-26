@@ -79,10 +79,6 @@ const Invoices = () => {
             />
           </Pressable>
         </View>
-
-      
-      
-
  
   <View style={styles.cont}>
       <Footer  prop={"Invoices"} />
@@ -90,8 +86,7 @@ const Invoices = () => {
 
     <View style={styles.boxContianer}>
     <InvoiceList dsearch={search} />
-    </View>
-      
+    </View>     
       
     </View>
     
