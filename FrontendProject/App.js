@@ -73,12 +73,12 @@ const App = () => {
           name="Login"
           component={Login}
           initialParams={{
-          title: 'Login', 
+          title: '', 
           // showBackArrow: true, 
           // profileImage : require('./assets/mask-group1.png'), 
           }}/> */}
 
-          <Stack.Screen
+          {/* <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
@@ -102,7 +102,7 @@ const App = () => {
               name="ChangePassword"
               component={ChangePassword}
               initialParams={{
-                title: '',
+                title: 'Change Password',
               showBackArrow: true,
               onBackPress:'Home',
               }}
@@ -141,21 +141,21 @@ const App = () => {
           profileImage: require('./assets/mask-group1.png'),
               }}
                
-              />  
+              />   */}
                
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
               initialParams={{
-              title: ' ', 
+              title: 'Add Employee', 
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            />
+            /> */}
 
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
@@ -163,16 +163,16 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            />
+            /> */}
 
            
             
 
-            <Stack.Screen
+            {/* <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
-              title: '', 
+              title: 'Business Info', 
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
@@ -184,7 +184,7 @@ const App = () => {
               name="OwnerInfo"
               component={OwnerInfo}
               initialParams={{
-              title: '', 
+              title: 'Owner Info', 
               showBackArrow: true, 
               onBackPress:'Vehicles',
               }}
@@ -235,7 +235,7 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />  
+            />   */}
 
 
              <Stack.Screen 
@@ -249,15 +249,15 @@ const App = () => {
                 }}
             />  
 
-            <Stack.Screen
+            {/* <Stack.Screen
               name="AddCustomer"
               component={AddCustomer}
               initialParams={{
-              title: ' ', 
+              title: 'Add Customer', 
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            />
+            /> */}
 
 
 

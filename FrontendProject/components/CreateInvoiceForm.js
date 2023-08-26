@@ -1,33 +1,49 @@
 import React from 'react';
 import { Image } from "expo-image";
-import { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { useState, useEffect, useRef } from "react";
+import { View, StyleSheet, Text, TextInput, Modal, FlatList, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
 import DueDateTimePicker from '@react-native-community/datetimepicker';
 import ErrorPopup from "../components/ErrorPopup";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
 
+  const [selectedCountry, setSelectedCountry] = useState('');
   const invoiceStatus = ['Paid', 'Due'];
   const [name, setName] = useState('');
+  const [numberPlates, setNumberPlates] = useState([]);
+  const [data, setData] = useState(transformedResponse);
   // console.warn(name);
   const [status, setStatus] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
+  const [search, setSearch] = useState('');
   const [regNumber, setregNumber] = useState('');
   // const [status,setStatus] = useState('');
+  const searchRef = useRef();
+  const transformedResponse = numberPlates.map(item => {
+    const { registration_number } = item;
+    return {
+      name: registration_number,
 
+    };
+  });
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
-
+  const [carNumberFocused, setCarNumberFocused] = useState(false);
+  const [carNumber, setCarNumber] = useState('');
   const [date, setDate] = useState(new Date());
   const [Duedate, setDueDate] = useState();
   const [formHeight, setFormHeight] = useState(150);
   const [msg, setmsg] = useState('');
+  const [clicked, setClicked] = useState(false);
+  const [user, setUser] = useState('');
   const [msgg, setmsgg] = useState('');
   const [DueDateError, setDueDateError] = useState(false);
   const [nameError, setNameError] = useState(false);
@@ -58,6 +74,84 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
     setStatus(code);
   };
 
+  getCustomer = async (carNumber) => {
+
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+
+    axios.request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
+        // setUser(Name);
+        setName(Name);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    setName('No Customer');
+    
+    getRegistrationNumber();
+    getCustomer(regNumber);
+  }, [regNumber]);
+
+  const handleClick = () => {
+
+    setClicked(!clicked);
+
+  };
+  const getRegistrationNumber = async () => {
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    const Business_id = await AsyncStorage.getItem("Business_id");
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/maintenance-record/get-registration-number/${Business_id}`,
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+
+    axios.request(config)
+      .then((response) => {
+
+        // JSON.stringify(response.data);
+        // console.log(response.data);
+        setNumberPlates(response.data);
+        // console.log(numberPlates);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
+
+  const onSearch = search => {
+    if (search != '') {
+      let tempData = transformedResponse.filter(item => {
+        return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+      });
+      setData(tempData);
+    } else {
+      setData(transformedResponse);
+    }
+  }
+  const handleAddCustomer = () => {
+    navigation.navigate('AddVehicle');
+  };
 
   useEffect(() => {
     if (save) {
@@ -75,7 +169,7 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
       if (!name) {
         setFormHeight(200);
         setNameError(true);
-        setmsg('Please provide Name');
+        setmsg('Select Registration Number');
       } else {
         if (!regNumber) {
           setFormHeight(200);
@@ -118,15 +212,16 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
 
 
   useEffect(() => {
+
     let date;
     let Duedate;
     if (selectedDate) {
       date = selectedDate;
     }
-    if(selectedDueDate){
+    if (selectedDueDate) {
       Duedate = selectedDueDate;
     }
-    
+
     if (typeof onFormDataChange === 'function') {
       onFormDataChange({ name, regNumber, date, Duedate, status });
     }
@@ -140,29 +235,142 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
       <View style={styles.inLine}>
         <TextInput style={[
           nameError ? styles.loritaR : styles.lorita
-          , styles.text5ClrName]} onChangeText={setName} placeholder="Name  "></TextInput>
+          , styles.text5ClrName]} onChangeText={setName}
+          editable={false}
+          >
+            {name}
+
+          </TextInput>
         <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
+        <TouchableOpacity onPress={handleClick}>
+          <Text style={[styles.regNumber,
+          regNumberError ? styles.text5ClrR : styles.text5Clr
+          ]}>
+            {regNumber == '' ? 'Select Registration' : regNumber}
 
-        <TextInput style={[styles.regNumber,
-        regNumberError ? styles.text5ClrR : styles.text5Clr
-        ]} onChangeText={setregNumber} placeholder="Reg Number   ">
+          </Text>
 
-        </TextInput>
+        </TouchableOpacity>
         <Image
           style={styles.date2SvgrepoCom11R}
           contentFit="cover"
           source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
         />
-
-
       </View>
       {nameError ? <Text style={styles.nameError}>{msg}</Text> : null}
 
 
+      {clicked ? (
+        <Modal transparent={true} animationType="slide">
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+            }}>
+            <View
+              style={{
+                elevation: 5,
+                marginTop: 20,
+                height: 600,
+                alignSelf: 'center',
+                width: '90%',
+                backgroundColor: '#fff',
+                borderRadius: 10,
+              }}>
+              <TextInput
+                placeholder="Search.."
+                value={search}
+                ref={searchRef}
+                onChangeText={txt => {
+                  onSearch(txt);
+                  setSearch(txt);
+                }}
+                style={{
+                  width: '90%',
+                  height: 50,
+                  alignSelf: 'center',
+                  borderWidth: 0.2,
+                  borderColor: '#8e8e8e',
+                  borderRadius: 7,
+                  marginTop: 20,
+                  paddingLeft: 20,
+                }}
+              />
+              <ScrollView>
+                <FlatList
+                  data={data}
+                  style={styles.FlatList}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity
+                        style={{
+                          width: '85%',
+                          alignSelf: 'center',
+                          height: 50,
+                          justifyContent: 'center',
+                          borderBottomWidth: 0.5,
+                          borderColor: '#8e8e8e',
+                        }}
+                        onPress={() => {
+                          setregNumber(item.name);
+                          setCarNumber(item.name)
+                          setClicked(!clicked);
+                          onSearch('');
+                          setSearch('');
+                        }}>
+                        <Text style={{ fontWeight: '600' }}>{item.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </ScrollView>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'rgba(3, 29, 68, 1)',
+                  paddingVertical: 10,
+                  alignSelf: "center",
+                  borderRadius: 5,
+                  paddingLeft: 10,
+                  width: "50%",
+                  marginTop: 10,
+                  position: "fixed",
+                  zIndex: 999,
+                  bottom: 5,
+                }}
+                onPress={handleAddCustomer}
+              >
+                <Text style={{
+                  fontSize: FontSize.size_sm,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: 'white',
+                  textAlign: 'center',
+                }}>Add Vehicle</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                zIndex: 999,
+              }}
+              onPress={
+                handleClick
+              }>
+
+              <AntDesign name="closecircle" size={24} color="red~~" />
+              {/* //rgba(3, 29, 68, 1) */}
+
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      ) : null}
       {/* date and status  */}
       <View style={styles.parent}>
 
@@ -313,13 +521,13 @@ const styles = StyleSheet.create({
 
   text5Clr: {
     borderBottomWidth: 2,
-    width: "40%",
+    width: "120%",
     borderBottomColor: '#ccc',
     paddingHorizontal: 10,
   },
   text5ClrR: {
     borderBottomWidth: 2,
-    width: "40%",
+    width: "120%",
     borderBottomColor: 'red',
     paddingHorizontal: 10,
   },
@@ -383,6 +591,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     position: "relative",
     width: 150,
+    // left:-15,
   },
   lineViewPosition: {
     top: 34,
@@ -685,7 +894,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
-    left: 50,
+    left: 35,
     position: "relative",
   },
   groupIcon: {
@@ -725,14 +934,14 @@ const styles = StyleSheet.create({
     top: 34,
   },
   statusPaiddue: {
-    marginLeft: 65,
+    marginLeft: 50,
     width: "38%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: '#ccc', // Set the color of the underline
     paddingHorizontal: 10,
   },
   statusPaiddueR: {
-    marginLeft: 65,
+    marginLeft: 50,
     width: "38%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: 'red', // Set the color of the underline
@@ -755,11 +964,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   date2SvgrepoCom11R: {
-    left: 28,
+    // left: 50,
     height: 25,
     width: 25,
     top: 0,
-    position: "relative",
+    left: 380,
+    position: "absolute",
     overflow: "hidden",
   },
 

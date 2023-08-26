@@ -9,6 +9,11 @@ import * as ImagePicker from 'expo-image-picker';
 const windowWidth = Dimensions.get('window');
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
+import {AntDesign} from '@expo/vector-icons';
 
 const AddCustomer = () => {
   const navigation = useNavigation();
@@ -88,7 +93,7 @@ const AddCustomer = () => {
     setImageModalVisible(false);
   };
 
-  const uploadImage = async (userId) =>{
+  const uploadImage = async (userId,accessToken) =>{
     console.log(userId);
     const imageData = new FormData();
     imageData.append('files', {
@@ -229,7 +234,7 @@ const AddCustomer = () => {
             
             // Perform logic using the updated userId here
             if (createdUserId) {
-              uploadImage(createdUserId);
+              uploadImage(createdUserId,accessToken);
             }
             navigation.navigate('AddVehicle');
           }
@@ -277,12 +282,11 @@ const AddCustomer = () => {
               <Image
                 source={{ uri: profileImage }}
                 style={styles.fullImage}
-                resizeMode="contain"
               />
             )}
             </View>
             <TouchableOpacity
-              style={styles.imageModalButton}
+              style={styles.imageModalButton2}
               onPress={() => setFullImageModalVisible(false)}
             >
               <Text style={styles.imageModalButtonText}>Close</Text>
@@ -291,26 +295,32 @@ const AddCustomer = () => {
         </Modal>
 
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isImageModalVisible}
-          onRequestClose={() => setImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
-              <Text style={styles.imageModalButtonText}>Take a Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
-              <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.imageModalButton}
-              onPress={() => setImageModalVisible(false)}
-            >
-              <Text style={styles.imageModalButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+  animationType="slide"
+  transparent={true}
+  visible={isImageModalVisible}
+  onRequestClose={() => setImageModalVisible(false)}
+>
+  <View style={styles.imageModalContainer}>
+    {/* Background Close Button */}
+    <TouchableOpacity
+      onPress={() => setImageModalVisible(false)}
+      style={styles.closeButton}
+    >
+      <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+    </TouchableOpacity>
+
+    {/* Content */}
+    <View style={styles.imageModalContent}>
+      {/* Image Source Options */}
+      <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
+        <Text style={styles.imageModalButtonText}>Take a Photo</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.imageModalButton1} onPress={handleImageFromGallery}>
+        <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
 
 
 <View style={styles.wrap}>
@@ -1145,24 +1155,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-  imageModalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', //rgba(255, 255, 255, 0.5)
-  },
-  imageModalButton: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 5,
-    marginVertical: 10,
-    width: 250,
-    alignItems: 'center',
-  },
-  imageModalButtonText: {
-    color: 'rgba(3, 29, 68, 1)',
-    fontSize: 16,
-  },
+  // imageModalContainer: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: 'rgba(0, 0, 0, 0.5)', //rgba(255, 255, 255, 0.5)
+  // },
+  // imageModalButton: {
+  //   backgroundColor: 'white',
+  //   padding: 15,
+  //   borderRadius: 5,
+  //   marginVertical: 10,
+  //   width: 250,
+  //   alignItems: 'center',
+  // },
+  // imageModalButtonText: {
+  //   color: 'rgba(3, 29, 68, 1)',
+  //   fontSize: 16,
+  // },
   uploadText: {
     marginTop:10,
     color: 'rgba(3, 29, 68, 1)',
@@ -1199,6 +1209,57 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     color: Color.white,
     fontSize: FontSize.size_base,
+  },
+  imageModalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  closeButton: {
+    // position: 'absolute',
+    top: heightPercentageToDP('4%'), // Adjust the percentage as needed
+    left: widthPercentageToDP('35%'), // Adjust the percentage as needed
+    zIndex: 999,
+  },
+  imageModalContent: {
+    backgroundColor: 'white',
+    padding: widthPercentageToDP('4%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('2%'), // Adjust the percentage as needed
+    width: widthPercentageToDP('80%'), // Adjust the percentage as needed
+    alignItems: 'center',
+    height: heightPercentageToDP('30%')
+  },
+  imageModalButton: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('1%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('0%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('6%'),
+  },
+  imageModalButton1: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('1%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('0%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('2%'),
+  },
+  imageModalButton2: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('2%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('1%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('1%'),
+  },
+  imageModalButtonText: {
+    color: 'white',
+    fontSize: widthPercentageToDP('4%'), // Adjust the percentage as needed
   },
 });
 

@@ -57,6 +57,7 @@ const AddVehicle = () => {
   const [data, setData] = useState(transformedResponse);
   const [selectedCountry, setSelectedCountry] = useState('');
   const searchRef = useRef();
+  const [userId,setUserId] = useState('');
 
   const getCustomer = async () =>{
     let token= await AsyncStorage.getItem("accessToken");
@@ -183,12 +184,14 @@ const AddVehicle = () => {
       
       setSelectedImage([...selectedImage, { uri, type }]);
       setShowGalleryImagePicker(false);
+      console.log(selectedImage);
     };
   
     const handleGalleryImageSelected = (uri,type) => {
       
       setSelectedImage([...selectedImage, { uri, type }]);
       setShowGalleryImagePicker(false);
+      console.log(selectedImage);
     };
   
     const handleImageDelete = (index) => {
@@ -202,6 +205,52 @@ const AddVehicle = () => {
       setvehicleType(code);
       
     };
+
+    const uploadImage = async (vehicleId) => {
+      let token= await AsyncStorage.getItem("accessToken");
+      const accessToken = 'Bearer ' + token;
+      const imageData = new FormData();
+        // Iterate through the image array and append images to the FormData
+        try {
+          // selectedImage.forEach((uri, index) => {
+          //   formData.append('files', {
+          //     uri: uri,
+          //     name: new Date() + ".jpeg",
+          //     type: 'image/jpeg',
+          //   });
+          // });
+
+          imageData.append('files', {
+            uri: selectedImage,
+            name: new Date + "_profile"+".jpeg",
+            type: 'image/jpeg', // Adjust the MIME type as needed
+          });
+          console.log("formData: " ,imageData );
+
+          
+      
+          const response = await axios.post(
+            `http://192.168.0.236:8080/api/file/upload/profile/${vehicleId}`,
+            imageData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                // Authorization: accessToken, // Add your authorization token if required
+              },
+            }
+          );
+      
+          if (!response.data.success) {
+            throw new Error('API request failed');
+          }
+      
+          console.log('Images uploaded successfully');
+        } catch (error) {
+          console.error('Error:', error.message);
+        }
+      };
+    
+    
 
     
 
@@ -286,7 +335,7 @@ const AddVehicle = () => {
         let config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: `http://172.20.64.1:8080/api/vehicle/${Business_id}/add-vehicle`,
+          url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/add-vehicle`,
           headers: { 
             'Content-Type': 'application/json',
             'Authorization': accessToken
@@ -297,6 +346,18 @@ const AddVehicle = () => {
         axios.request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
+          if (response.data.status === 'OK') {
+          
+            const createdUserId = response.data.data;
+            console.log(response.data.data);
+            setUserId(createdUserId);
+            
+            // Perform logic using the updated userId here
+            if (createdUserId) {
+              uploadImage(createdUserId);
+            }
+            navigation.navigate('Login');
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -355,6 +416,7 @@ const AddVehicle = () => {
            onSnapToItem={(index) => setActiveSlide(index)}
            sliderHeight={100}
          />
+         {/* {console.log(selectedImage)} */}
          <Pagination
            dotsLength={selectedImage.length}
            activeDotIndex={activeSlide}
@@ -852,7 +914,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   formWrap:{
-    marginTop:30,
+    marginTop:100,
     position:'relative',
     // backgroundColor:'red',
   },
@@ -903,7 +965,7 @@ video: {
   },
   deleteButton: {
     position: "relative",
-    top: 0,
+    top: 10,
     left:0,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
@@ -1209,7 +1271,7 @@ wrap:{
     color: Color.textTxtPrimary,
   },
   upload: {
-    top:170,
+    top:220,
     left:35,
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
@@ -1221,7 +1283,7 @@ wrap:{
   vectorIcon1: {
     height: "39.67%",
     width: "26.09%",
-    top: 148,
+    top: 195,
 
     right: "73.91%",
     bottom: "16.67%",

@@ -307,7 +307,7 @@ const [userId,setUserId] = useState('');
     >
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
 
-      <Text style={styles.businessInfoText}>Business Info</Text>
+      {/* <Text style={styles.businessInfoText}>Business Info</Text> */}
       
       <View style={styles.profileImageContainer}>
         <TouchableOpacity onPress={handleShowProfile}>
@@ -416,7 +416,7 @@ const [userId,setUserId] = useState('');
       </View>
     
 
-        <Modal
+      <Modal
           animationType="slide"
           transparent={true}
           visible={isFullImageModalVisible}
@@ -432,7 +432,7 @@ const [userId,setUserId] = useState('');
             )}
             </View>
             <TouchableOpacity
-              style={styles.imageModalButton}
+              style={styles.imageModalButton2}
               onPress={() => setFullImageModalVisible(false)}
             >
               <Text style={styles.imageModalButtonText}>Close</Text>
@@ -461,7 +461,7 @@ const [userId,setUserId] = useState('');
       <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
         <Text style={styles.imageModalButtonText}>Take a Photo</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
+      <TouchableOpacity style={styles.imageModalButton1} onPress={handleImageFromGallery}>
         <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
       </TouchableOpacity>
     </View>
@@ -616,30 +616,60 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   closeButton: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex:999,
-
+    // position: 'absolute',
+    top: heightPercentageToDP('4%'), // Adjust the percentage as needed
+    left: widthPercentageToDP('35%'), // Adjust the percentage as needed
+    zIndex: 999,
   },
   imageModalContent: {
     backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: 300,
+    padding: widthPercentageToDP('4%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('2%'), // Adjust the percentage as needed
+    width: widthPercentageToDP('80%'), // Adjust the percentage as needed
     alignItems: 'center',
+    height: heightPercentageToDP('30%')
   },
   imageModalButton: {
     backgroundColor: 'rgba(3, 29, 68, 1)',
-    padding: 12,
-    borderRadius: 5,
-    marginVertical: 10,
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('1%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('0%'), // Adjust the percentage as needed
     width: '100%',
     alignItems: 'center',
+    marginTop:heightPercentageToDP('6%'),
+  },
+  imageModalButton1: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('1%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('0%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('2%'),
+  },
+  imageModalButton2: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('2%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('1%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('1%'),
   },
   imageModalButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: widthPercentageToDP('4%'), // Adjust the percentage as needed
+  },
+  fullImageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxHeight: '100%', 
+    width: '100%',// Adjust this value as needed
+  },
+  fullImage: {
+    width: '100%',
+    height: '100%',
   },
 });
 

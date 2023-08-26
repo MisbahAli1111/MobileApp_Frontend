@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     flexWrap:"wrap",
     marginTop:250,
     marginLeft: 12,
-    marginBottom:90,
-   
+    // marginBottom:90,
+   maxHeight:525,
     // alignItems: 'flex-end', 
   },
   iconLayout1: {
@@ -549,4 +549,3 @@ const styles = StyleSheet.create({
 });
 
 export default Invoices;
-

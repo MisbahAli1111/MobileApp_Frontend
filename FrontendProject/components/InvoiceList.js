@@ -31,7 +31,7 @@ function Invoicelist({ dsearch }) {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         setInvoices(response.data);
-
+        
       })
       .catch((error) => {
         console.log(error);
@@ -47,12 +47,16 @@ function Invoicelist({ dsearch }) {
     navigation.navigate("InvoiceDetailView", { recordId });
   };
 
-  // useEffect(() => {
-  //   setSearch(dsearch);
-  //   const formattedQuery = dsearch.trim();
-  //   const maintained = Invoices.filter((record) => record.Name.includes(formattedQuery))
-  //   setData(maintained);
-  // }, [dsearch]);
+  useEffect(() => {
+    setSearch(dsearch);
+    const formattedQuery = dsearch.trim().toLowerCase(); 
+    const maintained = Invoices.filter((record) =>
+      record.name.toLowerCase().includes(formattedQuery) 
+    );
+    setData(maintained);
+  }, [dsearch]);
+  
+
 
   useEffect(() => {
     getData();
@@ -104,7 +108,7 @@ function Invoicelist({ dsearch }) {
                 ]}>
                   {record.total}</Text>
                 <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-                  {record.status === "true" ? (
+                  {record.status === "false" ? (
                     <View style={[styles.groupInner, styles.groupChildLayout]} />
                   ) : (
                     <View style={[styles.groupChild1, styles.groupChildLayout]} />
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
     color: Color.white,
     textAlign: "left",
     position: "absolute",
-    width:"110%",
+    width: "110%",
   },
   iconChildPosition: {
     width: 430,
@@ -330,7 +334,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
-    width:"100%",
+    width: "100%",
     position: "absolute",
   },
   text: {

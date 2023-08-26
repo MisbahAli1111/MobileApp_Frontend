@@ -11,28 +11,15 @@ import * as Sharing from 'expo-sharing';
 import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 import { useRoute } from "@react-navigation/native";
 import { useState, useEffect, useMemo } from "react";
-
-
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 function InvoiceDetailView() {
   const route = useRoute();
 
   const invoiceId = route.params?.recordId;
+  const [Invoice , setInvoice] = useState([]);
+  
 
-  const Descriptions = [
-    {
-      item: 'Service A',
-      rate: 50,
-      quantity: 2,
-      amount: 100,
-    },
-    {
-      item: 'Service B',
-      rate: 30,
-      quantity: 3,
-      amount: 90,
-    },
-
-  ];
 
   const navigation = useNavigation();
   const [invoiceID, setInvoiceID] = useState('');
@@ -47,15 +34,114 @@ function InvoiceDetailView() {
   const [discount, setDiscount] = useState('');
   const [total, setTotal] = useState('');
   const [balanceDue, setBalanceDue] = useState('');
+  const [description, setDescription] = useState([]);
+  const [taxr, setTaxr] = useState([]);
+  const [discountr, setDiscountr] = useState([]);
+  const [vehicle,setVehicle]= useState('');
  
   useEffect(() => {
 
     getData();
-  }, [invoiceId]);
-
-  const getData=  async()=>{
     
+  }, [invoiceId]);
+  useEffect(() => {
+
+    calculateTotalAmount();
+    
+  });
+
+
+  const getData = async () => {
+
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+  
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
+      headers: {
+        'Authorization': accessToken 
+            }
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        // setInvoice(response.data);
+        setDate(response.data[0].date);
+        setDue(response.data[0].invoiceDue);
+        setBalance(response.data[0].total);
+        setSubTotal(response.data[0].total);
+        setDescription(response.data[0].descriptions);
+        setTaxr(response.data[0].taxes);
+        setDiscountr(response.data[0].discounts);
+        setName(response.data[0].name);
+        setVehicle(response.data[0].vehicleName);
+        let st=response.data[0].status;
+        if(st== "true"){
+          setStatus('Paid');
+        }else{
+          setStatus("Due");
+        }
+        // console.log(Invoice.data);
+        calculateTotalAmount();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
   }
+
+ 
+  const calculateTotalAmount = () => {
+    setDiscount(0);
+    setTax(0);
+    if (description.length === 0 && discountr.length === 0 && taxr.length === 0) {
+      setTotal(0.0);
+      return;
+    }
+  
+    let totalAmount = 0.0;
+  
+    for (const item of description) {
+      const itemAmount = parseFloat(item.quantity) * parseFloat(item.rate);
+      totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
+    }
+    
+   
+
+    let totalDiscount = 0.0;
+    for (const disc of discountr) {
+      const discountRate = parseFloat(disc.discountRate);
+      if (!isNaN(discountRate)) {
+        totalDiscount += (discountRate / 100) * totalAmount; // Convert rate to decimal
+      }
+    }
+    
+    setDiscount(totalDiscount);
+
+
+    let totaltax = 0.0;
+    for (const t of taxr) {
+    
+      const taxRate = parseFloat(t.taxRate);
+      
+      if (!isNaN(taxRate)) {
+        totaltax += (taxRate / 100) * totalAmount; // Convert rate to decimal
+      }
+    }
+    setTax(totaltax);
+    
+    
+    totalAmount += totalDiscount;
+    totalAmount -= totaltax;
+  
+    totalAmount = totalAmount.toFixed(2);
+    
+    setTotal(totalAmount);
+  };
 
 
   const html = `
@@ -230,43 +316,43 @@ function InvoiceDetailView() {
         </View>
 
         <View style={styles.head}>
-        <Image
-              style={[styles.groupChild, styles.groupLayout2]}
-              contentFit="cover"
-              source={require("../assets/rectangle-62.png")}
-            />
+          <Image
+            style={[styles.groupChild, styles.groupLayout2]}
+            contentFit="cover"
+            source={require("../assets/rectangle-62.png")}
+          />
           <Text style={[styles.description, styles.changePosition]}>
             DESCRIPTION
           </Text>
           <Text style={[styles.oilChange, styles.textTypo4]}></Text>
-          
+
           <Text style={[styles.rate, styles.qtyTypo]}>RATE</Text>
           <Text style={[styles.text1, styles.textTypo2]}></Text>
-  
+
           <Text style={[styles.qty, styles.qtyTypo]}>QTY</Text>
           <Text style={[styles.text5, styles.textTypo1]}></Text>
-         
+
           <Text style={[styles.amount, styles.textPosition1]}>Amount</Text>
           <Text style={[styles.text9, styles.textPosition1]}></Text>
         </View>
         <View style={[styles.groupItem, styles.groupItemPosition]} />
-        
+
         <ScrollView style={styles.wrap}>
-  
-      {Descriptions.map((desc, index) => (
-        <View key={index} style={styles.dataRow}>
-          <Text style={styles.dataCell}>{desc.item}</Text>
-          <Text style={styles.dataCell}>{desc.rate}</Text>
-          <Text style={styles.dataCell}>{desc.quantity}</Text>
-          <Text style={styles.dataCell}>{desc.amount}</Text>
-        </View>
-      ))}
-    </ScrollView>
 
-      
+          {description.map((desc, index) => (
+            <View key={index} style={styles.dataRow}>
+              <Text style={styles.dataCell}>{desc.item}</Text>
+              <Text style={styles.dataCell}>{desc.rate}</Text>
+              <Text style={styles.dataCell}>{desc.quantity}</Text>
+              <Text style={styles.dataCell}>{desc.amount}</Text>
+            </View>
+          ))}
+        </ScrollView>
 
 
-         {/* <View style={[styles.groupParent, styles.parentLayout]}>
+
+
+        {/* <View style={[styles.groupParent, styles.parentLayout]}>
           <View style={[styles.vectorParent, styles.parentLayout]}>
             
          
@@ -288,28 +374,34 @@ function InvoiceDetailView() {
           colors={["rgba(7, 132, 199, 0.16)", "rgba(217, 217, 217, 0)"]}
         />
 
-
-        <View style={styles.setstyle}>
+<Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
+<Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text>
+       
+<View style={styles.setstyle}>
           <Text style={[styles.corollaGli2016, styles.dueTypo]}>
             {/* {regNumber} */}
           </Text>
           <View style={[styles.ellipseParent, styles.ellipseLayout]}>
-            <Image
+           {/* // status */}
+           
+            {/* <Image
               style={[styles.ellipseIcon, styles.ellipseLayout]}
               contentFit="cover"
               source={require("../assets/ellipse-10.png")}
-            />
-            <Text style={styles.paid}></Text>
+            /> */}
+            {/* <Text style={styles.paid}>sdfsfd</Text> */}
           </View>
-          <Text style={[styles.loritaDaniel, styles.dueTypo]}></Text>
+
+          <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
+          
           <View style={[styles.dateParent, styles.parentLayout1]}>
             <Text style={[styles.date, styles.dueTypo]}>DATE</Text>
-            <Text style={[styles.jan2023, styles.rs3000Typo]}></Text>
+            <Text style={[styles.jan2023, styles.rs3000Typo]}>{date}</Text>
             <Text style={[styles.text14, styles.textLayout]}>-</Text>
           </View>
           <View style={[styles.dueParent, styles.parentLayout1]}>
             <Text style={[styles.due, styles.textLayout1]}>Due </Text>
-            <Text style={[styles.onReceipt, styles.rs3000Typo]}>On Receipt</Text>
+            <Text style={[styles.onReceipt, styles.rs3000Typo]}>{due}</Text>
             <Text style={[styles.text14, styles.textLayout]}>-</Text>
           </View>
           <View style={[styles.balanceParent, styles.parentLayout1]}>
@@ -317,7 +409,7 @@ function InvoiceDetailView() {
             <Text style={styles.rs3000Typo}></Text>
             <Text style={[styles.text14, styles.textLayout]}>-</Text>
           </View>
-          <Text style={[styles.inv00011, styles.invoiceTypo]}></Text>
+          <Text style={[styles.inv00011, styles.invoiceTypo]}>{balance}</Text>
           <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
 
         </View>
@@ -327,17 +419,17 @@ function InvoiceDetailView() {
             <Text style={[styles.text18, styles.rs0Position]}>-</Text>
             <Text style={[styles.subtotal, styles.tax0Typo]}>Subtotal</Text>
             <Text style={[styles.tax0, styles.tax0Typo]}>Tax (%)</Text>
-            <Text style={[styles.rs3550, styles.rs0Typo]}></Text>
-            <Text style={[styles.rs0, styles.rs0Typo]}></Text>
+            <Text style={[styles.rs3550, styles.rs0Typo]}>{subTotal}</Text>
+            <Text style={[styles.rs0, styles.rs0Typo]}>{tax}</Text>
             <Text style={[styles.text19, styles.textPosition]}>-</Text>
             <Text style={[styles.discount, styles.textPosition]}>Discount</Text>
-            <Text style={[styles.text20, styles.textPosition]}></Text>
+            <Text style={[styles.text20, styles.textPosition]}>{discount}</Text>
             <View style={styles.group}>
               <Text style={[styles.text17, styles.textTypo]}>-</Text>
 
               <Text style={[styles.total1, styles.total1Typo]}>Total</Text>
 
-              <Text style={[styles.rs3550, styles.rs0Typo]}></Text>
+              <Text style={[styles.rs3550, styles.rs0Typo]}>{total}</Text>
 
             </View>
           </View>
@@ -381,8 +473,8 @@ function InvoiceDetailView() {
         />
 
 
-        <View >
-        <Footer prop={"Invoices"} />
+        <View style={styles.foot} >
+          <Footer prop={"Invoices"} />
         </View>
       </View>
     </>
@@ -404,12 +496,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: 'gray',
     paddingVertical: 8,
-    
+
   },
   dataCell: {
     flex: 1,
     textAlign: 'center',
-    
+
   },
   groupChild6: {
     borderRadius: Border.br_7xs,
@@ -422,11 +514,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-  head:{
-    marginTop:290,
-    alignContent:'center',
-    justifyContent:'center',
-    marginLeft:12,
+  head: {
+    marginTop: 290,
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginLeft: 12,
   },
   // Blue:{
   //   flex:1,
@@ -453,13 +545,13 @@ const styles = StyleSheet.create({
   },
   wrap: {
     marginTop: 37,
-    maxHeight:178,
-    width:"94%",
-    marginLeft:16,
-    borderRadius:14,
+    maxHeight: 178,
+    width: "94%",
+    marginLeft: 16,
+    borderRadius: 14,
     backgroundColor: Color.steelblue_300,
     flexGrow: 1,
-    flex:1,
+    flex: 1,
   },
   parentLayout1: {
     height: 0,
@@ -489,6 +581,10 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
   },
+  foot:{
+    flex:1,
+    position:'absolute',
+  },
   parentLayout: {
     height: 179,
     width: 392,
@@ -501,7 +597,7 @@ const styles = StyleSheet.create({
   groupItemPosition: {
     backgroundColor: Color.steelblue_300,
     left: 0,
-  
+
   },
   changePosition: {
     left: 15,
@@ -843,7 +939,7 @@ const styles = StyleSheet.create({
   },
   rate: {
     width: 35,
-    left: 164,
+    left: 134,
     fontSize: FontSize.size_smi,
     textAlign: "left",
     position: "absolute",
@@ -994,7 +1090,7 @@ const styles = StyleSheet.create({
   paid: {
     left: 0,
     color: Color.darkolivegreen,
-    top: 5,
+    top: 300,
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.caption2Regular_size,
     textAlign: "left",
@@ -1008,13 +1104,44 @@ const styles = StyleSheet.create({
   },
   loritaDaniel: {
     top: 260,
-    left: 260,
+    marginLeft:310,
+    // left: 320,
     width: 180,
     fontSize: FontSize.size_sm,
     color: Color.textTxtPrimary,
     textAlign: "left",
+    alignContent:'flex-end',
+    justifyContent:'flex-end',
     position: "absolute",
   },
+  loritaDanielV: {
+     marginTop:-272,
+    
+    // marginLeft:310,
+    left: 200,
+    width: 180,
+    fontSize: FontSize.size_sm,
+    color: Color.textTxtPrimary,
+    textAlign: "right",
+    // alignContent:'flex-end',
+    // justifyContent:'flex-end',
+    position: "relative",
+    alignSelf: 'flex-start',
+  },
+  loritaDanielS: {
+    marginTop:0,
+   
+   // marginLeft:310,
+   left: 200,
+   width: 180,
+   fontSize: FontSize.size_sm,
+   color: 'green',
+   textAlign: "right",
+   // alignContent:'flex-end',
+   // justifyContent:'flex-end',
+   position: "relative",
+   alignSelf: 'flex-start',
+ },
   date: {
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,
@@ -1024,7 +1151,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   jan2023: {
-    width: 160,
+    width: 180,
   },
   text14: {
     left: 50,
@@ -1062,13 +1189,13 @@ const styles = StyleSheet.create({
   },
   inv00011: {
     width: 85,
-    top: 237,
+    top: 297,
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsSemibold,
     textAlign: "left",
     fontWeight: "600",
-    left: 25,
+    left: 110,
   },
   invoiceTo: {
     left: 315,

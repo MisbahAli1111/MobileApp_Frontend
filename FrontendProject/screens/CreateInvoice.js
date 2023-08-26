@@ -120,7 +120,7 @@ const CreateInvoice = (parans) => {
   const handleTaxChange = (items) => {
     setDiscount(items);
    
-    // console.log(items);
+   
     setEmptyFeildsDisc(false);
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -141,15 +141,13 @@ const CreateInvoice = (parans) => {
       discountName: item.discountName,
       discountRate: parseFloat(item.discountRate)
     }));
-    // console.log("Discount");
-    // console.log(taxes);
+
     setDiscountArray(taxes);
   }
 
 
   const handleDiscount = (items) => {
-    console.log("tax");
-    console.log(items);
+ 
     setTax(items);
     setEmptyFeildsTax(false);
     for (let i = 0; i < items.length; i++) {
@@ -218,13 +216,13 @@ const CreateInvoice = (parans) => {
 
   sendData = async () => {
 
-  console.log(TaxArray);
-    console.log("sendData d");
+  
     const token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
     let st;
-    if(status == "paid"){
+    
+    if(status == "Paid"){
       st=true;
     }else{
       st=false;
@@ -285,13 +283,11 @@ const CreateInvoice = (parans) => {
       totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
     }
     
-    console.log("for descrition");
-    console.log(totalAmount);
    
 
     let totalDiscount = 0.0;
     for (const disc of discount) {
-      const discountRate = parseFloat(disc.rate);
+      const discountRate = parseFloat(disc.discountRate);
       if (!isNaN(discountRate)) {
         totalDiscount += (discountRate / 100) * totalAmount; // Convert rate to decimal
       }
@@ -300,14 +296,17 @@ const CreateInvoice = (parans) => {
 
     let totaltax = 0.0;
     for (const t of tax) {
-      const taxRate = parseFloat(t.rate);
+    
+      const taxRate = parseFloat(t.taxRate);
+      
       if (!isNaN(taxRate)) {
         totaltax += (taxRate / 100) * totalAmount; // Convert rate to decimal
       }
     }
     
-    totalAmount -= totalDiscount;
-    totalAmount += totaltax;
+    
+    totalAmount += totalDiscount;
+    totalAmount -= totaltax;
   
     totalAmount = totalAmount.toFixed(2);
   
