@@ -24,9 +24,11 @@ import { useRef } from "react";
 
 const CreateInvoice = (parans) => {
   const navigation = useNavigation();
-
+  const [APIData,setAPIData]=useState();
   const route = useRoute();
-
+  const [APIDiscount , setAPIDiscount] = useState();
+  const [APITax,setAPITax]= useState();
+  const [APIDescription,setAPIDescription] = useState();
   // contains the record id details
   const recordId = route.params?.InvoiceRecord;
   const invoiceId =route.params?.InvoiceId;
@@ -53,24 +55,17 @@ const CreateInvoice = (parans) => {
 
     axios.request(config)
       .then((response) => {
-        console.log(" data here");
+       
         console.log(JSON.stringify(response.data));
-        // setInvoice(response.data);
-        setDate(response.data[0].date);
-        // setDue(response.data[0].invoiceDue);
-
-        // setSubTotal(response.data[0].total);
-        // setDescription(response.data[0].descriptions);
-        // setTaxr(response.data[0].taxes);
-        // setDiscountr(response.data[0].discounts);
-        setName(response.data[0].name);
-        // setVehicle(response.data[0].vehicleName);
-        let st = response.data[0].status;
-        setStatus(st ? 'Paid' : 'Due');
-        // setBalance(st ? 0 : response.data[0].total);
-        // console.log(Invoice.data);
-        // calculateTotalAmount();
-        // setIsLoading(false);
+        setAPIData(response.data);
+        setAPIDescription(response.data);
+        const taxArray = response.data[0].taxes;      
+        setAPITax(taxArray);
+        const discArray = response.data[0].discounts;
+        setAPIDiscount(discArray);
+        // console.log(" data here");
+        // console.log(APIData);
+  
       })
       .catch((error) => {
         console.log(error);
@@ -208,7 +203,6 @@ const CreateInvoice = (parans) => {
       }
     }
 
-  
 
     const filteredItems = items.filter(item => {
       return !(item.taxRate === "" && item.taxName === "");
@@ -222,6 +216,10 @@ const CreateInvoice = (parans) => {
     setTaxArray(taxes);
     
   }
+
+
+
+
 
   const handleFormDataChange = (data) => {
     setName(data.name);
@@ -351,8 +349,8 @@ const CreateInvoice = (parans) => {
       }
     }
     
-    totalAmount += totalDiscount;
-    totalAmount -= totaltax;
+    totalAmount -= totalDiscount;
+    totalAmount += totaltax;
   
     totalAmount = totalAmount.toFixed(2);
   
@@ -403,18 +401,18 @@ const CreateInvoice = (parans) => {
 
       <ScrollView style={styles.wrap}>
         <View style={styles.form}>
-          <CreateInvoiceForm onFormDataChange={handleFormDataChange}  save={save} setSave={setSave} />
+          <CreateInvoiceForm onFormDataChange={handleFormDataChange} APIData={APIData}  save={save} setSave={setSave} />
         </View>
         <View style={styles.scroll}>
           <View>
-            <InvoiceDescription onItemsChange={handleItemsChange} />
+            <InvoiceDescription onItemsChange={handleItemsChange} APIDescription={APIDescription} />
           </View>
           <View style={styles.tableRow}>
             <View style={styles.taxd}>
-              <InvoiceDiscount onItemsChange={handleDiscount} />
+              <InvoiceDiscount onItemsChange={handleDiscount} APITax={APITax} />
             </View>
             <View style={styles.taxdd}>
-              <InvoiceTax onItemsChange={handleTaxChange} />
+              <InvoiceTax onItemsChange={handleTaxChange} APIDiscount={APIDiscount}  />
             </View>
           </View>
         </View>

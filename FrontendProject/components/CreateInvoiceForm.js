@@ -11,7 +11,8 @@ import DueDateTimePicker from '@react-native-community/datetimepicker';
 import ErrorPopup from "../components/ErrorPopup";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
+const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
+
 
   const [selectedCountry, setSelectedCountry] = useState('');
   const invoiceStatus = ['Paid', 'Due'];
@@ -35,6 +36,45 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
     };
   });
 
+  useEffect(() => {
+    if(APIData){
+      console.log("API");
+      console.log(APIData);
+      
+    
+    console.log(APIData[0]);
+    const  data=APIData[0];
+    setName(data.name);
+    setregNumber(data.registrationNumber);
+    let st='';
+    if(status){
+      st='Paid';
+    }else{
+      st='Due';
+    }
+    setStatus(st);
+    
+    // console.log(d);
+    const date=formatDate(data.date);
+    const DueDate=formatDate(data.invoiceDue);
+    // console.log(date);
+    // setDate(date);
+    // setSelectedDueDate(data.invoiceDue);
+    // setSelectedDate(date);
+    setAPDate(date);
+    setAPDueDate(DueDate);
+
+  }
+    // // setData();
+  }, [APIData]);
+
+
+  const formatDate = (dateString) => {
+    const dateObject = new Date(dateString);
+    return dateObject.toDateString();
+  };
+  
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
   const [carNumberFocused, setCarNumberFocused] = useState(false);
@@ -52,7 +92,9 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
   const [regNumberError, setregNumberError] = useState(false);
   const [DateError, setDataError] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-
+  const [APDate,setAPDate] = useState(null);
+  const [APDueDate,setAPDueDate] = useState(null);
+  
   
 
   const handleDateChange = (event, date) => {
@@ -382,7 +424,7 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
           style={[
             DateError ? styles.text1R : styles.text1
             , styles.text1Typo]}
-          value={selectedDate ? selectedDate.toDateString() : ''}
+          value={selectedDate ? selectedDate.toDateString() : APDate}
           placeholder="Select Creation date"
           editable={false}></TextInput>
 
@@ -440,7 +482,7 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
           style={[
             DateError ? styles.text1R : styles.text1
             , styles.text1Typo]}
-          value={selectedDueDate ? selectedDueDate.toDateString() : ''}
+          value={selectedDueDate ? selectedDueDate.toDateString() : APDueDate}
           placeholder="Select Due date"
           editable={false}></TextInput>
 

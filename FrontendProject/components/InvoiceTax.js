@@ -5,11 +5,24 @@ import { StyleSheet, TouchableOpacity,TextInput,FlatList ,TouchableWithoutFeedba
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
-function InvoiceDiscount({ onItemsChange }) {
+function InvoiceDiscount({ onItemsChange,APITax }) {
 const navigation = useNavigation();
 const [items, setItems] = useState([{ taxName: '', taxRate: ''}]);
 
-
+useEffect(()=>{
+  
+  if (APITax && APITax.length > 0) {
+    console.log("API Taxs");
+    console.log(APITax);
+    
+    const initialTaxItems = APITax.map((item) => ({
+      taxName: item.taxName,
+      taxRate: item.taxRate.toString(),
+    }));
+    
+    setItems(initialTaxItems);
+  }
+},[APITax]);
   const renderItem =({ item, index })=>(
     <View style={[styles.rowContainer, styles.groupLayout]}>
     <TextInput

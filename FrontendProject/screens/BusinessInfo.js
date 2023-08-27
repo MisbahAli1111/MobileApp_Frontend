@@ -39,14 +39,6 @@ const [userId,setUserId] = useState('');
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
-//   const token='';
-//   const fetchToekn = async () => {
-  
-//  };
-
-//   useEffect(() => {
-//     fetchToekn();
-//     },[]);
 
 
 
@@ -306,8 +298,6 @@ const [userId,setUserId] = useState('');
       source={require("../assets/light-texture2234-1.png")}
     >
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-
-      {/* <Text style={styles.businessInfoText}>Business Info</Text> */}
       
       <View style={styles.profileImageContainer}>
         <TouchableOpacity onPress={handleShowProfile}>
@@ -497,7 +487,7 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: heightPercentageToDP('1%'),
+    marginTop: heightPercentageToDP('23%'),
   },
   profileImage: {
     width: widthPercentageToDP('30%'),
@@ -523,15 +513,15 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: widthPercentageToDP('90%'),
-    marginTop: heightPercentageToDP('4%'),
-    marginBottom: heightPercentageToDP('0%')
+    marginTop: heightPercentageToDP('5%'),
+    marginBottom: heightPercentageToDP('10%')
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
     borderColor: 'gray',
-    paddingVertical: heightPercentageToDP('1.5%'),
+    paddingVertical: heightPercentageToDP('1%'),
     marginBottom: heightPercentageToDP('2%'),
   },
   icon: {
@@ -597,6 +587,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems:"center",
     marginTop: heightPercentageToDP('5%'),
+    marginBottom: widthPercentageToDP('1%')
   },
   registerButton: {
     backgroundColor: 'rgba(3, 29, 68, 1)',
