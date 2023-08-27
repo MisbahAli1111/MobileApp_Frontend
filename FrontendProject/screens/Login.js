@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     height: heightPercentageToDP('6%'),
-    paddingHorizontal: widthPercentageToDP('34%'),
+    paddingHorizontal: widthPercentageToDP('40%'),
   },
   // buttonImage: {
   //   width: widthPercentageToDP("10%"),
@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     marginTop: heightPercentageToDP('2%'), // Responsive margin
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: widthPercentageToDP('10%'),
   },
   notRegisteredText: {
     fontSize: 16,

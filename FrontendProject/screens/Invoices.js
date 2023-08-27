@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
     left: 22,
     justifyContent: "center",
     height: 20,
-    top: 1,
+    top: 0,
     position: "absolute",
   },
   text: {
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   },
   breadcrumbs: {
     height: 20,
-    top: 15,
+    top: 5,
   },
   breadcrumbsWrapper: {
     height: 20,

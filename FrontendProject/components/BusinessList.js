@@ -156,7 +156,7 @@ function BusinessList({ }) {
 
   return (
     <View style={styles.wrap}>
-        {Business.map((BusinessB) => {
+        {Business.map((BusinessB,index) => {
             const timeDifferenceText = fetchTime(BusinessB.id);
 
             return (

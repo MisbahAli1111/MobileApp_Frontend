@@ -268,7 +268,6 @@ const OwnerInfo = () => {
       <Text style={[styles.letsLevelUp, styles.letsPosition]}>
         Let’s level up your business, together.
       </Text>
-      <Text style={[styles.ownerInfo1, styles.registerTypo]}>Owner Info</Text>
 
       <View style={styles.profileImageContainer}>
       <TouchableOpacity onPress={handleShowProfile}>
@@ -923,7 +922,7 @@ const styles = StyleSheet.create({
     color: Color.darkslateblue,
   },
   letsRegister: {
-    top: "9.00%",
+    top: "15.00%",
     fontSize: FontSize.size_8xl,
     fontWeight: "600",
     fontFamily: FontFamily.poppinsSemibold,
@@ -931,7 +930,7 @@ const styles = StyleSheet.create({
   letsLevelUp: {
     height: "2.58%",
     width: "68.6%",
-    top: "13.40%",
+    top: "18.90%",
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     left: "4.65%",

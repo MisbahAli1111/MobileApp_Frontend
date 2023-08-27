@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     top:10,
-    left:-70,
-    marginBottom:10
+    marginBottom:10,
+    left: 10,
 
   },
  

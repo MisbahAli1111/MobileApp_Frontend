@@ -65,12 +65,13 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
         if (VehicleType === "default") {
             const maintained = vehicles.filter((vehicle) => {
                 if (!searchType.length > 0) {
-                    const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery);
-                    const makeMatches = vehicle.make.toUpperCase().includes(formattedQuery);
-                    const yearMatches = vehicle.year.includes(formattedQuery);
-                    const nameMatches = vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery);
+                    const modelMatches = vehicle.model && vehicle.model.toUpperCase().includes(formattedQuery);
+                    const makeMatches = vehicle.make && vehicle.make.toUpperCase().includes(formattedQuery);
+                    const yearMatches = vehicle.year && vehicle.year.includes(formattedQuery);
+                    const nameMatches = (vehicle.firstName && vehicle.firstName.toUpperCase().includes(formattedQuery)) ||
+                                       (vehicle.lastName && vehicle.lastName.toUpperCase().includes(formattedQuery));
                     return modelMatches || makeMatches || yearMatches || nameMatches;
-                } else {
+                                    } else {
                     const searchTypeMatches = searchType.some(property => {
                         console.log(property);
                         if (property === "firstName") {
@@ -93,12 +94,13 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
             const maintained = vehicles.filter((vehicle) => {
                 const s = searchType;
                 if (!searchType.length > 0) {
-                    const modelMatches = vehicle.model.toUpperCase().includes(formattedQuery) && vehicle.type === VehicleType;
-                    const makeMatches = vehicle.make.toUpperCase().includes(formattedQuery) && vehicle.type === VehicleType;
-                    const yearMatches = vehicle.year.includes(formattedQuery) && vehicle.type === VehicleType;
-                    const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) || vehicle.lastName.toUpperCase().includes(formattedQuery)) && vehicle.type === VehicleType;
+                    const modelMatches = vehicle.model && vehicle.model.toUpperCase().includes(formattedQuery);
+                    const makeMatches = vehicle.make && vehicle.make.toUpperCase().includes(formattedQuery);
+                    const yearMatches = vehicle.year && vehicle.year.includes(formattedQuery);
+                    const nameMatches = (vehicle.firstName && vehicle.firstName.toUpperCase().includes(formattedQuery)) ||
+                                       (vehicle.lastName && vehicle.lastName.toUpperCase().includes(formattedQuery));
                     return modelMatches || makeMatches || yearMatches || nameMatches;
-                } else {
+                      } else {
                     const searchTypeMatches = searchType.some(property => {
                         if (property === "firstName") {
                             const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) )&& vehicle.type ==  VehicleType;

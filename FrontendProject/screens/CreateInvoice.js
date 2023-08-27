@@ -29,7 +29,54 @@ const CreateInvoice = (parans) => {
 
   // contains the record id details
   const recordId = route.params?.InvoiceRecord;
+  const invoiceId =route.params?.InvoiceId;
+  // console.log(invoiceId);
 
+  useEffect(() => {
+    getData();
+  }, [invoiceId]);
+
+  const getData = async () => {
+    // setIsLoading(true);
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+
+
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
+      headers: {
+        'Authorization': accessToken
+      }
+    };  
+
+    axios.request(config)
+      .then((response) => {
+        console.log(" data here");
+        console.log(JSON.stringify(response.data));
+        // setInvoice(response.data);
+        setDate(response.data[0].date);
+        // setDue(response.data[0].invoiceDue);
+
+        // setSubTotal(response.data[0].total);
+        // setDescription(response.data[0].descriptions);
+        // setTaxr(response.data[0].taxes);
+        // setDiscountr(response.data[0].discounts);
+        setName(response.data[0].name);
+        // setVehicle(response.data[0].vehicleName);
+        let st = response.data[0].status;
+        setStatus(st ? 'Paid' : 'Due');
+        // setBalance(st ? 0 : response.data[0].total);
+        // console.log(Invoice.data);
+        // calculateTotalAmount();
+        // setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
 
 
 
@@ -304,7 +351,6 @@ const CreateInvoice = (parans) => {
       }
     }
     
-    
     totalAmount += totalDiscount;
     totalAmount -= totaltax;
   
@@ -357,7 +403,7 @@ const CreateInvoice = (parans) => {
 
       <ScrollView style={styles.wrap}>
         <View style={styles.form}>
-          <CreateInvoiceForm onFormDataChange={handleFormDataChange} save={save} setSave={setSave} />
+          <CreateInvoiceForm onFormDataChange={handleFormDataChange}  save={save} setSave={setSave} />
         </View>
         <View style={styles.scroll}>
           <View>
@@ -1230,7 +1276,10 @@ const styles = StyleSheet.create({
     top: -25,
   },
   group: {
-    left: 320,
+    left: 300,
+    alignContent:'flex-end',
+    justifyContent:'flex-end',
+    textAlign:'right',
     width: 132,
     height: 0,
     top: 680,

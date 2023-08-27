@@ -658,9 +658,9 @@ const AddEmployee = () => {
         </Pressable>
       </View>
 
-      <Text style={[styles.employeeInfo, styles.registerTypo]}>
+      {/* <Text style={[styles.employeeInfo, styles.registerTypo]}>
         Employee Info
-      </Text>
+      </Text> */}
 
 
 

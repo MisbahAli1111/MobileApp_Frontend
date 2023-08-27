@@ -652,9 +652,9 @@ const AddCustomer = () => {
         </Pressable>
       </View>
 
-      <Text style={[styles.employeeInfo, styles.registerTypo]}>
+      {/* <Text style={[styles.employeeInfo, styles.registerTypo]}>
         Customer Info
-      </Text>
+      </Text> */}
 
 
 

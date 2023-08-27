@@ -286,10 +286,12 @@ const styles = StyleSheet.create({
   davidDaniel: {
     flex: 1,
     height: 40,
+    fontSize:50,
     borderColor: "gray",
     borderWidth: 1,
     paddingHorizontal: 10,
     marginRight: 10,
+    width:100,
   },
   vector: {
     // Your vector styles
@@ -521,10 +523,11 @@ const styles = StyleSheet.create({
   davidDaniel: {
     top: 14,
     left: 21,
+    fontSize:18,
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "800",
     position: "absolute",
-    
+    width:100,
     color:'black',
   },
   icon1: {

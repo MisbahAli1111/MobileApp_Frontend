@@ -34,6 +34,7 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
 
     };
   });
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
   const [carNumberFocused, setCarNumberFocused] = useState(false);
@@ -51,6 +52,9 @@ const CreateInvoiceForm = ({ onFormDataChange, save, setSave }) => {
   const [regNumberError, setregNumberError] = useState(false);
   const [DateError, setDataError] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
+
+  
+
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
     if (date) {

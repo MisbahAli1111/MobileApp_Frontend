@@ -103,9 +103,11 @@ function Invoicelist({ dsearch }) {
                 </View>
                 <Text style={[
                   currentPressedIndex === index ? styles.rs30004 : styles.rs3000,
-                  , styles.rs3000Typo
+                  ,
+                  currentPressedIndex === index ? styles.rs3000TypoR :styles.rs3000Typo
                 ]}>
-                  Rs. {record.total}</Text>
+                  Rs. {record.total}
+                  </Text>
                   
                 <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
                   <View style={[
@@ -198,6 +200,16 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: FontSize.size_base,
     top: -10,
+    position: "relative",
+  },
+  rs3000TypoR: {
+    left: 300,
+    alignContent: 'flex-end',
+    justifyContent: 'flex-end',
+    fontFamily: FontFamily.poppinsMedium,
+    fontWeight: "500",
+    fontSize: FontSize.size_base,
+    top: 10,
     position: "relative",
   },
   frameWrapperPosition: {

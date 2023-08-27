@@ -275,7 +275,7 @@ function InvoiceDetailView() {
 
   };
   function editInvoiceFunction() {
-    navigation.navigate("CreateInvoice");
+    navigation.navigate("CreateInvoice", { InvoiceId: invoiceId });
   }
   const [invoiceNumber, setinvoiceNumber] = useState('');
 

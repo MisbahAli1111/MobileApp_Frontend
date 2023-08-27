@@ -154,7 +154,7 @@ const ChangePassword = () => {
   };
 
   const isPasswordValid = (password) => {
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/;
+    const passwordPattern = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/;
     return passwordPattern.test(password);
   };
 
@@ -163,7 +163,7 @@ const ChangePassword = () => {
       style={styles.container}
       source={require("../assets/light-texture2234-1.png")}
     >
-      <Text style={styles.title}>Change Password</Text>
+      {/* <Text style={styles.title}>Change Password</Text> */}
       {renderPasswordInput('currentPassword', 'Current Password', currentPassword, showCurrentPassword)}
       {renderPasswordInput('newPassword', 'New Password', newPassword, showNewPassword)}
       {renderPasswordInput('confirmNewPassword', 'Confirm New Password', confirmNewPassword, showConfirmNewPassword)}
@@ -219,9 +219,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: 'rgba(3, 29, 68, 1)',
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 20,
+    paddingHorizontal: 90,
+    borderRadius: 10,
+    marginTop: -10,
   },
   buttonText: {
     color: 'white',

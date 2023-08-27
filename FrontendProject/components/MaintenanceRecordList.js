@@ -93,7 +93,10 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
 
     const maintained = records.filter((record) => {
       if (!searchType.length > 0) {
-        const field1Matches = record.service.toUpperCase().includes(formattedQuery);
+        console.log("service here");
+        console.log(record.service);
+        const field1Matches = record.service.toUpperCase().includes(formattedQuery.toUpperCase());
+
         return field1Matches;
       } else {
         const searchTypeMatches = searchType.some(property => {
@@ -110,6 +113,8 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
         return searchTypeMatches;
       }
     });
+
+    setData(maintained);
 
 
 

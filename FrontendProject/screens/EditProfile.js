@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 const windowWidth = Dimensions.get('window').width;
 import axios from 'axios';
+import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+
 const EditProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState('');
@@ -390,6 +392,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     fontSize: 16,
+    fontFamily: FontFamily.poppinsMedium
   },
   phonePickerContainer: {
     flexDirection: 'row',
@@ -409,22 +412,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     fontSize: 16,
+    fontFamily: FontFamily.poppinsMedium
   },
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
-    marginTop: 200,
+    marginBottom: 0,
+    marginTop: 10,
   },
   button: {
     backgroundColor: 'rgba(3, 29, 68, 1)',
     paddingVertical: 15,
-    paddingHorizontal: 150,
+    paddingHorizontal: 167,
     borderRadius: 10,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
+    
   },
   pickerContainer: {
     width: 30,
@@ -457,6 +462,7 @@ const styles = StyleSheet.create({
     marginTop:10,
     color: 'rgba(3, 29, 68, 1)',
     fontSize: 16,
+    fontFamily: FontFamily.poppinsMedium, 
   },
   fullImage: {
     width: '100%',

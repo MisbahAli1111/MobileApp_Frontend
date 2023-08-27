@@ -61,7 +61,7 @@ const Home = () => {
       />
       
       <View style={[styles.homeChild, styles.homeLayout]} />
-      <Text style={[styles.text, styles.textTypo1]}>009</Text>
+      <Text style={[styles.text, styles.textTypo1]}>1</Text>
       <Text style={[styles.paymentDues, styles.paymentDuesPosition]}>
         Payment Dues
       </Text>
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     left: 15,
   },
   text: {
-    left: 94,
+    left: 110,
     textAlign: "left",
     fontSize: FontSize.size_lgi,
     top: 265,
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   wrapper: {
-    left: 300,
+    left:310,
     width: 100,
     height: 29,
     top: 265,
