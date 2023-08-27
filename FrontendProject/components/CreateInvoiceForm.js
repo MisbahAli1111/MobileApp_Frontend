@@ -25,6 +25,8 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [search, setSearch] = useState('');
+  const [localDate, setLocalDate] = useState();
+  const [localDueDate, setLocalDueDate] = useState();
   const [regNumber, setregNumber] = useState('');
   // const [status,setStatus] = useState('');
   const searchRef = useRef();
@@ -55,12 +57,15 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
     setStatus(st);
     
     // console.log(d);
+    
     const date=formatDate(data.date);
     const DueDate=formatDate(data.invoiceDue);
     // console.log(date);
     // setDate(date);
     // setSelectedDueDate(data.invoiceDue);
     // setSelectedDate(date);
+    setLocalDate(data.date);
+    setLocalDueDate(data.invoiceDue);
     setAPDate(date);
     setAPDueDate(DueDate);
 
@@ -266,6 +271,13 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
     }
     if (selectedDueDate) {
       Duedate = selectedDueDate;
+    }
+    if(APDate  && APDueDate){
+      console.log("dates present");
+      date=localDate;
+      Duedate=localDueDate;
+      date=localDate;
+      Duedate=localDueDate;
     }
 
     if (typeof onFormDataChange === 'function') {

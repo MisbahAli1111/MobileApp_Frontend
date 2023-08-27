@@ -59,7 +59,7 @@ const App = () => {
             <Header
               title={title}
               showBackArrow={showBackArrow}
-               onBackPress={() => navigation.navigate(onBackPress)}
+               onBackPress={onBackPress}
               profileImage={profileImage}
               
             />
@@ -73,9 +73,7 @@ const App = () => {
           name="Login"
           component={Login}
           initialParams={{
-          title: '', 
-          // showBackArrow: true, 
-          // profileImage : require('./assets/mask-group1.png'), 
+          title: '',  
           }}/> */}
 
           {/* <Stack.Screen
@@ -84,9 +82,9 @@ const App = () => {
               initialParams={{
           title: 'Dashboard', 
           showBackArrow: false,
-          profileImage: require('./assets/mask-group1.png'),
+          profileImage: '',
               }}
-            /> 
+            />  */}
 
           <Stack.Screen
           name="EditProfile"
@@ -94,7 +92,7 @@ const App = () => {
           initialParams={{
           title: 'Edit Profile', 
           showBackArrow: true, 
-          // profileImage: require('./assets/mask-group1.png'), 
+          onBackPress:'Home',
           }}/>
 
           
@@ -115,7 +113,7 @@ const App = () => {
           title: 'Add Record', 
           showBackArrow: true, 
           onBackPress:'Vehicles',
-          profileImage: require('./assets/mask-group1.png'),
+          profileImage: '', 
               }}
             />
 
@@ -126,9 +124,9 @@ const App = () => {
           title: 'Maintenance Record', 
           showBackArrow: true, 
           onBackPress:'Vehicles',
-          profileImage: require('./assets/mask-group1.png'),
+          profileImage: '', 
               }}
-              />  */}
+              /> 
 
 
             <Stack.Screen
@@ -137,8 +135,8 @@ const App = () => {
               initialParams={{
           title: 'Invoices', 
           showBackArrow: true, 
-          onBackPress:'Vehicles',
-          profileImage: require('./assets/mask-group1.png'),
+          onBackPress:'Home',
+          profileImage: '',
               }}
                
               />  
@@ -155,15 +153,15 @@ const App = () => {
             />
 
             
-            <Stack.Screen
+            {/* <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
               title: ' ', 
               showBackArrow: true, 
-              onBackPress:'Home',
+              onBackPress:'Login',
               }}
-            />
+            /> */}
 
            
             
@@ -174,7 +172,7 @@ const App = () => {
               initialParams={{
               title: 'Business Info', 
               showBackArrow: true, 
-              onBackPress:'Vehicles',
+              onBackPress:'SwitchBusiness',
               }}
             />
 
@@ -186,7 +184,7 @@ const App = () => {
               initialParams={{
               title: 'Owner Info', 
               showBackArrow: true, 
-              onBackPress:'Vehicles',
+              onBackPress:'Login',
               }}
           /> 
 
@@ -197,8 +195,8 @@ const App = () => {
                 initialParams={{
                 title: 'Create Invoice', 
                 showBackArrow: true, 
-                onBackPress:'Vehicles',
-                profileImage: require('./assets/mask-group1.png'),
+                onBackPress:'Invoices',
+                profileImage: '', 
                 }}
               /> 
             
@@ -209,8 +207,8 @@ const App = () => {
               initialParams={{
                 title: 'Invoice Detail', 
                 showBackArrow: true, 
-                onBackPress:'Vehicles',
-                profileImage: require('./assets/mask-group1.png'),
+                onBackPress:'CreateInvoice',
+                profileImage: '', 
                 }}
             />
             
@@ -220,8 +218,8 @@ const App = () => {
               initialParams={{
                 title: 'Records', 
                 showBackArrow: true, 
-                onBackPress:'Vehicles',
-                profileImage: require('./assets/mask-group1.png'),
+                onBackPress:'Home',
+                profileImage: '', 
                 }}
             />  
              
@@ -232,8 +230,8 @@ const App = () => {
               initialParams={{
                 title: 'Vehicles', 
                 showBackArrow: true, 
-                onBackPress:'Vehicles',
-                profileImage: require('./assets/mask-group1.png'),
+                onBackPress:'Home',
+                profileImage: '', 
                 }}
             />  
 
@@ -244,8 +242,8 @@ const App = () => {
               initialParams={{
                 title: 'Vehicles', 
                 showBackArrow: true, 
-                onBackPress:'Add Vehicles',
-                profileImage: require('./assets/mask-group1.png'),
+                onBackPress:'Vehicle',
+                profileImage: '', 
                 }}
             />  
 
@@ -268,7 +266,7 @@ const App = () => {
                 title: 'Vehicle Details', 
                 showBackArrow: true, 
                 onBackPress:'AddVehicle',
-                profileImage: require('./assets/mask-group1.png'),
+                profileImage: '', 
                 }}
             />  
             

@@ -15,8 +15,8 @@ const [items, setItems] = useState([{ discountName: '', discountRate: ''}]);
       console.log(APIDiscount);
       
       const initialDisItems = APIDiscount.map((item) => ({
-        discountName: item.taxName,
-        discountRate: item.taxRate.toString(),
+        discountName: item.discountName,
+        discountRate: item.discountRate.toString(),
       }));
       setItems(initialDisItems);
     }

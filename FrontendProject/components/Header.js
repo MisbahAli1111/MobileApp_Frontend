@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import ProfileDropdown from './ProfilePopDown';
 import { Color } from "../GlobalStyles";
@@ -9,82 +9,95 @@ import axios from 'axios';
 const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   const navigation = useNavigation();
   const [isProfileDropdownVisible, setProfileDropdownVisible] = useState(false);
-  const [userId,setUserId] = useState('');
-  const [profileImageLink,setProfileImageLink] = useState('');
+  const [userId, setUserId] = useState('');
+  const [profileImageLink, setProfileImageLink] = useState('');
+  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const handleProfileImagePress = () => {
     setProfileDropdownVisible((prevState) => !prevState);
   };
 
-  // const getProfileImage = async () => {
-  //   try {
-  //     const accessTokens = await AsyncStorage.getItem('accessToken');
-  //     const token = 'Bearer ' + accessTokens;
-  
-  //     const config = {
-  //       method: 'get',
-  //       maxBodyLength: Infinity,
-  //       url: `http://192.168.0.236:8080/api/users/${userId}/profile-image`,
-  //       headers: {
-  //         Authorization: token,
-  //       },
-  //     };
-  
-  //     const response = await axios.request(config);
-  
-  //     if (response.status === 200) {
-  //       const responseData = response.data;
-  //       console.log(responseData.url); // Access URL directly from response data
-  //       setProfileImageLink(profileImage);
-  //       // console.log(profileImage); // Set the URL in your component's state
-  //     } else {
-  //       console.log('Error: ' + response.statusText);
-  //     }
-  //   } catch (error) {
-  //     console.log('Error fetching profile image:', error);
-  //   }
-  // };
-          
+  const getProfileImage = async (userId) => {
+    try {
+      const accessTokens = await AsyncStorage.getItem('accessToken');
+      const token = 'Bearer ' + accessTokens;
+
+      const config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
+        headers: {
+          Authorization: token,
+        },
+      };
+
+      const response = await axios.request(config);
+
+      if (response.status === 200) {
+        // console.log(response);
+        const responseData = response.data;
+        setProfileImageLink(responseData.url);
+        // console.log("profile: ", profileImageLink);
+      } else {
+        console.log('Error: ' + response.statusText);
+      }
+    } catch (error) {
+      console.log('Error fetching profile image:', error);
+    } finally {
+      setLoading(false); // Set loading to false when the request completes
+    }
+  };
 
   useEffect(() => {
-    // Retrieve the user ID from AsyncStorage
+    // console.log(onBackPress);
     const fetchUserId = async () => {
       try {
         const storedUserId = await AsyncStorage.getItem('userId');
         setUserId(storedUserId);
+        if (userId) {
+          console.log("userID found");
+        }
       } catch (error) {
         console.error('Error fetching user ID from AsyncStorage:', error);
       }
-      
     };
-    console.log(profileImage);
-    fetchUserId();
-    // getProfileImage();
+
+    fetchUserId().then(() => {
+      if (userId) {
+        getProfileImage(userId);
+      }
+    });
+
   }, []);
 
   return (
     <ImageBackground
-      source={require('../assets/light-texture2234-1.png')} // Replace with the actual image path
+      source={require('../assets/light-texture2234-1.png')}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
         {showBackArrow && (
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate({onBackPress})}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate(onBackPress )}>
             <Image source={require('../assets/vector2.png')} style={styles.arrowImage} />
           </TouchableOpacity>
         )}
         <Text style={styles.title}>{title}</Text>
-        {profileImage &&
+        
+        {loading ? ( // Display loader while loading
+          <ActivityIndicator size="small" color="black" />
+        ) : profileImageLink && (
           <TouchableOpacity onPress={handleProfileImagePress}>
-          {/* {console.log(profileImage)} */}
-            <Image source={profileImage} style={styles.profileImage} />
-          </TouchableOpacity>}
+            <Image source={{ uri: baseUrl + profileImageLink }} style={styles.profileImage} />
+          </TouchableOpacity>
+        )}
         {isProfileDropdownVisible && <ProfileDropdown />}
       </View>
     </ImageBackground>
   );
 };
 
+// Styles and export remain unchanged
 const styles = StyleSheet.create({
   backgroundImage: {
     flex:1,
@@ -116,7 +129,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   profileImage: {
-    width: 20,
+    width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 15

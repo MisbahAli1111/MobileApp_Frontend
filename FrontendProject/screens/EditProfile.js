@@ -8,6 +8,11 @@ import * as FileSystem from 'expo-file-system';
 const windowWidth = Dimensions.get('window').width;
 import axios from 'axios';
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import {AntDesign} from '@expo/vector-icons';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
 const EditProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
@@ -22,6 +27,10 @@ const EditProfile = () => {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [isImageModalVisible,setImageModalVisible]= useState('false');
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
+  const [userId, setUserId] = useState('');
+  const [profileImageLink, setProfileImageLink] = useState(null);
+  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [loading, setLoading] = useState(true); 
   const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
 
   const handleImageUpload = () => {
@@ -29,7 +38,7 @@ const EditProfile = () => {
   };
   
   const handleShowProfile = () =>{
-    if (profileImage) {
+    if (profileImageLink) {
       setFullImageModalVisible(true);
     }
   }; 
@@ -42,7 +51,7 @@ const EditProfile = () => {
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setProfileImage(result.assets[0].uri);
+      setProfileImageLink(result.assets[0].uri);
     }
     
 
@@ -58,7 +67,7 @@ const EditProfile = () => {
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setProfileImage(result.assets[0].uri);
+      setProfileImageLink(result.assets[0].uri);
     }
     
     setImageModalVisible(false);
@@ -69,22 +78,22 @@ const EditProfile = () => {
     const randomString = Math.random().toString(36).substring(7); // Generate a random string
     return `image_${timestamp}_${randomString}`;
   };
-  const saveImageToDirectory = async (imageUri) => {
-    try {
-      const uniqueName = generateUniqueName(); // Generate a unique name for the image
-      const destinationUri = `${FileSystem.documentDirectory}${uniqueName}.jpeg`;
+  // const saveImageToDirectory = async (imageUri) => {
+  //   try {
+  //     const uniqueName = generateUniqueName(); // Generate a unique name for the image
+  //     const destinationUri = `${FileSystem.documentDirectory}${uniqueName}.jpeg`;
   
-      // Copy the image to the specified destination
-      await FileSystem.copyAsync({
-        from: imageUri,
-        to: destinationUri,
-      });
+  //     // Copy the image to the specified destination
+  //     await FileSystem.copyAsync({
+  //       from: imageUri,
+  //       to: destinationUri,
+  //     });
   
-      console.log('Image saved to:', destinationUri);
-    } catch (error) {
-      console.error('Error saving image:', error);
-    }
-  };
+  //     console.log('Image saved to:', destinationUri);
+  //   } catch (error) {
+  //     console.error('Error saving image:', error);
+  //   }
+  // };
   
 
 
@@ -96,7 +105,7 @@ const EditProfile = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/users/${userId}`, // Use backticks
+      url: `http://192.168.0.236:8080/api/users/${userId}`, // Use backticks
       headers: {}
     };
   
@@ -139,7 +148,7 @@ const EditProfile = () => {
     let config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/users/update-user/${userId}`,
+      url: `http://192.168.0.236:8080/api/users/update-user/${userId}`,
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -149,6 +158,10 @@ const EditProfile = () => {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      if(userId)
+      {
+      uploadImage(userId);
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -193,6 +206,86 @@ const EditProfile = () => {
     }
   };
 
+  const uploadImage = async (userId) =>{
+    console.log(userId);
+    const imageData = new FormData();
+    imageData.append('files', {
+       uri: profileImage,
+       name: new Date + "_profile"+".jpeg",
+       type: 'image/jpeg', // Adjust the MIME type as needed
+     });
+    
+    console.log("formData: " ,imageData );
+    
+
+
+    const response = await axios.post(
+      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      imageData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // Authorization: accessToken, // Add your authorization token if required
+        },
+      }
+    );
+
+    console.log('Upload response:', response.data);
+    console.log('Success', 'Files uploaded successfully');
+    };
+
+  const getProfileImage = async (userId) => {
+    try {
+      const accessTokens = await AsyncStorage.getItem('accessToken');
+      const token = 'Bearer ' + accessTokens;
+
+      const config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
+        headers: {
+          Authorization: token,
+        },
+      };
+
+      const response = await axios.request(config);
+
+      if (response.status === 200) {
+        // console.log(response);
+        const responseData = response.data;
+        setProfileImageLink(baseUrl + responseData.url);
+        // console.log("profile: ", profileImageLink);
+      } else {
+        console.log('Error: ' + response.statusText);
+      }
+    } catch (error) {
+      console.log('Error fetching profile image:', error);
+    } finally {
+      setLoading(false); // Set loading to false when the request completes
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('userId');
+        setUserId(storedUserId);
+        if (userId) {
+          console.log("userID found");
+        }
+      } catch (error) {
+        console.error('Error fetching user ID from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserId().then(() => {
+      if (userId) {
+        getProfileImage(userId);
+      }
+    });
+
+  }, []);
+
   return (
     <ImageBackground
       style={styles.backgroundImage}
@@ -201,8 +294,8 @@ const EditProfile = () => {
       <View style={styles.container}>
       <View style={styles.profileImageContainer}>
       <TouchableOpacity onPress={handleShowProfile}>
-          {profileImage ? (
-            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          {profileImageLink ? (
+            <Image source={{ uri: profileImageLink }} style={styles.profileImage} />
           ) : (
             
             <View style={styles.profileImagePlaceholder}>
@@ -210,8 +303,8 @@ const EditProfile = () => {
             
           )}
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleImageUpload}>
-                <Text style={styles.uploadText}>Change Profile Picture</Text>
+          <TouchableOpacity onPress={handleImageUpload}  style={styles.uploadButton}>
+          <Text style={styles.uploadButtonText}>Upload</Text>
               </TouchableOpacity>
         </View>
         <View style={styles.formContainer}>
@@ -294,7 +387,7 @@ const EditProfile = () => {
         </View>
         {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
 
-        <Modal
+        {/* <Modal
           animationType="slide"
           transparent={true}
           visible={isImageModalVisible}
@@ -324,9 +417,9 @@ const EditProfile = () => {
         >
           <View style={styles.imageModalContainer}>
           <View style={styles.fullImageContainer}>
-            {profileImage && (
+            {profileImageLink && (
               <Image
-                source={{ uri: profileImage }}
+                source={{ uri: profileImageLink }}
                 style={styles.fullImage}
                 resizeMode="contain"
               />
@@ -339,7 +432,59 @@ const EditProfile = () => {
               <Text style={styles.imageModalButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
+        </Modal> */}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isFullImageModalVisible}
+          onRequestClose={() => setFullImageModalVisible(false)}
+        >
+          <View style={styles.imageModalContainer}>
+          <View style={styles.fullImageContainer}>
+            {profileImageLink && (
+              <Image
+                source={{ uri: profileImageLink }}
+                style={styles.fullImage}
+              />
+            )}
+            </View>
+            <TouchableOpacity
+              style={styles.imageModalButton2}
+              onPress={() => setFullImageModalVisible(false)}
+            >
+              <Text style={styles.imageModalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
         </Modal>
+
+        <Modal
+  animationType="slide"
+  transparent={true}
+  visible={isImageModalVisible}
+  onRequestClose={() => setImageModalVisible(false)}
+>
+  <View style={styles.imageModalContainer}>
+    {/* Background Close Button */}
+    <TouchableOpacity
+      onPress={() => setImageModalVisible(false)}
+      style={styles.closeButton}
+    >
+      <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+    </TouchableOpacity>
+
+    {/* Content */}
+    <View style={styles.imageModalContent}>
+      {/* Image Source Options */}
+      <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
+        <Text style={styles.imageModalButtonText}>Take a Photo</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.imageModalButton1} onPress={handleImageFromGallery}>
+        <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
 
 
         <View style={styles.buttonContainer}>
@@ -444,39 +589,52 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', //rgba(255, 255, 255, 0.5)
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  closeButton: {
+    // position: 'absolute',
+    top: heightPercentageToDP('4%'), // Adjust the percentage as needed
+    left: widthPercentageToDP('35%'), // Adjust the percentage as needed
+    zIndex: 999,
+  },
+  imageModalContent: {
+    backgroundColor: 'white',
+    padding: widthPercentageToDP('4%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('2%'), // Adjust the percentage as needed
+    width: widthPercentageToDP('80%'), // Adjust the percentage as needed
+    alignItems: 'center',
+    height: heightPercentageToDP('30%')
   },
   imageModalButton: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 5,
-    marginVertical: 10,
-    width: 250,
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('1%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('0%'), // Adjust the percentage as needed
+    width: '100%',
     alignItems: 'center',
+    marginTop:heightPercentageToDP('6%'),
+  },
+  imageModalButton1: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('1%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('0%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('2%'),
+  },
+  imageModalButton2: {
+    backgroundColor: 'rgba(3, 29, 68, 1)',
+    padding: heightPercentageToDP('1.5%'), // Adjust the percentage as needed
+    borderRadius: widthPercentageToDP('2%'), // Adjust the percentage as needed
+    marginVertical: heightPercentageToDP('1%'), // Adjust the percentage as needed
+    width: '100%',
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('1%'),
   },
   imageModalButtonText: {
-    color: 'rgba(3, 29, 68, 1)',
-    fontSize: 16,
-  },
-  uploadText: {
-    marginTop:10,
-    color: 'rgba(3, 29, 68, 1)',
-    fontSize: 16,
-    fontFamily: FontFamily.poppinsMedium, 
-  },
-  fullImage: {
-    width: '100%',
-    height: '100%',
-  },
-  formContainer: {
-    flex: 1,
-    width: windowWidth * 0.9,
-    alignSelf: 'center',
-    marginTop: 20,
-  },
-  uploadTextContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    color: 'white',
+    fontSize: widthPercentageToDP('4%'), // Adjust the percentage as needed
   },
   fullImageContainer: {
     flex: 1,
@@ -484,6 +642,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     maxHeight: '100%', 
     width: '100%',// Adjust this value as needed
+  },
+  fullImage: {
+    width: '100%',
+    height: '100%',
+  },
+  uploadButton: {
+    backgroundColor: Color.darkslateblue,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  uploadButtonText: {
+    color: Color.white,
+    fontSize: FontSize.size_base,
   },
 });
 
