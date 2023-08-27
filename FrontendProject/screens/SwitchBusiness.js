@@ -66,7 +66,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '90%',
     // alignItems: 'center',
-    height: heightPercentageToDP('60%'), 
+    // backgroundColor:'red',
+    height: heightPercentageToDP('100%'), 
     marginTop: heightPercentageToDP('3%'),
   },
   createNewBusinessButton: {

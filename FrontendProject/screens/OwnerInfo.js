@@ -121,7 +121,7 @@ const OwnerInfo = () => {
 
 
     const response = await axios.post(
-      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `http://192.168.100.71:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -222,7 +222,7 @@ const OwnerInfo = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://192.168.0.236:8080/api/users/register/owner',
+        url: 'http://192.168.100.71:8080/api/users/register/owner',
         headers: {
           'Content-Type': 'application/json'
         },

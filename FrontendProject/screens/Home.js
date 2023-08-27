@@ -17,9 +17,8 @@ import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
   const navigation = useNavigation();
-  const [totalEmployees , setTotalEmployees] = useState('');
+  const [totalEmployees , setTotalEmployees] = useState(0);
   const invoices = null;
-  //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
 
   const data = [10, 20, 5, 25, 15, 30, 12];
 

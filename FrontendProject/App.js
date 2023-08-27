@@ -88,7 +88,7 @@ const App = () => {
               }}
             /> 
 
-          {/* <Stack.Screen
+          <Stack.Screen
           name="EditProfile"
           component={EditProfile}
           initialParams={{
@@ -106,9 +106,9 @@ const App = () => {
               showBackArrow: true,
               onBackPress:'Home',
               }}
-            />  */}
+            /> 
 
-           {/* <Stack.Screen
+           <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               initialParams={{
@@ -141,10 +141,10 @@ const App = () => {
           profileImage: require('./assets/mask-group1.png'),
               }}
                
-              />   */}
+              />  
                
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
               initialParams={{
@@ -152,7 +152,7 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            /> */}
+            />
 
             
             <Stack.Screen
@@ -168,7 +168,7 @@ const App = () => {
            
             
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
@@ -235,10 +235,10 @@ const App = () => {
                 onBackPress:'Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
 
 
-             {/* <Stack.Screen 
+             <Stack.Screen 
               name="AddVehicle"
               component={AddVehicle}
               initialParams={{
@@ -247,9 +247,9 @@ const App = () => {
                 onBackPress:'Add Vehicles',
                 profileImage: require('./assets/mask-group1.png'),
                 }}
-            />   */}
+            />  
 
-            {/* <Stack.Screen
+            <Stack.Screen
               name="AddCustomer"
               component={AddCustomer}
               initialParams={{
@@ -257,7 +257,7 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Home',
               }}
-            /> */}
+            />
 
 
 

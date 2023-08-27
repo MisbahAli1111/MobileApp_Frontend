@@ -79,7 +79,7 @@ function BusinessList({ }) {
                 let config = {
                     method: 'get',
                     maxBodyLength: Infinity,
-                    url: 'http://192.168.0.236:8080/api/business/get-my-businesses',
+                    url: 'http://192.168.100.71:8080/api/business/get-my-businesses',
                     headers: {
                         'Authorization': token,
                     },
@@ -155,7 +155,7 @@ function BusinessList({ }) {
     }, );
 
   return (
-    <View>
+    <View style={styles.wrap}>
         {Business.map((BusinessB) => {
             const timeDifferenceText = fetchTime(BusinessB.id);
 
@@ -227,9 +227,10 @@ const styles = StyleSheet.create({
     },
 
     groupParentLayout: {
-        height: heightPercentageToDP('10%'),
+        height: heightPercentageToDP('8%'),
         width: widthPercentageToDP('90%'),
         // left: 0,
+        // backgroundColor:'red',
         position: "relative",
         alignItems: 'flex-start',
         flexWrap: "wrap",
@@ -282,6 +283,9 @@ const styles = StyleSheet.create({
         ],
         left: 0,
         position: "absolute",
+    },
+    wrap:{
+        height: heightPercentageToDP('80%'),
     },
     switchBusiness1: {
         top: "14.27%",

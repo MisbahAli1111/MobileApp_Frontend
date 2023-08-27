@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, ScrollView, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Dimensions, Pressable, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import Footer from "../components/Footer";
@@ -16,9 +16,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function InvoiceDetailView() {
   const route = useRoute();
 
+
   const invoiceId = route.params?.recordId;
-  const [Invoice , setInvoice] = useState([]);
-  
+  const [Invoice, setInvoice] = useState([]);
+
 
 
   const navigation = useNavigation();
@@ -37,33 +38,36 @@ function InvoiceDetailView() {
   const [description, setDescription] = useState([]);
   const [taxr, setTaxr] = useState([]);
   const [discountr, setDiscountr] = useState([]);
-  const [vehicle,setVehicle]= useState('');
- 
+  const [vehicle, setVehicle] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
+
   useEffect(() => {
 
     getData();
-    
+
   }, [invoiceId]);
   useEffect(() => {
 
     calculateTotalAmount();
-    
+
   });
 
 
   const getData = async () => {
-
-    let token= await AsyncStorage.getItem("accessToken");
+    setIsLoading(true);
+    let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
-  
+
 
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
       headers: {
-        'Authorization': accessToken 
-            }
+        'Authorization': accessToken
+      }
     };
 
     axios.request(config)
@@ -72,21 +76,19 @@ function InvoiceDetailView() {
         // setInvoice(response.data);
         setDate(response.data[0].date);
         setDue(response.data[0].invoiceDue);
-        setBalance(response.data[0].total);
+
         setSubTotal(response.data[0].total);
         setDescription(response.data[0].descriptions);
         setTaxr(response.data[0].taxes);
         setDiscountr(response.data[0].discounts);
         setName(response.data[0].name);
         setVehicle(response.data[0].vehicleName);
-        let st=response.data[0].status;
-        if(st== "true"){
-          setStatus('Paid');
-        }else{
-          setStatus("Due");
-        }
+        let st = response.data[0].status;
+        setStatus(st ? 'Paid' : 'Due');
+        setBalance(st ? 0 : response.data[0].total);
         // console.log(Invoice.data);
         calculateTotalAmount();
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -94,7 +96,7 @@ function InvoiceDetailView() {
 
   }
 
- 
+
   const calculateTotalAmount = () => {
     setDiscount(0);
     setTax(0);
@@ -102,15 +104,15 @@ function InvoiceDetailView() {
       setTotal(0.0);
       return;
     }
-  
+
     let totalAmount = 0.0;
-  
+
     for (const item of description) {
       const itemAmount = parseFloat(item.quantity) * parseFloat(item.rate);
       totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
     }
-    
-   
+
+
 
     let totalDiscount = 0.0;
     for (const disc of discountr) {
@@ -119,27 +121,27 @@ function InvoiceDetailView() {
         totalDiscount += (discountRate / 100) * totalAmount; // Convert rate to decimal
       }
     }
-    
+
     setDiscount(totalDiscount);
 
 
     let totaltax = 0.0;
     for (const t of taxr) {
-    
+
       const taxRate = parseFloat(t.taxRate);
-      
+
       if (!isNaN(taxRate)) {
         totaltax += (taxRate / 100) * totalAmount; // Convert rate to decimal
       }
     }
     setTax(totaltax);
-    
-    
+
+
     totalAmount += totalDiscount;
     totalAmount -= totaltax;
-  
+
     totalAmount = totalAmount.toFixed(2);
-    
+
     setTotal(totalAmount);
   };
 
@@ -279,7 +281,9 @@ function InvoiceDetailView() {
 
   return (
     <>
+
       <View style={styles.invoiceDetailView}>
+
 
         <Image
           style={styles.lightTexture22341Icon}
@@ -351,17 +355,15 @@ function InvoiceDetailView() {
 
 
 
+        <View style={{ flex: 1, justifyContent: 'center', position: 'absolute', width: screenWidth, height: screenHeight, alignItems: 'center' }}>
 
-        {/* <View style={[styles.groupParent, styles.parentLayout]}>
-          <View style={[styles.vectorParent, styles.parentLayout]}>
-            
-         
-            <View style={[styles.groupItem, styles.groupItemPosition]} />
-          </View>
-
-
-
-        </View>  */}
+          {isLoading ? (
+            <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+          ) : (
+            <View>
+            </View>
+          )}
+        </View>
 
 
         <View style={[styles.element2, styles.housefillFlexBox]}>
@@ -374,16 +376,16 @@ function InvoiceDetailView() {
           colors={["rgba(7, 132, 199, 0.16)", "rgba(217, 217, 217, 0)"]}
         />
 
-<Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
-<Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text>
-       
-<View style={styles.setstyle}>
+        <Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
+        <Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text>
+
+        <View style={styles.setstyle}>
           <Text style={[styles.corollaGli2016, styles.dueTypo]}>
             {/* {regNumber} */}
           </Text>
           <View style={[styles.ellipseParent, styles.ellipseLayout]}>
-           {/* // status */}
-           
+            {/* // status */}
+
             {/* <Image
               style={[styles.ellipseIcon, styles.ellipseLayout]}
               contentFit="cover"
@@ -393,7 +395,7 @@ function InvoiceDetailView() {
           </View>
 
           <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
-          
+
           <View style={[styles.dateParent, styles.parentLayout1]}>
             <Text style={[styles.date, styles.dueTypo]}>DATE</Text>
             <Text style={[styles.jan2023, styles.rs3000Typo]}>{date}</Text>
@@ -508,6 +510,18 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
   },
+  // cont: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   position:'absolute',
+  //   width: '80%', // Adjust the width as needed
+  //   height: screenHeight * 0.5,
+  // },
+  loader: {
+    // borderWidth: 4, // Adjust the line width as needed
+    // borderColor: '#0000ff',
+  },
   groupChild6Layout: {
     height: 30,
     width: 150,
@@ -581,9 +595,9 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
   },
-  foot:{
-    flex:1,
-    position:'absolute',
+  foot: {
+    flex: 1,
+    position: 'absolute',
   },
   parentLayout: {
     height: 179,
@@ -1104,19 +1118,19 @@ const styles = StyleSheet.create({
   },
   loritaDaniel: {
     top: 260,
-    marginLeft:310,
+    marginLeft: 310,
     // left: 320,
     width: 180,
     fontSize: FontSize.size_sm,
     color: Color.textTxtPrimary,
     textAlign: "left",
-    alignContent:'flex-end',
-    justifyContent:'flex-end',
+    alignContent: 'flex-end',
+    justifyContent: 'flex-end',
     position: "absolute",
   },
   loritaDanielV: {
-     marginTop:-272,
-    
+    marginTop: -272,
+
     // marginLeft:310,
     left: 200,
     width: 180,
@@ -1129,19 +1143,19 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   loritaDanielS: {
-    marginTop:0,
-   
-   // marginLeft:310,
-   left: 200,
-   width: 180,
-   fontSize: FontSize.size_sm,
-   color: 'green',
-   textAlign: "right",
-   // alignContent:'flex-end',
-   // justifyContent:'flex-end',
-   position: "relative",
-   alignSelf: 'flex-start',
- },
+    marginTop: 0,
+
+    // marginLeft:310,
+    left: 200,
+    width: 180,
+    fontSize: FontSize.size_sm,
+    color: 'green',
+    textAlign: "right",
+    // alignContent:'flex-end',
+    // justifyContent:'flex-end',
+    position: "relative",
+    alignSelf: 'flex-start',
+  },
   date: {
     color: Color.darkslateblue,
     fontSize: FontSize.size_smi,

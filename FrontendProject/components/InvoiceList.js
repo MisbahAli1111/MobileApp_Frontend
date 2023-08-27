@@ -31,7 +31,7 @@ function Invoicelist({ dsearch }) {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         setInvoices(response.data);
-        
+
       })
       .catch((error) => {
         console.log(error);
@@ -40,7 +40,7 @@ function Invoicelist({ dsearch }) {
   };
 
   const displayedRecords = search ? data : Invoices;
-
+  console
   const handlePress = (index, recordId) => {
     setCurrentPressedIndex(index);
     // console.log(recordId);
@@ -49,13 +49,13 @@ function Invoicelist({ dsearch }) {
 
   useEffect(() => {
     setSearch(dsearch);
-    const formattedQuery = dsearch.trim().toLowerCase(); 
+    const formattedQuery = dsearch.trim().toLowerCase();
     const maintained = Invoices.filter((record) =>
-      record.name.toLowerCase().includes(formattedQuery) 
+      record.name.toLowerCase().includes(formattedQuery)
     );
     setData(maintained);
   }, [dsearch]);
-  
+
 
 
   useEffect(() => {
@@ -79,14 +79,13 @@ function Invoicelist({ dsearch }) {
                   currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
                 ]}>
                   {record.name}
-
                 </Text>
 
                 <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
                   <Text style={[
                     currentPressedIndex === index ? styles.inv00014 : styles.inv0001,
                     currentPressedIndex === index ? styles.text4Typo : styles.textTypo
-                  ]}>{record.id}</Text>
+                  ]}>INV{record.id}</Text>
 
 
                   <Text style={[
@@ -106,20 +105,22 @@ function Invoicelist({ dsearch }) {
                   currentPressedIndex === index ? styles.rs30004 : styles.rs3000,
                   , styles.rs3000Typo
                 ]}>
-                  {record.total}</Text>
+                  Rs. {record.total}</Text>
+                  
                 <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-                  {record.status === "false" ? (
-                    <View style={[styles.groupInner, styles.groupChildLayout]} />
-                  ) : (
-                    <View style={[styles.groupChild1, styles.groupChildLayout]} />
-                  )}
+                  <View style={[
+                    styles.groupInner,
+                    styles.groupChildLayout,
+                    record.status ? styles.groupChild1 : null 
+                  ]} />
 
-                  {record.status === "false" ? (
-                    <Text style={[styles.due, styles.paidTypo]}>Due</Text>
-                  ) : (
-                    <Text style={[styles.paid1, styles.paidTypo]}>Paid</Text>
-                  )}
-
+                  <Text style={[
+                    styles.due,
+                    styles.paidTypo,
+                    record.status ? styles.paid1 : null 
+                  ]}>
+                    {record.status ? 'Paid' : 'Due'}
+                  </Text>
                 </View>
               </Pressable>
 
@@ -190,13 +191,14 @@ const styles = StyleSheet.create({
     top: 1,
   },
   rs3000Typo: {
-    left: 310,
-    textAlign: "left",
+    left: 300,
+    alignContent: 'flex-end',
+    justifyContent: 'flex-end',
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     fontSize: FontSize.size_base,
-    top: 15,
-    position: "absolute",
+    top: -10,
+    position: "relative",
   },
   frameWrapperPosition: {
     left: 325,
@@ -383,11 +385,12 @@ const styles = StyleSheet.create({
     top: 0,
   },
   due: {
-    left: -7,
+    left: -7.5,
     color: Color.white,
     fontSize: FontSize.size_mini,
-    textAlign: "left",
-    top: -2,
+    textAlign: "center",
+    // alignContent:"center",
+    top: -1,
     position: "absolute",
   },
   rectangleGroup: {
@@ -404,11 +407,12 @@ const styles = StyleSheet.create({
     top: -2,
   },
   paid1: {
-    left: -7,
+    left: -7.5,
+    
     color: Color.white,
     fontSize: FontSize.size_mini,
-    textAlign: "left",
-    top: -2,
+    textAlign: "center",
+   
     position: "absolute",
   },
   rectangleContainer: {
@@ -452,6 +456,7 @@ const styles = StyleSheet.create({
   },
   rs30004: {
     color: Color.white,
+  
   },
   rectangleParent2: {
     top: 315,
