@@ -30,7 +30,7 @@ const Home = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/users/get-employees/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/users/get-employees/${Business_id}`,
       headers: { }
     };
     

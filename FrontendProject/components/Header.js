@@ -15,93 +15,80 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   const [baseUrlM, setBaseUrlM]= useState('http://192.168.100.71:8080');
   const [loading, setLoading] = useState(true); // Add loading state
 
+  
   const handleProfileImagePress = () => {
     setProfileDropdownVisible((prevState) => !prevState);
   };
 
-
-
-
-  const getProfileImage = async (userId) => {
+  const getProfileImage = async () => {
     try {
       const accessTokens = await AsyncStorage.getItem('accessToken');
       const token = 'Bearer ' + accessTokens;
+      const storedUserId = await AsyncStorage.getItem('userId');
+      setUserId(storedUserId);
 
-      const config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: `http://192.168.100.71:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
-        headers: {
-          Authorization: token,
-        },
-      };
+      if (userId) {
+        console.log("userID found");
 
-      const response = await axios.request(config);
+        const config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `http://192.168.0.236:8080/api/users/${userId}/profile-image`,
+          headers: {
+            Authorization: token,
+          },
+        };
 
-      if (response.status === 200) {
-        // console.log(response);
-        const responseData = response.data;
-        setProfileImageLink(responseData.url);
-        setLoading(false);
-        // console.log("profile: ", profileImageLink);
-      } else {
-        console.log('Error: ' + response.statusText);
+        const response = await axios.request(config);
+
+        if (response.status === 200) {
+          const responseData = response.data;
+          setProfileImageLink(baseUrl+responseData.url); // Update the state directly
+        } else {
+          console.log('Error: ' + response.statusText);
+        }
       }
     } catch (error) {
       console.log('Error fetching profile image:', error);
-    } 
+    } finally {
+      setLoading(false); // Set loading state to false regardless of success or error
+    }
   };
 
   useEffect(() => {
-    // console.log(onBackPress);
-    const fetchUserId = async () => {
-      try {
-        const storedUserId = await AsyncStorage.getItem('userId');
-        setUserId(storedUserId);
-        if (userId) {
-          console.log("userID found");
-          getProfileImage(userId);
-        }
-      } catch (error) {
-        console.error('Error fetching user ID from AsyncStorage:', error);
-      }
-    };
-
-    fetchUserId();
-    // .then(() => {
-    //   if (userId) {
-    //     getProfileImage(userId);
-    //   }
-    // });
-
-  }, []);
+    getProfileImage();
+  }, [userId]); // Fetch the profile image whenever userId changes
 
   return (
     <ImageBackground
-      source={require('../assets/light-texture2234-1.png')}
-      style={styles.backgroundImage}
-    >
-      <View style={styles.container}>
-        {showBackArrow && (
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate(onBackPress )}>
-            <Image source={require('../assets/vector2.png')} style={styles.arrowImage} />
-          </TouchableOpacity>
-        )}
-        <Text style={styles.title}>{title}</Text>
-        
-        {profileImage !== "No" && (
-          
-          loading ? ( 
-            <ActivityIndicator size="small" color="black" />
-          ) : (
-            <TouchableOpacity onPress={handleProfileImagePress}>
-              <Image source={{ uri: baseUrlM + profileImageLink }} style={styles.profileImage} />
-            </TouchableOpacity>
-          )
-        )}
-        {isProfileDropdownVisible && <ProfileDropdown />}
-      </View>
-    </ImageBackground>
+  source={require('../assets/light-texture2234-1.png')}
+  style={styles.backgroundImage}
+>
+  <View style={styles.container}>
+    {showBackArrow ? (
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate(onBackPress)}>
+        <Image source={require('../assets/vector2.png')} style={styles.arrowImage} />
+      </TouchableOpacity>
+    ) : (
+      <View style={styles.placeholderImage} />
+    )}
+    <Text style={styles.title}>{title}</Text>
+
+    {loading ? (
+      <ActivityIndicator size="small" color="black" />
+    ) : (
+      profileImageLink ? (
+        <TouchableOpacity onPress={handleProfileImagePress}>
+          <Image source={{ uri: profileImageLink }} style={styles.profileImage} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.placeholderImage} />
+      )
+    )}
+    {isProfileDropdownVisible && <ProfileDropdown />}
+  </View>
+</ImageBackground>
+
   );
 };
 
@@ -137,11 +124,18 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
+    marginRight: 15
+  },
+  placeholderImage:
+  {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 15
-  },
+  }
 });
 
 export default Header;
