@@ -38,47 +38,8 @@ const CreateInvoice = (parans) => {
   const screenWidth = Dimensions.get('window').width;
 
 
-  useEffect(() => {
-    if (invoiceId !== undefined && invoiceId !== null) {
-      getData();
-    }
-  }, [invoiceId]);
-  
-  const getData = async () => {
-    setIsLoading(true);
-    let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
 
 
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
-      headers: {
-        'Authorization': accessToken
-      }
-    };
-
-    axios.request(config)
-      .then((response) => {
-
-        console.log(JSON.stringify(response.data));
-        console.log(response.data);
-        setAPIData(response.data);
-        setAPIDescription(response.data);
-        const taxArray = response.data[0].taxes;
-        setAPITax(taxArray);
-        const discArray = response.data[0].discounts;
-        setAPIDiscount(discArray);
-        // console.log(" data here");
-        // console.log(APIData);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-  }
 
 
 
@@ -259,13 +220,10 @@ const CreateInvoice = (parans) => {
           setErrorMsg('You are about to create empty invoice. Are you sure you want to proceed?');
           setShowErrorPopup(true);
         } else {
-          if (invoiceId) {
-            // console.log("update");
-            updateData();
-          } else {
+          
             // console.log("create");
             sendData();
-          }
+          
 
         }
       }
@@ -275,50 +233,7 @@ const CreateInvoice = (parans) => {
 
   };
 
-  updateData = async () => {
-
-    console.log("Update here");
-    const token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
-    let st;
-
-    if (status == "Paid") {
-      st = true;
-    } else {
-      st = false;
-    }
-    let data = JSON.stringify({
-      "invoiceDue": Duedate,
-      "date": date,
-      "registrationNumber": regNumber,
-      "total": parseFloat(totalAmount),
-      "status": st,
-
-      "descriptions": descriptionArray,
-      "discounts": DiscountArray,
-      "taxes": TaxArray
-    });
-
-    let config = {
-      method: 'put',
-      maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/edit-invoice/${invoiceId}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': accessToken
-      },
-      data: data
-    };
-
-    axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        navigation.navigate('Invoices');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+ 
 
 
   sendData = async () => {
@@ -453,18 +368,7 @@ const CreateInvoice = (parans) => {
         </View>
         <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
       </View>
-      {/* {invoiceId ? (
-        <View style={[styles.vectorContainerr, styles.groupChild6Layoutt]}>
 
-     
-          <TouchableOpacity onPress={changeRecord}  >
-            <Text style={[styles.editInvoice2, styles.totalTypo]}>
-              Change Record
-            </Text>
-          </TouchableOpacity>
-
-        </View>
-      ) : null} */}
 
       {/* reg number  */}
       <Image
@@ -525,19 +429,13 @@ const CreateInvoice = (parans) => {
             contentFit="cover"
             source={require("../assets/rectangle-73.png")}
           />
-          {invoiceId ? (
-            <TouchableOpacity onPress={handleSave}>
-              <Text style={[styles.createInvoice3E, styles.totalTypo]}>
-                Edit Invoice
-              </Text>
-            </TouchableOpacity>
-          ) : (
+        
             <TouchableOpacity onPress={handleSave}>
               <Text style={[styles.createInvoice3, styles.totalTypo]}>
                 Create Invoice
               </Text>
             </TouchableOpacity>
-          )}
+        
         </TouchableOpacity>
       </View>
 

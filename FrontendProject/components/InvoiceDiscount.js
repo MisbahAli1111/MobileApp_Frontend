@@ -5,22 +5,11 @@ import { StyleSheet, TouchableOpacity,TextInput,FlatList ,TouchableWithoutFeedba
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
-function InvoiceDiscount({ onItemsChange,APIDiscount }) {
+function InvoiceDiscount({ onItemsChange}) {
 const navigation = useNavigation();
 const [items, setItems] = useState([{ discountName: '', discountRate: ''}]);
 
-  useEffect(()=>{
-    if (APIDiscount && APIDiscount.length > 0) {
-      console.log("API Discount");
-      console.log(APIDiscount);
-      
-      const initialDisItems = APIDiscount.map((item) => ({
-        discountName: item.discountName,
-        discountRate: item.discountRate.toString(),
-      }));
-      setItems(initialDisItems);
-    }
-  },[APIDiscount]);
+
 
   const renderItem =({ item, index })=>(
     <View style={[styles.rowContainer, styles.groupLayout]}>

@@ -5,9 +5,9 @@ import { StyleSheet,TextInput, TouchableOpacity,FlatList ,TouchableWithoutFeedba
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
-function InvoiceDescription({ onItemsChange,APIDescription }) {
+function InvoiceDescription({ onItemsChange }) {
 const navigation = useNavigation();
-;
+
 
 const [items, setItems] = useState([{ itemName: '', rate: '', quantity: '' }]);
 
@@ -18,18 +18,6 @@ useEffect(() => {
 }, [items]);
 const [amount, setAmount] = useState(0);
 
-useEffect(()=>{
-  if (APIDescription && APIDescription.length === 1 && APIDescription[0].descriptions && APIDescription[0].descriptions.length > 0) {
-    console.log("Description API");
-    const descriptionsArray = APIDescription[0].descriptions;
-    const initialItems = descriptionsArray.map((item) => ({
-      itemName: item.item,
-      rate: item.rate.toString(),
-      quantity: item.quantity.toString()
-    }));
-    setItems(initialItems);
-  }
-},[APIDescription])
 
   const renderItem =({ item, index })=>(
     <View style={[styles.rowContainer, styles.groupLayout]}>

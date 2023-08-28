@@ -309,13 +309,7 @@ function InvoiceDetailView() {
             </View>
             <Text style={[styles.invoice, styles.dueTypo]}>Invoice</Text>
           </View>
-          <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
-            <TouchableOpacity onPress={editInvoiceFunction}>
-              <Text style={[styles.editInvoice2, styles.totalTypo]}>
-                Edit Invoice
-              </Text>
-            </TouchableOpacity>
-          </View>
+ 
 
         </View>
 
