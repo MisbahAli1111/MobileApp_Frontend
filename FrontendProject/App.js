@@ -69,14 +69,14 @@ const App = () => {
         },
       })}
       >
-          {/* <Stack.Screen
+          <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: '',  
-          }}/> */}
+          }}/>
 
-          {/* <Stack.Screen
+          <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
@@ -84,7 +84,7 @@ const App = () => {
           showBackArrow: false,
           profileImage: '',
               }}
-            />  */}
+            /> 
 
           <Stack.Screen
           name="EditProfile"
@@ -153,7 +153,7 @@ const App = () => {
             />
 
             
-            {/* <Stack.Screen
+            <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
@@ -161,7 +161,7 @@ const App = () => {
               showBackArrow: true, 
               onBackPress:'Login',
               }}
-            /> */}
+            />
 
            
             

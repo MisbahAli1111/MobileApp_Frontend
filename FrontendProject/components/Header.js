@@ -12,6 +12,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   const [userId, setUserId] = useState('');
   const [profileImageLink, setProfileImageLink] = useState('');
   const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [baseUrlM, setBaseUrlM]= useState('http://192.168.100.71:8080');
   const [loading, setLoading] = useState(true); // Add loading state
 
   const handleProfileImagePress = () => {
@@ -26,7 +27,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
       const config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
+        url: `http://192.168.100.71:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
         headers: {
           Authorization: token,
         },
@@ -88,7 +89,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
           <ActivityIndicator size="small" color="black" />
         ) : profileImageLink && (
           <TouchableOpacity onPress={handleProfileImagePress}>
-            <Image source={{ uri: baseUrl + profileImageLink }} style={styles.profileImage} />
+            <Image source={{ uri: baseUrlM + profileImageLink }} style={styles.profileImage} />
           </TouchableOpacity>
         )}
         {isProfileDropdownVisible && <ProfileDropdown />}

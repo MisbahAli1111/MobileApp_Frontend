@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image } from "expo-image";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
 import { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Text, TextInput, Modal, FlatList, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
@@ -11,7 +11,7 @@ import DueDateTimePicker from '@react-native-community/datetimepicker';
 import ErrorPopup from "../components/ErrorPopup";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
+const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave }) => {
 
 
   const [selectedCountry, setSelectedCountry] = useState('');
@@ -155,39 +155,26 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
     
     getRegistrationNumber();
     getCustomer(regNumber);
-  }, [regNumber]);
+  }, [regNumber],[recordId]);
 
-  const handleClick = () => {
 
-    setClicked(!clicked);
-
-  };
   const getRegistrationNumber = async () => {
-    let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
-    const Business_id = await AsyncStorage.getItem("Business_id");
-
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-registration-number/${Business_id}`,
-      headers: {
-        'Authorization': accessToken
-      }
+      url: `http://192.168.100.71:8080/api/maintenance-record/${recordId}/registration-number`,
+      headers: { }
     };
-
+    
     axios.request(config)
-      .then((response) => {
-
-        // JSON.stringify(response.data);
-        // console.log(response.data);
-        setNumberPlates(response.data);
-        // console.log(numberPlates);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    .then((response) => {
+      // console.log("regNumber");
+      // console.log(JSON.stringify(response.data));
+      setregNumber(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   const onSearch = search => {
@@ -304,15 +291,17 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
-        <TouchableOpacity onPress={handleClick}>
+   
           <Text style={[styles.regNumber,
           regNumberError ? styles.text5ClrR : styles.text5Clr
-          ]}>
-            {regNumber == '' ? 'Select Registration' : regNumber}
-
+          ]}
+          editable={false}
+          >
+            
+            {regNumber}
           </Text>
 
-        </TouchableOpacity>
+        
         <Image
           style={styles.date2SvgrepoCom11R}
           contentFit="cover"
@@ -322,113 +311,6 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save, setSave }) => {
       {nameError ? <Text style={styles.nameError}>{msg}</Text> : null}
 
 
-      {clicked ? (
-        <Modal transparent={true} animationType="slide">
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-            }}>
-            <View
-              style={{
-                elevation: 5,
-                marginTop: 20,
-                height: 600,
-                alignSelf: 'center',
-                width: '90%',
-                backgroundColor: '#fff',
-                borderRadius: 10,
-              }}>
-              <TextInput
-                placeholder="Search.."
-                value={search}
-                ref={searchRef}
-                onChangeText={txt => {
-                  onSearch(txt);
-                  setSearch(txt);
-                }}
-                style={{
-                  width: '90%',
-                  height: 50,
-                  alignSelf: 'center',
-                  borderWidth: 0.2,
-                  borderColor: '#8e8e8e',
-                  borderRadius: 7,
-                  marginTop: 20,
-                  paddingLeft: 20,
-                }}
-              />
-              <ScrollView>
-                <FlatList
-                  data={data}
-                  style={styles.FlatList}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity
-                        style={{
-                          width: '85%',
-                          alignSelf: 'center',
-                          height: 50,
-                          justifyContent: 'center',
-                          borderBottomWidth: 0.5,
-                          borderColor: '#8e8e8e',
-                        }}
-                        onPress={() => {
-                          setregNumber(item.name);
-                          setCarNumber(item.name)
-                          setClicked(!clicked);
-                          onSearch('');
-                          setSearch('');
-                        }}>
-                        <Text style={{ fontWeight: '600' }}>{item.name}</Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </ScrollView>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'rgba(3, 29, 68, 1)',
-                  paddingVertical: 10,
-                  alignSelf: "center",
-                  borderRadius: 5,
-                  paddingLeft: 10,
-                  width: "50%",
-                  marginTop: 10,
-                  position: "fixed",
-                  zIndex: 999,
-                  bottom: 5,
-                }}
-                onPress={handleAddCustomer}
-              >
-                <Text style={{
-                  fontSize: FontSize.size_sm,
-                  fontFamily: FontFamily.poppinsMedium,
-                  color: 'white',
-                  textAlign: 'center',
-                }}>Add Vehicle</Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                zIndex: 999,
-              }}
-              onPress={
-                handleClick
-              }>
-
-              <AntDesign name="closecircle" size={24} color="red~~" />
-              {/* //rgba(3, 29, 68, 1) */}
-
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      ) : null}
       {/* date and status  */}
       <View style={styles.parent}>
 

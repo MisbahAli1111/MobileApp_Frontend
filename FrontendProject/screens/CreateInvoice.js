@@ -5,7 +5,7 @@ import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet, View, Text, Pressable, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
+import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { TextInput } from "react-native-gesture-handler";
@@ -24,18 +24,21 @@ import { useRef } from "react";
 
 const CreateInvoice = (parans) => {
   const navigation = useNavigation();
-  const [APIData,setAPIData]=useState();
+  const [APIData, setAPIData] = useState();
   const route = useRoute();
-  const [APIDiscount , setAPIDiscount] = useState();
-  const [APITax,setAPITax]= useState();
-  const [APIDescription,setAPIDescription] = useState();
+  const [APIDiscount, setAPIDiscount] = useState();
+  const [APITax, setAPITax] = useState();
+  const [APIDescription, setAPIDescription] = useState();
   // contains the record id details
   const recordId = route.params?.InvoiceRecord;
-  const invoiceId =route.params?.InvoiceId;
+  const invoiceId = route.params?.InvoiceId;
   // console.log(invoiceId);
+
+
 
   useEffect(() => {
     getData();
+
   }, [invoiceId]);
 
   const getData = async () => {
@@ -51,21 +54,22 @@ const CreateInvoice = (parans) => {
       headers: {
         'Authorization': accessToken
       }
-    };  
+    };
 
     axios.request(config)
       .then((response) => {
-       
+
         console.log(JSON.stringify(response.data));
+        console.log(response.data);
         setAPIData(response.data);
         setAPIDescription(response.data);
-        const taxArray = response.data[0].taxes;      
+        const taxArray = response.data[0].taxes;
         setAPITax(taxArray);
         const discArray = response.data[0].discounts;
         setAPIDiscount(discArray);
         // console.log(" data here");
         // console.log(APIData);
-  
+
       })
       .catch((error) => {
         console.log(error);
@@ -110,8 +114,8 @@ const CreateInvoice = (parans) => {
   const [EmptyFeildsDesc, setEmptyFeildsDesc] = useState(false);
   const [EmptyFeildsDisc, setEmptyFeildsDisc] = useState(false);
   const [EmptyFeildsTax, setEmptyFeildsTax] = useState(false);
-  const [descriptionArray , setDescriptionArray]= useState([]);
-  const [  DiscountArray ,setDiscountArray] = useState([]);
+  const [descriptionArray, setDescriptionArray] = useState([]);
+  const [DiscountArray, setDiscountArray] = useState([]);
   const [TaxArray, setTaxArray] = useState([]);
   const handleItemsChange = (items) => {
     setDescription(items);
@@ -125,7 +129,7 @@ const CreateInvoice = (parans) => {
       const rate = item.rate;
 
       if (!itemName && !quantity && !rate) {
-   
+
         setEmptyItem(true);
       }
       if (
@@ -135,7 +139,7 @@ const CreateInvoice = (parans) => {
         (itemName && !quantity && !rate) ||
         (!itemName && !quantity && rate) ||
         (!itemName && quantity && !rate)) {
-       
+
         setEmptyFeildsDesc(true);
       }
 
@@ -146,7 +150,7 @@ const CreateInvoice = (parans) => {
     const filteredItems = items.filter(item => {
       return !(item.rate === "" && item.quantity === "" && item.itemName === "");
     });
-  
+
     const descriptions = filteredItems.map(item => ({
       item: item.itemName,
       rate: parseFloat(item.rate),
@@ -155,14 +159,17 @@ const CreateInvoice = (parans) => {
     }));
 
     setDescriptionArray(descriptions);
- 
+
 
   };
+  // const changeRecord = () =>{
+  //   navigation.navigate("MaintenanceRecord", { fromPreviousScreen: true })
+  // };
 
   const handleTaxChange = (items) => {
     setDiscount(items);
-   
-   
+
+
     setEmptyFeildsDisc(false);
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -170,7 +177,7 @@ const CreateInvoice = (parans) => {
       const rate = item.discountRate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
-  
+
         setEmptyFeildsDisc(true);
       }
     }
@@ -189,7 +196,7 @@ const CreateInvoice = (parans) => {
 
 
   const handleDiscount = (items) => {
- 
+
     setTax(items);
     setEmptyFeildsTax(false);
     for (let i = 0; i < items.length; i++) {
@@ -198,7 +205,7 @@ const CreateInvoice = (parans) => {
       const rate = item.taxRate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
-     
+
         setEmptyFeildsTax(true);
       }
     }
@@ -214,7 +221,7 @@ const CreateInvoice = (parans) => {
     }));
 
     setTaxArray(taxes);
-    
+
   }
 
 
@@ -261,26 +268,27 @@ const CreateInvoice = (parans) => {
 
   sendData = async () => {
 
-  
+    console.log("here");
     const token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
     let st;
-    
-    if(status == "Paid"){
-      st=true;
-    }else{
-      st=false;
+
+    if (status == "Paid") {
+      st = true;
+    } else {
+      st = false;
     }
-   
+
 
     let data = JSON.stringify({
+
       "invoiceDue": Duedate,
       "date": date,
       "registrationNumber": regNumber,
       "total": parseFloat(totalAmount),
-      "status":st,
-    
+      "status": st,
+
       "descriptions": descriptionArray,
       "discounts": DiscountArray,
       "taxes": TaxArray
@@ -320,15 +328,15 @@ const CreateInvoice = (parans) => {
       setTotalAmount(0.0);
       return;
     }
-  
+
     let totalAmount = 0.0;
-  
+
     for (const item of Description) {
       const itemAmount = parseFloat(item.quantity) * parseFloat(item.rate);
       totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
     }
-    
-   
+
+
 
     let totalDiscount = 0.0;
     for (const disc of discount) {
@@ -341,22 +349,22 @@ const CreateInvoice = (parans) => {
 
     let totaltax = 0.0;
     for (const t of tax) {
-    
+
       const taxRate = parseFloat(t.taxRate);
-      
+
       if (!isNaN(taxRate)) {
         totaltax += (taxRate / 100) * totalAmount; // Convert rate to decimal
       }
     }
-    
+
     totalAmount -= totalDiscount;
     totalAmount += totaltax;
-  
+
     totalAmount = totalAmount.toFixed(2);
-  
+
     setTotalAmount(totalAmount);
   };
-  
+
 
   return (
     <View style={styles.createInvoice}>
@@ -382,8 +390,18 @@ const CreateInvoice = (parans) => {
         </View>
         <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
       </View>
+      {/* {invoiceId ? (
+        <View style={[styles.vectorContainerr, styles.groupChild6Layoutt]}>
 
+     
+          <TouchableOpacity onPress={changeRecord}  >
+            <Text style={[styles.editInvoice2, styles.totalTypo]}>
+              Change Record
+            </Text>
+          </TouchableOpacity>
 
+        </View>
+      ) : null} */}
 
       {/* reg number  */}
       <Image
@@ -401,7 +419,7 @@ const CreateInvoice = (parans) => {
 
       <ScrollView style={styles.wrap}>
         <View style={styles.form}>
-          <CreateInvoiceForm onFormDataChange={handleFormDataChange} APIData={APIData}  save={save} setSave={setSave} />
+          <CreateInvoiceForm onFormDataChange={handleFormDataChange} APIData={APIData} recordId={recordId} save={save} setSave={setSave} />
         </View>
         <View style={styles.scroll}>
           <View>
@@ -412,7 +430,7 @@ const CreateInvoice = (parans) => {
               <InvoiceDiscount onItemsChange={handleDiscount} APITax={APITax} />
             </View>
             <View style={styles.taxdd}>
-              <InvoiceTax onItemsChange={handleTaxChange} APIDiscount={APIDiscount}  />
+              <InvoiceTax onItemsChange={handleTaxChange} APIDiscount={APIDiscount} />
             </View>
           </View>
         </View>
@@ -438,20 +456,27 @@ const CreateInvoice = (parans) => {
 
       {/* Submit Button  */}
       <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
-        <TouchableOpacity onPress={handleSave}>
-          <Image
-            style={[styles.groupChild6, styles.groupChild6Layout]}
-            contentFit="cover"
-            source={require("../assets/rectangle-73.png")}
-          />
-          <TouchableOpacity onPress={handleSave}>
-            <Text style={[styles.createInvoice3, styles.totalTypo]}>
-              Create Invoice
-            </Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
-
-      </View>
+  <TouchableOpacity onPress={handleSave}>
+    <Image
+      style={[styles.groupChild6, styles.groupChild6Layout]}
+      contentFit="cover"
+      source={require("../assets/rectangle-73.png")}
+    />
+    {invoiceId ? (
+      <TouchableOpacity onPress={handleSave}>
+        <Text style={[styles.createInvoice3, styles.totalTypo]}>
+          Edit Invoice
+        </Text>
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity onPress={handleSave}>
+        <Text style={[styles.createInvoice3, styles.totalTypo]}>
+          Create Invoice
+        </Text>
+      </TouchableOpacity>
+    )}
+  </TouchableOpacity>
+</View>
 
       {/* footer  */}
       <View style={[styles.footer]}>
@@ -512,10 +537,40 @@ const styles = StyleSheet.create({
   containerr: {
     flex: 1,
   },
+  editInvoice2: {
+    color: Color.white,
+    lineHeight: 18,
+    top: -1,
+    // textAlign: "center",
+    fontSize: FontSize.caption2Regular_size,
+    width: 120,
+    left: -13,
+
+  },
+  vectorContainerr: {
+
+    marginTop: 112,
+    left: 275,
+    backgroundColor: Color.darkslateblue,
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    shadowRadius: 20,
+    // elevation: 20,
+    flexDirection: "row",
+    paddingHorizontal: Padding.p_11xl,
+    paddingVertical: Padding.p_6xs,
+    borderRadius: Border.br_11xl,
+    // borderRadius:20,
+  },
+
   footer: {
     position: 'absolute',
     paddingRight: 10,
     left: 8,
+  },
+  groupChild6Layoutt: {
+    height: 30,
+    width: 130,
+    position: "absolute",
   },
   tablewrapper: {
     flex: 1,
@@ -1275,9 +1330,9 @@ const styles = StyleSheet.create({
   },
   group: {
     left: 300,
-    alignContent:'flex-end',
-    justifyContent:'flex-end',
-    textAlign:'right',
+    alignContent: 'flex-end',
+    justifyContent: 'flex-end',
+    textAlign: 'right',
     width: 132,
     height: 0,
     top: 680,
