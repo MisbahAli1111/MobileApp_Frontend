@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Vehicles from "../screens/Vehicles";
+
 function VehicleRecords({dsearch,type,searchType,searchOrder}) {
     const navigation = useNavigation();
     const [search, setSearch] = useState('');

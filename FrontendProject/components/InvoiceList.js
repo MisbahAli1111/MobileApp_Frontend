@@ -14,7 +14,25 @@ function Invoicelist({ dsearch }) {
 
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
 
-  const getData = async () => {
+
+
+  const displayedRecords = search ? data : Invoices;
+  
+  const handlePress = (index, recordId) => {
+    setCurrentPressedIndex(index);
+    // console.log(recordId);
+    navigation.navigate("InvoiceDetailView", { recordId });
+  };
+
+
+
+
+
+  useEffect(() => {
+    getData();
+  },[]);
+
+  getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
@@ -36,31 +54,17 @@ function Invoicelist({ dsearch }) {
       .catch((error) => {
         console.log(error);
       });
-
-  };
-
-  const displayedRecords = search ? data : Invoices;
-  console
-  const handlePress = (index, recordId) => {
-    setCurrentPressedIndex(index);
-    // console.log(recordId);
-    navigation.navigate("InvoiceDetailView", { recordId });
   };
 
   useEffect(() => {
     setSearch(dsearch);
     const formattedQuery = dsearch.trim().toLowerCase();
     const maintained = Invoices.filter((record) =>
-      record.name.toLowerCase().includes(formattedQuery)
+      record.name && record.name.toLowerCase().includes(formattedQuery)
     );
     setData(maintained);
   }, [dsearch]);
-
-
-
-  useEffect(() => {
-    getData();
-  }, []);
+  
 
   return (
     <ScrollView style={styles.wrap}>

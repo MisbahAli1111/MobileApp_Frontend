@@ -137,8 +137,8 @@ function InvoiceDetailView() {
     setTax(totaltax);
 
 
-    totalAmount += totalDiscount;
-    totalAmount -= totaltax;
+    totalAmount -= totalDiscount;
+    totalAmount += totaltax;
 
     totalAmount = totalAmount.toFixed(2);
 
@@ -486,11 +486,15 @@ function InvoiceDetailView() {
 const styles = StyleSheet.create({
   editInvoice2: {
     color: Color.white,
-    lineHeight: 18,
-    // textAlign: "center",
+    left:-9,
+    // lineHeight: 18,
+    textAlign: "center",
+    alignSelf:'center',
+    alignContent:'center',
+    justifyContent:'center',
     fontSize: FontSize.caption2Regular_size,
-    width: 120,
-    left: 10,
+    width: 80,
+    
 
   },
   dataRow: {
@@ -524,7 +528,7 @@ const styles = StyleSheet.create({
   },
   groupChild6Layout: {
     height: 30,
-    width: 150,
+    width: 120,
     position: "absolute",
   },
 
@@ -546,7 +550,7 @@ const styles = StyleSheet.create({
   vectorContainer: {
 
     top: -8,
-    left: 230,
+    left: 250,
     backgroundColor: Color.darkslateblue,
     shadowColor: "rgba(0, 0, 0, 0.05)",
     shadowRadius: 20,

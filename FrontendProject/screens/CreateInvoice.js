@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, View, Text, Pressable, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Text, Pressable,Dimensions,ActivityIndicator, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
@@ -26,6 +26,7 @@ const CreateInvoice = (parans) => {
   const navigation = useNavigation();
   const [APIData, setAPIData] = useState();
   const route = useRoute();
+  const [isLoading, setIsLoading] = useState(false);
   const [APIDiscount, setAPIDiscount] = useState();
   const [APITax, setAPITax] = useState();
   const [APIDescription, setAPIDescription] = useState();
@@ -33,16 +34,18 @@ const CreateInvoice = (parans) => {
   const recordId = route.params?.InvoiceRecord;
   const invoiceId = route.params?.InvoiceId;
   // console.log(invoiceId);
-
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
 
 
   useEffect(() => {
-    getData();
-
+    if (invoiceId !== undefined && invoiceId !== null) {
+      getData();
+    }
   }, [invoiceId]);
-
+  
   const getData = async () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
@@ -69,7 +72,7 @@ const CreateInvoice = (parans) => {
         setAPIDiscount(discArray);
         // console.log(" data here");
         // console.log(APIData);
-
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -256,7 +259,14 @@ const CreateInvoice = (parans) => {
           setErrorMsg('You are about to create empty invoice. Are you sure you want to proceed?');
           setShowErrorPopup(true);
         } else {
-          sendData();
+          if (invoiceId) {
+            // console.log("update");
+            updateData();
+          } else {
+            // console.log("create");
+            sendData();
+          }
+
         }
       }
 
@@ -264,6 +274,51 @@ const CreateInvoice = (parans) => {
 
 
   };
+
+  updateData = async () => {
+
+    console.log("Update here");
+    const token = await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    let st;
+
+    if (status == "Paid") {
+      st = true;
+    } else {
+      st = false;
+    }
+    let data = JSON.stringify({
+      "invoiceDue": Duedate,
+      "date": date,
+      "registrationNumber": regNumber,
+      "total": parseFloat(totalAmount),
+      "status": st,
+
+      "descriptions": descriptionArray,
+      "discounts": DiscountArray,
+      "taxes": TaxArray
+    });
+
+    let config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/invoice/edit-invoice/${invoiceId}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      },
+      data: data
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        navigation.navigate('Invoices');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
 
   sendData = async () => {
@@ -368,7 +423,15 @@ const CreateInvoice = (parans) => {
 
   return (
     <View style={styles.createInvoice}>
+      <View style={{ flex: 1, justifyContent: 'center', position: 'absolute', width: screenWidth, height: screenHeight, alignItems: 'center' }}>
 
+        {isLoading ? (
+          <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+        ) : (
+          <View>
+          </View>
+        )}
+      </View>
 
       <Image
         style={[styles.lightTexture22341Icon, styles.groupChildPosition]}
@@ -456,27 +519,27 @@ const CreateInvoice = (parans) => {
 
       {/* Submit Button  */}
       <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
-  <TouchableOpacity onPress={handleSave}>
-    <Image
-      style={[styles.groupChild6, styles.groupChild6Layout]}
-      contentFit="cover"
-      source={require("../assets/rectangle-73.png")}
-    />
-    {invoiceId ? (
-      <TouchableOpacity onPress={handleSave}>
-        <Text style={[styles.createInvoice3, styles.totalTypo]}>
-          Edit Invoice
-        </Text>
-      </TouchableOpacity>
-    ) : (
-      <TouchableOpacity onPress={handleSave}>
-        <Text style={[styles.createInvoice3, styles.totalTypo]}>
-          Create Invoice
-        </Text>
-      </TouchableOpacity>
-    )}
-  </TouchableOpacity>
-</View>
+        <TouchableOpacity onPress={handleSave}>
+          <Image
+            style={[styles.groupChild6, styles.groupChild6Layout]}
+            contentFit="cover"
+            source={require("../assets/rectangle-73.png")}
+          />
+          {invoiceId ? (
+            <TouchableOpacity onPress={handleSave}>
+              <Text style={[styles.createInvoice3E, styles.totalTypo]}>
+                Edit Invoice
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleSave}>
+              <Text style={[styles.createInvoice3, styles.totalTypo]}>
+                Create Invoice
+              </Text>
+            </TouchableOpacity>
+          )}
+        </TouchableOpacity>
+      </View>
 
       {/* footer  */}
       <View style={[styles.footer]}>
@@ -1353,6 +1416,16 @@ const styles = StyleSheet.create({
   createInvoice3: {
     top: 10,
     left: 132,
+    color: Color.snow,
+    fontSize: FontSize.size_base,
+    fontFamily: FontFamily.poppinsMedium,
+    alignContent: "center",
+  },
+  createInvoice3E: {
+    top: 10,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
     color: Color.snow,
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.poppinsMedium,

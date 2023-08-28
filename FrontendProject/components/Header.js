@@ -19,6 +19,9 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
     setProfileDropdownVisible((prevState) => !prevState);
   };
 
+
+
+
   const getProfileImage = async (userId) => {
     try {
       const accessTokens = await AsyncStorage.getItem('accessToken');
@@ -39,15 +42,14 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         // console.log(response);
         const responseData = response.data;
         setProfileImageLink(responseData.url);
+        setLoading(false);
         // console.log("profile: ", profileImageLink);
       } else {
         console.log('Error: ' + response.statusText);
       }
     } catch (error) {
       console.log('Error fetching profile image:', error);
-    } finally {
-      setLoading(false); // Set loading to false when the request completes
-    }
+    } 
   };
 
   useEffect(() => {
@@ -58,17 +60,19 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         setUserId(storedUserId);
         if (userId) {
           console.log("userID found");
+          getProfileImage(userId);
         }
       } catch (error) {
         console.error('Error fetching user ID from AsyncStorage:', error);
       }
     };
 
-    fetchUserId().then(() => {
-      if (userId) {
-        getProfileImage(userId);
-      }
-    });
+    fetchUserId();
+    // .then(() => {
+    //   if (userId) {
+    //     getProfileImage(userId);
+    //   }
+    // });
 
   }, []);
 
@@ -85,12 +89,15 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         )}
         <Text style={styles.title}>{title}</Text>
         
-        {loading ? ( // Display loader while loading
-          <ActivityIndicator size="small" color="black" />
-        ) : profileImageLink && (
-          <TouchableOpacity onPress={handleProfileImagePress}>
-            <Image source={{ uri: baseUrlM + profileImageLink }} style={styles.profileImage} />
-          </TouchableOpacity>
+        {profileImage !== "No" && (
+          
+          loading ? ( 
+            <ActivityIndicator size="small" color="black" />
+          ) : (
+            <TouchableOpacity onPress={handleProfileImagePress}>
+              <Image source={{ uri: baseUrlM + profileImageLink }} style={styles.profileImage} />
+            </TouchableOpacity>
+          )
         )}
         {isProfileDropdownVisible && <ProfileDropdown />}
       </View>

@@ -30,6 +30,8 @@ const EditProfile = () => {
   const [userId, setUserId] = useState('');
   const [profileImageLink, setProfileImageLink] = useState(null);
   const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [baseUrlM, setBaseUrlM] = useState('http://192.168.100.71:8080');
+  
   const [loading, setLoading] = useState(true); 
   const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
 
@@ -105,7 +107,7 @@ const EditProfile = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/${userId}`, // Use backticks
+      url: `http://192.168.100.71:8080/api/users/${userId}`, // Use backticks
       headers: {}
     };
   
@@ -148,7 +150,7 @@ const EditProfile = () => {
     let config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/update-user/${userId}`,
+      url: `http://192.168.100.71:8080/api/users/update-user/${userId}`,
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -210,7 +212,7 @@ const EditProfile = () => {
     console.log(userId);
     const imageData = new FormData();
     imageData.append('files', {
-       uri: profileImage,
+       uri: profileImageLink,
        name: new Date + "_profile"+".jpeg",
        type: 'image/jpeg', // Adjust the MIME type as needed
      });
@@ -220,7 +222,7 @@ const EditProfile = () => {
 
 
     const response = await axios.post(
-      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `http://192.168.100.71:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -242,7 +244,7 @@ const EditProfile = () => {
       const config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
+        url: `http://192.168.100.71:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
         headers: {
           Authorization: token,
         },
@@ -253,7 +255,7 @@ const EditProfile = () => {
       if (response.status === 200) {
         // console.log(response);
         const responseData = response.data;
-        setProfileImageLink(baseUrl + responseData.url);
+        setProfileImageLink(baseUrlM + responseData.url);
         // console.log("profile: ", profileImageLink);
       } else {
         console.log('Error: ' + response.statusText);
@@ -285,7 +287,7 @@ const EditProfile = () => {
     });
 
   }, []);
-
+  console.log(profileImageLink);
   return (
     <ImageBackground
       style={styles.backgroundImage}
@@ -304,7 +306,7 @@ const EditProfile = () => {
           )}
           </TouchableOpacity>
           <TouchableOpacity onPress={handleImageUpload}  style={styles.uploadButton}>
-          <Text style={styles.uploadButtonText}>Upload</Text>
+          <Text style={styles.uploadButtonText}>Update Profile</Text>
               </TouchableOpacity>
         </View>
         <View style={styles.formContainer}>

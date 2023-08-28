@@ -51,7 +51,7 @@ const App = () => {
           <Stack.Navigator  screenOptions={({ route, navigation }) => ({
         header: ({ previous }) => {
           
-          const { title = route.name, showBackArrow = previous !== undefined,onBackPress = "Home", profileImage } = route.params;
+          const { title = route.name, showBackArrow = previous !== undefined,onBackPress = "Home", profileImage = "No" } = route.params;
       //     console.log("title:", title);
       // console.log("showBackArrow:", showBackArrow);
       // console.log("onBackPress:", onBackPress);
@@ -73,7 +73,8 @@ const App = () => {
           name="Login"
           component={Login}
           initialParams={{
-          title: '',  
+          title: '',
+          profileImage: 'No',  
           }}/>
 
           <Stack.Screen
@@ -82,7 +83,7 @@ const App = () => {
               initialParams={{
           title: 'Dashboard', 
           showBackArrow: false,
-          profileImage: '',
+          profileImage: 'Yes',
               }}
             /> 
 
@@ -93,6 +94,7 @@ const App = () => {
           title: 'Edit Profile', 
           showBackArrow: true, 
           onBackPress:'Home',
+          profileImage:'No'
           }}/>
 
           
@@ -103,6 +105,7 @@ const App = () => {
                 title: 'Change Password',
               showBackArrow: true,
               onBackPress:'Home',
+              profileImage:'No'
               }}
             /> 
 
@@ -113,7 +116,7 @@ const App = () => {
           title: 'Add Record', 
           showBackArrow: true, 
           onBackPress:'Vehicles',
-          profileImage: '', 
+          profileImage: 'Yes', 
               }}
             />
 
@@ -124,7 +127,7 @@ const App = () => {
           title: 'Maintenance Record', 
           showBackArrow: true, 
           onBackPress:'Vehicles',
-          profileImage: '', 
+          profileImage: 'Yes', 
               }}
               /> 
 
@@ -136,7 +139,7 @@ const App = () => {
           title: 'Invoices', 
           showBackArrow: true, 
           onBackPress:'Home',
-          profileImage: '',
+          profileImage: 'Yes',
               }}
                
               />  
@@ -149,6 +152,7 @@ const App = () => {
               title: 'Add Employee', 
               showBackArrow: true, 
               onBackPress:'Home',
+              profileImage:'No'
               }}
             />
 
@@ -160,6 +164,7 @@ const App = () => {
               title: ' ', 
               showBackArrow: true, 
               onBackPress:'Login',
+              profileImage:'No'
               }}
             />
 
@@ -173,6 +178,7 @@ const App = () => {
               title: 'Business Info', 
               showBackArrow: true, 
               onBackPress:'SwitchBusiness',
+              profileImage:'No'
               }}
             />
 
@@ -185,6 +191,7 @@ const App = () => {
               title: 'Owner Info', 
               showBackArrow: true, 
               onBackPress:'Login',
+              profileImage:'No'
               }}
           /> 
 
@@ -193,10 +200,10 @@ const App = () => {
                 name="CreateInvoice"
                 component={CreateInvoice}
                 initialParams={{
-                title: 'Create Invoice', 
+                title: 'Invoice', 
                 showBackArrow: true, 
                 onBackPress:'Invoices',
-                profileImage: '', 
+                profileImage: 'Yes', 
                 }}
               /> 
             
@@ -208,7 +215,7 @@ const App = () => {
                 title: 'Invoice Detail', 
                 showBackArrow: true, 
                 onBackPress:'CreateInvoice',
-                profileImage: '', 
+                profileImage: 'Yes', 
                 }}
             />
             
@@ -219,7 +226,7 @@ const App = () => {
                 title: 'Records', 
                 showBackArrow: true, 
                 onBackPress:'Home',
-                profileImage: '', 
+                profileImage: 'Yes', 
                 }}
             />  
              
@@ -231,7 +238,7 @@ const App = () => {
                 title: 'Vehicles', 
                 showBackArrow: true, 
                 onBackPress:'Home',
-                profileImage: '', 
+                profileImage: 'Yes', 
                 }}
             />  
 
@@ -243,7 +250,7 @@ const App = () => {
                 title: 'Vehicles', 
                 showBackArrow: true, 
                 onBackPress:'Vehicle',
-                profileImage: '', 
+                profileImage: 'Yes', 
                 }}
             />  
 
@@ -254,6 +261,7 @@ const App = () => {
               title: 'Add Customer', 
               showBackArrow: true, 
               onBackPress:'Home',
+              profileImage:'No'
               }}
             />
 
@@ -266,7 +274,7 @@ const App = () => {
                 title: 'Vehicle Details', 
                 showBackArrow: true, 
                 onBackPress:'AddVehicle',
-                profileImage: '', 
+                profileImage: 'Yes', 
                 }}
             />  
             

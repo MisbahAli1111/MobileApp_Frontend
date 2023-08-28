@@ -344,8 +344,8 @@ const styles = StyleSheet.create({
     checkCircleSvgrepoCom1Icon: {
         top: heightPercentageToDP('3%'),
         left: widthPercentageToDP('78%'),
-        width: widthPercentageToDP('10%'),
-        height: heightPercentageToDP('5%'),
+        width: widthPercentageToDP('8%'),
+        height: heightPercentageToDP('4%'),
         position: "absolute",
         overflow: "hidden",
     },
