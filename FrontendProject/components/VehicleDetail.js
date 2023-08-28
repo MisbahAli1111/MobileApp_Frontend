@@ -25,7 +25,7 @@ function VehicleDetails(props) {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/vehicle/${vehicleId}`,
+      url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}`,
       headers: { 
         'Authorization': accessToken
       }
