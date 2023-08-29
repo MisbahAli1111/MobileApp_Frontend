@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
 const VehicleCarousel = () => {
+    const navigation = useNavigation();
   const scrollViewRef = useRef(null);
 
   const images = [
@@ -19,7 +20,7 @@ const VehicleCarousel = () => {
   const imageTexts = [
     "Car",
     "Bike",
-    "Bus",
+    "Truck",
     "Auto",
     "Other",
   ];
@@ -38,7 +39,7 @@ return (
     <View style={styles.container}>
       <View style={styles.navigation}>
         <TouchableOpacity onPress={handlePrevPress}>
-          <Text style={styles.arrow}>{'<'}</Text>
+        <Image source={require('../assets/left.png')} style={styles.arrowImage} />
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -50,12 +51,32 @@ return (
       >
         {images.map((image, index) => (
           <TouchableOpacity
-            key={index}
-            onPress={() => {
-
-
-            }}
-          >
+          key={index}
+          onPress={() => {
+            let vehicleType = '';
+            switch (index) {
+              case 0:
+                vehicleType = 'Car';
+                break;
+              case 1:
+                vehicleType = 'Bike';
+                break;
+              case 2:
+                vehicleType = 'Bus';
+                break;
+              case 3:
+                vehicleType = 'Auto';
+                break;
+              case 4:
+                vehicleType = 'Other';
+                break;
+              default:
+                break;
+            }
+            
+            navigation.navigate('Vehicles', { type: vehicleType });
+          }}
+        >
             <LinearGradient
               style={styles.item}
               locations={[0, 1]}
@@ -100,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navigation: {
-    width: 40,
+    width: 35,
     height: 90,
     justifyContent: 'center',
     alignItems: 'center',

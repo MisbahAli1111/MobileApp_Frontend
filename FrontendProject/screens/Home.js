@@ -819,7 +819,7 @@ const styles = StyleSheet.create({
   },
   container: {
     position:'relative',
-    marginTop:500,
+    marginTop:480,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
