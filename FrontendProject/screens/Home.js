@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View,TextInput, Button, Text, Pressable, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import VehicleCarousel from "../components/VehicleCarousel";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 // import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
@@ -108,8 +109,10 @@ const Home = () => {
 
       {/* car , bike, auto.. */}
 
-     <HomeVehicleTypes />
-
+     {/* <HomeVehicleTypes /> */}
+     <View style={styles.container}>
+      <VehicleCarousel />
+    </View>
 
 
       <Image
@@ -313,9 +316,11 @@ const styles = StyleSheet.create({
   },
 
   cont: {
-    padding: 6,
-    top: -35,
-    right: 5,
+    padding: 0,
+    top:0,
+    
+    position:'absolute',
+    right: 410,
   },
   groupChildPosition2: {
     height: 63,
@@ -813,7 +818,11 @@ const styles = StyleSheet.create({
     right: 2
   },
   container: {
-    left: 98,
+    position:'relative',
+    marginTop:500,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   homeMutedIcon: {
     height: 27,
