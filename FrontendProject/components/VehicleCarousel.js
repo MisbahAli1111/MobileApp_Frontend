@@ -39,7 +39,7 @@ return (
     <View style={styles.container}>
       <View style={styles.navigation}>
         <TouchableOpacity onPress={handlePrevPress}>
-        <Image source={require('../assets/left.png')} style={styles.arrowImage} />
+        <Text style={styles.arrow}>{'<'}</Text> 
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: 24,
-    color:'blue',
+    color: '#4e6e91',
   },
   item: {
     width: 80,

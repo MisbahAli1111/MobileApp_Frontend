@@ -27,6 +27,10 @@ const AddVehicle = () => {
   const [keyCustomer,setKeyCustomer] = useState('');
   const [Vehiclecolor,setvehiclecolor]=useState("");
   const [phoneNumber, setphoneNumber]=useState('');
+  const [ customerType, setCusomterType] = useState('');
+  const [ customerTypeError, setCusomterTypeError] = useState(false);
+  const [ CompanyNameError, setCompanyNameError] = useState(false);
+  
   const [km, setKm]=useState('');
   const [Nmsg,setNmsg]= useState('');
   const [vehicleTypeError, setvehicleTypeError]=useState(false);
@@ -42,6 +46,7 @@ const AddVehicle = () => {
   const [year, setYear]= useState('');
   const [ makeError, setMakeError] = useState(false);
   const vehicleCategories = ['Bike','Car','Truck','Richshaw','Other'];
+  const CusomterCategories = ['Walk-in','Company'];
   const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
@@ -58,7 +63,7 @@ const AddVehicle = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const searchRef = useRef();
   const [userId,setUserId] = useState('');
-
+  const  [ CompanyName,setCompanyName] = useState('');
   const getCustomer = async () =>{
     let token= await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
@@ -206,6 +211,11 @@ const AddVehicle = () => {
       
     };
 
+    const handleCustomerTypeSelect = (code) => {
+      setCusomterType(code);
+      
+    };
+
     const uploadImage = async (vehicleId) => {
       let token= await AsyncStorage.getItem("accessToken");
       const accessToken = 'Bearer ' + token;
@@ -259,7 +269,7 @@ const AddVehicle = () => {
 
     const  saveVehicle= async () => {
       let isValid = true;
-  
+      
       if (!vehicleType) {
         setMsg('Please Enter Vehicle Type');
         setvehicleTypeError(true);
@@ -295,6 +305,23 @@ const AddVehicle = () => {
         setMakeError(false);
       }
     
+      if (!customerType) {
+        setCusomterTypeError(true);
+        isValid = false;
+      } else {
+        setCusomterTypeError(false);
+      }
+
+      
+      if(customerType== 'Company'){
+        setCompanyNameError(false);
+        if(!CompanyName){
+          setCompanyNameError(true);
+        }
+      }
+
+
+
       if (!keyCustomer) {
         setNameError(true);
         isValid = false;
@@ -322,15 +349,19 @@ const AddVehicle = () => {
         const Business_id = await AsyncStorage.getItem("Business_id");
         
 
+        
         let data = JSON.stringify({
           "type": vehicleType,
           "model": vehicleModel,
           "make": make,
           "year": year,
+      
           "registrationNumber": Registration,
           "color": Vehiclecolor,
           "ownerId": keyCustomer,
-          "carkilometerDriven": km
+          "kilometerDriven": km,
+          "customerType":customerType,
+          "parentCompany": customerType === 'Walk-in' ? null : CompanyName
         });
         
         let config = {
@@ -469,7 +500,7 @@ const AddVehicle = () => {
        </View>
 
         {/* form start */}
-      <View style={styles.formWrap}>
+        <View style={styles.formWrap}>
       <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
         <View style={styles.vehicleTypeParent}>
           <TextInput
@@ -608,6 +639,8 @@ const AddVehicle = () => {
         nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
 
+   
+      
       
       {clicked ? (
         <Modal transparent={true} animationType="slide">
@@ -741,6 +774,72 @@ const AddVehicle = () => {
         phoneNumberError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {phoneNumberError ? <Text style={styles.nameError}>Please Provide Contact Number</Text> : null}
      
+
+      <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
+        <View style={styles.vehicleTypeParent}>
+          <TextInput style={[styles.vehicleTypeC, styles.vehicleTypo]}    
+         onChangeText={text => setCusomterType(text)} placeholder="Customer Type"
+          editable={false}
+          value={customerType}>
+           
+
+            {/* here  */}
+          </TextInput>
+          <View style={styles.carParentC}>
+          
+          <Image
+            style={[styles.frameChild, styles.childLayout]}
+            contentFit="cover"
+            source={require("../assets/vector-61.png")}
+          />
+        
+          { (
+      <View  style={styles.vechilePicker}>
+      <Picker
+      style={styles.picker}
+        selectedValue={customerType}
+        onValueChange={(itemValue) =>handleCustomerTypeSelect(itemValue)}
+      >
+        <Picker.Item label="Select Customer Type" value="" />
+        {CusomterCategories.map((code) => (
+          <Picker.Item key={code} label={code} value={code} />
+        ))}
+      </Picker>
+      </View>
+    )}
+     </View>
+        </View>
+      </View>
+
+      <View style={[
+        styles.groupInnerC
+        , 
+        customerTypeError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
+      {customerTypeError ? <Text style={styles.nameError}>Please provide Customer Type</Text> : null}
+
+
+
+
+
+      {customerType === 'Company' && (
+         <View style={[styles.lineGroup, styles.lineParentLayout]}>
+         <View style={styles.frameWrapper}>
+          <View style={styles.vehicleTypeParent}>
+            <TextInput style={[
+             CompanyNameError ?  styles.vehicleTypeeR :styles.vehicleTypee 
+              , styles.vehicleTypo]}
+            onChangeText={text => setCompanyName(text)} placeholder="Company Name   "
+            value={CompanyName}> 
+            </TextInput>
+          </View>
+        </View>
+      </View>
+      )}
+     {CompanyNameError ? <Text style={styles.nameError}>Please provide company Name</Text> : null}
+   
+
+
+
       <View style={[styles.lineGroup, styles.lineParentLayout]}>
          <View style={styles.frameWrapper}>
           <View style={styles.vehicleTypeParent}>
@@ -761,6 +860,13 @@ const AddVehicle = () => {
         styles.groupInner, 
         kmError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
       {kmError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
+      
+      {customerType === 'Company' && (
+        <View  style={styles.gap}></View>
+      )}
+      {km  && (
+        <View  style={styles.gape}></View>
+      )}
       </View>
       </ScrollView>
 
@@ -866,6 +972,12 @@ const styles = StyleSheet.create({
     left: '50%',
     transform: [{ translateX: -25 }, { translateY: -25 }], // Adjust the values based on the icon size
   },
+  gap:{
+    marginTop:70,
+  },
+  gape:{
+    marginTop:60,
+  },
   modalContainer: {
     flex: 1,
     alignItems:"center",
@@ -917,7 +1029,6 @@ const styles = StyleSheet.create({
   formWrap:{
     marginTop:100,
     position:'relative',
-    // backgroundColor:'red',
   },
 video: {
     width: "100%",
@@ -1307,6 +1418,30 @@ wrap:{
   vehicleType: {
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
+    // width:'80%',
+  },
+  vehicleTypee: {
+    fontSize: FontSize.size_base,
+    color: Color.darkslateblue,
+        borderBottomWidth: 2,
+        borderColor: "#cbcbcb",
+    paddingBottom:9,
+    
+    width:'98%',
+  },
+  vehicleTypeeR: {
+    fontSize: FontSize.size_base,
+    color: Color.darkslateblue,
+        borderBottomWidth: 2,
+        borderColor: 'red',
+    paddingBottom:9,
+    
+    width:'98%',
+  },
+  vehicleTypeC: {
+    fontSize: FontSize.size_base,
+    color: Color.darkslateblue,
+    width:'80%',
   },
   car: {
     fontSize: FontSize.size_base,
@@ -1330,6 +1465,12 @@ wrap:{
     flexDirection: "row",
     alignItems: "center",
   },
+  carParentC: {
+    marginLeft: -10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom:-5,
+  },
   carParent1: {
     marginLeft: 24,
     flexDirection: "row",
@@ -1340,7 +1481,8 @@ wrap:{
   },
   addVehicleInner: {
     top: 0,
-    marginTop:10,
+    marginTop:0,
+    marginBottom:10,
   },
   lineView: {
     width: 167,
@@ -1363,10 +1505,11 @@ wrap:{
   },
   vehicleModel: {
     marginLeft:230,
-    marginTop: -42,
+    marginTop: -54,
     fontSize: FontSize.size_base,
-    color: Color.darkslateblue,
+    color: Color.Black,
     position: "relative",
+    marginBottom:10,
   },
   text2: {
     left: 349,
@@ -1430,7 +1573,13 @@ wrap:{
   },
   groupInner: {
     left:20,
-    marginTop:8,
+    marginTop:6,
+    marginBottom:5,
+    borderColor: "#cbcbcb",
+  },
+  groupInnerC: {
+    left:20,
+    marginTop:0,
     marginBottom:5,
     borderColor: "#cbcbcb",
   },
@@ -1471,7 +1620,7 @@ wrap:{
     marginTop:18,
   },
   lineGroup: {
-    marginTop:10,
+    marginTop:20,
   },
   lineContainer: {
     top: 687,

@@ -33,7 +33,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         const config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/users/${userId}/profile-image`,
+          url: `http://192.168.100.71:8080/api/users/${userId}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -43,7 +43,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
 
         if (response.status === 200) {
           const responseData = response.data;
-          setProfileImageLink(baseUrl+responseData.url); // Update the state directly
+          setProfileImageLink(baseUrlM+responseData.url); // Update the state directly
         } else {
           console.log('Error: ' + response.statusText);
         }
