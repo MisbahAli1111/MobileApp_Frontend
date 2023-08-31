@@ -19,9 +19,9 @@ const SwitchBusiness = () => {
         source={require("../assets/light-texture2234-1.png")}
       />
 
-      <Text style={[styles.switchBusinessText]}>
+      {/* <Text style={[styles.switchBusinessText]}>
         Switch Business
-      </Text>
+      </Text> */}
 
       <ScrollView style={styles.businessListContainer}>
       <View >
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // backgroundColor:'red',
     height: heightPercentageToDP('100%'), 
-    marginTop: heightPercentageToDP('3%'),
+    marginTop: heightPercentageToDP('10%'),
   },
   createNewBusinessButton: {
     flexDirection: 'row',

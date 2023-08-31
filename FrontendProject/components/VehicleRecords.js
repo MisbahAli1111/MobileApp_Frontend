@@ -14,7 +14,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
     const [VehicleType, setVehicleType] = useState([]);
     const [SearchType, setSearchType]= useState('');
     const [SearchOrder, setSearchOrder]= useState('');
-
+    const [asyncVehicleId,setAsyncvehicleId] = useState('');
     const [data, setData] = useState([]);
     const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
     const [ vehicles, setVehicles]= useState([]);
@@ -61,65 +61,39 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
         setSearchOrder(searchOrder);
         // console.log(searchType);
         const formattedQuery = dsearch.trim().toUpperCase();
-        
+
         if (VehicleType === "default") {
             const maintained = vehicles.filter((vehicle) => {
-                if (!searchType.length > 0) {
-                    const modelMatches = vehicle.model && vehicle.model.toUpperCase().includes(formattedQuery);
-                    const makeMatches = vehicle.make && vehicle.make.toUpperCase().includes(formattedQuery);
-                    const yearMatches = vehicle.year && vehicle.year.includes(formattedQuery);
-                    const nameMatches = (vehicle.firstName && vehicle.firstName.toUpperCase().includes(formattedQuery)) ||
-                                       (vehicle.lastName && vehicle.lastName.toUpperCase().includes(formattedQuery));
-                    return modelMatches || makeMatches || yearMatches || nameMatches;
-                                    } else {
-                    const searchTypeMatches = searchType.some(property => {
-                        console.log(property);
-                        if (property === "firstName") {
-                            
-                            const nameMatches = (vehicle.name.toUpperCase().toString().includes(formattedQuery));
-                            return nameMatches;
-                            
-                        }
-                        if (vehicle[property]) {
-                            return vehicle[property].toUpperCase().includes(formattedQuery);
-                        }
-                        return false;
-                    });
-                    return searchTypeMatches;
-                }
+
+                const modelMatches = vehicle.model && vehicle.model.toUpperCase().includes(formattedQuery);
+                const makeMatches = vehicle.make && vehicle.make.toUpperCase().includes(formattedQuery);
+                const yearMatches = vehicle.year && vehicle.year.includes(formattedQuery);
+                const nameMatches = vehicle.name && vehicle.name.toUpperCase().includes(formattedQuery);
+                const NumberMatches = vehicle.registrationNumber.toUpperCase().includes(formattedQuery);
+                const contactMatches = vehicle.phoneNumber && vehicle.phoneNumber.includes(formattedQuery);
+                
+                return modelMatches || makeMatches || yearMatches || nameMatches  || NumberMatches || contactMatches;
             });
-    
+
             setData(maintained);
         } else {
             const maintained = vehicles.filter((vehicle) => {
                 const s = searchType;
-                if (!searchType.length > 0) {
-                    const modelMatches = vehicle.model && vehicle.model.toUpperCase().includes(formattedQuery);
-                    const makeMatches = vehicle.make && vehicle.make.toUpperCase().includes(formattedQuery);
-                    const yearMatches = vehicle.year && vehicle.year.includes(formattedQuery);
-                    const nameMatches = (vehicle.firstName && vehicle.firstName.toUpperCase().includes(formattedQuery)) ||
-                                       (vehicle.lastName && vehicle.lastName.toUpperCase().includes(formattedQuery));
-                    return modelMatches || makeMatches || yearMatches || nameMatches;
-                      } else {
-                    const searchTypeMatches = searchType.some(property => {
-                        if (property === "firstName") {
-                            const nameMatches = (vehicle.firstName.toUpperCase().includes(formattedQuery) )&& vehicle.type ==  VehicleType;
-                            return nameMatches;
-                        }
-                        if (vehicle[property]) {
-                            return vehicle[property].toUpperCase().includes(formattedQuery);
-                        }
-                        return false;
-                    });
-                    return searchTypeMatches && vehicle.type === VehicleType;
-                }
+
+                const modelMatches = vehicle.model && vehicle.model.toUpperCase().includes(formattedQuery);
+                const makeMatches = vehicle.make && vehicle.make.toUpperCase().includes(formattedQuery);
+                const yearMatches = vehicle.year && vehicle.year.includes(formattedQuery);
+                const nameMatches = (vehicle.firstName && vehicle.firstName.toUpperCase().includes(formattedQuery)) ||
+                    (vehicle.lastName && vehicle.lastName.toUpperCase().includes(formattedQuery));
+                return modelMatches || makeMatches || yearMatches || nameMatches;
+
+
             });
-    
+
             setData(maintained);
         }
-        
+
     }, [dsearch, VehicleType, searchType, searchOrder]);
-       
 
       getData = async () =>{
 
@@ -130,7 +104,7 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/get-all-vehicles`,
+            url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/get-all-vehicles`,
             headers: { 
               'Authorization': accessToken
             }
@@ -139,7 +113,9 @@ function VehicleRecords({dsearch,type,searchType,searchOrder}) {
           .then((response) => {
             console.log(JSON.stringify(response.data));
             setVehicles(response.data.data); 
-            
+            AsyncStorage.setItem("VehicleId",JSON.stringify(response.data.data[0].id));
+            AsyncStorage.setItem("registrationNumber",JSON.stringify(response.data.data[0].registrationNumber));
+            // console.log("id",JSON.stringify(response.data.data[0].registrationNumber));
           })
           .catch((error) => {
             console.log(error);

@@ -1,20 +1,98 @@
 import * as React from "react";
+import { useState,useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { Modal,StyleSheet, View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import VehicleDetails from "../components/VehicleDetail";
 import { useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+
 
 const VehicleDetailView = ({route}) => {
+  const [imageResponce,setImageResponce] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fetchedImages,setFetchedImages] = React.useState([]);
+  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
   const navigation = useNavigation();
+  const [originalUri,setOriginalUri] = useState('');
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [loading, setLoading] = useState(false);
   // const route = useRoute();
+  const vehicleId = route.params.vehicleId;
+  const registrationNumber = route.registrationNumber;
 
   // contains the record id details
-  const vehicleId = route.params.vehicleId;
-  // console.log("here");
   
+
+  const getVehicleImages = async (vehicleId) => {
+    try {
+      if (!fetchedImages || fetchedImages.length === 0) {
+        setLoading(true);
+      }
+      let token = await AsyncStorage.getItem("accessToken");
+      const accessToken = 'Bearer ' + token;
+
+      if (vehicleId) {
+        let config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+  
+        const response = await axios.request(config);
+        setImageResponce(response.data);
+        console.log("responce set");
+        if (imageResponce && imageResponce.length > 0) {
+          const imageUrls = imageResponce.map(item => baseUrl + item.url);
+          setFetchedImages(imageUrls);
+          setLoading(false);
+        }
+        
+        
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  useEffect(() => {
+    getVehicleImages(vehicleId);
+  }, []); // Add vehicleId as a dependency to this effect
+  
+  
+
+  const renderCarouselItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+       onPress={() => handleOpen(item)}>
+      <Image
+        source={{ uri: item }}
+        style={styles.carouselImage}
+        contentFit="cover"
+      />
+      </TouchableOpacity>
+    );
+  };
+
+  const handleOpen = (uri) => {
+    setOriginalUri(uri);
+    if(originalUri)
+    {
+    setModalVisible(true);
+  }
+};
+
+  const handleClose = () => {
+    setModalVisible(false);
+    setOriginalUri('');
+  };
   
   
   return (
@@ -24,6 +102,39 @@ const VehicleDetailView = ({route}) => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
+
+<View style={styles.container}>
+{loading ? (
+        <ActivityIndicator size="large" color="#007aff" />
+      ) : (
+        fetchedImages.length > 0 && (
+          <View style={styles.imageContainer}>
+            <Carousel
+              data={fetchedImages}
+              renderItem={renderCarouselItem}
+              sliderWidth={350}
+              itemWidth={400}
+              onSnapToItem={(index) => setActiveSlide(index)}
+              sliderHeight={100}
+            />
+
+            <Pagination
+              dotsLength={fetchedImages.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotColor="#007aff"
+              dotStyle={styles.paginationDot}
+              inactiveDotColor="#ccc"
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          </View>
+        )
+      )}
+     </View>
+     
+     
+ 
 
       
 
@@ -40,17 +151,25 @@ const VehicleDetailView = ({route}) => {
           </View>
           <Text style={[styles.text, styles.textFlexBox]}>\</Text>
         </View>
-        <Text style={[styles.abc123, styles.abc123Clr]}>ABC-123</Text>
+        <Text style={[styles.abc123, styles.abc123Clr]}>{registrationNumber}</Text>
         <View style={[styles.element, styles.housefillFlexBox]}>
           <Text style={[styles.text1, styles.textFlexBox]}>\</Text>
         </View>
         <Text style={[styles.record, styles.kmTypo]}>Vehicle</Text>
       </View>
-
+      <View style={styles.vehicleComponent}>
       <VehicleDetails prop={vehicleId} />
-
+      </View>
       {/* face icon  */}
       
+      <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+        <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
+            <Text style={styles.deleteButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
 
      
       
@@ -62,6 +181,79 @@ const VehicleDetailView = ({route}) => {
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    // backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalMedia: {
+    width: '100%',
+    height: '100%',
+    aspectRatio: 1, // This maintains the original image's aspect ratio
+  },
+  deleteButton1: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    zIndex: 1,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  carouselImage: {
+  width: "100%",
+  height: "100%",
+  justifyContent: 'center',
+  // alignItems: 'center',
+  position:"relative",
+  left:"5%"
+},
+
+  vehicleComponent:{
+    top:-230,
+  },
+  carouselItem: {
+    width: "100%",
+    height: "100%",
+    position:"relative",
+    justifyContent: 'center',
+    alignItems:'center',
+  },
+  paginationContainer: {
+    paddingVertical: 5,
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 8,
+  },
+  imageUpload:{
+    position:"absolute",
+
+  },
+  container: {
+    top:150,
+    height:"30%",
+    // backgroundColor:"red",
+    alignItems: 'center',
+    justifyContent: 'center',
+    position:'relative',
+  },
+  imageContainer: {
+    position: 'relative',
+    width: "90%",
+    height: "90%",
+    // backgroundColor:"blue",
+    
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    contentFit: 'cover',
+  },
   childViewPosition: {
     width: 430,
     left: -6.5,
@@ -70,7 +262,7 @@ const styles = StyleSheet.create({
   
   cont:{
     padding:6,
-    top:-35,
+    top:-290,
     right:5,
     zIndex:999,
   },
@@ -497,9 +689,9 @@ const styles = StyleSheet.create({
   groupIcon: {
     left: 105,
   },
-  container: {
-    left: 365,
-  },
+  // container: {
+  //   left: 365,
+  // },
   invoiceWarrantyLineSvgrepoIcon: {
     left: 375,
   },
@@ -542,7 +734,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     flex: 1,
     overflow: "hidden",
-    height: 932,
+    height: "100%",
     width: "100%",
   },
 });

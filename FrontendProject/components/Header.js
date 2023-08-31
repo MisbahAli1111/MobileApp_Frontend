@@ -13,7 +13,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   const [profileImageLink, setProfileImageLink] = useState('');
   const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
   const [baseUrlM, setBaseUrlM]= useState('http://192.168.100.71:8080');
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(false); // Add loading state
 
   
   const handleProfileImagePress = () => {
@@ -26,6 +26,10 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
       const token = 'Bearer ' + accessTokens;
       const storedUserId = await AsyncStorage.getItem('userId');
       setUserId(storedUserId);
+      if(profileImageLink == null)
+      {
+        setLoading(true);
+      }
 
       if (userId) {
         console.log("userID found");
@@ -33,7 +37,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         const config = {
           method: 'get',
           maxBodyLength: Infinity,
-          url: `http://192.168.100.71:8080/api/users/${userId}/profile-image`,
+          url: `http://192.168.0.236:8080/api/users/${userId}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -43,7 +47,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
 
         if (response.status === 200) {
           const responseData = response.data;
-          setProfileImageLink(baseUrlM+responseData.url); // Update the state directly
+          setProfileImageLink(baseUrl+responseData.url); // Update the state directly
         } else {
           console.log('Error: ' + response.statusText);
         }

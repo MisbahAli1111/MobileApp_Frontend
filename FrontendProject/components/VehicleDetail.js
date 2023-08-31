@@ -20,7 +20,10 @@ function VehicleDetails(props) {
   getData = async () => {
     let token= await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
-   
+    setVehicleId(props.prop);
+
+   if(vehicleId)
+   {
     // console.log(vehicleId);
     let config = {
       method: 'get',
@@ -39,10 +42,11 @@ function VehicleDetails(props) {
     .catch((error) => {
       console.log(error);
     });
+  }
   };
 
   useEffect(() => {
-    setVehicleId(props.prop);
+    
     // console.log(vehicleId);
     getData();
   });
@@ -50,7 +54,7 @@ function VehicleDetails(props) {
 
   return (
     <View>
-        <View>
+        <View style={styles.textComponent}>
             <Text style={styles.heading}>{vechileDetails.make}  {vechileDetails.model}  {vechileDetails.year}</Text>
         </View>
 
@@ -109,18 +113,18 @@ function VehicleDetails(props) {
       </View>
 
       {/* car image  */}
-      <Image
+      {/* <Image
         style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
         contentFit="cover"
         source={require("../assets/group-114.png")}
-      />
+      /> */}
 
 
-      <Image
+      {/* <Image
         style={styles.maintenanceDetailViewChild3}
         contentFit="cover"
         source={require("../assets/group-83.png")}
-      />
+      /> */}
       <Image
         style={[styles.vectorIcon1, styles.vectorIconLayout]}
         contentFit="cover"
@@ -137,13 +141,16 @@ function VehicleDetails(props) {
   );
 }
 const styles = StyleSheet.create({
+  textComponent:{
+    justifyContent:"center",
+    alignItems:"center"
+  },
     heading:{
         top:392,
         fontSize:20,
         fontFamily: FontFamily.poppinsRegular,
         color: Color.Black,
         fontWeight: 'bold',
-        left:25,
     },
   childViewPosition: {
     width: 380,
