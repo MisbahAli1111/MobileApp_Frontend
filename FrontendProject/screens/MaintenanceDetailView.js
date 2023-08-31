@@ -16,8 +16,8 @@ const MaintenanceDetailView = () => {
 
   // contains the record id details
   const recordId = route.params?.recordId;
-  // console.warn(recordId);
-  
+  console.warn(recordId);
+
 
   
   return (

@@ -22,50 +22,7 @@ const FilterSearchVehicle = ({onFilterSelect}) => {
       
         <View style={styles.dropdown}>
         
-          <View style={styles.pickerContainer}>
-            <Text style={styles.pickerLabel}>Select Attributes:</Text>
-            <View style={styles.radioButtonGroup}>
-              <RadioButton.Item
-                label="Name"
-                value="firstName"
-                status={selectedAttributes.includes('firstName') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('firstName')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'firstName'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'firstName']);
-                  }
-                }}
-                color={selectedAttributes.includes('firstName') ? Color.steelblue_100 : undefined}
-              />
-              <RadioButton.Item
-                label="Contact"
-                value="phoneNumber"
-                status={selectedAttributes.includes('phoneNumber') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('phoneNumber')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'phoneNumber'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'phoneNumber']);
-                  }
-                }}
-                color={selectedAttributes.includes('phoneNumber') ? Color.steelblue_100 : undefined}
-              />
-              <RadioButton.Item
-                label="Registration Number"
-                value="registrationNumber"
-                status={selectedAttributes.includes('registrationNumber') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('registrationNumber')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'registrationNumber'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'registrationNumber']);
-                  }
-                }}
-                color={selectedAttributes.includes('registrationNumber') ? Color.steelblue_100 : undefined}
-              />
-            </View>
-          </View>
+          
           <View style={styles.pickerContainer}>
             <Text style={styles.pickerLabel}>Select Sort Order:</Text>
             <View style={styles.radioButtonGroup}>
@@ -108,7 +65,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     width: 200,
-    height: 405,
+    height: 205,
     position: 'absolute',
     top: -17,
     right: 140,

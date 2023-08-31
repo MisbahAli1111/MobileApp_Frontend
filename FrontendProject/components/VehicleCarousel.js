@@ -62,7 +62,7 @@ return (
                 vehicleType = 'Bike';
                 break;
               case 2:
-                vehicleType = 'Bus';
+                vehicleType = 'Truck';
                 break;
               case 3:
                 vehicleType = 'Auto';
