@@ -81,7 +81,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
     {loading ? (
       <ActivityIndicator size="small" color="black" />
     ) : (
-      profileImageLink ? (
+      profileImage !== "No" && profileImageLink ? (
         <TouchableOpacity onPress={handleProfileImagePress}>
           <Image source={{ uri: profileImageLink }} style={styles.profileImage} />
         </TouchableOpacity>

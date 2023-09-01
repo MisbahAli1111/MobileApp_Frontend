@@ -10,6 +10,7 @@ import { useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Carousel, { Pagination } from "react-native-snap-carousel";
+import {AntDesign} from "@expo/vector-icons";
 
 
 const VehicleDetailView = ({route}) => {
@@ -28,43 +29,70 @@ const VehicleDetailView = ({route}) => {
   // contains the record id details
   
 
-  const getVehicleImages = async (vehicleId) => {
-    try {
-      if (!fetchedImages || fetchedImages.length === 0) {
-        setLoading(true);
-      }
-      let token = await AsyncStorage.getItem("accessToken");
-      const accessToken = 'Bearer ' + token;
+  // const getVehicleImages = async (vehicleId) => {
+  //   try {
+  //     if (!fetchedImages || fetchedImages.length === 0) {
+  //       setLoading(true);
+  //     }
+  //     let token = await AsyncStorage.getItem("accessToken");
+  //     const accessToken = 'Bearer ' + token;
 
-      if (vehicleId) {
-        let config = {
-          method: 'get',
-          maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
-          headers: {
-            'Authorization': accessToken
-          }
-        };
+  //     if (vehicleId) {
+  //       let config = {
+  //         method: 'get',
+  //         maxBodyLength: Infinity,
+  //         url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
+  //         headers: {
+  //           'Authorization': accessToken
+  //         }
+  //       };
   
-        const response = await axios.request(config);
-        setImageResponce(response.data);
-        console.log("responce set");
-        if (imageResponce && imageResponce.length > 0) {
-          const imageUrls = imageResponce.map(item => baseUrl + item.url);
-          setFetchedImages(imageUrls);
-          setLoading(false);
-        }
+  //       const response = await axios.request(config);
+  //       setImageResponce(response.data);
+  //       console.log("responce set");
+  //       if (imageResponce && imageResponce.length > 0) {
+  //         const imageUrls = imageResponce.map(item => baseUrl + item.url);
+  //         setFetchedImages(imageUrls);
+  //         setLoading(false);
+  //       }
         
         
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   
   useEffect(() => {
-    getVehicleImages(vehicleId);
-  }, []); // Add vehicleId as a dependency to this effect
+    const fetchImages = async () => {
+      try {
+        setLoading(true); // Set loading to true while fetching
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = 'Bearer ' + token;
+
+        if (vehicleId) {
+          let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
+            headers: {
+              'Authorization': accessToken
+            }
+          };
+    
+          const response = await axios.request(config);
+          const imageUrls = response.data.map(item => baseUrl + item.url);
+          setFetchedImages(imageUrls);
+          setLoading(false); // Set loading to false when images are fetched
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false); // Make sure to set loading to false in case of an error
+      }
+    };
+
+    fetchImages();
+  }, [vehicleId]); // Add vehicleId as a dependency to this effect
   
   
 
@@ -165,8 +193,8 @@ const VehicleDetailView = ({route}) => {
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
         <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
-          <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
-            <Text style={styles.deleteButtonText}>Close</Text>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+          <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
           </TouchableOpacity>
         </View>
       </Modal>
@@ -183,24 +211,19 @@ const VehicleDetailView = ({route}) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    // backgroundColor: 'black',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalMedia: {
     width: '100%',
     height: '100%',
-    aspectRatio: 1, // This maintains the original image's aspect ratio
-  },
-  deleteButton1: {
+    },
+  closeButton: {
     position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex: 1,
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontSize: 16,
+    top: 10, // Adjust the top positioning as needed
+    right: 10, // Adjust the right positioning as needed
+    zIndex: 1, // Ensure the button appears above the image
   },
   carouselImage: {
   width: "100%",

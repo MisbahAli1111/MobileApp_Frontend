@@ -69,13 +69,13 @@ const App = () => {
         },
       })}
       >
-          {/* <Stack.Screen
+          <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: '',
           profileImage: 'No',  
-          }}/> */}
+          }}/>
 
           <Stack.Screen
               name="Home"
@@ -161,10 +161,10 @@ const App = () => {
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
-              title: ' ', 
+              title: 'Switch Business', 
               showBackArrow: true, 
               onBackPress:'Login',
-              profileImage:'No'
+              profileImage:'Yes'
               }}
             />
 

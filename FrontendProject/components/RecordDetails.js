@@ -1,13 +1,20 @@
 import * as React from "react";
-import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Modal, TouchableOpacity,ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import {AntDesign} from "@expo/vector-icons";
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
+
+
 function RecordDetails({recordId}) {
 
 
@@ -20,18 +27,56 @@ function RecordDetails({recordId}) {
 
   const [datePart, timePart] = dateTime.split('T');
   const [registrationNumber,setRegistrationNumber]=useState('');
+  const [imageResponce,setImageResponce] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fetchedImages,setFetchedImages] = React.useState([]);
+  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const navigation = useNavigation();
+  const [originalUri,setOriginalUri] = useState('');
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-  
     getData();
+    const fetchImages = async () => {
+      try {
+        setLoading(true); // Set loading to true while fetching
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = 'Bearer ' + token;
+
+        if (recordId) {
+          let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/images`,
+            headers: {
+              'Authorization': accessToken
+            }
+          };
+    
+          const response = await axios.request(config);
+          const imageUrls = response.data.map(item => baseUrl + item.url);
+          setFetchedImages(imageUrls);
+          setLoading(false); // Set loading to false when images are fetched
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false); // Make sure to set loading to false in case of an error
+      }
+    };
+
+    fetchImages();
   },[recordId]);
 
   getData=async()=>{
     let token= await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
+    if(recordId)
+    {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'http://192.168.100.71:8080/api/maintenance-record/get-records/10',
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
       headers: { 
         'Authorization':accessToken
       }
@@ -52,38 +97,120 @@ function RecordDetails({recordId}) {
     .catch((error) => {
       console.log(error);
     });
-    
+  }
   };
 
-  const navigation = useNavigation();
+
+  // const getRecordImages = async () => {
+  //   try {
+  //     if (!fetchedImages || fetchedImages.length === 0) {
+  //       setLoading(true);
+  //     }
+  //     let token = await AsyncStorage.getItem("accessToken");
+  //     const accessToken = 'Bearer ' + token;
+
+  //     if (recordId) {
+  //       let config = {
+  //         method: 'get',
+  //         maxBodyLength: Infinity,
+  //         url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/images`,
+  //         headers: {
+  //           'Authorization': accessToken
+  //         }
+  //       };
+  
+  //       const response = await axios.request(config);
+  //       setImageResponce(response.data);
+  //       console.log("responce set");
+  //       if (imageResponce && imageResponce.length > 0) {
+  //         const imageUrls = imageResponce.map(item => baseUrl + item.url);
+  //         setFetchedImages(imageUrls);
+  //         setLoading(false);
+  //       }
+        
+        
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const renderCarouselItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+       onPress={() => handleOpen(item)}>
+      <Image
+        source={{ uri: item }}
+        style={styles.carouselImage}
+        contentFit="cover"
+      />
+      </TouchableOpacity>
+    );
+  };
+
+  const handleOpen = (uri) => {
+    setOriginalUri(uri);
+    if(originalUri)
+    {
+    setModalVisible(true);
+  }
+};
+
+  const handleClose = () => {
+    setModalVisible(false);
+    setOriginalUri('');
+  };
 
   return (
     <ScrollView style={styles.wrap}>
 
-      {/* details  */}
+     
 {/* car image  */}
-      <Image
-        style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
-        contentFit="cover"
-        source={require("../assets/group-114.png")}
-      />
-       <Image
-        style={[styles.vectorIcon1, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector4.png")}
-      />
-      <Image
-        style={[styles.vectorIcon2, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector5.png")}
-      />
-      <Image
-        style={styles.maintenanceDetailViewChild3}
-        contentFit="cover"
-        source={require("../assets/group-83.png")}
-      />
+
+     <View style={styles.Carousalcontainer}>
+     {loading ? (
+        <ActivityIndicator size="large" color="#007aff" />
+      ) : (
+        fetchedImages.length > 0 && (
+          <View style={styles.imageContainer}>
+            <Carousel
+              data={fetchedImages}
+              renderItem={renderCarouselItem}
+              sliderWidth={350}
+              itemWidth={400}
+              onSnapToItem={(index) => setActiveSlide(index)}
+              sliderHeight={100}
+            />
+
+            <Pagination
+              dotsLength={fetchedImages.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotColor="#007aff"
+              dotStyle={styles.paginationDot}
+              inactiveDotColor="#ccc"
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          </View>
+        )
+      )}
+     </View>
+     {/* modal */}
+
+     <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+        <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+          <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+     {/* details  */}
       <View style={styles.detailsParent}>
-        <Text style={[styles.details, styles.abc123Clr]}>Details</Text>
+        <Text style={[styles.details, styles.abc123Clr]}>Details:</Text>
         <Text style={[styles.carWasMaintained, styles.jan2023Positionn]}>
         {detail}
         </Text>
@@ -141,7 +268,75 @@ function RecordDetails({recordId}) {
   );
 }
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  modalMedia: {
+    width: '100%',
+    height: '100%',
+    // aspectRatio: 1, // This maintains the original image's aspect ratio
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10, // Adjust the top positioning as needed
+    right: 10, // Adjust the right positioning as needed
+    zIndex: 1, // Ensure the button appears above the image
+  },
+  carouselImage: {
+  width: "100%",
+  height: "100%",
+  justifyContent: 'center',
+  // alignItems: 'center',
+  position:"relative",
+  left:"5%"
+},
 
+  vehicleComponent:{
+    top:-230,
+  },
+  carouselItem: {
+    width: "100%",
+    height: "100%",
+    position:"relative",
+    justifyContent: 'center',
+    alignItems:'center',
+  },
+  paginationContainer: {
+    paddingVertical: 5,
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 8,
+  },
+  imageUpload:{
+    position:"absolute",
+
+  },
+  Carousalcontainer: {
+    height:"40%",
+    // backgroundColor:"red",
+    alignItems: 'center',
+    justifyContent: 'center',
+    position:'relative',
+  },
+  imageContainer: {
+    position: 'relative',
+    width: "90%",
+    height: "90%",
+    // backgroundColor:"blue",
+    
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    contentFit: 'cover',
+  },
+  
   childViewPosition: {
     width: 430,
     left: -6.5,
@@ -164,8 +359,7 @@ const styles = StyleSheet.create({
   wrap:{
     marginTop:0,
     // height:538,
-    marginLeft:8,
-    width:385,
+    width:"100%",
     zIndex:1,
     overflow:"hidden",
   },

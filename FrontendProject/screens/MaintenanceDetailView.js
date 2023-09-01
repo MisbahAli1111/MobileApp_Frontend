@@ -16,8 +16,8 @@ const MaintenanceDetailView = () => {
 
   // contains the record id details
   const recordId = route.params?.recordId;
-  console.warn(recordId);
-
+  // console.warn(recordId);
+  
 
   
   return (
@@ -27,23 +27,7 @@ const MaintenanceDetailView = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      {/* header  */}
-      <View style={[styles.vectorParent, styles.childViewPosition]}>
-        <Image
-          style={[styles.groupChild, styles.childViewPosition]}
-          contentFit="cover"
-          source={require("../assets/rectangle-571.png")}
-        />
-        <View style={styles.groupItem} />
-        
-       
-        <Image
-          style={[styles.groupInner, styles.groupInnerLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-58.png")}
-        />
-      </View>
-
+     
     {/* home  */}
 
       <View style={styles.breadcrumbsParent}>
