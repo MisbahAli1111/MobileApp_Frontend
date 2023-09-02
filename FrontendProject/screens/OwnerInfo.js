@@ -238,7 +238,7 @@ const OwnerInfo = () => {
             console.log(response.data.data);
             setUserId(createdUserId);
             
-            // Perform logic using the updated userId here
+           
             if (createdUserId) {
               uploadImage(createdUserId);
             }

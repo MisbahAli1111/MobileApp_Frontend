@@ -2,6 +2,7 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
+import ErrorPopup from "../components/ErrorPopup";
 import { StyleSheet, View, Text, TextInput, Dimensions, ActivityIndicator, ScrollView, TouchableOpacity, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
@@ -21,7 +22,8 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
     const [vehicles, setVehicles] = useState([]);
     const screenHeight = Dimensions.get('window').height;
     const screenWidth = Dimensions.get('window').width;
-
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
+  
 
     const displayedVehicles = useMemo(() => {
         let filteredVehicles;
@@ -50,8 +52,13 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
         return sortedVehicles;
     }, [search, data, vehicles, VehicleType, searchOrder]);
 
+    const deleteVehicle = () => {
 
+    }
 
+    const setPopUp = () => {
+        setShowErrorPopup(true);
+    }
     const handlePress = (vehicleId) => {
         setCurrentPressedIndex(vehicleId);
         // console.log(vehicleId);
@@ -142,16 +149,15 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
 
     return (
         <View>
+            <ErrorPopup
+                visible={showErrorPopup}
+                message={'Are you sure you want to remove Vehicle?'}
+                onConfirm={() => {
+                    setShowErrorPopup(false);
 
-            <View style={{ flex: 1, justifyContent: 'center', position: 'absolute', width: screenWidth, height: screenHeight, alignItems: 'center' }}>
-
-                {isLoading ? (
-                    <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
-                ) : (
-                    <View>
-                    </View>
-                )}
-            </View>
+                }}
+                onCancel={() => setShowErrorPopup(false)}
+            />
             <View>
                 <ScrollView style={styles.scroll}>
                     {displayedVehicles.map((vehicle) => (
@@ -179,8 +185,18 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
                                         </Text>
                                     </View>
                                     <View>
-                                       <FontAwesome name="trash" size={30} color="black" />
+
+                                        <TouchableOpacity onPress={setPopUp}>
+                                            <FontAwesome
+                                                name="trash"
+                                                marginLeft='64%'
+                                                marginTop='-3%'
+                                                size={25}
+                                                color={currentPressedIndex === vehicle.id ? "white" : "black"}
+                                            />
+                                        </TouchableOpacity>
                                     </View>
+
                                 </View>
 
                                 {/* For Company Name  */}
