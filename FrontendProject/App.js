@@ -21,6 +21,7 @@ import AddVehicle from "./screens/AddVehicle";
 import Login from "./screens/Login";
 import VehicleDetails from  "./screens/VehiclesDetails";
 import AddCustomer from "./screens/AddCustomer";
+import CustomerDetails from "./screens/CustomerDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import Header from "./components/Header";
@@ -130,6 +131,15 @@ const App = () => {
           profileImage: 'Yes', 
               }}
               /> 
+          <Stack.Screen
+          name="CustomerDetails"
+          component={CustomerDetails}
+          initialParams={{
+          title: 'Customer Details',
+          showBackArrow: true, 
+          onBackPress:'Vehicles',
+          profileImage: 'Yes',  
+          }}/>    
 
 
             <Stack.Screen

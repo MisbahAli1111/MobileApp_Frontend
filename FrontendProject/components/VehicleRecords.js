@@ -23,7 +23,7 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
     const screenHeight = Dimensions.get('window').height;
     const screenWidth = Dimensions.get('window').width;
     const [showErrorPopup, setShowErrorPopup] = useState(false);
-  
+    const [ tempVehicleid, setTempVehicleId]= useState('');
 
     const displayedVehicles = useMemo(() => {
         let filteredVehicles;
@@ -52,14 +52,34 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
         return sortedVehicles;
     }, [search, data, vehicles, VehicleType, searchOrder]);
 
-    const deleteVehicle = () => {
+    deleteVehicle = async () => {
+        const Business_id = await AsyncStorage.getItem("Business_id");
+            console.log(tempVehicleid);
+        
 
+        let config = {
+            method: 'put',
+            maxBodyLength: Infinity,
+            url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
+            headers: {}
+        };
+
+        axios.request(config)
+            .then((response) => {
+                // console.log(JSON.stringify(response.data));
+                getData();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
-    const setPopUp = () => {
+    const setPopUp = (vehicleIds) => {
+        setTempVehicleId(vehicleIds);
         setShowErrorPopup(true);
     }
     const handlePress = (vehicleId) => {
+
         setCurrentPressedIndex(vehicleId);
         // console.log(vehicleId);
         navigation.navigate("VehicleDetails", { vehicleId });
@@ -144,20 +164,17 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
         getData();
     }, [type]);
 
+    const handleDeleteVehicle = () => {
+        // console.log(tempVehicleid);
+        setShowErrorPopup(false);
+        deleteVehicle();
+    };
 
     //   console.log(displayedVehicles);
 
     return (
         <View>
-            <ErrorPopup
-                visible={showErrorPopup}
-                message={'Are you sure you want to remove Vehicle?'}
-                onConfirm={() => {
-                    setShowErrorPopup(false);
 
-                }}
-                onCancel={() => setShowErrorPopup(false)}
-            />
             <View>
                 <ScrollView style={styles.scroll}>
                     {displayedVehicles.map((vehicle) => (
@@ -176,6 +193,7 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
                                     ]}
                                 >
                                 </View>
+
                                 <View style={[styles.trashRow]}>
                                     <View style={[styles.frameParent1, styles.frameParentLayout]}>
                                         <Text style={[styles.landCruiserV8,
@@ -185,8 +203,17 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
                                         </Text>
                                     </View>
                                     <View>
-
-                                        <TouchableOpacity onPress={setPopUp}>
+                                        <ErrorPopup
+                                            visible={showErrorPopup}
+                                            message={'Are you sure you want to remove Vehicle?'}
+                                            onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
+                                            onCancel={() => {
+                                                setShowErrorPopup(false);
+                                                setTempVehicleId(null); // Reset vehicleIds when the popup is closed
+                                              }}
+                                           
+                                        />
+                                        <TouchableOpacity onPress={() => setPopUp(vehicle.id)}>
                                             <FontAwesome
                                                 name="trash"
                                                 marginLeft='64%'

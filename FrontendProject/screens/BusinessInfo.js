@@ -209,7 +209,7 @@ const [userId,setUserId] = useState('');
 
 
     const response = await axios.post(
-      `http://192.168.100.71:8080/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
+      `http://192.168.0.236:8080/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {

@@ -85,9 +85,14 @@ function VehicleDetails(props) {
         <Text style={[styles.maintainedBy, styles.dateTypo]}>
           Client Name
         </Text>
+        <TouchableOpacity 
+        onPress={() => navigation.navigate("CustomerDetails", {
+    ownerId: vechileDetails.ownerId
+  })}>
         <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
         {vechileDetails.name}
         </Text>
+        </TouchableOpacity>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>
             manual

@@ -251,7 +251,7 @@ const AddVehicle = () => {
           );
       
           console.log('Response:', response.data);
-          if (response.data.status == OK) {
+          if (response.data.status == "OK") {
             console.log("image uploaded");
           }
       
@@ -388,7 +388,7 @@ const AddVehicle = () => {
             if (createdUserId) {
               uploadImage(createdUserId);
             }
-            navigation.navigate('Login');
+            navigation.navigate('Vehicles');
           }
         })
         .catch((error) => {
@@ -742,7 +742,7 @@ const AddVehicle = () => {
           handleClick
         }>
         
-        <AntDesign name="closecircle" size={24} color="red~~" />
+        <AntDesign name="closecircle" size={24} color="rgba(3, 29, 68, 1)" />
         
       </TouchableOpacity>
         </View>  

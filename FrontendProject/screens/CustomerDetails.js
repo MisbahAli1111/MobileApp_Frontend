@@ -4,8 +4,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import { Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as FileSystem from 'expo-file-system';
-const windowWidth = Dimensions.get('window').width;
 import axios from 'axios';
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import {AntDesign} from '@expo/vector-icons';
@@ -13,8 +11,12 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
+import { useRoute } from '@react-navigation/native'; 
 
 const EditProfile = () => {
+    const route = useRoute();
+    const {ownerId} = route.params;
+    console.log(ownerId);
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState('');

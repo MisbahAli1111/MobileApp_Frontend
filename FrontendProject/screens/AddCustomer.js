@@ -107,7 +107,7 @@ const AddCustomer = () => {
 
 
     const response = await axios.post(
-      `http://192.168.100.71:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -215,7 +215,7 @@ const AddCustomer = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `http://192.168.100.71:8080/api/users/register/customer/${Business_id}`,
+        url: `http://192.168.0.236:8080/api/users/register/customer/${Business_id}`,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': accessToken
