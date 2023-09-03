@@ -17,7 +17,8 @@ import {
 
 function RecordDetails({recordId}) {
 
-
+  const [ownerId,setOwnerId] = useState('');
+  const [ownerName,setOwnerName] = useState('');
   const [detail , setDetail]=useState('');
   const [name, setName]=useState('');
   const [Mileage,setMileage]=useState('');
@@ -66,7 +67,48 @@ function RecordDetails({recordId}) {
     };
 
     fetchImages();
-  },[recordId]);
+
+    const getOwnerId = async () => {
+      try {
+        const storedOwnerId = await AsyncStorage.getItem('ownerId');
+        if (storedOwnerId !== null) {
+          setOwnerId(storedOwnerId);
+          console.log('Successfully retrieved ownerId from AsyncStorage:', storedOwnerId);
+        } else {
+          console.log('ownerId not found in AsyncStorage.');
+        }
+      } catch (error) {
+        console.error('Error retrieving ownerId from AsyncStorage:', error);
+      }
+    };
+    
+    getOwnerId();
+    if(ownerId)
+    {
+      getOwnerInfo(ownerId);
+    }
+
+  },[recordId,ownerId]);
+
+  const getOwnerInfo = async (ownerId) => {
+    if(ownerId)
+    {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.0.236:8080/api/users/${ownerId}`, // Use backticks
+      headers: {}
+    };
+  
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setOwnerName(response.data.firstName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }};
 
   getData=async()=>{
     let token= await AsyncStorage.getItem("accessToken");
@@ -100,41 +142,6 @@ function RecordDetails({recordId}) {
   }
   };
 
-
-  // const getRecordImages = async () => {
-  //   try {
-  //     if (!fetchedImages || fetchedImages.length === 0) {
-  //       setLoading(true);
-  //     }
-  //     let token = await AsyncStorage.getItem("accessToken");
-  //     const accessToken = 'Bearer ' + token;
-
-  //     if (recordId) {
-  //       let config = {
-  //         method: 'get',
-  //         maxBodyLength: Infinity,
-  //         url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/images`,
-  //         headers: {
-  //           'Authorization': accessToken
-  //         }
-  //       };
-  
-  //       const response = await axios.request(config);
-  //       setImageResponce(response.data);
-  //       console.log("responce set");
-  //       if (imageResponce && imageResponce.length > 0) {
-  //         const imageUrls = imageResponce.map(item => baseUrl + item.url);
-  //         setFetchedImages(imageUrls);
-  //         setLoading(false);
-  //       }
-        
-        
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  // };
 
   const renderCarouselItem = ({ item }) => {
     return (
@@ -252,6 +259,13 @@ function RecordDetails({recordId}) {
           <Text style={[styles.jan2023, styles.jan2023Position]}>{service}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Service</Text>
         </View>
+        <View style={styles.carWashParent1}>
+        <TouchableOpacity 
+        onPress={()=> navigation.navigate("CustomerDetails")}>
+          <Text style={[styles.jan2023, styles.jan2023Position,styles.hyperlink]}>{ownerName}</Text>
+          </TouchableOpacity>
+          <Text style={[styles.date, styles.dateTypo]}>Vehicle Owner</Text>
+        </View>
         <View style={[styles.pmParent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>{timePart}</Text>
           <Text style={[styles.date, styles.dateTypo]}>Time</Text>
@@ -268,6 +282,10 @@ function RecordDetails({recordId}) {
   );
 }
 const styles = StyleSheet.create({
+  hyperlink: {
+    textDecorationLine: 'underline',
+    color: '#0073e6', // Change the color to your desired hyperlink color
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -400,6 +418,7 @@ const styles = StyleSheet.create({
   jan2023Position: {
     top: 26,
     position: "relative",
+    width:200
   },
   jan2023Positionn: {
     top: 0,
@@ -660,15 +679,23 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     position: "absolute",
+    width:200
   },
   jan2023Parent: {
     width: 98,
     left: 25,
   },
   carWashParent: {
-    top: 239,
+    top: 230,
     width: 79,
     left: 25,
+    height: 50,
+    position: "absolute",
+  },
+  carWashParent1: {
+    top: 230,
+    width: 79,
+    left: 280,
     height: 50,
     position: "absolute",
   },

@@ -2,7 +2,7 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Linking, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import Vehicles from "../screens/Vehicles";
@@ -38,6 +38,16 @@ function VehicleDetails(props) {
     .then((response) => {
       // console.log(JSON.stringify(response.data));
         setVehicleDetails(response.data);
+        const ownerId = JSON.stringify(response.data.ownerId);
+        // console.log("owner:" ,ownerId);
+  
+      try {
+        // Store ownerId in AsyncStorage
+        AsyncStorage.setItem('ownerId', ownerId);
+        // console.log('ownerId has been set in AsyncStorage:', ownerId);
+      } catch (error) {
+        console.error('Error setting ownerId in AsyncStorage:', error);
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -73,7 +83,12 @@ function VehicleDetails(props) {
             </View>
           </View>
           <View style={[styles.kmWrapper, styles.jan2023Position]}>
+          <TouchableOpacity
+          onPress={() => {if (vechileDetails.phoneNumber) {
+                  Linking.openURL(`tel:${vechileDetails.phoneNumber}`);
+                }}}>
             <Text style={[styles.km, styles.kmTypo]}>{vechileDetails.phoneNumber}</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={[styles.frameContainer, styles.waleedAliPosition]}>
@@ -86,10 +101,8 @@ function VehicleDetails(props) {
           Client Name
         </Text>
         <TouchableOpacity 
-        onPress={() => navigation.navigate("CustomerDetails", {
-    ownerId: vechileDetails.ownerId
-  })}>
-        <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
+        onPress={() => navigation.navigate("CustomerDetails")}>
+        <Text style={[styles.waleedAli, styles.waleedAliPosition,styles.hyperlink]}>
         {vechileDetails.name}
         </Text>
         </TouchableOpacity>
@@ -146,6 +159,10 @@ function VehicleDetails(props) {
   );
 }
 const styles = StyleSheet.create({
+  hyperlink: {
+    textDecorationLine: 'underline',
+    color: '#0073e6', // Change the color to your desired hyperlink color
+  },
   textComponent:{
     justifyContent:"center",
     alignItems:"center"

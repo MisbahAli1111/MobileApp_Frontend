@@ -73,7 +73,7 @@ const AddVehicle = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/users/get-customer/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/users/get-customer/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -217,6 +217,8 @@ const AddVehicle = () => {
     };
 
     const uploadImage = async (vehicleId) => {
+      if(selectedImage)
+      {
       let token= await AsyncStorage.getItem("accessToken");
       const accessToken = 'Bearer ' + token;
       const imageData = new FormData();
@@ -241,7 +243,7 @@ const AddVehicle = () => {
           
       
           const response = await axios.post(
-            `http://192.168.100.71:8080/api/file/upload/vehicle/${vehicleId}`,
+            `http://192.168.0.236:8080/api/file/upload/vehicle/${vehicleId}`,
             imageData,
             {
               headers: {
@@ -250,7 +252,7 @@ const AddVehicle = () => {
             }
           );
       
-          console.log('Response:', response.data);
+          console.log('ResponseVehicle :', response.data);
           if (response.data.status == "OK") {
             console.log("image uploaded");
           }
@@ -259,7 +261,7 @@ const AddVehicle = () => {
         } catch (error) {
           console.error('Error:', error.message);
         }
-      };
+    }};
     
     
 
@@ -363,11 +365,21 @@ const AddVehicle = () => {
           "customerType":customerType,
           "parentCompany": customerType === 'Walk-in' ? null : CompanyName
         });
+
+        const ownerId = toString(keyCustomer);
+
+        try {
+          // Store ownerId in AsyncStorage
+          await AsyncStorage.setItem('ownerId', ownerId);
+          console.log('ownerId has been set in AsyncStorage:', ownerId);
+        } catch (error) {
+          console.error('Error setting ownerId in AsyncStorage:', error);
+        }
         
         let config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/add-vehicle`,
+          url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/add-vehicle`,
           headers: { 
             'Content-Type': 'application/json',
             'Authorization': accessToken

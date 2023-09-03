@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal,View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ImageBackground } from 'react-native';
+import {Linking, Modal,View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ImageBackground } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import { Dimensions } from 'react-native';
@@ -11,12 +11,10 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-import { useRoute } from '@react-navigation/native'; 
+
 
 const EditProfile = () => {
-    const route = useRoute();
-    const {ownerId} = route.params;
-    console.log(ownerId);
+  const [ownerId,setOwnerId] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState('');
@@ -29,14 +27,12 @@ const EditProfile = () => {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [isImageModalVisible,setImageModalVisible]= useState('false');
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
-  const [userId, setUserId] = useState('');
   const [profileImageLink, setProfileImageLink] = useState(null);
   const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
   const [baseUrlM, setBaseUrlM] = useState('http://192.168.100.71:8080');
   
   const [loading, setLoading] = useState(true); 
   const countryCodes = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE", "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF", "TD", "CL", "CN", "CO", "KM", "CG", "CD", "CR", "HR", "CU", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "GQ", "ER", "EE", "ET", "FJ", "FI", "FR", "GA", "GM", "GE", "DE", "GH", "GR", "GD", "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI", "JM", "JP", "JO", "KZ", "KE", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI", "LT", "LU", "MK", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "FM", "MD", "MC", "MN", "ME", "MA", "MZ", "MM", "NA", "NR", "NP", "NL", "NZ", "NI", "NE", "NG", "KP", "NO", "OM", "PK", "PW", "PA", "PG", "PY", "PE", "PH", "PL", "PT", "QA", "RO", "RU", "RW", "KN", "LC", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES", "LK", "SD", "SR", "SZ", "SE", "CH", "SY", "TJ", "TZ", "TH", "TL", "TG", "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE", "VN", "YE", "ZM", "ZW"];
-
   const handleImageUpload = () => {
     setImageModalVisible(true);
   };
@@ -82,34 +78,14 @@ const EditProfile = () => {
     const randomString = Math.random().toString(36).substring(7); // Generate a random string
     return `image_${timestamp}_${randomString}`;
   };
-  // const saveImageToDirectory = async (imageUri) => {
-  //   try {
-  //     const uniqueName = generateUniqueName(); // Generate a unique name for the image
-  //     const destinationUri = `${FileSystem.documentDirectory}${uniqueName}.jpeg`;
-  
-  //     // Copy the image to the specified destination
-  //     await FileSystem.copyAsync({
-  //       from: imageUri,
-  //       to: destinationUri,
-  //     });
-  
-  //     console.log('Image saved to:', destinationUri);
-  //   } catch (error) {
-  //     console.error('Error saving image:', error);
-  //   }
-  // };
-  
-
-
-  // console.log(profileImage);
 
   getData = async () => {
-    const userId = await AsyncStorage.getItem("userId");
-
+    if(ownerId)
+    {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/${userId}`, // Use backticks
+      url: `http://192.168.0.236:8080/api/users/${ownerId}`, // Use backticks
       headers: {}
     };
   
@@ -125,20 +101,39 @@ const EditProfile = () => {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }};
   
 
   useEffect(() => {
-    getData();
-   }, []);
+    
+    const getOwnerId = async () => {
+      try {
+        const storedOwnerId = await AsyncStorage.getItem('ownerId');
+        if (storedOwnerId !== null) {
+          setOwnerId(storedOwnerId);
+          console.log('Successfully retrieved ownerId from AsyncStorage:', storedOwnerId);
+        } else {
+          console.log('ownerId not found in AsyncStorage.');
+        }
+      } catch (error) {
+        console.error('Error retrieving ownerId from AsyncStorage:', error);
+      }
+    };
+    
+    getOwnerId();
+    
+
+    if(ownerId)
+    {
+      getData(ownerId);
+      getProfileImage(ownerId);
+    }
+   }, [ownerId]);
   
 
   const handleSave = async () => {
-
-    // if(profileImage){
-    //   saveImageToDirectory(profileImage);
-    // }
-    const userId = await AsyncStorage.getItem("userId");
+    if(ownerId)
+    {
 
     let data = JSON.stringify({
       "firstName": name,
@@ -152,7 +147,7 @@ const EditProfile = () => {
     let config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/update-user/${userId}`,
+      url: `http://192.168.0.236:8080/api/users/update-user/${ownerId}`,
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -162,15 +157,15 @@ const EditProfile = () => {
     axios.request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      if(userId)
+      if(ownerId)
       {
-      uploadImage(userId);
+      uploadImage(ownerId);
       }
     })
     .catch((error) => {
       console.log(error);
     });
-
+  }
 
 
   };
@@ -210,8 +205,9 @@ const EditProfile = () => {
     }
   };
 
-  const uploadImage = async (userId) =>{
-    console.log(userId);
+  const uploadImage = async (ownerId) =>{
+    if(ownerId)
+    {
     const imageData = new FormData();
     imageData.append('files', {
        uri: profileImageLink,
@@ -224,7 +220,7 @@ const EditProfile = () => {
 
 
     const response = await axios.post(
-      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `http://192.168.0.236:8080/api/file/upload/profile/${ownerId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -233,12 +229,12 @@ const EditProfile = () => {
         },
       }
     );
-
+    }
     console.log('Upload response:', response.data);
     console.log('Success', 'Files uploaded successfully');
     };
 
-  const getProfileImage = async (userId) => {
+  const getProfileImage = async (ownerId) => {
     try {
       const accessTokens = await AsyncStorage.getItem('accessToken');
       const token = 'Bearer ' + accessTokens;
@@ -246,7 +242,7 @@ const EditProfile = () => {
       const config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem('userId')}/profile-image`,
+        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem('ownerId')}/profile-image`,
         headers: {
           Authorization: token,
         },
@@ -269,27 +265,7 @@ const EditProfile = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const storedUserId = await AsyncStorage.getItem('userId');
-        setUserId(storedUserId);
-        if (userId) {
-          console.log("userID found");
-        }
-      } catch (error) {
-        console.error('Error fetching user ID from AsyncStorage:', error);
-      }
-    };
 
-    fetchUserId().then(() => {
-      if (userId) {
-        getProfileImage(userId);
-      }
-    });
-
-  }, []);
-  console.log(profileImageLink);
   return (
     <ImageBackground
       style={styles.backgroundImage}
@@ -309,7 +285,33 @@ const EditProfile = () => {
           </TouchableOpacity>
           <TouchableOpacity onPress={handleImageUpload}  style={styles.uploadButton}>
           <Text style={styles.uploadButtonText}>Update Profile</Text>
-              </TouchableOpacity>
+          </TouchableOpacity>
+
+          <View style={styles.contactIconsContainer}>
+            <TouchableOpacity
+              style={styles.contactIcon}
+              onPress={() => {
+                // Handle sending an email here
+                if (email) {
+                  Linking.openURL(`mailto:${email}`);
+                }
+              }}
+            >
+              <AntDesign name="mail" size={24} color="rgba(3, 29, 68, 1)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.contactIcon}
+              onPress={() => {
+                // Handle making a phone call here
+                if (phoneNumber) {
+                  Linking.openURL(`tel:${phoneNumber}`);
+                }
+              }}
+            >
+              <AntDesign name="phone" size={24} color="rgba(3, 29, 68, 1)" />
+            </TouchableOpacity>
+          </View>      
         </View>
         <View style={styles.formContainer}>
         <TextInput
@@ -391,52 +393,7 @@ const EditProfile = () => {
         </View>
         {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
 
-        {/* <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isImageModalVisible}
-          onRequestClose={() => setImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
-              <Text style={styles.imageModalButtonText}>Take a Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
-              <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.imageModalButton}
-              onPress={() => setImageModalVisible(false)}
-            >
-              <Text style={styles.imageModalButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isFullImageModalVisible}
-          onRequestClose={() => setFullImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-          <View style={styles.fullImageContainer}>
-            {profileImageLink && (
-              <Image
-                source={{ uri: profileImageLink }}
-                style={styles.fullImage}
-                resizeMode="contain"
-              />
-            )}
-            </View>
-            <TouchableOpacity
-              style={styles.imageModalButton}
-              onPress={() => setFullImageModalVisible(false)}
-            >
-              <Text style={styles.imageModalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal> */}
+        
 
         <Modal
           animationType="slide"
@@ -661,6 +618,15 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     color: Color.white,
     fontSize: FontSize.size_base,
+  },
+  contactIconsContainer: {
+    flexDirection: 'row', // Arrange icons horizontally
+    justifyContent: 'center', // Center icons horizontally
+    alignItems: 'center',
+    marginTop:heightPercentageToDP('2%'), // Center icons vertically
+  },
+  contactIcon: {
+    marginRight: 10, // Add spacing between icons
   },
 });
 

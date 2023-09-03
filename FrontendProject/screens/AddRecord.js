@@ -228,7 +228,8 @@ const [userId,setUserId] = useState('');
     
     axios.request(config)
     .then((response) => {
-      // console.log(JSON.stringify(response.data));
+      console.log(JSON.stringify(response.data));
+
       const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
       setUser(Name);
     })
@@ -268,6 +269,8 @@ const [userId,setUserId] = useState('');
   };
 
   const uploadImage = async (recordId) => {
+    if(selectedImage)
+    {
     let token= await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
     const imageData = new FormData();
@@ -305,7 +308,7 @@ const [userId,setUserId] = useState('');
       } catch (error) {
         console.error('Error:', error.message);
       }
-    };
+  }};
 
   const handleSave = async () => {
     
