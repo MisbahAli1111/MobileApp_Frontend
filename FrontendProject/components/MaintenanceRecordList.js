@@ -1,16 +1,18 @@
 import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import { StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, View, Dimensions, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
 
 const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, create, setCreate }) => {
   const navigation = useNavigation();
-
 
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
@@ -18,7 +20,7 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
   const [InvoiceScreen, setInvoiceScreen] = useState(false);
   const [CreateInvoice, setCreateInvoice] = useState(false);
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-  const [ InvoiceIndex,setInvoiceIndex] = useState('');
+  const [InvoiceIndex, setInvoiceIndex] = useState('');
   const [InvoiceRecord, setInvoiceRecord] = useState('');
 
   const displayedRecords = search ? data : records;
@@ -47,7 +49,7 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'http://192.168.0.236:8080/api/maintenance-record/get-records',
+      url: 'http://192.168.100.71:8080/api/maintenance-record/get-records',
       headers: {
         'Authorization': accessToken
       }
@@ -77,14 +79,14 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
     if (fromPreviousScreen) {
       setInvoiceScreen(true);
     }
-    if(create){
+    if (create) {
       setCreate(false);
-      if(InvoiceRecord){
-        navigation.navigate("CreateInvoice", { InvoiceRecord: InvoiceRecord });   
+      if (InvoiceRecord) {
+        navigation.navigate("CreateInvoice", { InvoiceRecord: InvoiceRecord });
       }
       // setCreateInvoice(true);
     }
-},[create]);
+  }, [create]);
 
   useEffect(() => {
     setSearch(dsearch);
@@ -149,19 +151,24 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
             <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
               <View style={[styles.groupFrame]}>
                 <Pressable
-                  style={[styles.groupFrame, styles.groupParentLayout]}
+                  style={[styles.groupFrame]}
                   onPress={() => handlePress(index, record.id)}
                 >
-                  {/* Image */}
-                  <Image
-                    style={[
-                      styles.rectangleIcon,
-                      styles.groupParentLayout,
-                    ]}
-                    contentFit="cover"
-                    source={currentPressedIndex === index ? require("../assets/rectangle-541.png") : require("../assets/rectangle-54.png")}
-                  />
-                  <View style={[styles.frameParent, styles.frameParentLayout]}>
+                  <View style={styles.textWrap}>
+                    <View style={styles.rowWrap}>
+                      <Image
+                        style={[styles.groupIcon, styles.iconLayout1]}
+                        contentFit="cover"
+                        source={currentPressedIndex === index ? require("../assets/group-801.png") : require("../assets/group-80.png")}
+                      />
+                      <Text
+                        style={[
+                          currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+                        ]}>
+                        {`Maintained On `}</Text>
+                    </View>
+                  </View>
+                  {/* <View style={[styles.frameParent, styles.frameParentLayout]}>
                     <View
                       style={[styles.maintainedOnParent, styles.surfaceParentFlexBox]}
                     >
@@ -211,8 +218,8 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
                         Service
                       </Text>
                     </View>
-                  </View>
-                  <Image
+                  </View> */}
+                  {/* <Image
                     style={[styles.groupIcon, styles.iconLayout1]}
                     contentFit="cover"
                     source={currentPressedIndex === index ? require("../assets/group-801.png") : require("../assets/group-80.png")}
@@ -225,11 +232,11 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
                     contentFit="cover"
                     source={
                       currentPressedIndex === index ? require("../assets/vehicleservicessvgrepocom-12.png") : require("../assets/vehicleservicessvgrepocom-11.png")}
-                  />
-                  <Text style={[
+                  /> */}
+                  {/* <Text style={[
                     currentPressedIndex === index ? styles.carWashW : styles.carWash, styles.carPosition]}>{record.service}</Text>
                   <Text style={[
-                    currentPressedIndex === index ? styles.text2W : styles.text2, styles.textPosition]}>{record.kilometerDriven}</Text>
+                    currentPressedIndex === index ? styles.text2W : styles.text2, styles.textPosition]}>{record.kilometerDriven}</Text> */}
 
                 </Pressable>
               </View>
@@ -240,24 +247,46 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
   );
 }
 const styles = StyleSheet.create({
-  groupParentLayout: {
-    height: 132,
-    width: 375,
-    left: 5,
-    position: "relative",
-    alignItems: 'flex-start',
-    flexWrap: "wrap",
-    marginBottom: 20,
+  // groupParentLayout: {
+  //   height: 120,
+  //   width: 375,
+  //   left: 5,
+  //   position: "relative",
+  //   alignItems: 'flex-start',
+  //   flexWrap: "wrap",
+  //   marginBottom: 25,
 
+  // },
+
+  groupParentLayout: {
+    backgroundColor: Color.steelblue_300,
+    padding: 16,
+    marginVertical: 8,
+    alignSelf: 'center',
+    width: screenWidth * 0.9, // Set a maximum width (adjust as needed)
+    height: screenHeight * 0.14,
+    borderRadius: 8,
+  },
+  textWrap: {
+    fontSize: FontSize.size_smi,
+    textAlign: "right",
+    
+  },
+  rowWrap: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // paddingHorizontal: 16,
+    alignItems: 'flex-start', 
   },
   serviceWrapper: {
     top: 84,
   },
   wrap: {
-    width: 385,
-    marginLeft: 1,
+    width: screenWidth,
+    // alignContent:'center',
+    // justifyContent:'center',
     // backgroundColor:'red',
-    height: 552,
+    height: screenHeight * .6,
 
   },
   text2Typo: {
@@ -313,24 +342,25 @@ const styles = StyleSheet.create({
   maintainedOn: {
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
+    marginLeft:8,
   },
 
   maintainedOnW: {
     color: Color.white,
     fontFamily: FontFamily.poppinsRegular,
+    marginLeft:8,
   },
   davidTypo: {
-    fontSize: FontSize.size_smi,
-    textAlign: "left",
+
   },
   groupIcon: {
     height: "57.58%",
     width: "5.1%",
-    top: "11.36%",
-    right: "91.07%",
-    bottom: "31.06%",
-    left: "3.83%",
-    position: "absolute",
+    // top: "11.36%",
+    // right: "91.07%",
+    // bottom: "31.06%",
+    // left: "3.83%",
+    // position: "absolute",
   },
 
   iconLayout1: {

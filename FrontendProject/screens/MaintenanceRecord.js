@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   boxContianer :{
     marginTop:220,
-    marginLeft: 10, 
+    marginLeft: 0, 
     // alignItems: 'flex-end', 
   },
   iconLayout1: {

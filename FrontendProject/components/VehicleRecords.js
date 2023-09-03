@@ -60,7 +60,7 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
         let config = {
             method: 'put',
             maxBodyLength: Infinity,
-            url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
+            url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
             headers: {}
         };
 
@@ -137,7 +137,7 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/get-all-vehicles`,
+            url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/get-all-vehicles`,
             headers: {
                 'Authorization': accessToken
             }
