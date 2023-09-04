@@ -1,53 +1,140 @@
 import * as React from "react";
-import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Linking, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Modal, TouchableOpacity,ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-import Vehicles from "../screens/Vehicles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView } from "react-native";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import {AntDesign} from "@expo/vector-icons";
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
-function VehicleDetails(props) {
 
+function RecordDetails({recordId}) {
+
+  const [ownerId,setOwnerId] = useState('');
+  const [ownerName,setOwnerName] = useState('');
+  const [detail , setDetail]=useState('');
+  const [name, setName]=useState('');
+  const [Mileage,setMileage]=useState('');
+  const [service,setService]=useState('');
+  const [type,setTyoe]=useState('');
+  const [dateTime,setDateTime]=useState('');
+
+  const [datePart, timePart] = dateTime.split('T');
+  const [registrationNumber,setRegistrationNumber]=useState('');
+  const [imageResponce,setImageResponce] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fetchedImages,setFetchedImages] = React.useState([]);
+  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
   const navigation = useNavigation();
-  const [vehicleId,setVehicleId] = useState('');
-  const [vechileDetails, setVehicleDetails]= useState([]);
+  const [originalUri,setOriginalUri] = useState('');
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  // console.log(vehicleId);
+  useEffect(() => {
+    getData();
+    const fetchImages = async () => {
+      try {
+        setLoading(true); // Set loading to true while fetching
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = 'Bearer ' + token;
 
-  getData = async () => {
-    let token= await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
-    setVehicleId(props.prop);
+        if (recordId) {
+          let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/images`,
+            headers: {
+              'Authorization': accessToken
+            }
+          };
+    
+          const response = await axios.request(config);
+          const imageUrls = response.data.map(item => baseUrl + item.url);
+          setFetchedImages(imageUrls);
+          setLoading(false); // Set loading to false when images are fetched
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false); // Make sure to set loading to false in case of an error
+      }
+    };
 
-   if(vehicleId)
-   {
-    // console.log(vehicleId);
+    fetchImages();
+
+    const getOwnerId = async () => {
+      try {
+        const storedOwnerId = await AsyncStorage.getItem('ownerId');
+        if (storedOwnerId !== null) {
+          setOwnerId(storedOwnerId);
+          console.log('Successfully retrieved ownerId from AsyncStorage:', storedOwnerId);
+        } else {
+          console.log('ownerId not found in AsyncStorage.');
+        }
+      } catch (error) {
+        console.error('Error retrieving ownerId from AsyncStorage:', error);
+      }
+    };
+    
+    getOwnerId();
+    if(ownerId)
+    {
+      getOwnerInfo(ownerId);
+    }
+
+  },[recordId,ownerId]);
+
+  const getOwnerInfo = async (ownerId) => {
+    if(ownerId)
+    {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}`,
+      url: `http://192.168.0.236:8080/api/users/${ownerId}`, // Use backticks
+      headers: {}
+    };
+  
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setOwnerName(response.data.firstName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }};
+
+  getData=async()=>{
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    if(recordId)
+    {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
       headers: { 
-        'Authorization': accessToken
+        'Authorization':accessToken
       }
     };
     
     axios.request(config)
     .then((response) => {
       // console.log(JSON.stringify(response.data));
-        setVehicleDetails(response.data);
-        const ownerId = JSON.stringify(response.data.ownerId);
-        // console.log("owner:" ,ownerId);
-  
-      try {
-        // Store ownerId in AsyncStorage
-        AsyncStorage.setItem('ownerId', ownerId);
-        // console.log('ownerId has been set in AsyncStorage:', ownerId);
-      } catch (error) {
-        console.error('Error setting ownerId in AsyncStorage:', error);
-      }
+      setDetail(response.data[0].maintanenceDetail);
+      setName(response.data[0].name);
+      setMileage(response.data[0].kilometerDriven);
+      setService(response.data[0].service);
+      setRegistrationNumber(response.data[0].registrationNumber);
+      setTyoe(response.data[0].type);
+      setDateTime(response.data[0].maintanenceDateTime);
+     
     })
     .catch((error) => {
       console.log(error);
@@ -55,40 +142,242 @@ function VehicleDetails(props) {
   }
   };
 
-  useEffect(() => {
-    
-    // console.log(vehicleId);
-    getData();
-  });
 
+  const renderCarouselItem = ({ item }) => {
+    return (
+      <TouchableOpacity
+       onPress={() => handleOpen(item)}>
+      <Image
+        source={{ uri: item }}
+        style={styles.carouselImage}
+        contentFit="cover"
+      />
+      </TouchableOpacity>
+    );
+  };
+
+  const handleOpen = (uri) => {
+    setOriginalUri(uri);
+    if(originalUri)
+    {
+    setModalVisible(true);
+  }
+};
+
+  const handleClose = () => {
+    setModalVisible(false);
+    setOriginalUri('');
+  };
+
+  const calculateServiceDue = () => {
+    const serviceTypeMap = {
+      'Car': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 3000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 15000,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 2000,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 2500,
+        },
+      },
+      'Auto': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 3000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 1350,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 1800,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 2250,
+        },
+      },
+      'Bike': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 600,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 900,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1200,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1500,
+        },
+      },
+      'Truck': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 10000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 2000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 3000,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 4000,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 5000,
+        },
+      },
+      'Other': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 2000,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1200,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1500,
+        },
+      },
+    };
+  
+  
+  
+  
+    if (serviceTypeMap[type] && serviceTypeMap[type][service]) {
+      const { kilometersDrivenPerDay, totalKilometersBetweenServices } = serviceTypeMap[type][service];
+      const daysUntilNextService = totalKilometersBetweenServices / kilometersDrivenPerDay;
+      return addDays(datePart, Math.floor(daysUntilNextService));
+    }
+  
+    return addDays(datePart, 30); // Default value if service or type is unknown
+  };
+  
+  
+
+  // Function to add days to a date
+  const addDays = (date, days) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+  
+    const year = newDate.getFullYear();
+    const month = String(newDate.getMonth() + 1).padStart(2, '0'); // Month is zero-indexed
+    const day = String(newDate.getDate()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}`;
+  };
+  
+
+  const serviceDue = calculateServiceDue();
 
   return (
-    <View>
-        <View style={styles.textComponent}>
-            <Text style={styles.heading}>{vechileDetails.make}  {vechileDetails.model}  {vechileDetails.year}</Text>
+    <ScrollView style={styles.wrap}>
+
+     
+{/* car image  */}
+
+     <View style={styles.Carousalcontainer}>
+     {loading ? (
+        <ActivityIndicator size="large" color="#007aff" />
+      ) : (
+        fetchedImages.length > 0 && (
+          <View style={styles.imageContainer}>
+            <Carousel
+              data={fetchedImages}
+              renderItem={renderCarouselItem}
+              sliderWidth={350}
+              itemWidth={400}
+              onSnapToItem={(index) => setActiveSlide(index)}
+              sliderHeight={100}
+            />
+
+            <Pagination
+              dotsLength={fetchedImages.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotColor="#007aff"
+              dotStyle={styles.paginationDot}
+              inactiveDotColor="#ccc"
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          </View>
+        )
+      )}
+     </View>
+     {/* modal */}
+
+     <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+        <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+          <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+          </TouchableOpacity>
         </View>
+      </Modal>
+
+     {/* details  */}
+      <View style={styles.detailsParent}>
+        <Text style={[styles.details, styles.abc123Clr]}>Details:</Text>
+        <Text style={[styles.carWasMaintained, styles.jan2023Positionn]}>
+        {detail}
+        </Text>
+      </View>
 
       {/* blue div  */}
 
       <View style={[styles.vectorGroup, styles.vectorGroupLayout]}>
-        <Image
-          style={[styles.rectangleIcon, styles.vectorGroupLayout]}
-          contentFit="cover"
-          source={require("../assets/rectangle-66.png")}
-        />
+
         <View style={[styles.frameParent, styles.frameParentPosition]}>
           <View style={styles.frameWrapper}>
             <View style={styles.mileageWrapper}>
-              <Text style={styles.dateTypo}>Owner Contact</Text>
+              <Text style={styles.dateTypo}>Mileage</Text>
             </View>
           </View>
           <View style={[styles.kmWrapper, styles.jan2023Position]}>
-          <TouchableOpacity
-          onPress={() => {if (vechileDetails.phoneNumber) {
-                  Linking.openURL(`tel:${vechileDetails.phoneNumber}`);
-                }}}>
-            <Text style={[styles.km, styles.kmTypo]}>{vechileDetails.phoneNumber}</Text>
-            </TouchableOpacity>
+            <Text style={[styles.km, styles.kmTypo]}>{Mileage} km</Text>
           </View>
         </View>
         <View style={[styles.frameContainer, styles.waleedAliPosition]}>
@@ -96,66 +385,49 @@ function VehicleDetails(props) {
         </View>
         <Text
           style={[styles.registrationNumber, styles.dateTypo]}>{`Registration Number `}</Text>
-        <Text style={[styles.abc1231, styles.kmTypo]}>{vechileDetails.registrationNumber}</Text>
+        <Text style={[styles.abc1231, styles.kmTypo]}>{registrationNumber}</Text>
         <Text style={[styles.maintainedBy, styles.dateTypo]}>
-          Client Name
+          Maintained By
         </Text>
-        <TouchableOpacity 
-        onPress={() => navigation.navigate("CustomerDetails")}>
-        <Text style={[styles.waleedAli, styles.waleedAliPosition,styles.hyperlink]}>
-        {vechileDetails.name}
+        <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
+          {name}
         </Text>
-        </TouchableOpacity>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>
-            manual
+            {datePart}
           </Text>
-          <Text style={[styles.date, styles.dateTypo]}>Transmision</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Date</Text>
         </View>
         <View style={styles.carWashParent}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>{vechileDetails.model}</Text>
-          <Text style={[styles.date, styles.dateTypo]}>Model</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{service}</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Service</Text>
+        </View>
+        <View style={styles.carWashParent1}>
+        <TouchableOpacity 
+        onPress={()=> navigation.navigate("CustomerDetails")}>
+          <Text style={[styles.jan2023, styles.jan2023Position,styles.hyperlink]}>{ownerName}</Text>
+          </TouchableOpacity>
+          <Text style={[styles.date, styles.dateTypo]}>Vehicle Owner</Text>
         </View>
         <View style={[styles.pmParent, styles.parentPosition]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>{vechileDetails.kilometerDriven}</Text>
-          <Text style={[styles.date, styles.dateTypo]}>Mileage</Text>
-        </View>
-        <View style={[styles.pmParent, styles.parentPositionn]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>{vechileDetails.color}</Text>
-          <Text style={[styles.date, styles.dateTypo]}>Color</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{timePart}</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Time</Text>
         </View>
         <View style={[styles.carWrapper, styles.typePosition]}>
-          <Text style={[styles.km, styles.kmTypo]}>{vechileDetails.type}</Text>
+          <Text style={[styles.km, styles.kmTypo]}>{type}</Text>
         </View>
-        <Text style={[styles.type, styles.typePosition]}>Type</Text>
+        <Text style={[styles.type, styles.typePosition]}>{`Type `}</Text>
+        <View style={styles.carWashParent2}>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{serviceDue}</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Service Due</Text>
+        </View>
+      
       </View>
-
-      {/* car image  */}
-      {/* <Image
-        style={[styles.maintenanceDetailViewChild2, styles.childViewPosition]}
-        contentFit="cover"
-        source={require("../assets/group-114.png")}
-      /> */}
+     
 
 
-      {/* <Image
-        style={styles.maintenanceDetailViewChild3}
-        contentFit="cover"
-        source={require("../assets/group-83.png")}
-      /> */}
-      <Image
-        style={[styles.vectorIcon1, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector4.png")}
-      />
-      <Image
-        style={[styles.vectorIcon2, styles.vectorIconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector5.png")}
-      />
 
-
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -163,21 +435,79 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: '#0073e6', // Change the color to your desired hyperlink color
   },
-  textComponent:{
-    justifyContent:"center",
-    alignItems:"center"
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
-    heading:{
-        top:392,
-        fontSize:20,
-        fontFamily: FontFamily.poppinsRegular,
-        color: Color.Black,
-        fontWeight: 'bold',
-    },
+  modalMedia: {
+    width: '100%',
+    height: '100%',
+    // aspectRatio: 1, // This maintains the original image's aspect ratio
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10, // Adjust the top positioning as needed
+    right: 10, // Adjust the right positioning as needed
+    zIndex: 1, // Ensure the button appears above the image
+  },
+  carouselImage: {
+  width: "100%",
+  height: "100%",
+  justifyContent: 'center',
+  // alignItems: 'center',
+  position:"relative",
+  left:"5%"
+},
+
+  vehicleComponent:{
+    top:-230,
+  },
+  carouselItem: {
+    width: "100%",
+    height: "100%",
+    position:"relative",
+    justifyContent: 'center',
+    alignItems:'center',
+  },
+  paginationContainer: {
+    paddingVertical: 5,
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 8,
+  },
+  imageUpload:{
+    position:"absolute",
+
+  },
+  Carousalcontainer: {
+    height:"40%",
+    // backgroundColor:"red",
+    alignItems: 'center',
+    justifyContent: 'center',
+    position:'relative',
+  },
+  imageContainer: {
+    position: 'relative',
+    width: "90%",
+    height: "90%",
+    // backgroundColor:"blue",
+    
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    contentFit: 'cover',
+  },
+  
   childViewPosition: {
-    width: 380,
-    left: 18,
-    position: "absolute",
+    width: 430,
+    left: -6.5,
+    position: "relative",
   },
   cont:{
     padding:6,
@@ -193,6 +523,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
   },
+  wrap:{
+    marginTop:0,
+    // height:538,
+    width:"100%",
+    zIndex:1,
+    overflow:"hidden",
+  },
   textFlexBox: {
     textAlign: "left",
     color: Color.textTxtPrimary,
@@ -200,7 +537,7 @@ const styles = StyleSheet.create({
   abc123Clr: {
     color: Color.darkslateblue,
     textAlign: "left",
-    position: "absolute",
+    position: "relative",
   },
   kmTypo: {
     fontFamily: FontFamily.poppinsRegular,
@@ -211,9 +548,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   vectorGroupLayout: {
+    height: 380,
+    width: 400,
+    marginTop:20,
+    position: "relative",
+    backgroundColor:"#c2e0f2",
+  },
+  vectorGroupLayoutt: {
     height: 301,
-    width: 382,
-    position: "absolute",
+    width: 392,
+    
+    position: "relative",
   },
   frameParentPosition: {
     top: 25,
@@ -221,7 +566,13 @@ const styles = StyleSheet.create({
   },
   jan2023Position: {
     top: 26,
-    position: "absolute",
+    position: "relative",
+    width:200
+  },
+  jan2023Positionn: {
+    top: 0,
+    marginTop:5,
+    position: "relative",
   },
   waleedAliPosition: {
     top: 51,
@@ -233,22 +584,15 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     fontSize: FontSize.size_base,
-    fontWeight:"700",
-    
+    // fontWeight:700,
   },
   parentPosition: {
     top: 167,
     height: 50,
     position: "absolute",
   },
-
-  parentPositionn: {
-    top: 240,
-    height: 50,
-    position: "absolute",
-  },
   typePosition: {
-    left: 245,
+    left: 279,
     position: "absolute",
   },
   homeTypo: {
@@ -281,7 +625,7 @@ const styles = StyleSheet.create({
   },
   vectorIconLayout: {
     bottom: "68.68%",
-    top: "29.17%",
+    top: 0,
     width: "2.74%",
     height: "2.15%",
     maxHeight: "100%",
@@ -425,7 +769,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   frameWrapper: {
-    left: -3,
+    left: 0,
     top: 0,
     position: "absolute",
   },
@@ -433,7 +777,6 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    fontWeight:700,
   },
   kmWrapper: {
     flexDirection: "row",
@@ -441,8 +784,8 @@ const styles = StyleSheet.create({
     left: 0,
   },
   frameParent: {
-    width: 200,
-    left: 240,
+    width: 86,
+    left: 281,
     height: 50,
   },
   frameContainer: {
@@ -460,7 +803,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
     position: "absolute",
-    fontWeight:700,
   },
   maintainedBy: {
     left: 25,
@@ -473,7 +815,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    
   },
   jan2023: {
     fontFamily: FontFamily.poppinsRegular,
@@ -481,27 +823,41 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
     fontSize: FontSize.size_base,
     left: 0,
-    fontWeight:700,
   },
   date: {
     left: 0,
     top: 0,
     position: "absolute",
+    width:200
   },
   jan2023Parent: {
     width: 98,
     left: 25,
   },
   carWashParent: {
-    top: 239,
+    top: 230,
     width: 79,
     left: 25,
     height: 50,
     position: "absolute",
   },
+  carWashParent2: {
+    top: 290,
+    width: 79,
+    left: 25,
+    height: 50,
+    position: "absolute",
+  },
+  carWashParent1: {
+    top: 230,
+    width: 79,
+    left: 280,
+    height: 50,
+    position: "absolute",
+  },
   pmParent: {
-    width: 150,
-    left: 245,
+    width: 61,
+    left: 281,
   },
   carWrapper: {
     flexDirection: "row",
@@ -511,13 +867,12 @@ const styles = StyleSheet.create({
   type: {
     top: 98,
     color: Color.dimgray_100,
-    fontFamily: FontFamily.Black,
+    fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     fontSize: FontSize.size_base,
   },
   vectorGroup: {
-    top: 430,
-    left: 16,
+    left: 5,
   },
   details: {
     fontWeight: "700",
@@ -526,24 +881,24 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     color: Color.Black,
     left: 0,
-    top: 0,
+    
   },
   carWasMaintained: {
     left: 1,
     width: 392,
-    top: 26,
+    top: 0,
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    fontWeight:"700",
+    fontWeight:700,
   },
   detailsParent: {
-    top: 385,
+    top: 0,
     width: 393,
-    height: 122,
+
     left: 20,
-    position: "absolute",
+    position: "relative",
   },
   maintenanceDetailViewChild: {
     top: 3,
@@ -641,15 +996,15 @@ const styles = StyleSheet.create({
     left: 287,
   },
   maintenanceDetailViewChild2: {
-    top: 150,
+    top: 0,
     height: 223,
   },
   maintenanceDetailViewChild3: {
-    top: 378,
+    top: 0,
     left: 182,
     width: 55,
     height: 9,
-    position: "absolute",
+    position: "relative",
   },
   vectorIcon1: {
     right: "6.77%",
@@ -669,4 +1024,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default VehicleDetails;
+export default RecordDetails;

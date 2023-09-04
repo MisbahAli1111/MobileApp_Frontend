@@ -34,7 +34,7 @@ function Invoicelist({ dsearch }) {
 
   const setPopUp = (vehicleIds) => {
 
-}
+  }
 
   useEffect(() => {
     getData();
@@ -78,7 +78,9 @@ function Invoicelist({ dsearch }) {
     <ScrollView style={styles.wrap}>
       {
         displayedRecords.map((record, index) => (
-          <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
+          <View key={index} style={[styles.groupView,
+          currentPressedIndex === index ? styles.groupParentLayoutW : styles.groupParentLayout
+          ]}>
 
             <Pressable
               style={styles.press}
@@ -93,14 +95,14 @@ function Invoicelist({ dsearch }) {
                     {record.name}
                   </Text>
                   <TouchableOpacity
-                   onPress={() => setPopUp(record.id)}>
+                    onPress={() => setPopUp(record.id)}>
                     <FontAwesome
                       name="trash"
-
                       size={25}
-                      color={currentPressedIndex === record.id ? "white" : "black"}
+                      color={currentPressedIndex === index ? "white" : "black"}
                     />
-                    </TouchableOpacity>
+                  </TouchableOpacity>
+
                 </View>
 
                 <View style={[styles.inv0001Parent]}>
@@ -110,39 +112,39 @@ function Invoicelist({ dsearch }) {
                   ]}>INV{record.id}</Text>
 
 
+
+
                   <Text style={[
+                    styles.muhammadAli44,
+                    currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
+                  ]}>
+                    Rs. {record.total}
+                  </Text>
+                </View>
+
+
+                <View style={[styles.inv0001Parent]}>
+                <Text style={[
                     currentPressedIndex === index ? styles.jan20234 : styles.jan2023,
-                    currentPressedIndex === index ? styles.text4Typo : styles.janPosition
                   ]}>
                     {record.invoiceDue}
                   </Text>
+                  <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
+                    <View style={[
+                      styles.groupInner,
+                      styles.groupChildLayout,
+                      record.status ? styles.groupChild1 : null
+                    ]} />
 
-
-     
+                    <Text style={[
+                      styles.due,
+                      styles.paidTypo,
+                      record.status ? styles.paid1 : null
+                    ]}>
+                      {record.status ? 'Paid' : 'Due'}
+                    </Text>
+                  </View>
                 </View>
-
-
-                <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-                  <View style={[
-                    styles.groupInner,
-                    styles.groupChildLayout,
-                    record.status ? styles.groupChild1 : null
-                  ]} />
-
-                  <Text style={[
-                    styles.due,
-                    styles.paidTypo,
-                    record.status ? styles.paid1 : null
-                  ]}>
-                    {record.status ? 'Paid' : 'Due'}
-                  </Text>
-                </View>
-                {/* <Text style={[
-                  styles.muhammadAli4,
-                  currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
-                ]}>
-                  Rs. {record.total}
-                </Text> */}
               </View>
             </Pressable>
 
@@ -159,15 +161,24 @@ const styles = StyleSheet.create({
     backgroundColor: Color.steelblue_300,
     marginVertical: 0.2 * rem,
     alignSelf: 'center',
-    // padding: 0.5 * rem,
     width: screenWidth * 0.91,
-    height: screenHeight * 0.09,
+    height: screenHeight * 0.108,
+    borderRadius: 8,
+  },
+  groupParentLayoutW: {
+    backgroundColor: Color.darkslateblue,
+    marginVertical: 0.2 * rem,
+    alignSelf: 'center',
+    width: screenWidth * 0.91,
+    height: screenHeight * 0.108,
     borderRadius: 8,
   },
   rowWrap: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 10,
+    marginBottom:0,
+    margin:10,
+    marginTop: 10,
   },
   cont: {
     width: 385,
@@ -176,7 +187,7 @@ const styles = StyleSheet.create({
   press: {
     // backgroundColor:'red',
     width: screenWidth * 0.91,
-    height: screenHeight * 0.09,
+    height: screenHeight * 0.105,
   },
   invPosition: {
     left: 0,
@@ -205,7 +216,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   janPosition: {
-    left: 86,
+
     top: 1,
     fontSize: FontSize.size_sm,
   },
@@ -238,7 +249,7 @@ const styles = StyleSheet.create({
   groupChildLayout: {
     width: 53,
     height: 23,
-    position: "absolute",
+
   },
   groupChild4Bg: {
     backgroundColor: Color.darkslateblue,
@@ -349,7 +360,7 @@ const styles = StyleSheet.create({
   },
   inv0001: {
     fontSize: FontSize.size_mini,
-    marginLeft:0.5*rem,
+    marginLeft: 0.5 * rem,
     top: 0,
   },
   jan2023: {
@@ -358,6 +369,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
+    marginLeft: 0.5 * rem,
     width: "100%",
     position: "absolute",
   },
@@ -414,8 +426,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleGroup: {
-    left: 325,
-    top: 47,
+    // marginLeft:10*rem,
+    textAlign: 'right',
+    position: 'absolute',
+    marginLeft: 12.8 * rem,
+
+    marginTop: 0.1 * rem,
   },
   rectangleParent: {
 
@@ -449,19 +465,25 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   muhammadAli4: {
+    fontSize: 0.7 * rem,
+  },
+  muhammadAli44: {
     fontSize: FontSize.size_base,
-
+    marginLeft:10*rem,
   },
   inv00014: {
     fontSize: FontSize.size_mini,
-    marginLeft:0.5*rem,
+    marginLeft: 0.5 * rem,
     top: 0,
   },
   jan20234: {
     fontSize: FontSize.size_sm,
-    left: 86,
-    top: 1,
+    color: Color.white,
+    marginLeft: 0.5 * rem,
+    fontFamily: FontFamily.poppinsMedium,
+    fontWeight: "500",
     width: "100%",
+    position: "absolute",
   },
   text4: {
     left: 75,
@@ -634,10 +656,7 @@ const styles = StyleSheet.create({
     height: "36.76%",
     position: "absolute",
   },
-  rectangleParent18: {
-    marginTop: 180,
-    marginLeft: 22,
-  },
+
   invoicesInner: {
     top: 3,
     left: 29,
