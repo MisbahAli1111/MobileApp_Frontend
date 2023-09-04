@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     flex:1,
     flexWrap:"wrap",
     marginTop:250,
-    marginLeft: 12,
+   
     // marginBottom:90,
    maxHeight:525,
     // alignItems: 'flex-end', 

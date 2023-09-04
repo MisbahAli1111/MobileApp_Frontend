@@ -1,11 +1,17 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import { StyleSheet, TextInput, Dimensions, TouchableOpacity, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome } from '@expo/vector-icons';
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const rem = screenWidth / 16;
+
 function Invoicelist({ dsearch }) {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
@@ -17,7 +23,7 @@ function Invoicelist({ dsearch }) {
 
 
   const displayedRecords = search ? data : Invoices;
-  
+
   const handlePress = (index, recordId) => {
     setCurrentPressedIndex(index);
     // console.log(recordId);
@@ -26,11 +32,13 @@ function Invoicelist({ dsearch }) {
 
 
 
+  const setPopUp = (vehicleIds) => {
 
+}
 
   useEffect(() => {
     getData();
-  },[]);
+  }, []);
 
   getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
@@ -64,28 +72,38 @@ function Invoicelist({ dsearch }) {
     );
     setData(maintained);
   }, [dsearch]);
-  
+
 
   return (
     <ScrollView style={styles.wrap}>
       {
         displayedRecords.map((record, index) => (
           <View key={index} style={[styles.groupView, styles.groupParentLayout]}>
-            <View style={[styles.groupFrame]}>
-              <Pressable
-                style={[styles.rectangleParent, styles.parentLayout]}
-                onPress={() => handlePress(index, record.id)}
-              >
-                <View style={[
-                  currentPressedIndex === index ? styles.groupChild4Bg : styles.groupItem, styles.groupChildLayout1,]} />
-                <Text style={[
-                  styles.muhammadAli4,
-                  currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
-                ]}>
-                  {record.name}
-                </Text>
 
-                <View style={[styles.inv0001Parent, styles.inv0001ParentLayout]}>
+            <Pressable
+              style={styles.press}
+              onPress={() => handlePress(index, record.id)}
+            >
+              <View style={[styles.groupFrame]}>
+                <View style={styles.rowWrap}>
+                  <Text style={[
+                    styles.muhammadAli4,
+                    currentPressedIndex === index ? styles.text4Typo : styles.textTypo
+                  ]}>
+                    {record.name}
+                  </Text>
+                  <TouchableOpacity
+                   onPress={() => setPopUp(record.id)}>
+                    <FontAwesome
+                      name="trash"
+
+                      size={25}
+                      color={currentPressedIndex === record.id ? "white" : "black"}
+                    />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={[styles.inv0001Parent]}>
                   <Text style={[
                     currentPressedIndex === index ? styles.inv00014 : styles.inv0001,
                     currentPressedIndex === index ? styles.text4Typo : styles.textTypo
@@ -100,37 +118,35 @@ function Invoicelist({ dsearch }) {
                   </Text>
 
 
-                  <Text style={[
-                    currentPressedIndex === index ? styles.text4 : styles.text,
-                    currentPressedIndex === index ? styles.textPosition : styles.textPosition
-                  ]}>-</Text>
+     
                 </View>
-                <Text style={[
-                  currentPressedIndex === index ? styles.rs30004 : styles.rs3000,
-                  ,
-                  currentPressedIndex === index ? styles.rs3000TypoR :styles.rs3000Typo
-                ]}>
-                  Rs. {record.total}
-                  </Text>
-                  
+
+
                 <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
                   <View style={[
                     styles.groupInner,
                     styles.groupChildLayout,
-                    record.status ? styles.groupChild1 : null 
+                    record.status ? styles.groupChild1 : null
                   ]} />
 
                   <Text style={[
                     styles.due,
                     styles.paidTypo,
-                    record.status ? styles.paid1 : null 
+                    record.status ? styles.paid1 : null
                   ]}>
                     {record.status ? 'Paid' : 'Due'}
                   </Text>
                 </View>
-              </Pressable>
+                {/* <Text style={[
+                  styles.muhammadAli4,
+                  currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
+                ]}>
+                  Rs. {record.total}
+                </Text> */}
+              </View>
+            </Pressable>
 
-            </View>
+
           </View>
 
         ))}
@@ -140,29 +156,33 @@ function Invoicelist({ dsearch }) {
 }
 const styles = StyleSheet.create({
   groupParentLayout: {
-    height: 132,
-    left: 5,
-    position: "relative",
-    alignItems: 'flex-start',
-    flexWrap: "wrap",
-    marginBottom: -30,
-
+    backgroundColor: Color.steelblue_300,
+    marginVertical: 0.2 * rem,
+    alignSelf: 'center',
+    // padding: 0.5 * rem,
+    width: screenWidth * 0.91,
+    height: screenHeight * 0.09,
+    borderRadius: 8,
   },
-
+  rowWrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
   cont: {
     width: 385,
     marginLeft: 1,
+  },
+  press: {
+    // backgroundColor:'red',
+    width: screenWidth * 0.91,
+    height: screenHeight * 0.09,
   },
   invPosition: {
     left: 0,
     top: 0,
   },
-  parentLayout: {
-    height: 85,
-    width: 393,
-    left: 0,
-    position: "relative",
-  },
+
   groupChildLayout1: {
     borderRadius: Border.br_3xs,
     height: 85,
@@ -172,7 +192,6 @@ const styles = StyleSheet.create({
   },
   paidTypo: {
     fontFamily: FontFamily.poppinsMedium,
-    textAlign: "left",
     fontWeight: "500",
   },
   inv0001ParentLayout: {
@@ -181,10 +200,9 @@ const styles = StyleSheet.create({
   },
   textTypo: {
     color: Color.dimgray_100,
-    textAlign: "left",
+
     fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
+    fontWeight: "700",
   },
   janPosition: {
     left: 86,
@@ -197,24 +215,15 @@ const styles = StyleSheet.create({
     top: 1,
   },
   rs3000Typo: {
-    left: 300,
-    alignContent: 'flex-end',
-    justifyContent: 'flex-end',
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    fontSize: FontSize.size_base,
-    top: -10,
-    position: "relative",
+
   },
   rs3000TypoR: {
-    left: 300,
-    alignContent: 'flex-end',
-    justifyContent: 'flex-end',
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    fontSize: FontSize.size_base,
-    top: 10,
-    position: "relative",
+    fontFamily: FontFamily.poppinsBold,
+    fontWeight: "700",
+    color: Color.white,
+
+    position: "absolute",
+    width: "110%",
   },
   frameWrapperPosition: {
     left: 325,
@@ -239,9 +248,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsBold,
     fontWeight: "700",
     color: Color.white,
-    textAlign: "left",
-    position: "absolute",
-    width: "110%",
   },
   iconChildPosition: {
     width: 430,
@@ -343,7 +349,7 @@ const styles = StyleSheet.create({
   },
   inv0001: {
     fontSize: FontSize.size_mini,
-    left: 0,
+    marginLeft:0.5*rem,
     top: 0,
   },
   jan2023: {
@@ -363,9 +369,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   inv0001Parent: {
-    width: 175,
-    top: 47,
-    left: 15,
+    flexDirection: 'row',
   },
   rs3000: {
     color: Color.textTxtPrimary,
@@ -424,11 +428,11 @@ const styles = StyleSheet.create({
   },
   paid1: {
     left: -7.5,
-    
+
     color: Color.white,
     fontSize: FontSize.size_mini,
     textAlign: "center",
-   
+
     position: "absolute",
   },
   rectangleContainer: {
@@ -446,12 +450,11 @@ const styles = StyleSheet.create({
   },
   muhammadAli4: {
     fontSize: FontSize.size_base,
-    left: 15,
-    top: 15,
+
   },
   inv00014: {
     fontSize: FontSize.size_mini,
-    left: 0,
+    marginLeft:0.5*rem,
     top: 0,
   },
   jan20234: {
@@ -472,7 +475,7 @@ const styles = StyleSheet.create({
   },
   rs30004: {
     color: Color.white,
-  
+
   },
   rectangleParent2: {
     top: 315,
@@ -825,8 +828,8 @@ const styles = StyleSheet.create({
     top: 84,
   },
   wrap: {
-    width: 390,
-    marginLeft: 4,
+    width: screenWidth,
+    height: screenHeight * .64,
   },
   text2Typo: {
     color: Color.gray_300,

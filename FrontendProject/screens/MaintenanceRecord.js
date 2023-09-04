@@ -1,45 +1,49 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet,TextInput, TouchableOpacity, View, Text, Pressable } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, Dimensions, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
-import MaintenanceRecordList from  "../components/MaintenanceRecordList";
+import MaintenanceRecordList from "../components/MaintenanceRecordList";
 import FilterSearchRecord from "../components/FilterSearchRecord";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const rem = screenWidth / 16;
 
-const MaintenanceRecord = ({route}) => {
+const MaintenanceRecord = ({ route }) => {
   const { fromPreviousScreen } = route.params;
-  
-  const navigation = useNavigation();
-  const [searchType , setSearchType] = useState([]);
-  const [searchOrder , setSearchOrder] = useState('');
-  const [search, setSearch] = useState('');
-  const [filterSearchClicked,setFilterSearchClicked] =useState(false);
-  const [create, setCreate]=useState(false);
 
-  const functionFilterSearch = () =>{
+  const navigation = useNavigation();
+  const [searchType, setSearchType] = useState([]);
+  const [searchOrder, setSearchOrder] = useState('');
+  const [search, setSearch] = useState('');
+  const [filterSearchClicked, setFilterSearchClicked] = useState(false);
+  const [create, setCreate] = useState(false);
+
+  const functionFilterSearch = () => {
     setFilterSearchClicked(true);
   };
 
-const addFilterInState = (attribute, sort) => {
-  
+  const addFilterInState = (attribute, sort) => {
+
     setFilterSearchClicked(false);
     setSearchType(attribute);
     setSearchOrder(sort);
 
-  }; 
+  };
   const handleSavePress = () => {
     setCreate(true);
   };
 
-  const handleQuery= (query) => {
+  const handleQuery = (query) => {
     setSearch(query);
   }
 
   return (
     <View style={styles.maintenanceRecord}>
-      
+
       <Image
         style={styles.lightTexture22341Icon}
         contentFit="cover"
@@ -54,42 +58,40 @@ const addFilterInState = (attribute, sort) => {
 
 
       <View style={styles.groupParent}>
-        <View style={[styles.breadcrumbsWrapper, styles.breadcrumbsLayout]}>
-          <View style={[styles.breadcrumbs, styles.breadcrumbsLayout]}>
-            <View style={[styles.housefill, styles.housefillFlexBox]}>
+            <View style={[styles.housefill]}>
               <Image
                 style={styles.homeMutedIcon}
                 contentFit="cover"
                 source={require("../assets/homemuted.png")}
               />
+                 <Text style={[styles.text, styles.davidTypo1]}>\</Text>
+                 <Text style={styles.search}>Search</Text> 
             </View>
-            
-            <View style={styles.elementPosition}>
-              <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-            </View>
-        
-            <View style={[styles.surface, styles.surfaceParentFlexBox]}>
-              <Text style={styles.search}>Search</Text>
-            </View>
+   
             <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
               <Pressable onPress={functionFilterSearch}>
-              <Text style={[styles.abc123, styles.abc123Clr]}>
-                Filter
+                <View style={{ flexDirection:'row' }}>
+                <Text style={[styles.abc123, styles.abc123Clr]}>
+                  Filter
                 </Text>
+                <Icon
+                  name="exchange"
+                  size={0.5 * rem}
+                  // marginLeft={0.2 * rem}
+                  color={"black"}
+                  style={{ transform: 'rotate(90deg)' }}
+                />
+                </View>
               </Pressable>
-              {filterSearchClicked && <FilterSearchRecord onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
+              {filterSearchClicked && <FilterSearchRecord onFilterSelect={(attribute, sort) => addFilterInState(attribute, sort)} />}
             </View>
-            
-            
-          </View>
-        </View>
-       
-        <Pressable
+
+        {/* <Pressable
           style={[styles.groupWrapper, styles.groupLayout]}
           onPress={() => navigation.navigate("AddRecord")}
         >
           <View style={[styles.rectangleGroup, styles.groupLayout]}>
-          
+
             <View style={[styles.groupInner, styles.groupInnerLayout]} />
             <View style={styles.addRecordParent}>
               <Text style={[styles.addRecord, styles.addTypo]}>Add Record</Text>
@@ -100,69 +102,69 @@ const addFilterInState = (attribute, sort) => {
               />
             </View>
           </View>
-        </Pressable>
-</View>
+        </Pressable> */}
+      </View>
 
 
       {/* search */}
       <View style={styles.rectangleContainer}>
-      {fromPreviousScreen ? (
-        <View style={styles.wrap}>
+        {fromPreviousScreen ? (
+          <View style={styles.wrap}>
 
-        <View style={styles.blueContainer}>
-          <Text style={styles.blueText}>Select Record to Create Invoice</Text>
-        </View>
-        {/* onPress={handleSavePress} */}
-        <TouchableOpacity onPress={handleSavePress} > 
-        <View style={styles.saveContainer}>
-        <Text style={styles.blueTextB}>Create</Text>
-        </View>
-        </TouchableOpacity>
-  
-        </View>
-      ) : (
-        <View>
+            <View style={styles.blueContainer}>
+              <Text style={styles.blueText}>Select Record to Create Invoice</Text>
+            </View>
+            {/* onPress={handleSavePress} */}
+            <TouchableOpacity onPress={handleSavePress} >
+              <View style={styles.saveContainer}>
+                <Text style={styles.blueTextB}>Create</Text>
+              </View>
+            </TouchableOpacity>
+
+          </View>
+        ) : (
+          <View>
+            <Pressable
+              style={[styles.rectanglePressable, styles.rectanglePosition]}
+              onPress={() => navigation.navigate("MaintenanceRecord")}
+            />
+            <TextInput
+              style={styles.davidDaniel}
+              placeholder="David"
+              clearButtonMode="always"
+              value={search}
+              onChangeText={(query) => handleQuery(query)}
+            />
+          </View>
+        )}
+
         <Pressable
-        style={[styles.rectanglePressable, styles.rectanglePosition]}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
-      />
-        <TextInput
-          style={styles.davidDaniel}
-          placeholder="David"
-          clearButtonMode="always"
-          value={search}
-          onChangeText={(query) => handleQuery(query)}
-        />
-        </View>
-      )}
-
-      <Pressable
-        style={styles.vector}
-        onPress={() => navigation.navigate("MaintenanceRecord")}
-      >
-        <Image
-          style={[styles.icon1, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/vector8.png")}
-        />
-      </Pressable>
-    </View>
-
-      
-      
-
- 
-  <View style={styles.cont}>
-      <Footer  prop={"MaintenanceRecord"} />
+          style={styles.vector}
+          onPress={() => navigation.navigate("MaintenanceRecord")}
+        >
+          <Image
+            style={[styles.icon1, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/vector8.png")}
+          />
+        </Pressable>
       </View>
 
-    <View style={styles.boxContianer}>
-    <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} fromPreviousScreen={fromPreviousScreen} create={create} setCreate={setCreate} />
+
+
+
+
+      <View style={styles.cont}>
+        <Footer prop={"MaintenanceRecord"} />
+      </View>
+
+      <View style={styles.boxContianer}>
+        <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} fromPreviousScreen={fromPreviousScreen} create={create} setCreate={setCreate} />
+      </View>
+
+
     </View>
-      
-      
-    </View>
-    
+
 
   );
 };
@@ -176,17 +178,17 @@ const styles = StyleSheet.create({
     },
     left: 0,
   },
-  FilterSearch:{
-    left:228,
-    top:10
+  FilterSearch: {
+    left: 228,
+    top: 10
   },
-  cont:{
-    marginLeft:1,
-    zIndex:999,
+  cont: {
+    marginLeft: 1,
+    zIndex: 999,
   },
-  boxContianer :{
-    marginTop:220,
-    marginLeft: 0, 
+  boxContianer: {
+    marginTop: 220,
+    marginLeft: 0,
     // alignItems: 'flex-end', 
   },
   iconLayout1: {
@@ -204,10 +206,7 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
   },
-  housefillFlexBox: {
-    justifyContent: "center",
-    position: "absolute",
-  },
+
   davidTypo1: {
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "500",
@@ -241,29 +240,29 @@ const styles = StyleSheet.create({
   rectangleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    top:50,
+    top: 50,
   },
   blueContainer: {
     position: "absolute",
 
-    borderRadius:10,
+    borderRadius: 10,
   },
   saveContainer: {
     height: 34,
     width: 100,
-    marginTop:8,
-    marginLeft:275,
-    alignSelf:'baseline',
+    marginTop: 8,
+    marginLeft: 275,
+    alignSelf: 'baseline',
     position: "absolute",
     backgroundColor: Color.darkslateblue,
-    borderRadius:48,
+    borderRadius: 48,
 
   },
   blueText: {
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    marginTop:13,
+    marginTop: 13,
     color: Color.darkslateblue,
     fontSize: 18,
     fontWeight: "bold",
@@ -273,26 +272,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    marginTop:4,
+    marginTop: 4,
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
-  wrap:{
-    
-    flexDirection:'row',
+  wrap: {
+
+    flexDirection: 'row',
   },
-  davidDaniel: {
-    flex: 1,
-    height: 40,
-    fontSize:50,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginRight: 10,
-    width:100,
-  },
+
   vector: {
     // Your vector styles
   },
@@ -399,16 +389,14 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   homeMutedIcon: {
-    width: 12,
-    height: 14,
+    width: 0.5*rem,
+    height: 0.5*rem,
+    top:0.09*rem,
   },
   housefill: {
-    width: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    height: 20,
-    left: 10,
-    top: 0,
+    flexDirection:'row',
+    marginLeft:0.4*rem,
+    
   },
   elementPosition: {
     left: 30,
@@ -420,6 +408,7 @@ const styles = StyleSheet.create({
   text: {
     lineHeight: 17,
     textAlign: "left",
+    marginLeft:0.2*rem,
     fontSize: FontSize.caption2Regular_size,
     color: Color.textTxtPrimary,
     fontFamily: FontFamily.caption2Regular,
@@ -434,9 +423,10 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
+    marginLeft:0.2*rem,
   },
   surface: {
-    left: 40,
+    left: 10,
     top: 2,
     flexDirection: "row",
     justifyContent: "center",
@@ -444,10 +434,10 @@ const styles = StyleSheet.create({
   abc123: {
     fontWeight: "500",
     fontFamily: FontFamily.poppinsSemibold,
-    fontSize: FontSize.size_sm,
+    fontSize: 0.5*rem,
   },
   surface1: {
-    left: 220,
+    left: 12.5*rem,
     top: 0,
     flexDirection: "row",
     justifyContent: "center",
@@ -508,27 +498,27 @@ const styles = StyleSheet.create({
 
 
   groupParent: {
-    top: 100,
-    height: 33,
-    width: 392,
-    left: 19,
+    top: 4.9 * rem,
+    // height: 33,
+    // width: 32,
+    left: 0.49 * rem,
     position: "absolute",
   },
   rectanglePressable: {
-    height: 55,
-    width: 378,
+    height: 2 * rem,
+    width: screenWidth * 0.9,
     position: "absolute",
     backgroundColor: Color.steelblue_300,
   },
   davidDaniel: {
-    top: 14,
-    left: 21,
-    fontSize:18,
+    top: 0.5 * rem,
+    left: 0.8 * rem,
+    fontSize: 0.7 * rem,
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "800",
     position: "absolute",
-    width:100,
-    color:'black',
+    width: 9 * rem,
+    color: 'grey',
   },
   icon1: {
     maxHeight: "100%",
@@ -556,7 +546,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
-    zIndex:1,
+    zIndex: 1,
   },
 });
 

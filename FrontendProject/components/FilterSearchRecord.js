@@ -20,63 +20,7 @@ const FilterSearchRecord = ({onFilterSelect}) => {
       
         <View style={styles.dropdown}>
         
-          <View style={styles.pickerContainer}>
-            <Text style={styles.pickerLabel}>Select Attributes:</Text>
-            <View style={styles.radioButtonGroup}>
-              <RadioButton.Item
-                label="Date"
-                value="maintanenceDateTime"
-                status={selectedAttributes.includes('maintanenceDateTime') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('maintanenceDateTime')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'maintanenceDateTime'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'maintanenceDateTime']);
-                  }
-                }}
-                color={selectedAttributes.includes('maintanenceDateTime') ? Color.steelblue_100 : undefined}
-              />
-              <RadioButton.Item
-                label="Maintained By"
-                value="name"
-                status={selectedAttributes.includes('name') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('name')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'name'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'name']);
-                  }
-                }}
-                color={selectedAttributes.includes('name') ? Color.steelblue_100 : undefined}
-              />
-              <RadioButton.Item
-                label="Service"
-                value="service"
-                status={selectedAttributes.includes('service') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('service')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'service'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'service']);
-                  }
-                }}
-                color={selectedAttributes.includes('service') ? Color.steelblue_100 : undefined}
-              />
-              <RadioButton.Item
-                label="Mileage"
-                value="kilometerDriven"
-                status={selectedAttributes.includes('kilometerDriven') ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  if (selectedAttributes.includes('kilometerDriven')) {
-                    setSelectedAttributes(selectedAttributes.filter(attr => attr !== 'kilometerDriven'));
-                  } else {
-                    setSelectedAttributes([...selectedAttributes, 'kilometerDriven']);
-                  }
-                }}
-                color={selectedAttributes.includes('kilometerDriven') ? Color.steelblue_100 : undefined}
-              />
-            </View>
-          </View>
+
           <View style={styles.pickerContainer}>
             <Text style={styles.pickerLabel}>Select Sort Order:</Text>
             <View style={styles.radioButtonGroup}>
@@ -119,7 +63,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     width: 200,
-    height: 436,
+    height: 205,
     position: 'absolute',
     top: 0,
     left: -235,

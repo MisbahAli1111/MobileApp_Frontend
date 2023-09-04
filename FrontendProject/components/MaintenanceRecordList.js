@@ -24,7 +24,7 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
   const [InvoiceIndex, setInvoiceIndex] = useState('');
   const [InvoiceRecord, setInvoiceRecord] = useState('');
 
-  const displayedRecords = search ? data : records;
+  // const displayedRecords = search ? data : records;
 
   const handlePress = (index, recordId) => {
     if (InvoiceScreen) {
@@ -89,21 +89,61 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
     }
   }, [create]);
 
+  const displayedRecords = useMemo(() => {
+    let filteredVehicles;
+
+    if (search) {
+        filteredVehicles = data;
+    } else {
+            filteredVehicles = records;     
+    }
+    // console.log(searchOrder);
+    const sortedVehicles = filteredVehicles.slice().sort((a, b) => {
+        const dateA = new Date(a.maintanenceDateTime);
+        const dateB = new Date(b.maintanenceDateTime);
+
+        if (searchOrder === "ascending") {
+            return dateA - dateB;
+        } else {
+            return dateB - dateA;
+        }
+    });
+
+    return sortedVehicles;
+}, [search, data, records, searchType, searchOrder]);
+
+
   useEffect(() => {
     setSearch(dsearch);
 
+    console.log(searchOrder);
+
     const formattedQuery = dsearch.toUpperCase().trim();
-    console.log(formattedQuery);
     const maintained = records.filter((record) => {
       const nameMatches = record.name && record.name.toUpperCase().includes(formattedQuery);
-      // const drivenMatches = record.kilometerDriven && record.kilometerDriven.includes(formattedQuery);
-      // const serviceMatches = record.service && record.service.includes(formattedQuery);
-      // const ownerMatches = record.owner && record.owner.toUpperCase().includes(formattedQuery);
-      // const regMatches = record.registrationNumber && record.registrationNumber.includes(formattedQuery);
-      // const parentCompany = record.parentCompany && record.parentCompany.toUpperCase().includes(formattedQuery);
-      // return serviceMatches || ownerMatches || nameMatches || regMatches || parentCompany;
-      return nameMatches ;
+      const drivenMatches = record.kilometerDriven.toString().includes(formattedQuery);
+      const ownerMatches = record.vehicleOwner && record.vehicleOwner.toUpperCase().includes(formattedQuery);
+      const numberMatches = record.registrationNumber.toUpperCase().includes(formattedQuery);
+      const serviceMatches = record.service && record.service.toUpperCase().includes(formattedQuery);
+      const parentCompanyMatches = record.parentCompany && record.parentCompany.toUpperCase().includes(formattedQuery);
+    
+      const dateMatches = (query) => {
+        const formattedDate = query.split('/').reverse().join('-'); // Convert to 'YYYY-MM-DD' format
+        const maintanenceDate = record.maintanenceDateTime.split('T')[0];
+        return maintanenceDate.includes(formattedDate);
+      };
+    
+      return (
+        nameMatches ||
+        parentCompanyMatches ||
+        drivenMatches ||
+        serviceMatches ||
+        numberMatches ||
+        ownerMatches ||
+        dateMatches(formattedQuery)
+      );
     });
+    
 
     setData(maintained);
 

@@ -8,7 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { TextInput } from "react-native-gesture-handler";
 import Footer from "../components/Footer";
 import ErrorPopup from "../components/ErrorPopup";
 import ErrorPopup2 from "../components/ErrorPopup2";
