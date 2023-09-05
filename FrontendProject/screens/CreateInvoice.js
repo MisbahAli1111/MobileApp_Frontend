@@ -49,7 +49,7 @@ const CreateInvoice = (parans) => {
   const [amount, setAmount] = useState(0);
   const [quantity, setQuantity] = useState('');
 
-
+  const [ subtotal , setSubTotal]= useState(0);
 
   const [disRateper, setdisRateper] = useState(0);
   const [total, setTotal] = useState('');
@@ -197,7 +197,7 @@ const CreateInvoice = (parans) => {
     setDueDate(data.Duedate);
     setregNumber(data.regNumber);
     setStatus(data.status);
-
+    
   };
 
   const handleSave = () => {
@@ -248,14 +248,15 @@ const CreateInvoice = (parans) => {
     } else {
       st = false;
     }
-
+    console.log("subtotal here");
+    console.log(subtotal);
+      
 
     let data = JSON.stringify({
-
       "invoiceDue": Duedate,
       "date": date,
       "registrationNumber": regNumber,
-      "total": parseFloat(totalAmount),
+      "total": parseFloat(subtotal),
       "status": st,
 
       "descriptions": descriptionArray,
@@ -304,6 +305,7 @@ const CreateInvoice = (parans) => {
       const itemAmount = parseFloat(item.quantity) * parseFloat(item.rate);
       totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
     }
+    setSubTotal(totalAmount);
 
 
 
@@ -314,6 +316,7 @@ const CreateInvoice = (parans) => {
         totalDiscount += (discountRate / 100) * totalAmount; // Convert rate to decimal
       }
     }
+    
 
 
     let totaltax = 0.0;

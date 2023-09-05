@@ -50,7 +50,7 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'http://192.168.100.71:8080/api/maintenance-record/get-records',
+      url: 'http://192.168.0.236:8080/api/maintenance-record/get-records',
       headers: {
         'Authorization': accessToken
       }

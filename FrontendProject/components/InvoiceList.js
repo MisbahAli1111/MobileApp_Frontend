@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
+import isEqual from 'lodash/isEqual';
+import ErrorPopup from "../components/ErrorPopup";
 import { StyleSheet, TextInput, Dimensions, TouchableOpacity, ScrollView, View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
@@ -15,11 +17,12 @@ const rem = screenWidth / 16;
 function Invoicelist({ dsearch }) {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [data, setData] = useState([]);
   const [Invoices, setInvoices] = useState([]);
-
+  const [ tempInvoiceid, setTempInvoiceId]= useState('');
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-
+  const [ reload , setReload] = useState(0);
 
 
   const displayedRecords = search ? data : Invoices;
@@ -30,15 +33,39 @@ function Invoicelist({ dsearch }) {
     navigation.navigate("InvoiceDetailView", { recordId });
   };
 
+  const handleDeleteVehicle = () => {
+    // console.log(tempVehicleid);
+    setShowErrorPopup(false);
+    deleteVehicle();
+};
+const setPopUp = (vehicleIds) => {
+  setTempInvoiceId(vehicleIds);
+  setShowErrorPopup(true);
+}
 
 
-  const setPopUp = (vehicleIds) => {
-
-  }
+deleteVehicle = async () => {
+  let config = {
+    method: 'put',
+    maxBodyLength: Infinity,
+    url: `http://192.168.100.71:8080/api/invoice/${tempInvoiceid}/delete-invoice`,
+    headers: { }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    // console.log(JSON.stringify(response.data));
+    // getData();
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
 
   useEffect(() => {
+
     getData();
-  }, []);
+  });
 
   getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
@@ -54,11 +81,15 @@ function Invoicelist({ dsearch }) {
     };
 
     axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        setInvoices(response.data);
-
-      })
+    .then((response) => {
+      const newData = response.data;
+      const hasDataChanged = !isEqual(newData, Invoices); 
+      
+      if (hasDataChanged) {
+        console.log(JSON.stringify(newData));
+        setInvoices(newData);
+      }
+    })
       .catch((error) => {
         console.log(error);
       });
@@ -94,6 +125,16 @@ function Invoicelist({ dsearch }) {
                   ]}>
                     {record.name}
                   </Text>
+                  <ErrorPopup
+                    visible={showErrorPopup}
+                    message={'Are you sure you want to remove Invoice?'}
+                    onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
+                    onCancel={() => {
+                      setShowErrorPopup(false);
+                      setTempInvoiceId(null); // Reset vehicleIds when the popup is closed
+                    }}
+
+                  />
                   <TouchableOpacity
                     onPress={() => setPopUp(record.id)}>
                     <FontAwesome
@@ -124,7 +165,7 @@ function Invoicelist({ dsearch }) {
 
 
                 <View style={[styles.inv0001Parent]}>
-                <Text style={[
+                  <Text style={[
                     currentPressedIndex === index ? styles.jan20234 : styles.jan2023,
                   ]}>
                     {record.invoiceDue}
@@ -176,8 +217,8 @@ const styles = StyleSheet.create({
   rowWrap: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom:0,
-    margin:10,
+    marginBottom: 2,
+    margin: 10,
     marginTop: 10,
   },
   cont: {
@@ -469,7 +510,7 @@ const styles = StyleSheet.create({
   },
   muhammadAli44: {
     fontSize: FontSize.size_base,
-    marginLeft:10*rem,
+    marginLeft: 10 * rem,
   },
   inv00014: {
     fontSize: FontSize.size_mini,

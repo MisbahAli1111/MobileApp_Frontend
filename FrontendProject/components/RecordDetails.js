@@ -25,8 +25,9 @@ function RecordDetails({recordId}) {
   const [service,setService]=useState('');
   const [type,setTyoe]=useState('');
   const [dateTime,setDateTime]=useState('');
-
   const [datePart, timePart] = dateTime.split('T');
+  const [fetchedServiceDue,setFetchedServiceDue] = useState('');
+  const[serviceDue,setServiceDue] = fetchedServiceDue.split('T');
   const [registrationNumber,setRegistrationNumber]=useState('');
   const [imageResponce,setImageResponce] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -126,7 +127,7 @@ function RecordDetails({recordId}) {
     
     axios.request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      // console.log(JSON.stringify(response.data));
       setDetail(response.data[0].maintanenceDetail);
       setName(response.data[0].name);
       setMileage(response.data[0].kilometerDriven);
@@ -134,6 +135,7 @@ function RecordDetails({recordId}) {
       setRegistrationNumber(response.data[0].registrationNumber);
       setTyoe(response.data[0].type);
       setDateTime(response.data[0].maintanenceDateTime);
+      setFetchedServiceDue(response.data[0].serviceDue);
      
     })
     .catch((error) => {
@@ -168,6 +170,11 @@ function RecordDetails({recordId}) {
     setModalVisible(false);
     setOriginalUri('');
   };
+
+  
+  
+
+  
 
   return (
     <ScrollView style={styles.wrap}>
@@ -274,7 +281,13 @@ function RecordDetails({recordId}) {
           <Text style={[styles.km, styles.kmTypo]}>{type}</Text>
         </View>
         <Text style={[styles.type, styles.typePosition]}>{`Type `}</Text>
+        <View style={styles.carWashParent2}>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>{serviceDue}</Text>
+          <Text style={[styles.date, styles.dateTypo]}>Service Due</Text>
+        </View>
+      
       </View>
+     
 
 
 
@@ -399,7 +412,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   vectorGroupLayout: {
-    height: 301,
+    height: 380,
     width: 400,
     marginTop:20,
     position: "relative",
@@ -692,6 +705,13 @@ const styles = StyleSheet.create({
     height: 50,
     position: "absolute",
   },
+  carWashParent2: {
+    top: 290,
+    width: 79,
+    left: 25,
+    height: 50,
+    position: "absolute",
+  },
   carWashParent1: {
     top: 230,
     width: 79,
@@ -716,7 +736,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
   },
   vectorGroup: {
-    left: 10,
+    left: 5,
   },
   details: {
     fontWeight: "700",

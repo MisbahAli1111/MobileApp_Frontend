@@ -1,8 +1,8 @@
 import React from 'react';
 import { Image } from "expo-image";
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 import { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text, TextInput, Modal, FlatList, ScrollView, TouchableOpacity, Pressable } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Modal,Dimensions, FlatList, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -11,7 +11,13 @@ import DueDateTimePicker from '@react-native-community/datetimepicker';
 import ErrorPopup from "../components/ErrorPopup";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave }) => {
+import { width } from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const rem = screenWidth / 16;
+
+const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave }) => {
 
 
   const [selectedCountry, setSelectedCountry] = useState('');
@@ -39,37 +45,37 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
   });
 
   useEffect(() => {
-    if(APIData){
+    if (APIData) {
       console.log("API");
       console.log(APIData);
-      
-    
-    console.log(APIData[0]);
-    const  data=APIData[0];
-    setName(data.name);
-    setregNumber(data.registrationNumber);
-    let st='';
-    if(status){
-      st='Paid';
-    }else{
-      st='Due';
-    }
-    setStatus(st);
-    
-    // console.log(d);
-    
-    const date=formatDate(data.date);
-    const DueDate=formatDate(data.invoiceDue);
-    // console.log(date);
-    // setDate(date);
-    // setSelectedDueDate(data.invoiceDue);
-    // setSelectedDate(date);
-    setLocalDate(data.date);
-    setLocalDueDate(data.invoiceDue);
-    setAPDate(date);
-    setAPDueDate(DueDate);
 
-  }
+
+      console.log(APIData[0]);
+      const data = APIData[0];
+      setName(data.name);
+      setregNumber(data.registrationNumber);
+      let st = '';
+      if (status) {
+        st = 'Paid';
+      } else {
+        st = 'Due';
+      }
+      setStatus(st);
+
+      // console.log(d);
+
+      const date = formatDate(data.date);
+      const DueDate = formatDate(data.invoiceDue);
+      // console.log(date);
+      // setDate(date);
+      // setSelectedDueDate(data.invoiceDue);
+      // setSelectedDate(date);
+      setLocalDate(data.date);
+      setLocalDueDate(data.invoiceDue);
+      setAPDate(date);
+      setAPDueDate(DueDate);
+
+    }
     // // setData();
   }, [APIData]);
 
@@ -78,7 +84,7 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
     const dateObject = new Date(dateString);
     return dateObject.toDateString();
   };
-  
+
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
@@ -97,10 +103,10 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
   const [regNumberError, setregNumberError] = useState(false);
   const [DateError, setDataError] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-  const [APDate,setAPDate] = useState(null);
-  const [APDueDate,setAPDueDate] = useState(null);
-  
-  
+  const [APDate, setAPDate] = useState(null);
+  const [APDueDate, setAPDueDate] = useState(null);
+
+
 
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
@@ -152,10 +158,10 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
 
   useEffect(() => {
     setName('No Customer');
-    
+
     getRegistrationNumber();
     getCustomer(regNumber);
-  }, [regNumber],[recordId]);
+  }, [regNumber], [recordId]);
 
 
   const getRegistrationNumber = async () => {
@@ -163,18 +169,18 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
       method: 'get',
       maxBodyLength: Infinity,
       url: `http://192.168.100.71:8080/api/maintenance-record/${recordId}/registration-number`,
-      headers: { }
+      headers: {}
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      // console.log("regNumber");
-      // console.log(JSON.stringify(response.data));
-      setregNumber(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        // console.log("regNumber");
+        // console.log(JSON.stringify(response.data));
+        setregNumber(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const onSearch = search => {
@@ -259,12 +265,12 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
     if (selectedDueDate) {
       Duedate = selectedDueDate;
     }
-    if(APDate  && APDueDate){
+    if (APDate && APDueDate) {
       console.log("dates present");
-      date=localDate;
-      Duedate=localDueDate;
-      date=localDate;
-      Duedate=localDueDate;
+      date = localDate;
+      Duedate = localDueDate;
+      date = localDate;
+      Duedate = localDueDate;
     }
 
     if (typeof onFormDataChange === 'function') {
@@ -282,26 +288,26 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
           nameError ? styles.loritaR : styles.lorita
           , styles.text5ClrName]} onChangeText={setName}
           editable={false}
-          >
-            {name}
+        >
+          {name}
 
-          </TextInput>
+        </TextInput>
         <Image
           style={styles.date2SvgrepoCom11}
           contentFit="cover"
           source={require("../assets/frame2.png")}
         />
-   
-          <Text style={[styles.regNumber,
-          regNumberError ? styles.text5ClrR : styles.text5Clr
-          ]}
-          editable={false}
-          >
-            
-            {regNumber}
-          </Text>
 
-        
+        <Text style={[styles.regNumber,
+        regNumberError ? styles.text5ClrR : styles.text5Clr
+        ]}
+          editable={false}
+        >
+
+          {regNumber}
+        </Text>
+
+
         <Image
           style={styles.date2SvgrepoCom11R}
           contentFit="cover"
@@ -372,6 +378,44 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
 
 
       <View style={styles.parentp}>
+
+
+        <Pressable
+         style={{
+          flexDirection:'row',           
+        }}
+          onPress={openDueDatePicker}
+        >
+          <TextInput
+            style={[
+              DateError ? styles.text1R : styles.text1
+              , styles.text1Typo]}
+            value={selectedDueDate ? selectedDueDate.toDateString() : APDueDate}
+            placeholder="Select Due date"
+            editable={false}>
+          </TextInput>
+          <Image
+            style={styles.date2SvgrepoCom11C}
+            contentFit="cover"
+            source={require("../assets/date2svgrepocom-1-11.png")}
+          />
+        </Pressable>
+        {showDueDatePicker && (
+          <DueDateTimePicker
+            value={selectedDueDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDueDateChange}
+          />
+        )}
+
+
+        <Pressable
+          style={{
+            flexDirection:'row',           
+          }}
+          onPress={openDueDatePicker}
+        > 
         <TextInput
           style={[
             DateError ? styles.text1R : styles.text1
@@ -379,10 +423,6 @@ const CreateInvoiceForm = ({ onFormDataChange,APIData, save,recordId, setSave })
           value={selectedDueDate ? selectedDueDate.toDateString() : APDueDate}
           placeholder="Select Due date"
           editable={false}></TextInput>
-
-        <Pressable
-          onPress={openDueDatePicker}
-        >
           <Image
             style={styles.date2SvgrepoCom11C}
             contentFit="cover"
@@ -457,6 +497,8 @@ const styles = StyleSheet.create({
   parentp: {
     flexDirection: 'row',
     marginTop: 18,
+    justifyContent: 'space-between',
+    width:screenWidth*.9,
   },
 
   text5Clr: {

@@ -9,7 +9,7 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from '@expo/vector-icons';
-function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
+function VehicleRecords({ dsearch, type,added, searchType, searchOrder }) {
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState('');
@@ -160,8 +160,10 @@ function VehicleRecords({ dsearch, type, searchType, searchOrder }) {
 
 
     useEffect(() => {
+
         setVehicleType(type);
         getData();
+        
     }, [type]);
 
     const handleDeleteVehicle = () => {

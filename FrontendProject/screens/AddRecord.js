@@ -29,6 +29,7 @@ const [userId,setUserId] = useState('');
   const [driven, setDriven] = useState('');
   const [user, setUser] = useState('');
   const [service, setService] = useState('');
+  const [type,setType] =useState('');
 
   const [details, setDetails] = useState(false);
   const [NameError, setNameError] = useState(false);
@@ -55,6 +56,7 @@ const [userId,setUserId] = useState('');
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
+  const [serviceDue,setServiceDue] = useState('');
   const services = ['Oil Change', 'Car Wash', 'Car Maintenance', 'Servicing', 'Alignment'];
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
@@ -181,6 +183,174 @@ const [userId,setUserId] = useState('');
   const handleAddCustomer =() =>{
     navigation.navigate('AddVehicle');
   };
+
+
+
+  const calculateServiceDue = (type ,selectedCode) => {
+    console.log(type);
+    console.log(selectedCode)
+    const serviceTypeMap = {
+      'Car': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 3000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 15000,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 2000,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 50,
+          totalKilometersBetweenServices: 2500,
+        },
+      },
+      'Auto': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 3000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 1350,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 1800,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 45,
+          totalKilometersBetweenServices: 2250,
+        },
+      },
+      'Bike': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 600,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 900,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1200,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1500,
+        },
+      },
+      'Truck': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 10000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 2000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 3000,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 4000,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 100,
+          totalKilometersBetweenServices: 5000,
+        },
+      },
+      'Other': {
+        'Oil Change': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Wash': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1000,
+        },
+        'Car Maintenance': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 2000,
+        },
+        'Alignment': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1200,
+        },
+        'Servicing': {
+          kilometersDrivenPerDay: 30,
+          totalKilometersBetweenServices: 1500,
+        },
+      },
+    };
+  
+  
+  
+  
+    if (serviceTypeMap[type] && serviceTypeMap[type][selectedCode]) {
+      const { kilometersDrivenPerDay, totalKilometersBetweenServices } = serviceTypeMap[type][selectedCode];
+      const daysUntilNextService = totalKilometersBetweenServices / kilometersDrivenPerDay;
+      return addDays(selectedDate, Math.floor(daysUntilNextService));
+    }
+  
+    return addDays(selectedDate, 30); // Default value if service or type is unknown
+  };
+  
+  
+
+  // Function to add days to a date
+  const addDays = (date, days) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + days);
+    setServiceDue(newDate.toISOString());
+    console.log("ServiceDue: ",serviceDue);
+  };
+
+
+
+
+  const getType = async (carNumber) => {
+    let token= await AsyncStorage.getItem("accessToken");
+    const accessToken = 'Bearer ' + token;
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.0.236:8080/api/maintenance-record/${carNumber}/type`,
+      headers: { 
+        'Authorization': accessToken
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+
+      JSON.stringify(response.data);
+      setType(response.data);
+      console.log("Type: ",type);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  };
   
   const getRegistrationNumber = async () =>{
     let token= await AsyncStorage.getItem("accessToken");
@@ -194,7 +364,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-registration-number/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-registration-number/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -220,7 +390,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -242,7 +412,16 @@ const [userId,setUserId] = useState('');
     setUser('No Customer Found');
     getCustomer(carNumber);
     getRegistrationNumber();
-  },[carNumber]);
+    if(carNumber){
+    getType(carNumber);
+    }
+    if(type && selectedCode)
+    {
+      console.log("calcltaing....");
+      calculateServiceDue(type,selectedCode);
+      
+    }
+  },[carNumber,selectedCode]);
 
   const transformedResponse = numberPlates.map(item => {
     const { registration_number } = item;
@@ -290,7 +469,7 @@ const [userId,setUserId] = useState('');
         
     
         const response = await axios.post(
-          `http://192.168.100.71:8080/api/file/upload/record/${recordId}`,
+          `http://192.168.0.236:8080/api/file/upload/record/${recordId}`,
           imageData,
           {
             headers: {
@@ -381,20 +560,20 @@ const [userId,setUserId] = useState('');
         const dateTime=`${selectedDate.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`;
         const token = await AsyncStorage.getItem("accessToken");
         const accessToken = 'Bearer ' + token;
-    
         // const axios = require('axios');
         const data = {
           "kilometerDriven": driven,
           "service": selectedCode,
           "maintanenceDetail": details,
           "registrationNumber": carNumber,
-          "maintanenceDateTime": selectedDate
+          "maintanenceDateTime": selectedDate,
+          "serviceDue" : serviceDue
         };
           
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://192.168.100.71:8080/api/maintenance-record/add-record',
+          url: 'http://192.168.0.236:8080/api/maintenance-record/add-record',
           headers: { 
             'Content-Type': 'application/json', 
             'Authorization': accessToken

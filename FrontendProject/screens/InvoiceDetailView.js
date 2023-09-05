@@ -74,14 +74,21 @@ function InvoiceDetailView() {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         // setInvoice(response.data);
-        setDate(response.data[0].date);
+        // setDate(response.data[0].date);
+        const dateObj = new Date(response.data[0].date);
+        const year = dateObj.getFullYear();
+        const month = dateObj.getMonth() + 1; 
+        const day = dateObj.getDate();
+        setDate(`${month}/${day}/${year}`);
+        // console.log(formattedDate);
         setDue(response.data[0].invoiceDue);
-
+        setInvoiceID(response.data[0].id);
         setSubTotal(response.data[0].total);
         setDescription(response.data[0].descriptions);
         setTaxr(response.data[0].taxes);
         setDiscountr(response.data[0].discounts);
         setName(response.data[0].name);
+        setRegistrationNumber(response.data[0].registrationNumber);
         setVehicle(response.data[0].vehicleName);
         let st = response.data[0].status;
         setStatus(st ? 'Paid' : 'Due');
@@ -141,13 +148,25 @@ function InvoiceDetailView() {
     totalAmount += totaltax;
 
     totalAmount = totalAmount.toFixed(2);
+    
+    console.log(totalAmount);
 
     setTotal(totalAmount);
   };
 
+  const descriptionRows = description.map((desc, index) => `
+  <tr>
+    <td>${desc.item}</td>
+    <td>$${desc.rate.toFixed(2)}</td>
+    <td>${desc.quantity}</td>
+    <td>$${desc.amount.toFixed(2)}</td>
+  </tr>
+`).join('');
 
-  const html = `
-  <html lang="en">
+
+
+const html = `
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -170,17 +189,37 @@ function InvoiceDetailView() {
       font-weight: bold;
       margin-bottom: 20px;
     }
+    .header-left {
+      float: left;
+      text-align: left;
+      width: 33%;
+    }
+    .header-middle {
+      float: left;
+      text-align: center;
+      width: 33%;
+    }
+    .header-right {
+      float: right;
+      text-align: right;
+      text-decoration: underline;
+      width: 33%;
+    }
     .details {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
+      text-align: left;
+      margin-top: 50px; /* Reduce top margin for details section */
     }
     .details label {
       font-weight: bold;
+      margin-bottom: 1px; /* Reduce margin below labels */
+    }
+    .details p {
+      margin: 1px 0; /* Reduce vertical margin for data rows */
     }
     .items-table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 10px; /* Reduce top margin for the table */
     }
     .items-table th, .items-table td {
       border: 1px solid #ccc;
@@ -190,25 +229,34 @@ function InvoiceDetailView() {
     .items-table th {
       background-color: #f2f2f2;
     }
+    .items-table tr {
+      border-collapse: collapse; /* Add this line to remove gaps between rows in the table */
+    }
     .total {
       text-align: right;
       font-weight: bold;
+      margin-top: 10px; /* Reduce top margin for the totals section */
+    }
+    .total p {
+      margin: 1px 0; /* Reduce vertical margin for data rows */
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">Invoice</div>
+    <p class="header">
+      <span class="header-left">Invoice ID: ${invoiceID}</span>
+      <span class="header-middle"><img src="logo.png" alt="Logo"></span>
+      <span class="header-right">Invoice</span>
+    </p>
+    <p><br></p>
     <div class="details">
       <div>
-        <p>Invoice ID: ${invoiceID}</p>
         <p>Date: ${date}</p>
-        <p>Balance Due: ${total}</p>
-      </div>
-      <div>
         <p>Name: ${name}</p>
         <p>Registration Number: ${registrationNumber}</p>
         <p>Status: ${status}</p>
+        <p>Balance Due: ${total}</p>
       </div>
     </div>
     <table class="items-table">
@@ -221,29 +269,20 @@ function InvoiceDetailView() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Item 1</td>
-          <td>$20.00</td>
-          <td>2</td>
-          <td>$40.00</td>
-        </tr>
-        <tr>
-          <td>Item 2</td>
-          <td>$15.00</td>
-          <td>3</td>
-          <td>$45.00</td>
-        </tr>
+        ${descriptionRows}
       </tbody>
     </table>
     <div class="total">
-     <p>Subtotal: ${subTotal} </p>
+      <p>Subtotal: ${subTotal}</p>
       <p>Tax: ${tax}</p>
       <p>Discount: ${discount}</p>
       <p>Total: ${total}</p>
     </div>
   </div>
 </body>
-</html> `;
+</html>`;
+
+
 
   const generatePDF = async () => {
     const file = await printToFileAsync({
@@ -309,7 +348,7 @@ function InvoiceDetailView() {
             </View>
             <Text style={[styles.invoice, styles.dueTypo]}>Invoice</Text>
           </View>
- 
+
 
         </View>
 
@@ -438,36 +477,23 @@ function InvoiceDetailView() {
           onPress={printPDf}//printer button
         >
           <Image
-            style={styles.icon}
+            style={styles.iconP}
             contentFit="cover"
-            source={require("../assets/ellipse-8.png")}
+            source={require("../assets/printer-2.png")}
           />
         </Pressable>
+
+
         <Pressable
           style={[styles.frame, styles.framePosition]}//share button
           onPress={generatePDF}
-
         >
           <Image
-            style={styles.icon}
+            style={[styles.iconP]}
             contentFit="cover"
-            source={require("../assets/ellipse-8.png")}
+            source={require("../assets/icbaselineshare.png")}
           />
         </Pressable>
-
-
-
-        <Image
-          style={[styles.printer2Icon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/printer-2.png")}
-        />
-        <Image
-          style={[styles.icbaselineShareIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/icbaselineshare.png")}
-        />
-
 
         <View style={styles.foot} >
           <Footer prop={"Invoices"} />
@@ -480,23 +506,22 @@ function InvoiceDetailView() {
 const styles = StyleSheet.create({
   editInvoice2: {
     color: Color.white,
-    left:-9,
+    left: -9,
     // lineHeight: 18,
     textAlign: "center",
-    alignSelf:'center',
-    alignContent:'center',
-    justifyContent:'center',
+    alignSelf: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
     fontSize: FontSize.caption2Regular_size,
     width: 80,
-    
+
 
   },
   dataRow: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: 'gray',
+    borderBottomWidth: 0.8,
+    borderColor: 'white',
     paddingVertical: 8,
-
   },
   dataCell: {
     flex: 1,
@@ -759,9 +784,11 @@ const styles = StyleSheet.create({
   },
   framePosition: {
     left: 364,
-    height: 45,
-    width: 45,
+    justifyContent:'center',
+    alignItems:'center',
     position: "absolute",
+    borderRadius: 20,
+    backgroundColor: '#3894c9'
   },
   groupPressableLayout: {
     height: 104,
@@ -1372,6 +1399,10 @@ const styles = StyleSheet.create({
     right: 0,
     top: -20,
     position: "absolute"
+  },
+  iconP: {
+    height: 25,
+    width: 25,
 
   },
   wrapper: {
@@ -1379,9 +1410,13 @@ const styles = StyleSheet.create({
   },
   container: {
     top: 730,
+    height: 40,
+    width: 40,
   },
   frame: {
     top: 680,
+    height: 40,
+    width: 40,
   },
   invoiceDetailViewChild4: {
     left: 105,
@@ -1412,7 +1447,7 @@ const styles = StyleSheet.create({
     left: 164,
   },
   printer2Icon: {
-    top: 722,
+    top: 0,
   },
   icbaselineShareIcon: {
     top: 672,

@@ -400,7 +400,7 @@ const AddVehicle = () => {
             if (createdUserId) {
               uploadImage(createdUserId);
             }
-            navigation.navigate('Vehicles');
+            navigation.navigate('Vehicles', { type: 'default' });
           }
         })
         .catch((error) => {
