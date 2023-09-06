@@ -68,13 +68,14 @@ deleteVehicle = async () => {
   });
 
   getData = async () => {
+    const Business_id = await AsyncStorage.getItem("Business_id");
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'http://192.168.100.71:8080/api/invoice/get-invoice',
+      url: `http://192.168.100.71:8080/api/invoice/get-invoices/${Business_id}`,
       headers: {
         'Authorization': accessToken
       }

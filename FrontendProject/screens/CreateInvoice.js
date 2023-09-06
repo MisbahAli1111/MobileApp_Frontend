@@ -236,8 +236,8 @@ const CreateInvoice = (parans) => {
 
 
   sendData = async () => {
-
-    console.log("here");
+    const Business_id = await AsyncStorage.getItem("Business_id");
+      
     const token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
 
@@ -267,7 +267,7 @@ const CreateInvoice = (parans) => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/create-invoice/${recordId}`,
+      url: `http://192.168.100.71:8080/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': accessToken
