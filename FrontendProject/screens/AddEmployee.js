@@ -53,7 +53,16 @@ const AddEmployee = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isImageModalVisible,setImageModalVisible]= useState('false');
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword,setShowConfirmPassword] = useState(false);// Track password visibility
 
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
   const handleImageUpload = () => {
     setImageModalVisible(true);
   };
@@ -108,7 +117,7 @@ const AddEmployee = () => {
 
 
     const response = await axios.post(
-      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `http://172.16.85.231:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -160,7 +169,7 @@ const AddEmployee = () => {
       setEmailError(false);
     }
 
-    if (!selectedCode) {
+    if (!countryCode) {
       setPLError('Please select Country Code');
       setNumberError(true);
       hasErrors = true;
@@ -215,7 +224,7 @@ const AddEmployee = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/register/employee/${Business_id}`,
+        url: `http://172.16.85.231:8080/api/users/register/employee/${Business_id}`,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': accessToken
@@ -311,18 +320,27 @@ const AddEmployee = () => {
           style={styles.input}
           placeholder="Password"
           value={Password}
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           onChangeText={setPassword}
         />
-      </View><View style={styles.inputContainer}>
+        <TouchableOpacity 
+        onPress={togglePasswordVisibility}>
+        <AntDesign name="eyeo" style={styles.passwordIcon} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
         <AntDesign name="key" style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
           value={ConfirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry={true}
+          secureTextEntry={!showConfirmPassword}
         />
+        <TouchableOpacity 
+        onPress={toggleConfirmPasswordVisibility}>
+        <AntDesign name="eyeo" style={styles.passwordIcon} />
+        </TouchableOpacity>
       </View>
   
 
@@ -354,15 +372,16 @@ const AddEmployee = () => {
         />
       </View>
       </View>
-</ScrollView>
 
 
 
-  {/* <View style={styles.registerButtonContainer}> */}
+
+  <View style={styles.registerButtonContainer}>
     <TouchableOpacity onPress={handleSignUp} style={styles.registerButton}>
       <Text style={styles.registerButtonText}>Register</Text>
     </TouchableOpacity>
-  {/* </View> */}
+  </View>
+  </ScrollView>
       
     
 
@@ -382,10 +401,10 @@ const AddEmployee = () => {
             )}
             </View>
             <TouchableOpacity
-              style={styles.imageModalButton2}
+              style={styles.closeButton}
               onPress={() => setFullImageModalVisible(false)}
             >
-              <Text style={styles.imageModalButtonText}>Close</Text>
+              <AntDesign name="close" size={30} color="rgba(3, 29, 68, 1)" />
             </TouchableOpacity>
           </View>
         </Modal>
@@ -555,7 +574,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: widthPercentageToDP('90%'),
     borderRadius:widthPercentageToDP('2%'),
-    marginBottom: widthPercentageToDP('2%')
+    marginBottom: widthPercentageToDP('3%'),
   },
   registerButtonText: {
     color: 'white',
@@ -568,11 +587,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   closeButton: {
-    // position: 'absolute',
-    top: heightPercentageToDP('4%'), // Adjust the percentage as needed
-    left: widthPercentageToDP('35%'), // Adjust the percentage as needed
+    position: 'absolute',
+    top: heightPercentageToDP('2%'),
+    right: widthPercentageToDP('2%'),
     zIndex: 999,
+    paddingHorizontal: widthPercentageToDP('2%'),
+    paddingVertical: heightPercentageToDP('1%'),
   },
+  
   imageModalContent: {
     backgroundColor: 'white',
     padding: widthPercentageToDP('4%'), // Adjust the percentage as needed
@@ -622,6 +644,10 @@ const styles = StyleSheet.create({
   fullImage: {
     width: '100%',
     height: '100%',
+  },
+  passwordIcon: {
+    fontSize: widthPercentageToDP('5%'),
+    marginLeft: widthPercentageToDP('1%'), // Adjust the spacing as needed
   },
 });
 
