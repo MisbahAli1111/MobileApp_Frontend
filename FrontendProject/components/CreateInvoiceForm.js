@@ -410,7 +410,7 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
         )}
 
 
-        <Pressable
+        {/* <Pressable
           style={{
             flexDirection:'row',           
           }}
@@ -436,7 +436,7 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
             display="default"
             onChange={handleDueDateChange}
           />
-        )}
+        )} */}
       </View>
       {DueDateError ? <Text style={styles.nameError}>Provide Due Date for Invoice</Text> : null}
 

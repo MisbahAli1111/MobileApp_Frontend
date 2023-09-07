@@ -61,9 +61,11 @@ const styles = StyleSheet.create({
   container: {
     top: -6,
     flex: 1,
+    position:'absolute',
     justifyContent: 'center',
     alignItems: 'center',
     left: -16, 
+    // height:"20%",
     width:"100%"
   },
   vehiclesText:{

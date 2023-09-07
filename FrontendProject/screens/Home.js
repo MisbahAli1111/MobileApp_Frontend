@@ -5,7 +5,7 @@ import { StyleSheet, View,TextInput, Button, Text, Pressable, TouchableOpacity }
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import VehicleCarousel from "../components/VehicleCarousel";
-import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
+import { Color, Border,Padding, FontFamily, FontSize } from "../GlobalStyles";
 // import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from 'react-native';
 import Footer from "../components/Footer";
@@ -100,11 +100,16 @@ const Home = () => {
       </View>
       <View style={[styles.homeInner, styles.homeInnerLayout]} >
       <DashboardGraph/>
+           <TouchableOpacity
+            style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
+            onPress={() => navigation.navigate("SalesReport")}
+          >
+            <Text style={[styles.createInvoice, styles.text13Typo]}>
+              Generate Report
+            </Text>
+          </TouchableOpacity>
       </View>
 
-      {/* <View style={styles.lineParent}>
-      
-      </View> */}
 
 
       {/* car , bike, auto.. */}
@@ -240,6 +245,38 @@ const styles = StyleSheet.create({
   iconLayout: {
     height: 44,
     position: "absolute",
+  },
+  createInvoiceWrapper: {
+    marginTop:225,
+    marginLeft:125,
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    shadowRadius: 20,
+    elevation: 20,
+    paddingHorizontal: Padding.p_11xl,
+    paddingVertical: Padding.p_6xs,
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: -4,
+    },
+    backgroundColor: Color.darkslateblue,
+    top: 0,
+    flexDirection: "row",
+  },
+
+  invoicesChild3Layout: {
+    borderRadius: Border.br_11xl,
+    position: "absolute",
+  },
+  createInvoice: {
+    lineHeight: 18,
+    textAlign: "center",
+    fontFamily: FontFamily.poppinsMedium,
+    color: Color.white,
+  },
+  text13Typo: {
+    fontSize: FontSize.caption2Regular_size,
+    fontWeight: "500",
   },
   bikeLayout: {
     width: 36,
@@ -489,7 +526,7 @@ const styles = StyleSheet.create({
   homeInner: {
     top: 375,
     width: 389,
-    height: 215,
+    height: 265,
     left: 15,
     backgroundColor: Color.steelblue_300,
     position: "absolute",
@@ -819,7 +856,7 @@ const styles = StyleSheet.create({
   },
   container: {
     position:'relative',
-    marginTop:480,
+    marginTop:535,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

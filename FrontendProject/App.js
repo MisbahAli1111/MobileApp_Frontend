@@ -15,6 +15,7 @@ import SwitchBusiness3 from "./screens/SwitchBusiness3";
 import OwnerInfo from "./screens/OwnerInfo";
 import CreateInvoice from "./screens/CreateInvoice";
 import Invoices from "./screens/Invoices";
+import SalesReport from "./screens/SalesReport";
 import MaintenanceRecord from "./screens/MaintenanceRecord";
 import Vehicles from "./screens/Vehicles";
 import AddVehicle from "./screens/AddVehicle";
@@ -70,13 +71,13 @@ const App = () => {
         },
       })}
       >
-          <Stack.Screen
+          {/* <Stack.Screen
           name="Login"
           component={Login}
           initialParams={{
           title: '',
           profileImage: 'No',  
-          }}/>
+          }}/> */}
 
           <Stack.Screen
               name="Home"
@@ -154,6 +155,17 @@ const App = () => {
                
               />  
                
+               <Stack.Screen
+              name="SalesReport"
+              component={SalesReport}
+              initialParams={{
+          title: 'Sales Report', 
+          showBackArrow: true, 
+          onBackPress:'Home',
+          
+              }}
+               
+              />  
             
             <Stack.Screen
               name="AddEmployee"
