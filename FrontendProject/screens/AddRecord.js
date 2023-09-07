@@ -558,6 +558,8 @@ const [userId,setUserId] = useState('');
     if (!hasErrors) {
       try {
         const dateTime=`${selectedDate.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`;
+        const Business_id = await AsyncStorage.getItem("Business_id");
+    
         const token = await AsyncStorage.getItem("accessToken");
         const accessToken = 'Bearer ' + token;
         // const axios = require('axios');
@@ -573,7 +575,7 @@ const [userId,setUserId] = useState('');
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: 'http://192.168.100.71:8080/api/maintenance-record/add-record',
+          url: `http://192.168.100.71:8080/api/maintenance-record/add-record/${Business_id}`,
           headers: { 
             'Content-Type': 'application/json', 
             'Authorization': accessToken
