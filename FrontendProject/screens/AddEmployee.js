@@ -27,11 +27,11 @@ const AddEmployee = () => {
   const [countryCode, setCountryCode] = useState('');
   const [ConfirmPasswordVisible, setConfirmPasswordVisible] = useState(true);
   const [NameEror, setNameError] = useState(false);
-  const [CNICEror, setCNICError] = useState(false);
+  const [cnicErorr, setCnicError] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [userId, setUserId] = useState(null);
   
-  const [EmailEror, setEmailError] = useState(false);
+  const [EmailErorr, setEmailError] = useState(false);
   const [LocationEror, setLocationError] = useState(false);
   const [PasswordError, setPasswordError] = useState(false);
   const [CPasswordError, setCPasswordError] = useState(false);
@@ -72,6 +72,20 @@ const AddEmployee = () => {
       setFullImageModalVisible(true);
     }
   }; 
+
+  const clearError = () => {
+    setTimeout(() => {
+      setPLError("");
+      setCError("");
+      setCPasswordError("");
+      setCnicError("");
+      setEmailError("");
+      setLPasswordError("");
+      setNameError("");
+      setNumberError("");
+      setPasswordError("");
+    }, 2000); // 2000 milliseconds (2 seconds)
+  };
 
   const handleImageFromCamera = async () => {
     const result = await ImagePicker.launchCameraAsync({
@@ -117,18 +131,16 @@ const AddEmployee = () => {
 
 
     const response = await axios.post(
-      `http://172.16.85.231:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
           'Content-Type': 'multipart/form-data',
-          // Authorization: accessToken, // Add your authorization token if required
         },
       }
     );
 
-    console.log('Upload response:', response.data);
-    console.log('Success', 'Files uploaded successfully');
+    
     };
 
   const isValidEmail = (email) => {
@@ -156,10 +168,10 @@ const AddEmployee = () => {
     }
 
     if (!cnic) {
-      setCNICError(true);
+      setCnicError(true);
       hasErrors = true;
     } else {
-      setCNICError(false);
+      setCnicError(false);
     }
 
     if (!email || !isValidEmail(email)) {
@@ -208,10 +220,10 @@ const AddEmployee = () => {
     }
 
     if (!hasErrors) {
+      console.log("no errors");
       const Business_id = await AsyncStorage.getItem("Business_id");
       let token= await AsyncStorage.getItem("accessToken");
       const accessToken = 'Bearer ' + token;
-      // console.log(accessToken);
       let data = JSON.stringify({
         "firstName": name,
         "lastName": name,
@@ -224,14 +236,14 @@ const AddEmployee = () => {
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `http://172.16.85.231:8080/api/users/register/employee/${Business_id}`,
+        url: `http://192.168.0.236:8080/api/users/register/employee/${Business_id}`,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': accessToken
         },
         data: data
       };
-
+      console.log("api");
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
@@ -244,7 +256,8 @@ const AddEmployee = () => {
           // Perform logic using the updated userId here
           if (createdUserId) {
             uploadImage(createdUserId);
-          }
+          
+        }
             navigation.navigate('Home');
           }
         })
@@ -294,6 +307,8 @@ const AddEmployee = () => {
             value={name}
             onChangeText={setName}
           />
+          {NameEror && <Text style={styles.errorText}>Name is required.</Text>}
+          
           </View>
           <View style={styles.inputContainer}>
         <AntDesign name="idcard" style={styles.icon} />
@@ -303,7 +318,9 @@ const AddEmployee = () => {
           value={cnic}
           onChangeText={setcnic}
           keyboardType="numeric"
+          maxLength={15}
         />
+        {cnicErorr && <Text style={styles.errorText}>Enter CNIC / Invalid CNIC.</Text>}
       </View>
         <View style={styles.inputContainer}>
         <AntDesign name="mail" style={styles.icon} />
@@ -313,6 +330,7 @@ const AddEmployee = () => {
           value={email}
           onChangeText={setEmail}
         />
+        {EmailErorr && <Text style={styles.errorText}>Invalid email format.</Text>}
       </View>
       <View style={styles.inputContainer}>
         <AntDesign name="key" style={styles.icon} />
@@ -323,6 +341,8 @@ const AddEmployee = () => {
           secureTextEntry={!showPassword}
           onChangeText={setPassword}
         />
+        {PasswordError && <Text style={styles.errorText}>Password is required.</Text>}
+          {LPasswordError && <Text style={styles.errorText}>Password and Confirm Password do not match.</Text>}
         <TouchableOpacity 
         onPress={togglePasswordVisibility}>
         <AntDesign name="eyeo" style={styles.passwordIcon} />
@@ -337,6 +357,8 @@ const AddEmployee = () => {
           onChangeText={setConfirmPassword}
           secureTextEntry={!showConfirmPassword}
         />
+       {CPasswordError && <Text style={styles.errorText}>Confirm Password is required.</Text>}
+          {LPasswordError && <Text style={styles.errorText}>Password and Confirm Password do not match.</Text>}
         <TouchableOpacity 
         onPress={toggleConfirmPasswordVisibility}>
         <AntDesign name="eyeo" style={styles.passwordIcon} />
@@ -370,17 +392,20 @@ const AddEmployee = () => {
           maxLength={15}
           onChangeText={setPhonenumber}
         />
+        
       </View>
+      {PLEror && <Text style={styles.errorText}>{PLEror}</Text>}
       </View>
 
 
-
+{setErrorM && <Text style={styles.errorText}>{setErrorMessage}</Text>}
 
   <View style={styles.registerButtonContainer}>
     <TouchableOpacity onPress={handleSignUp} style={styles.registerButton}>
       <Text style={styles.registerButtonText}>Register</Text>
     </TouchableOpacity>
   </View>
+  {clearError()}
   </ScrollView>
       
     
@@ -565,16 +590,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems:"center",
-    marginTop: heightPercentageToDP('0%'),
-    marginBottom: widthPercentageToDP('1%')
+    // marginTop: heightPercentageToDP('0%'),
+    marginBottom: widthPercentageToDP('5%')
   },
   registerButton: {
     backgroundColor: 'rgba(3, 29, 68, 1)',
     paddingVertical: heightPercentageToDP('2%'),
     alignItems: 'center',
-    width: widthPercentageToDP('90%'),
+    width: widthPercentageToDP('93%'),
     borderRadius:widthPercentageToDP('2%'),
     marginBottom: widthPercentageToDP('3%'),
+    alignSelf: 'flex-start', // Align the button to the start (top) of the container
+    marginTop: -heightPercentageToDP('5%'),
   },
   registerButtonText: {
     color: 'white',
@@ -648,6 +675,10 @@ const styles = StyleSheet.create({
   passwordIcon: {
     fontSize: widthPercentageToDP('5%'),
     marginLeft: widthPercentageToDP('1%'), // Adjust the spacing as needed
+  },
+  errorText: {
+    color: 'red',// Adjust the font size as needed, using a percentage value
+    marginTop: '1%', // Add spacing between the input and the error message, using a percentage value
   },
 });
 
