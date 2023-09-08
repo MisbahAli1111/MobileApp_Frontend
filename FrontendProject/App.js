@@ -282,7 +282,7 @@ const App = () => {
               initialParams={{
               title: 'Add Customer', 
               showBackArrow: true, 
-              onBackPress:'Home',
+              onBackPress:'AddVehicle',
               profileImage:'No'
               }}
             />

@@ -19,11 +19,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
   const navigation = useNavigation();
   const [totalEmployees , setTotalEmployees] = useState(0);
+  const [invoiceDues,setInvoiceDues] = useState(0);
   const invoices = null;
 
   const data = [10, 20, 5, 25, 15, 30, 12];
 
-  getEmployee = async () =>{
+  const getEmployee = async () =>{
 
     const Business_id = await AsyncStorage.getItem("Business_id");
       
@@ -46,10 +47,39 @@ const Home = () => {
 
   }
 
+  const getInvoiceDue = async () =>{
+
+    const Business_id = await AsyncStorage.getItem("Business_id");
+    let token = await AsyncStorage.getItem("accessToken");
+     const accessToken = "Bearer " + token;
+      
+    if(Business_id)
+    {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://192.168.0.236:8080/api/invoice/${Business_id}/invoiceDue`,
+      headers: {
+        Authorization: accessToken,
+       }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      setInvoiceDues(response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  }
+
 
 
   useEffect(() => {
     getEmployee();
+    getInvoiceDue();
    });
 
   return (
@@ -62,7 +92,7 @@ const Home = () => {
       />
       
       <View style={[styles.homeChild, styles.homeLayout]} />
-      <Text style={[styles.text, styles.textTypo1]}>1</Text>
+      <Text style={[styles.text, styles.textTypo1]}>{invoiceDues}</Text>
       <Text style={[styles.paymentDues, styles.paymentDuesPosition]}>
         Payment Dues
       </Text>

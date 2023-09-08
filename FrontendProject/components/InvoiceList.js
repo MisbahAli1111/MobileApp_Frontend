@@ -48,7 +48,7 @@ deleteVehicle = async () => {
   let config = {
     method: 'put',
     maxBodyLength: Infinity,
-    url: `http://192.168.100.71:8080/api/invoice/${tempInvoiceid}/delete-invoice`,
+    url: `http://192.168.0.236:8080/api/invoice/${tempInvoiceid}/delete-invoice`,
     headers: { }
   };
   
@@ -75,7 +75,7 @@ deleteVehicle = async () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/get-invoices/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/invoice/get-invoices/${Business_id}`,
       headers: {
         'Authorization': accessToken
       }

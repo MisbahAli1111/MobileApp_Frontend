@@ -152,6 +152,8 @@ const AddVehicle = () => {
   };
   const handleAddCustomer =() =>{
     navigation.navigate('AddCustomer');
+    setClicked(!clicked);
+
   };
 
   const fetchData = async () => {

@@ -6,12 +6,15 @@ import { TouchableOpacity, Modal, Dimensions, Pressable, ImageBackground, Scroll
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import * as ImagePicker from 'expo-image-picker';
+import * as Sharing from 'expo-sharing';
 const windowWidth = Dimensions.get('window');
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Date2TimePicker from '@react-native-community/datetimepicker';
-
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { printToFileAsync } from 'expo-print';
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -27,7 +30,155 @@ const SalesReport = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDate2Picker, setShowDate2Picker] = useState(false);
 
-  const openDatePicker = () => {
+  // const html = `
+  // <html lang="en">
+  // <head>
+  //   <meta charset="UTF-8">
+  //   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  //   <title>Invoice</title>
+  //   <style>
+  //     body {
+  //       font-family: Arial, sans-serif;
+  //       line-height: 1.6;
+  //     }
+  //     .container {
+  //       max-width: 600px;
+  //       margin: 0 auto;
+  //       padding: 20px;
+  //       border: 1px solid #ccc;
+  //       border-radius: 10px;
+  //     }
+  //     .header {
+  //       text-align: center;
+  //       font-size: 24px;
+  //       font-weight: bold;
+  //       margin-bottom: 20px;
+  //     }
+  //     .header-left {
+  //       float: left;
+  //       text-align: left;
+  //       width: 33%;
+  //     }
+  //     .header-middle {
+  //       float: left;
+  //       text-align: center;
+  //       width: 33%;
+  //     }
+  //     .header-right {
+  //       float: right;
+  //       text-align: right;
+  //       text-decoration: underline;
+  //       width: 33%;
+  //     }
+  //     .details {
+  //       text-align: left;
+  //       margin-top: 50px; /* Reduce top margin for details section */
+  //     }
+  //     .details label {
+  //       font-weight: bold;
+  //       margin-bottom: 1px; /* Reduce margin below labels */
+  //     }
+  //     .details p {
+  //       margin: 1px 0; /* Reduce vertical margin for data rows */
+  //     }
+  //     .items-table {
+  //       width: 100%;
+  //       border-collapse: collapse;
+  //       margin-top: 10px; /* Reduce top margin for the table */
+  //     }
+  //     .items-table th, .items-table td {
+  //       border: 1px solid #ccc;
+  //       padding: 10px;
+  //       text-align: center;
+  //     }
+  //     .items-table th {
+  //       background-color: #f2f2f2;
+  //     }
+  //     .items-table tr {
+  //       border-collapse: collapse; /* Add this line to remove gaps between rows in the table */
+  //     }
+  //     .total {
+  //       text-align: right;
+  //       font-weight: bold;
+  //       margin-top: 10px; /* Reduce top margin for the totals section */
+  //     }
+  //     .total p {
+  //       margin: 1px 0; /* Reduce vertical margin for data rows */
+  //     }
+  //   </style>
+  // </head>
+  // <body>
+  //   <div class="container">
+  //     <p class="header">
+  //       <span class="header-left">Invoice ID: ${invoiceID}</span>
+  //       <span class="header-middle"><img src="logo.png" alt="Logo"></span>
+  //       <span class="header-right">Invoice</span>
+  //     </p>
+  //     <p><br></p>
+  //     <div class="details">
+  //       <div>
+  //         <p>Date: ${date}</p>
+  //         <p>Name: ${name}</p>
+  //         <p>Registration Number: ${registrationNumber}</p>
+  //         <p>Status: ${status}</p>
+  //         <p>Balance Due: ${total}</p>
+  //       </div>
+  //     </div>
+  //     <table class="items-table">
+  //       <thead>
+  //         <tr>
+  //           <th>Description</th>
+  //           <th>Rate</th>
+  //           <th>Quantity</th>
+  //           <th>Amount</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         ${descriptionRows}
+  //       </tbody>
+  //     </table>
+  //     <div class="total">
+  //       <p>Subtotal: ${subTotal}</p>
+  //       <p>Tax: ${tax}</p>
+  //       <p>Discount: ${discount}</p>
+  //       <p>Total: ${total}</p>
+  //     </div>
+  //   </div>
+  // </body>
+  // </html>`;
+
+  const generatePDF = async () => {
+    const file = await printToFileAsync({
+      html: html,
+      base64: false
+    });
+    await shareAsync(file.uri);
+
+  };
+
+  const printPDf = async () => {
+    try {
+      const file = await printToFileAsync({
+        html: html,
+        base64: false
+      });
+
+      const downloadObject = await FileSystem.downloadAsync(file.uri, FileSystem.documentDirectory + 'invoice.pdf');
+      if (downloadObject.status === 200) {
+        console.log('PDF downloaded successfully:', downloadObject.uri);
+        // You can also share the downloaded PDF if needed
+        // await Sharing.shareAsync(downloadObject.uri);
+      } else {
+        console.error('Error downloading the PDF.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+  };
+
+
+  const openDatePicker =  () => {
     setShowDatePicker(true);
   };
 
@@ -51,7 +202,7 @@ const SalesReport = () => {
     }
   };
 
-  handleDate = () =>{
+  handleDate = async () =>{
     let hasErrors = false;
     setDataError(false);
     setData2Error(false);
@@ -67,10 +218,40 @@ const SalesReport = () => {
     if (!hasErrors) {
       const date = new Date(selectedDate).toLocaleDateString();
       const date2 = new Date(selectedDate2).toLocaleDateString();
+      const Business_id = await AsyncStorage.getItem("Business_id");
+      const token = await AsyncStorage.getItem("accessToken");
+      const accessToken = 'Bearer ' + token;
+
+
+
+      let data = JSON.stringify({
+        "date": "2023-08-31T00:00",
+        "invoiceDue": "2023-09-06T00:00"
+      });
       
-      console.log(date);
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: `http://192.168.100.71:8080/api/invoice/get-invoice-salesReport/${Business_id}`,
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': accessToken
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        generatePDF
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+      
     }
-  };
+  };    
 
   return (
     <View style={styles.container}>

@@ -42,10 +42,14 @@ function InvoiceDetailView() {
   const [isLoading, setIsLoading] = useState(true);
   const screenHeight = Dimensions.get('window').height;
   const screenWidth = Dimensions.get('window').width;
+  const [businessProfile,setBusinessProfile] =useState("");
+  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [baseUrlM, setBaseUrlM]= useState('http://192.168.100.71:8080');
 
   useEffect(() => {
 
     getData();
+    getProfileImage();
 
   }, [invoiceId]);
   useEffect(() => {
@@ -64,7 +68,7 @@ function InvoiceDetailView() {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
+      url: `http://192.168.0.236:8080/api/invoice/get-invoice/${invoiceId}`,
       headers: {
         'Authorization': accessToken
       }
@@ -102,6 +106,40 @@ function InvoiceDetailView() {
       });
 
   }
+
+  const getProfileImage = async () => {
+    try {
+      const accessTokens = await AsyncStorage.getItem('accessToken');
+      const token = 'Bearer ' + accessTokens;
+      const Business_id = await AsyncStorage.getItem("Business_id");
+      
+
+      if (Business_id) {
+        console.log("userID found");
+
+        const config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `http://192.168.0.236:8080/api/business/${Business_id}/profile-image`,
+          headers: {
+            Authorization: token,
+          },
+        };
+
+        const response = await axios.request(config);
+
+        if (response.status === 200) {
+          const responseData = response.data;
+          console.log("Data Image:",response.data)
+          setBusinessProfile(baseUrl+responseData.url); // Update the state directly
+        } else {
+          console.log('Error: ' + response.statusText);
+        }
+      }
+    } catch (error) {
+      console.log('Error fetching profile image:', error);
+    } 
+  };
 
 
   const calculateTotalAmount = () => {
@@ -246,7 +284,7 @@ const html = `
   <div class="container">
     <p class="header">
       <span class="header-left">Invoice ID: ${invoiceID}</span>
-      <span class="header-middle"><img src="logo.png" alt="Logo"></span>
+      <span class="header-middle"><img src="${businessProfile}" alt="Logo"></span>
       <span class="header-right">Invoice</span>
     </p>
     <p><br></p>
