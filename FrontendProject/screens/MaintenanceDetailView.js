@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useState,useEffect,useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View,ScrollView, Text, Pressable } from "react-native";
+import { StyleSheet, View, ScrollView, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -13,13 +13,36 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const MaintenanceDetailView = () => {
   const navigation = useNavigation();
   const route = useRoute();
-
-  // contains the record id details
   const recordId = route.params?.recordId;
-  // console.warn(recordId);
-  
+  const [registrationNumber, setRegistrationNumber] = useState("");
 
-  
+  const getData = async () => {
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = "Bearer " + token;
+    if (recordId) {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
+        headers: {
+          Authorization: accessToken,
+        },
+      };
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          setRegistrationNumber(response.data[0].registrationNumber);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+  useEffect(() => {
+    getData();
+  });
+
   return (
     <View style={styles.maintenanceDetailView}>
       <Image
@@ -27,8 +50,8 @@ const MaintenanceDetailView = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-     
-    {/* home  */}
+
+      {/* home  */}
 
       <View style={styles.breadcrumbsParent}>
         <View style={styles.breadcrumbs}>
@@ -41,24 +64,21 @@ const MaintenanceDetailView = () => {
           </View>
           <Text style={[styles.text, styles.textFlexBox]}>\</Text>
         </View>
-        <Text style={[styles.abc123, styles.abc123Clr]}>ABC-123</Text>
+        <Text style={[styles.abc123, styles.abc123Clr]}>
+          {registrationNumber}
+        </Text>
         <View style={[styles.element, styles.housefillFlexBox]}>
           <Text style={[styles.text1, styles.textFlexBox]}>\</Text>
         </View>
         <Text style={[styles.record, styles.kmTypo]}>Record</Text>
       </View>
-      
-      
-        {/* <View style={styles.wrap}></View> */}
-      
-      
+
       <View style={[styles.cont]}>
-      <Footer  prop={"MaintenanceRecord"} />
-        </View>
-        <View style={styles.wrap}>
-      <RecordDetails recordId={recordId} />
+        <Footer prop={"MaintenanceRecord"} />
       </View>
-     
+      <View style={styles.wrap}>
+        <RecordDetails recordId={recordId} />
+      </View>
     </View>
   );
 };
@@ -69,20 +89,20 @@ const styles = StyleSheet.create({
     left: -6.5,
     position: "absolute",
   },
-  wrap:{
-    height:600,
+  wrap: {
+    height: 600,
     // marginVertical:190,
-    marginBottom:110,
-    
+    marginBottom: 110,
+
     // backgroundColor:'yellow',
   },
-  cont:{
-    padding:0,
-    top:-30,
-    position:'relative',
-    right:0,
-    zIndex:999,
-    flex:1,
+  cont: {
+    padding: 0,
+    top: -30,
+    position: "relative",
+    right: 0,
+    zIndex: 999,
+    flex: 1,
   },
   groupInnerLayout: {
     height: 43,
@@ -132,7 +152,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight: 700,
   },
   parentPosition: {
     top: 167,
@@ -363,7 +383,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    
   },
   jan2023: {
     fontFamily: FontFamily.poppinsRegular,
@@ -425,7 +444,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight: 700,
   },
   detailsParent: {
     top: 385,

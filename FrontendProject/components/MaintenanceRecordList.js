@@ -1,28 +1,45 @@
 import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TouchableOpacity, TextInput, TouchableWithoutFeedback, ScrollView, View, Dimensions, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  TouchableWithoutFeedback,
+  ScrollView,
+  View,
+  Dimensions,
+  Text,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
 
-const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, create, setCreate }) => {
+const RecordList = ({
+  dsearch,
+  searchType,
+  searchOrder,
+  fromPreviousScreen,
+  create,
+  setCreate,
+}) => {
   const navigation = useNavigation();
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
   const [InvoiceScreen, setInvoiceScreen] = useState(false);
   const [CreateInvoice, setCreateInvoice] = useState(false);
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-  const [InvoiceIndex, setInvoiceIndex] = useState('');
-  const [InvoiceRecord, setInvoiceRecord] = useState('');
+  const [InvoiceIndex, setInvoiceIndex] = useState("");
+  const [InvoiceRecord, setInvoiceRecord] = useState("");
 
   // const displayedRecords = search ? data : records;
 
@@ -37,27 +54,24 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
     }
   };
 
-
-
-
-
   getData = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-    
+
     let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
+    const accessToken = "Bearer " + token;
     // 192.168.100.71
 
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-all-records/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-all-records/${Business_id}`,
       headers: {
-        'Authorization': accessToken
-      }
+        Authorization: accessToken,
+      },
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
         setRecords(response.data);
@@ -67,11 +81,9 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
       .catch((error) => {
         console.log(error);
       });
-
   };
 
   useEffect(() => {
-
     getData();
   }, []);
 
@@ -94,25 +106,24 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
     let filteredVehicles;
 
     if (search) {
-        filteredVehicles = data;
+      filteredVehicles = data;
     } else {
-            filteredVehicles = records;     
+      filteredVehicles = records;
     }
     // console.log(searchOrder);
     const sortedVehicles = filteredVehicles.slice().sort((a, b) => {
-        const dateA = new Date(a.maintanenceDateTime);
-        const dateB = new Date(b.maintanenceDateTime);
+      const dateA = new Date(a.maintanenceDateTime);
+      const dateB = new Date(b.maintanenceDateTime);
 
-        if (searchOrder === "ascending") {
-            return dateA - dateB;
-        } else {
-            return dateB - dateA;
-        }
+      if (searchOrder === "ascending") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
     });
 
     return sortedVehicles;
-}, [search, data, records, searchType, searchOrder]);
-
+  }, [search, data, records, searchType, searchOrder]);
 
   useEffect(() => {
     setSearch(dsearch);
@@ -121,19 +132,29 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
 
     const formattedQuery = dsearch.toUpperCase().trim();
     const maintained = records.filter((record) => {
-      const nameMatches = record.name && record.name.toUpperCase().includes(formattedQuery);
-      const drivenMatches = record.kilometerDriven.toString().includes(formattedQuery);
-      const ownerMatches = record.vehicleOwner && record.vehicleOwner.toUpperCase().includes(formattedQuery);
-      const numberMatches = record.registrationNumber.toUpperCase().includes(formattedQuery);
-      const serviceMatches = record.service && record.service.toUpperCase().includes(formattedQuery);
-      const parentCompanyMatches = record.parentCompany && record.parentCompany.toUpperCase().includes(formattedQuery);
-    
+      const nameMatches =
+        record.name && record.name.toUpperCase().includes(formattedQuery);
+      const drivenMatches = record.kilometerDriven
+        .toString()
+        .includes(formattedQuery);
+      const ownerMatches =
+        record.vehicleOwner &&
+        record.vehicleOwner.toUpperCase().includes(formattedQuery);
+      const numberMatches = record.registrationNumber
+        .toUpperCase()
+        .includes(formattedQuery);
+      const serviceMatches =
+        record.service && record.service.toUpperCase().includes(formattedQuery);
+      const parentCompanyMatches =
+        record.parentCompany &&
+        record.parentCompany.toUpperCase().includes(formattedQuery);
+
       const dateMatches = (query) => {
-        const formattedDate = query.split('/').reverse().join('-'); // Convert to 'YYYY-MM-DD' format
-        const maintanenceDate = record.maintanenceDateTime.split('T')[0];
+        const formattedDate = query.split("/").reverse().join("-"); // Convert to 'YYYY-MM-DD' format
+        const maintanenceDate = record.maintanenceDateTime.split("T")[0];
         return maintanenceDate.includes(formattedDate);
       };
-    
+
       return (
         nameMatches ||
         parentCompanyMatches ||
@@ -144,155 +165,227 @@ const RecordList = ({ dsearch, searchType, searchOrder, fromPreviousScreen, crea
         dateMatches(formattedQuery)
       );
     });
-    
 
     setData(maintained);
-
-
-
   }, [dsearch, searchType, searchOrder]);
-
-
-
-
-
-
-
-
 
   const formatDateTime = (isoDateTime) => {
     const date = new Date(isoDateTime);
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const day = date.getDate().toString().padStart(2, "0");
     const year = date.getFullYear().toString();
     return `${month}/${day}/${year}`;
   };
   return (
     <ScrollView style={styles.wrap}>
-      {
-        displayedRecords.map((record, index) => {
-
-
-          // console.log(user);
-          return (
-            <View key={index} style={[styles.groupView,
-            currentPressedIndex === index ? styles.groupParentLayoutW : styles.groupParentLayout,
-            ]}>
-              <View style={[styles.groupFrame]}>
-                <Pressable
-                  style={[styles.groupFrame]}
-                  onPress={() => handlePress(index, record.id)}
-                >
-                  <View style={styles.textWrap}>
-
-
-                    <View style={styles.rowWrap}>
-                      <Icon name="wrench" size={0.5 * rem} color={currentPressedIndex === index ? "white" : "black"} />
-                      <Text style={[
-                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
+      {displayedRecords.map((record, index) => {
+        // console.log(user);
+        return (
+          <View
+            key={index}
+            style={[
+              styles.groupView,
+              currentPressedIndex === index
+                ? styles.groupParentLayoutW
+                : styles.groupParentLayout,
+            ]}
+          >
+            <View style={[styles.groupFrame]}>
+              <Pressable
+                style={[styles.groupFrame]}
+                onPress={() => handlePress(index, record.id)}
+              >
+                <View style={styles.textWrap}>
+                  <View style={styles.rowWrap}>
+                    <Icon
+                      name="wrench"
+                      size={0.5 * rem}
+                      color={currentPressedIndex === index ? "white" : "black"}
+                    />
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.maintainedOnW
+                          : styles.maintainedOn,
                         styles.davidTypo,
-                      ]}>
-                        Service
-                      </Text>
-                      <Text style={[
-                        currentPressedIndex === index ? styles.carWashW : styles.carWash]}>{record.service}</Text>
-                      <View style={{ flex: 1 }}></View>
-                      <Text style={[
+                      ]}
+                    >
+                      Service
+                    </Text>
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.carWashW
+                          : styles.carWash,
+                      ]}
+                    >
+                      {record.service}
+                    </Text>
+                    <View style={{ flex: 1 }}></View>
+                    <Text
+                      style={[
                         styles.dated,
-                        currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
-                      ]}>
-                        {formatDateTime(record.maintanenceDateTime)}
-                      </Text>
-                      
-                    </View>
-                    <View style={styles.rowWrap}>
-                      <Icon name="car" size={0.5 * rem} color={currentPressedIndex === index ? "white" : "black"} />
-
-                      <Text style={[
-                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-
-                      ]}>
-                        Reg. Number
-                      </Text>
-                      <Text style={[
-                        currentPressedIndex === index ? styles.carWashW : styles.carWash]}>{record.registrationNumber}
-                      </Text>
-                    </View>
-                    <View style={styles.rowWrap}>
-                      <Icon name="user" size={0.6 * rem} marginLeft={0.1*rem} color={currentPressedIndex === index ? "white" : "black"} />
-
-                      <Text style={[
-                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-
-                      ]}>
-                        Maintained By
-                      </Text>
-                      <Text style={[
-                        styles.stJanuary2023,
-                        currentPressedIndex === index ? styles.text2TypoW : styles.text2Typo,
-                      ]}>
-                        {record.name}
-                      </Text>
-                    </View>
-                    <View style={styles.rowWrap}>
-                      <Icon name="tachometer" size={0.6 * rem} color={currentPressedIndex === index ? "white" : "black"} />
-                      <Text style={[
-                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-
-                      ]}>
-                        Mileage
-                      </Text>
-                      <Text style={[
-                        currentPressedIndex === index ? styles.text2W : styles.text2, styles.textPosition]}>{record.kilometerDriven}</Text>
-
-                    </View>
-
-                    <View style={styles.rowWrap}>
-                      <Icon name="user" size={0.62 * rem} marginLeft={0.15*rem} color={currentPressedIndex === index ? "white" : "black"} />
-
-                      <Text style={[
-                        currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-
-                      ]}>
-                        Vehicle Owner
-                      </Text>
-                      <Text style={[
-                        currentPressedIndex === index ? styles.carWashW : styles.carWash]}>{record.vehicleOwner}
-                      </Text>
-                    </View>
-                    {record.parentCompany && (
-                      <View style={styles.rowWrap}>
-                        <Icon name="building" size={0.5 * rem} marginLeft={0.2*rem} color={currentPressedIndex === index ? "white" : "black"} />
-                        <Text style={[
-                          currentPressedIndex === index ? styles.maintainedOnW : styles.maintainedOn,
-
-                        ]}>
-                          Parent Company 
-                        </Text>
-                        <Text style={[
-                          currentPressedIndex === index ? styles.carWashW : styles.carWash]
-                        }>
-                          {record.parentCompany}
-                        </Text>
-                      </View>
-                    )}
+                        currentPressedIndex === index
+                          ? styles.text2TypoW
+                          : styles.text2Typo,
+                      ]}
+                    >
+                      {formatDateTime(record.maintanenceDateTime)}
+                    </Text>
                   </View>
-                </Pressable>
-              </View>
+                  <View style={styles.rowWrap}>
+                    <Icon
+                      name="car"
+                      size={0.5 * rem}
+                      color={currentPressedIndex === index ? "white" : "black"}
+                    />
+
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.maintainedOnW
+                          : styles.maintainedOn,
+                      ]}
+                    >
+                      Reg. Number
+                    </Text>
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.carWashW
+                          : styles.carWash,
+                      ]}
+                    >
+                      {record.registrationNumber}
+                    </Text>
+                  </View>
+                  <View style={styles.rowWrap}>
+                    <Icon
+                      name="user"
+                      size={0.6 * rem}
+                      marginLeft={0.1 * rem}
+                      color={currentPressedIndex === index ? "white" : "black"}
+                    />
+
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.maintainedOnW
+                          : styles.maintainedOn,
+                      ]}
+                    >
+                      Maintained By
+                    </Text>
+                    <Text
+                      style={[
+                        styles.stJanuary2023,
+                        currentPressedIndex === index
+                          ? styles.text2TypoW
+                          : styles.text2Typo,
+                      ]}
+                    >
+                      {record.name}
+                    </Text>
+                  </View>
+                  <View style={styles.rowWrap}>
+                    <Icon
+                      name="tachometer"
+                      size={0.6 * rem}
+                      color={currentPressedIndex === index ? "white" : "black"}
+                    />
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.maintainedOnW
+                          : styles.maintainedOn,
+                      ]}
+                    >
+                      Mileage
+                    </Text>
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.text2W
+                          : styles.text2,
+                        styles.textPosition,
+                      ]}
+                    >
+                      {record.kilometerDriven}
+                    </Text>
+                  </View>
+
+                  <View style={styles.rowWrap}>
+                    <Icon
+                      name="user"
+                      size={0.62 * rem}
+                      marginLeft={0.15 * rem}
+                      color={currentPressedIndex === index ? "white" : "black"}
+                    />
+
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.maintainedOnW
+                          : styles.maintainedOn,
+                      ]}
+                    >
+                      Vehicle Owner
+                    </Text>
+                    <Text
+                      style={[
+                        currentPressedIndex === index
+                          ? styles.carWashW
+                          : styles.carWash,
+                      ]}
+                    >
+                      {record.vehicleOwner}
+                    </Text>
+                  </View>
+                  {record.parentCompany && (
+                    <View style={styles.rowWrap}>
+                      <Icon
+                        name="building"
+                        size={0.5 * rem}
+                        marginLeft={0.2 * rem}
+                        color={
+                          currentPressedIndex === index ? "white" : "black"
+                        }
+                      />
+                      <Text
+                        style={[
+                          currentPressedIndex === index
+                            ? styles.maintainedOnW
+                            : styles.maintainedOn,
+                        ]}
+                      >
+                        Parent Company
+                      </Text>
+                      <Text
+                        style={[
+                          currentPressedIndex === index
+                            ? styles.carWashW
+                            : styles.carWash,
+                        ]}
+                      >
+                        {record.parentCompany}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </Pressable>
             </View>
-          );
-        })}
+          </View>
+        );
+      })}
     </ScrollView>
   );
-}
+};
 const styles = StyleSheet.create({
-
-
   groupParentLayout: {
     backgroundColor: Color.steelblue_300,
     padding: 0.5 * rem,
     marginVertical: 0.2 * rem,
-    alignSelf: 'center',
+    alignSelf: "center",
     width: screenWidth * 0.9, // Set a maximum width (adjust as needed)
     height: screenHeight * 0.19,
     borderRadius: 8,
@@ -301,18 +394,17 @@ const styles = StyleSheet.create({
     backgroundColor: Color.darkslateblue,
     padding: 0.5 * rem,
     marginVertical: 0.2 * rem,
-    alignSelf: 'center',
+    alignSelf: "center",
     width: screenWidth * 0.9, // Set a maximum width (adjust as needed)
     height: screenHeight * 0.19,
     borderRadius: 8,
   },
   textWrap: {
     fontSize: FontSize.size_smi,
-
   },
   rowWrap: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     padding: 0.02 * rem,
   },
   serviceWrapper: {
@@ -320,14 +412,13 @@ const styles = StyleSheet.create({
   },
   wrap: {
     width: screenWidth,
-    height: screenHeight * .64,
+    height: screenHeight * 0.64,
   },
   dated: {
     // marginLeft: 4.4 * rem,
-
-    },
+  },
   rightwrap: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginLeft: 1.2 * rem,
   },
   text2Typo: {
@@ -346,7 +437,7 @@ const styles = StyleSheet.create({
   text2TypoW: {
     color: Color.white,
     fontSize: 0.5 * rem,
-   
+
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "500",
   },
@@ -368,12 +459,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-
   maintainedByParent: {
     top: 28,
     left: 0,
   },
-
 
   surfaceParentFlexBox: {
     flexDirection: "row",
@@ -391,14 +480,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     marginLeft: 0.45 * rem,
   },
-  davidTypo: {
-
-  },
+  davidTypo: {},
   groupIcon: {
     height: 0.9 * rem,
     width: 0.65 * rem,
   },
-
 
   vehicleServicesSvgrepoCom1Icon: {
     top: 97,

@@ -760,7 +760,7 @@ const [userId,setUserId] = useState('');
           handleClick
         }>
         
-        <AntDesign name="closecircle" size={24} color="red~~" />
+        <AntDesign name="closecircle" size={24} color="rgba(3, 29, 68, 1)" />
         {/* //rgba(3, 29, 68, 1) */}
 
       </TouchableOpacity>

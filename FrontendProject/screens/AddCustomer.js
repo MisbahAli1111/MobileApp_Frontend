@@ -155,31 +155,31 @@ const AddCustomer = () => {
     if (password.length < 8) {
       return false;
     }
-  
+
     // Check if the password contains at least one lowercase letter
     if (!/[a-z]/.test(password)) {
       return false;
     }
-  
+
     // Check if the password contains at least one uppercase letter
     if (!/[A-Z]/.test(password)) {
       return false;
     }
-  
+
     // Check if the password contains at least one digit
     if (!/\d/.test(password)) {
       return false;
     }
-  
+
     // Check if the password contains at least one special character from @$!%?&
     if (!/[@$!%?&]/.test(password)) {
       return false;
     }
-  
+
     // All criteria are met
     return true;
   };
-  
+
   const countryCodes = [
     "AF",
     "AL",
@@ -424,14 +424,13 @@ const AddCustomer = () => {
       setNumberError(false);
     }
 
-    if (!Password ) {
+    if (!Password) {
       setPasswordError(true);
       hasErrors = true;
     } else if (!isPasswordValid(Password)) {
-        setPasswordValidError(true);
-        hasErrors=true;
-      }
-      else{
+      setPasswordValidError(true);
+      hasErrors = true;
+    } else {
       setPasswordError(false);
       setPasswordValidError(false);
     }
@@ -455,41 +454,41 @@ const AddCustomer = () => {
     if (!hasErrors) {
       const Business_id = await AsyncStorage.getItem("Business_id");
       console.log(Business_id);
-      let token= await AsyncStorage.getItem("accessToken");
-      const accessToken = 'Bearer ' + token;
+      let token = await AsyncStorage.getItem("accessToken");
+      const accessToken = "Bearer " + token;
       console.log(accessToken);
       let data = JSON.stringify({
-        "firstName": name,
-        "lastName": name,
-        "phoneNumber": phoneNumber,
-        "cnicNumber": cnic,
-        "countryCode":selectedCode,
-        "email": email,
-        "password": Password
+        firstName: name,
+        lastName: name,
+        phoneNumber: phoneNumber,
+        cnicNumber: cnic,
+        countryCode: countryCode,
+        email: email,
+        password: Password,
       });
       let config = {
-        method: 'post',
+        method: "post",
         maxBodyLength: Infinity,
         url: `http://192.168.0.236:8080/api/users/register/customer/${Business_id}`,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': accessToken
+          "Content-Type": "application/json",
+          Authorization: accessToken,
         },
-        data: data
+        data: data,
       };
 
-      axios.request(config)
+      axios
+        .request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
-          if (response.data.status === 'OK') {
-          
+          if (response.data.status === "OK") {
             const createdUserId = response.data.data;
             console.log(response.data.data);
             setUserId(createdUserId);
-            
+
             // Perform logic using the updated userId here
             if (createdUserId) {
-              uploadImage(createdUserId,accessToken);
+              uploadImage(createdUserId, accessToken);
             }
             setName("");
             setCountryCode("");
@@ -500,7 +499,7 @@ const AddCustomer = () => {
             setProfileImage("");
             setcnic("");
             clearError();
-            navigation.navigate('AddVehicle');
+            navigation.navigate("AddVehicle");
           }
         })
         .catch((error) => {
@@ -513,7 +512,7 @@ const AddCustomer = () => {
             setErrorMessage("An error occurred. Please try again."); // Default error message
           }
         });
-     }
+    }
   };
 
   return (

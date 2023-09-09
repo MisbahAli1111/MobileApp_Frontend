@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TextInput, TouchableOpacity, Dimensions, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Dimensions,
+  View,
+  Text,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from "../components/MaintenanceRecordList";
 import FilterSearchRecord from "../components/FilterSearchRecord";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
 
 const MaintenanceRecord = ({ route }) => {
@@ -17,8 +25,8 @@ const MaintenanceRecord = ({ route }) => {
 
   const navigation = useNavigation();
   const [searchType, setSearchType] = useState([]);
-  const [searchOrder, setSearchOrder] = useState('');
-  const [search, setSearch] = useState('');
+  const [searchOrder, setSearchOrder] = useState("");
+  const [search, setSearch] = useState("");
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [create, setCreate] = useState(false);
 
@@ -27,11 +35,9 @@ const MaintenanceRecord = ({ route }) => {
   };
 
   const addFilterInState = (attribute, sort) => {
-
     setFilterSearchClicked(false);
     setSearchType(attribute);
     setSearchOrder(sort);
-
   };
   const handleSavePress = () => {
     setCreate(true);
@@ -39,11 +45,10 @@ const MaintenanceRecord = ({ route }) => {
 
   const handleQuery = (query) => {
     setSearch(query);
-  }
+  };
 
   return (
     <View style={styles.maintenanceRecord}>
-
       <Image
         style={styles.lightTexture22341Icon}
         contentFit="cover"
@@ -55,36 +60,38 @@ const MaintenanceRecord = ({ route }) => {
         source={require("../assets/image-2.png")}
       />
 
-
-
       <View style={styles.groupParent}>
-            <View style={[styles.housefill]}>
-              <Image
-                style={styles.homeMutedIcon}
-                contentFit="cover"
-                source={require("../assets/homemuted.png")}
+        <View style={[styles.housefill]}>
+          <Image
+            style={styles.homeMutedIcon}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+          <Text style={[styles.text, styles.davidTypo1]}>\</Text>
+          <Text style={styles.search}>Search</Text>
+        </View>
+
+        <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
+          <Pressable onPress={functionFilterSearch}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={[styles.abc123, styles.abc123Clr]}>Filter</Text>
+              <Icon
+                name="exchange"
+                size={0.5 * rem}
+                // marginLeft={0.2 * rem}
+                color={"black"}
+                style={{ transform: "rotate(90deg)" }}
               />
-                 <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-                 <Text style={styles.search}>Search</Text> 
             </View>
-   
-            <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
-              <Pressable onPress={functionFilterSearch}>
-                <View style={{ flexDirection:'row' }}>
-                <Text style={[styles.abc123, styles.abc123Clr]}>
-                  Filter
-                </Text>
-                <Icon
-                  name="exchange"
-                  size={0.5 * rem}
-                  // marginLeft={0.2 * rem}
-                  color={"black"}
-                  style={{ transform: 'rotate(90deg)' }}
-                />
-                </View>
-              </Pressable>
-              {filterSearchClicked && <FilterSearchRecord onFilterSelect={(attribute, sort) => addFilterInState(attribute, sort)} />}
-            </View>
+          </Pressable>
+          {filterSearchClicked && (
+            <FilterSearchRecord
+              onFilterSelect={(attribute, sort) =>
+                addFilterInState(attribute, sort)
+              }
+            />
+          )}
+        </View>
 
         {/* <Pressable
           style={[styles.groupWrapper, styles.groupLayout]}
@@ -105,22 +112,21 @@ const MaintenanceRecord = ({ route }) => {
         </Pressable> */}
       </View>
 
-
       {/* search */}
       <View style={styles.rectangleContainer}>
         {fromPreviousScreen ? (
           <View style={styles.wrap}>
-
             <View style={styles.blueContainer}>
-              <Text style={styles.blueText}>Select Record to Create Invoice</Text>
+              <Text style={styles.blueText}>
+                Select Record to Create Invoice
+              </Text>
             </View>
             {/* onPress={handleSavePress} */}
-            <TouchableOpacity onPress={handleSavePress} >
+            <TouchableOpacity onPress={handleSavePress}>
               <View style={styles.saveContainer}>
                 <Text style={styles.blueTextB}>Create</Text>
               </View>
             </TouchableOpacity>
-
           </View>
         ) : (
           <View>
@@ -150,22 +156,21 @@ const MaintenanceRecord = ({ route }) => {
         </Pressable>
       </View>
 
-
-
-
-
       <View style={styles.cont}>
         <Footer prop={"MaintenanceRecord"} />
       </View>
 
       <View style={styles.boxContianer}>
-        <MaintenanceRecordList dsearch={search} searchType={searchType} searchOrder={searchOrder} fromPreviousScreen={fromPreviousScreen} create={create} setCreate={setCreate} />
+        <MaintenanceRecordList
+          dsearch={search}
+          searchType={searchType}
+          searchOrder={searchOrder}
+          fromPreviousScreen={fromPreviousScreen}
+          create={create}
+          setCreate={setCreate}
+        />
       </View>
-
-
     </View>
-
-
   );
 };
 
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
   },
   FilterSearch: {
     left: 228,
-    top: 10
+    top: 10,
   },
   cont: {
     marginLeft: 1,
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
   boxContianer: {
     marginTop: 220,
     marginLeft: 0,
-    // alignItems: 'flex-end', 
+    // alignItems: 'flex-end',
   },
   iconLayout1: {
     maxHeight: "100%",
@@ -252,11 +257,10 @@ const styles = StyleSheet.create({
     width: 100,
     marginTop: 8,
     marginLeft: 275,
-    alignSelf: 'baseline',
+    alignSelf: "baseline",
     position: "absolute",
     backgroundColor: Color.darkslateblue,
     borderRadius: 48,
-
   },
   blueText: {
     alignItems: "center",
@@ -279,8 +283,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   wrap: {
-
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 
   vector: {
@@ -389,14 +392,13 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   homeMutedIcon: {
-    width: 0.5*rem,
-    height: 0.5*rem,
-    top:0.09*rem,
+    width: 0.5 * rem,
+    height: 0.5 * rem,
+    top: 0.09 * rem,
   },
   housefill: {
-    flexDirection:'row',
-    marginLeft:0.4*rem,
-    
+    flexDirection: "row",
+    marginLeft: 0.4 * rem,
   },
   elementPosition: {
     left: 30,
@@ -408,7 +410,7 @@ const styles = StyleSheet.create({
   text: {
     lineHeight: 17,
     textAlign: "left",
-    marginLeft:0.2*rem,
+    marginLeft: 0.2 * rem,
     fontSize: FontSize.caption2Regular_size,
     color: Color.textTxtPrimary,
     fontFamily: FontFamily.caption2Regular,
@@ -423,7 +425,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
-    marginLeft:0.2*rem,
+    marginLeft: 0.2 * rem,
   },
   surface: {
     left: 10,
@@ -434,10 +436,10 @@ const styles = StyleSheet.create({
   abc123: {
     fontWeight: "500",
     fontFamily: FontFamily.poppinsSemibold,
-    fontSize: 0.5*rem,
+    fontSize: 0.5 * rem,
   },
   surface1: {
-    left: 12.5*rem,
+    left: 12.5 * rem,
     top: 0,
     flexDirection: "row",
     justifyContent: "center",
@@ -496,7 +498,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-
   groupParent: {
     top: 4.9 * rem,
     // height: 33,
@@ -518,7 +519,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     position: "absolute",
     width: 9 * rem,
-    color: 'grey',
+    color: "grey",
   },
   icon1: {
     maxHeight: "100%",
@@ -539,7 +540,6 @@ const styles = StyleSheet.create({
     left: 20,
   },
 
-
   maintenanceRecord: {
     backgroundColor: Color.white,
     flex: 1,
@@ -551,4 +551,3 @@ const styles = StyleSheet.create({
 });
 
 export default MaintenanceRecord;
-

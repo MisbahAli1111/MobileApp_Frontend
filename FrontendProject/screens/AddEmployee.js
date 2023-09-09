@@ -155,27 +155,27 @@ const AddEmployee = () => {
     if (password.length < 8) {
       return false;
     }
-  
+
     // Check if the password contains at least one lowercase letter
     if (!/[a-z]/.test(password)) {
       return false;
     }
-  
+
     // Check if the password contains at least one uppercase letter
     if (!/[A-Z]/.test(password)) {
       return false;
     }
-  
+
     // Check if the password contains at least one digit
     if (!/\d/.test(password)) {
       return false;
     }
-  
+
     // Check if the password contains at least one special character from @$!%?&
     if (!/[@$!%?&]/.test(password)) {
       return false;
     }
-  
+
     // All criteria are met
     return true;
   };
@@ -424,14 +424,13 @@ const AddEmployee = () => {
       setNumberError(false);
     }
 
-    if (!Password ) {
+    if (!Password) {
       setPasswordError(true);
       hasErrors = true;
     } else if (!isPasswordValid(Password)) {
-        setPasswordValidError(true);
-        hasErrors=true;
-      }
-      else{
+      setPasswordValidError(true);
+      hasErrors = true;
+    } else {
       setPasswordError(false);
       setPasswordValidError(false);
     }

@@ -1,46 +1,260 @@
-import React from 'react';
+import React from "react";
 import { Image } from "expo-image";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 import { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text, TextInput, Modal,Dimensions, FlatList, ScrollView, TouchableOpacity, Pressable } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  Modal,
+  Dimensions,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
+import { BarChart } from "react-native-chart-kit";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
-import DueDateTimePicker from '@react-native-community/datetimepicker';
+import DueDateTimePicker from "@react-native-community/datetimepicker";
 import ErrorPopup from "../components/ErrorPopup";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { width } from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
-
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { width } from "deprecated-react-native-prop-types/DeprecatedImagePropType";
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from "react-native-responsive-screen";
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
 
-const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave }) => {
-
-
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const invoiceStatus = ['Paid', 'Due'];
-  const [name, setName] = useState('');
+const CreateInvoiceForm = ({
+  onFormDataChange,
+  APIData,
+  save,
+  recordId,
+  setSave,
+}) => {
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const invoiceStatus = ["Paid", "Due"];
+  const CurrencyArray = [
+    "Afghanistan AFN",
+    "Albania ALL",
+    "Algeria DZD",
+    "Andorra EUR",
+    "Angola AOA",
+    "Antigua and Barbuda XCD",
+    "Argentina ARS",
+    "Armenia AMD",
+    "Australia AUD",
+    "Austria EUR",
+    "Azerbaijan AZN",
+    "Bahamas BSD",
+    "Bahrain BHD",
+    "Bangladesh BDT",
+    "Barbados BBD",
+    "Belarus BYN",
+    "Belgium EUR",
+    "Belize BZD",
+    "Benin XOF",
+    "Bhutan BTN",
+    "Bolivia BOB",
+    "Bosnia and Herzegovina BAM",
+    "Botswana BWP",
+    "Brazil BRL",
+    "Brunei BND",
+    "Bulgaria BGN",
+    "Burkina Faso XOF",
+    "Burundi BIF",
+    "Cambodia KHR",
+    "Cameroon XAF",
+    "Canada CAD",
+    "Cape Verde CVE",
+    "Central African Republic XAF",
+    "Chad XAF",
+    "Chile CLP",
+    "China CNY",
+    "Colombia COP",
+    "Comoros KMF",
+    "Congo (Congo-Brazzaville) XAF",
+    "Costa Rica CRC",
+    "Croatia HRK",
+    "Cuba CUP",
+    "Cyprus EUR",
+    "Czech Republic CZK",
+    "Democratic Republic of the Congo XAF",
+    "Denmark DKK",
+    "Djibouti DJF",
+    "Dominican Republic DOP",
+    "East Timor USD",
+    "Ecuador USD",
+    "Egypt EGP",
+    "El Salvador USD",
+    "Equatorial Guinea XAF",
+    "Eritrea ERN",
+    "Estonia EUR",
+    "Eswatini SZL",
+    "Ethiopia ETB",
+    "Fiji FJD",
+    "Finland EUR",
+    "France EUR",
+    "Gabon XAF",
+    "Gambia GMD",
+    "Georgia GEL",
+    "Germany EUR",
+    "Ghana GHS",
+    "Greece EUR",
+    "Grenada XCD",
+    "Guatemala GTQ",
+    "Guinea GNF",
+    "Guinea-Bissau XOF",
+    "Guyana GYD",
+    "Haiti HTG",
+    "Honduras HNL",
+    "Hungary HUF",
+    "Iceland ISK",
+    "India INR",
+    "Indonesia IDR",
+    "Iran IRR",
+    "Iraq IQD",
+    "Ireland EUR",
+    "Israel ILS",
+    "Italy EUR",
+    "Ivory Coast XOF",
+    "Jamaica JMD",
+    "Japan JPY",
+    "Jordan JOD",
+    "Kazakhstan KZT",
+    "Kenya KES",
+    "Kiribati AUD",
+    "Kuwait KWD",
+    "Kyrgyzstan KGS",
+    "Laos LAK",
+    "Latvia EUR",
+    "Lebanon LBP",
+    "Lesotho LSL",
+    "Liberia LRD",
+    "Libya LYD",
+    "Liechtenstein CHF",
+    "Lithuania EUR",
+    "Luxembourg EUR",
+    "Macedonia MKD",
+    "Madagascar MGA",
+    "Malawi MWK",
+    "Malaysia MYR",
+    "Maldives MVR",
+    "Mali XOF",
+    "Malta EUR",
+    "Marshall Islands USD",
+    "Mauritania MRU",
+    "Mauritius MUR",
+    "Mexico MXN",
+    "Micronesia USD",
+    "Moldova MDL",
+    "Monaco EUR",
+    "Mongolia MNT",
+    "Montenegro EUR",
+    "Morocco MAD",
+    "Mozambique MZN",
+    "Myanmar (formerly Burma) MMK",
+    "Namibia NAD",
+    "Nauru AUD",
+    "Nepal NPR",
+    "Netherlands EUR",
+    "New Zealand NZD",
+    "Nicaragua NIO",
+    "Niger XOF",
+    "Nigeria NGN",
+    "North Korea KPW",
+    "Norway NOK",
+    "Oman OMR",
+    "Pakistan PKR",
+    "Palau USD",
+    "Palestine State ILS",
+    "Panama PAB",
+    "Papua New Guinea PGK",
+    "Paraguay PYG",
+    "Peru PEN",
+    "Philippines PHP",
+    "Poland PLN",
+    "Portugal EUR",
+    "Qatar QAR",
+    "Romania RON",
+    "Russia RUB",
+    "Rwanda RWF",
+    "Saint Kitts and Nevis XCD",
+    "Saint Lucia XCD",
+    "Saint Vincent and the Grenadines XCD",
+    "Samoa WST",
+    "San Marino EUR",
+    "Sao Tome and Principe STN",
+    "Saudi Arabia SAR",
+    "Senegal XOF",
+    "Serbia RSD",
+    "Seychelles SCR",
+    "Sierra Leone SLL",
+    "Singapore SGD",
+    "Slovakia EUR",
+    "Slovenia EUR",
+    "Solomon Islands SBD",
+    "Somalia SOS",
+    "South Africa ZAR",
+    "South Korea KRW",
+    "South Sudan SSP",
+    "Spain EUR",
+    "Sri Lanka LKR",
+    "Sudan SDG",
+    "Suriname SRD",
+    "Sweden SEK",
+    "Switzerland CHF",
+    "Syria SYP",
+    "Tajikistan TJS",
+    "Tanzania TZS",
+    "Thailand THB",
+    "Togo XOF",
+    "Tonga TOP",
+    "Trinidad and Tobago TTD",
+    "Tunisia TND",
+    "Turkey TRY",
+    "Turkmenistan TMT",
+    "Tuvalu AUD",
+    "Uganda UGX",
+    "Ukraine UAH",
+    "United Arab Emirates AED",
+    "United Kingdom GBP",
+    "United States USD",
+    "Uruguay UYU",
+    "Uzbekistan UZS",
+    "Vanuatu VUV",
+    "Vatican City EUR",
+    "Venezuela VES",
+    "Vietnam VND",
+    "Yemen YER",
+    "Zambia ZMW",
+    "Zimbabwe ZWL",
+  ];
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
   const [numberPlates, setNumberPlates] = useState([]);
   const [data, setData] = useState(transformedResponse);
   // console.warn(name);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [localDate, setLocalDate] = useState();
   const [localDueDate, setLocalDueDate] = useState();
-  const [regNumber, setregNumber] = useState('');
+  const [regNumber, setregNumber] = useState("");
   // const [status,setStatus] = useState('');
   const searchRef = useRef();
-  const transformedResponse = numberPlates.map(item => {
+  const transformedResponse = numberPlates.map((item) => {
     const { registration_number } = item;
     return {
       name: registration_number,
-
     };
   });
 
@@ -49,16 +263,15 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       console.log("API");
       console.log(APIData);
 
-
       console.log(APIData[0]);
       const data = APIData[0];
       setName(data.name);
       setregNumber(data.registrationNumber);
-      let st = '';
+      let st = "";
       if (status) {
-        st = 'Paid';
+        st = "Paid";
       } else {
-        st = 'Due';
+        st = "Due";
       }
       setStatus(st);
 
@@ -74,29 +287,26 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       setLocalDueDate(data.invoiceDue);
       setAPDate(date);
       setAPDueDate(DueDate);
-
     }
     // // setData();
   }, [APIData]);
-
 
   const formatDate = (dateString) => {
     const dateObject = new Date(dateString);
     return dateObject.toDateString();
   };
 
-
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
   const [carNumberFocused, setCarNumberFocused] = useState(false);
-  const [carNumber, setCarNumber] = useState('');
+  const [carNumber, setCarNumber] = useState("");
   const [date, setDate] = useState(new Date());
   const [Duedate, setDueDate] = useState();
   const [formHeight, setFormHeight] = useState(150);
-  const [msg, setmsg] = useState('');
+  const [msg, setmsg] = useState("");
   const [clicked, setClicked] = useState(false);
-  const [user, setUser] = useState('');
-  const [msgg, setmsgg] = useState('');
+  const [user, setUser] = useState("");
+  const [msgg, setmsgg] = useState("");
   const [DueDateError, setDueDateError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [statusError, setStatusError] = useState(false);
@@ -105,8 +315,7 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
   const [showPicker, setShowPicker] = useState(false);
   const [APDate, setAPDate] = useState(null);
   const [APDueDate, setAPDueDate] = useState(null);
-
-
+  const [currency, setCurrency] = useState("");
 
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
@@ -118,7 +327,6 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
     setShowDueDatePicker(false);
     if (Duedate) {
       setSelectedDueDate(Duedate, "Please Fill");
-
     }
   };
   const openDueDatePicker = () => {
@@ -130,21 +338,24 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
   const handleInvoiceStatusSelect = (code) => {
     setStatus(code);
   };
+  const handleCurrencySelect = (code) => {
+    setCurrency(code);
+  };
 
   getCustomer = async (carNumber) => {
-
     let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
+    const accessToken = "Bearer " + token;
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: {
-        'Authorization': accessToken
-      }
+        Authorization: accessToken,
+      },
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
         // console.log(JSON.stringify(response.data));
         const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
@@ -156,45 +367,47 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       });
   };
 
-  useEffect(() => {
-    setName('No Customer');
+  useEffect(
+    () => {
+      setName("No Customer");
 
-    getRegistrationNumber();
-    getCustomer(regNumber);
-  }, [regNumber], [recordId]);
-
+      getRegistrationNumber();
+      getCustomer(regNumber);
+    },
+    [regNumber],
+    [recordId]
+  );
 
   const getRegistrationNumber = async () => {
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/registration-number`,
-      headers: {}
+      url: `http://192.168.100.71:8080/api/maintenance-record/${recordId}/registration-number`,
+      headers: {},
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
-        // console.log("regNumber");
-        // console.log(JSON.stringify(response.data));
         setregNumber(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
-  const onSearch = search => {
-    if (search != '') {
-      let tempData = transformedResponse.filter(item => {
+  const onSearch = (search) => {
+    if (search != "") {
+      let tempData = transformedResponse.filter((item) => {
         return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
       });
       setData(tempData);
     } else {
       setData(transformedResponse);
     }
-  }
+  };
   const handleAddCustomer = () => {
-    navigation.navigate('AddVehicle');
+    navigation.navigate("AddVehicle");
   };
 
   useEffect(() => {
@@ -205,21 +418,19 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       setNameError(false);
       setregNumberError(false);
       setStatusError(false);
-      setmsg('');
-      setmsgg('');
-
-
+      setmsg("");
+      setmsgg("");
 
       if (!name) {
         setFormHeight(200);
         setNameError(true);
-        setmsg('Select Registration Number');
+        setmsg("Select Registration Number");
       } else {
         if (!regNumber) {
           setFormHeight(200);
           setregNumberError(true);
           setNameError(true);
-          setmsg('Please provide Registration Number');
+          setmsg("Please provide Registration Number");
         }
       }
       if (!regNumber) {
@@ -230,13 +441,13 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       if (!selectedDate) {
         setFormHeight(200);
         setDataError(true);
-        setmsgg('Provide Date');
+        setmsgg("Provide Date");
       } else {
         if (!status) {
           setFormHeight(200);
           setDataError(true);
           setStatusError(true);
-          setmsgg('Provide Status');
+          setmsgg("Provide Status");
         }
       }
       if (!status) {
@@ -253,10 +464,7 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
     }
   }, [save]);
 
-
-
   useEffect(() => {
-
     let date;
     let Duedate;
     if (selectedDate) {
@@ -273,24 +481,26 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       Duedate = localDueDate;
     }
 
-    if (typeof onFormDataChange === 'function') {
-      onFormDataChange({ name, regNumber, date, Duedate, status });
+    if (typeof onFormDataChange === "function") {
+      onFormDataChange({ name, regNumber, date, currency, Duedate, status });
     }
-  }, [name, regNumber, date, Duedate, status, onFormDataChange]);
+  }, [name, regNumber, date, currency, Duedate, status, onFormDataChange]);
 
   return (
-    <View style={{ flex: 1, marginTop: 0, height: formHeight, overflow: 'hidden' }}>
-
-
+    <View
+      style={{ flex: 1, marginTop: 0, height: formHeight, overflow: "hidden" }}
+    >
       {/* Name  */}
       <View style={styles.inLine}>
-        <TextInput style={[
-          nameError ? styles.loritaR : styles.lorita
-          , styles.text5ClrName]} onChangeText={setName}
+        <TextInput
+          style={[
+            nameError ? styles.loritaR : styles.lorita,
+            styles.text5ClrName,
+          ]}
+          onChangeText={setName}
           editable={false}
         >
           {name}
-
         </TextInput>
         <Image
           style={styles.date2SvgrepoCom11}
@@ -298,15 +508,15 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
           source={require("../assets/frame2.png")}
         />
 
-        <Text style={[styles.regNumber,
-        regNumberError ? styles.text5ClrR : styles.text5Clr
-        ]}
+        <Text
+          style={[
+            styles.regNumber,
+            regNumberError ? styles.text5ClrR : styles.text5Clr,
+          ]}
           editable={false}
         >
-
           {regNumber}
         </Text>
-
 
         <Image
           style={styles.date2SvgrepoCom11R}
@@ -316,21 +526,16 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
       </View>
       {nameError ? <Text style={styles.nameError}>{msg}</Text> : null}
 
-
       {/* date and status  */}
       <View style={styles.parent}>
-
         <TextInput
-          style={[
-            DateError ? styles.text1R : styles.text1
-            , styles.text1Typo]}
+          style={[DateError ? styles.text1R : styles.text1, styles.text1Typo]}
           value={selectedDate ? selectedDate.toDateString() : APDate}
           placeholder="Select Creation date"
-          editable={false}></TextInput>
+          editable={false}
+        ></TextInput>
 
-        <Pressable
-          onPress={openDatePicker}
-        >
+        <Pressable onPress={openDatePicker}>
           <Image
             style={styles.date2SvgrepoCom11C}
             contentFit="cover"
@@ -345,14 +550,15 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
             onChange={handleDateChange}
           />
         )}
-        <TextInput style={[
-          statusError ? styles.statusPaiddueR : styles.statusPaiddue
-          , styles.text1Typo]}
+        <TextInput
+          style={[
+            statusError ? styles.statusPaiddueR : styles.statusPaiddue,
+            styles.text1Typo,
+          ]}
           value={status}
           editable={false}
           placeholder="Status"
         />
-
 
         <Image
           style={styles.pick}
@@ -371,29 +577,22 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
             ))}
           </Picker>
         </View>
-
-
       </View>
       {DateError ? <Text style={styles.nameError}>{msgg}</Text> : null}
 
-
       <View style={styles.parentp}>
-
-
         <Pressable
-         style={{
-          flexDirection:'row',           
-        }}
+          style={{
+            flexDirection: "row",
+          }}
           onPress={openDueDatePicker}
         >
           <TextInput
-            style={[
-              DateError ? styles.text1R : styles.text1
-              , styles.text1Typo]}
+            style={[DateError ? styles.text1R : styles.text1, styles.text1Typo]}
             value={selectedDueDate ? selectedDueDate.toDateString() : APDueDate}
             placeholder="Select Due date"
-            editable={false}>
-          </TextInput>
+            editable={false}
+          ></TextInput>
           <Image
             style={styles.date2SvgrepoCom11C}
             contentFit="cover"
@@ -408,55 +607,65 @@ const CreateInvoiceForm = ({ onFormDataChange, APIData, save, recordId, setSave 
             onChange={handleDueDateChange}
           />
         )}
+        {DueDateError ? (
+          <Text style={styles.nameError}>Provide Due Date for Invoice</Text>
+        ) : null}
 
-
-        {/* <Pressable
-          style={{
-            flexDirection:'row',           
-          }}
-          onPress={openDueDatePicker}
-        > 
+        {/* // here */}
         <TextInput
           style={[
-            DateError ? styles.text1R : styles.text1
-            , styles.text1Typo]}
-          value={selectedDueDate ? selectedDueDate.toDateString() : APDueDate}
-          placeholder="Select Due date"
-          editable={false}></TextInput>
-          <Image
-            style={styles.date2SvgrepoCom11C}
-            contentFit="cover"
-            source={require("../assets/date2svgrepocom-1-11.png")}
-          />
-        </Pressable>
-        {showDueDatePicker && (
-          <DueDateTimePicker
-            value={selectedDueDate || new Date()}
-            mode="date"
-            display="default"
-            onChange={handleDueDateChange}
-          />
-        )} */}
-      </View>
-      {DueDateError ? <Text style={styles.nameError}>Provide Due Date for Invoice</Text> : null}
+            statusError ? styles.statusPaiddueR : styles.statusPaiddue,
+            styles.text1Typo,
+          ]}
+          value={currency}
+          editable={false}
+          placeholder="Currency"
+        />
 
+        <Image
+          style={styles.pick}
+          contentFit="cover"
+          source={require("../assets/vector-7.png")}
+        />
+
+        <View style={styles.picker}>
+          <Picker
+            selectedValue={invoiceStatus}
+            onValueChange={(itemValue) => handleCurrencySelect(itemValue)}
+          >
+            <Picker.Item label="Select Currency" value="" />
+            {CurrencyArray.map((code) => (
+              <Picker.Item key={code} label={code} value={code} />
+            ))}
+          </Picker>
+        </View>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-
   invoiceStatusPicker: {
-    top: 232
+    top: 232,
   },
+  picker: {
+    height: heightPercentageToDP("5%"),
+    width: "100%",
+  },
+
   // container:{
   //  // marginLeft:0,
   // },
   tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  pickerContainer: {
+    flex: 0.8,
+    marginRight: widthPercentageToDP("2%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
   },
   picker: {
     left: 385,
@@ -466,7 +675,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     overflow: "hidden",
   },
-
+  picker2: {
+    left: 220,
+    height: 80,
+    width: 30,
+    top: -12,
+    position: "absolute",
+    // overflow: "hidden",
+  },
   createChildLayout3: {
     height: 126,
     top: 501,
@@ -478,7 +694,7 @@ const styles = StyleSheet.create({
     left: 215,
   },
   inLine: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 8,
   },
 
@@ -490,27 +706,35 @@ const styles = StyleSheet.create({
     position: "absolute",
     overflow: "hidden",
   },
+  pick2: {
+    left: 0,
+    height: 15,
+    width: 15,
+    top: 50,
+    position: "absolute",
+    overflow: "hidden",
+  },
   parent: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
   },
   parentp: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 18,
-    justifyContent: 'space-between',
-    width:screenWidth*.9,
+    justifyContent: "space-between",
+    width: screenWidth * 0.9,
   },
 
   text5Clr: {
     borderBottomWidth: 2,
     width: "120%",
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     paddingHorizontal: 10,
   },
   text5ClrR: {
     borderBottomWidth: 2,
     width: "120%",
-    borderBottomColor: 'red',
+    borderBottomColor: "red",
     paddingHorizontal: 10,
   },
 
@@ -560,7 +784,7 @@ const styles = StyleSheet.create({
   },
   text5ClrName: {
     top: 0,
-    position: 'relative',
+    position: "relative",
     color: Color.dimgray_100,
     textAlign: "left",
     left: 30,
@@ -590,8 +814,7 @@ const styles = StyleSheet.create({
   },
   nameError: {
     marginLeft: 30,
-    color: 'red',
-
+    color: "red",
   },
   rectangleViewBg: {
     backgroundColor: Color.steelblue_300,
@@ -892,18 +1115,18 @@ const styles = StyleSheet.create({
     left: 28,
     width: "40%",
     borderBottomWidth: 2, // Set the width of the underline
-    borderBottomColor: '#ccc', // Set the color of the underline
+    borderBottomColor: "#ccc", // Set the color of the underline
     paddingHorizontal: 10,
   },
   text1R: {
     left: 28,
     width: "40%",
     borderBottomWidth: 2, // Set the width of the underline
-    borderBottomColor: 'red', // Set the color of the underline
+    borderBottomColor: "red", // Set the color of the underline
     paddingHorizontal: 10,
   },
   invoiceStatusPicker: {
-    top: 232
+    top: 232,
   },
   groupInner: {
     left: 8,
@@ -919,14 +1142,14 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     width: "38%",
     borderBottomWidth: 2, // Set the width of the underline
-    borderBottomColor: '#ccc', // Set the color of the underline
+    borderBottomColor: "#ccc", // Set the color of the underline
     paddingHorizontal: 10,
   },
   statusPaiddueR: {
     marginLeft: 50,
     width: "38%",
     borderBottomWidth: 2, // Set the width of the underline
-    borderBottomColor: 'red', // Set the color of the underline
+    borderBottomColor: "red", // Set the color of the underline
     paddingHorizontal: 10,
   },
   date2SvgrepoCom11: {
@@ -1245,7 +1468,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     borderBottomWidth: 2,
     width: "39%",
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     paddingHorizontal: 10,
   },
   loritaR: {
@@ -1258,7 +1481,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   loritaWrapper: {
-    position: 'relative',
+    position: "relative",
     //flexDirection: "row",
   },
   frameView: {
@@ -1436,7 +1659,5 @@ const styles = StyleSheet.create({
     left: -8,
     position: "absolute",
   },
-
-
 });
 export default CreateInvoiceForm;

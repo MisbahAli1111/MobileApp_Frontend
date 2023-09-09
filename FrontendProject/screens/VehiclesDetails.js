@@ -1,7 +1,14 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { Modal,StyleSheet, View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  Modal,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -10,78 +17,40 @@ import { useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import {AntDesign} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
-
-const VehicleDetailView = ({route}) => {
-  const [imageResponce,setImageResponce] = useState([]);
+const VehicleDetailView = ({ route }) => {
+  const [imageResponce, setImageResponce] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [fetchedImages,setFetchedImages] = React.useState([]);
-  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [fetchedImages, setFetchedImages] = React.useState([]);
+  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
   const navigation = useNavigation();
-  const [originalUri,setOriginalUri] = useState('');
+  const [originalUri, setOriginalUri] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [loading, setLoading] = useState(false);
   // const route = useRoute();
   const vehicleId = route.params.vehicleId;
-  const registrationNumber = route.registrationNumber;
+  const [registrationNumber, setRegistrationNumber] = useState("");
 
-  // contains the record id details
-  
-
-  // const getVehicleImages = async (vehicleId) => {
-  //   try {
-  //     if (!fetchedImages || fetchedImages.length === 0) {
-  //       setLoading(true);
-  //     }
-  //     let token = await AsyncStorage.getItem("accessToken");
-  //     const accessToken = 'Bearer ' + token;
-
-  //     if (vehicleId) {
-  //       let config = {
-  //         method: 'get',
-  //         maxBodyLength: Infinity,
-  //         url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
-  //         headers: {
-  //           'Authorization': accessToken
-  //         }
-  //       };
-  
-  //       const response = await axios.request(config);
-  //       setImageResponce(response.data);
-  //       console.log("responce set");
-  //       if (imageResponce && imageResponce.length > 0) {
-  //         const imageUrls = imageResponce.map(item => baseUrl + item.url);
-  //         setFetchedImages(imageUrls);
-  //         setLoading(false);
-  //       }
-        
-        
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  
   useEffect(() => {
     const fetchImages = async () => {
       try {
         setLoading(true); // Set loading to true while fetching
         let token = await AsyncStorage.getItem("accessToken");
-        const accessToken = 'Bearer ' + token;
+        const accessToken = "Bearer " + token;
 
         if (vehicleId) {
           let config = {
-            method: 'get',
+            method: "get",
             maxBodyLength: Infinity,
             url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
             headers: {
-              'Authorization': accessToken
-            }
+              Authorization: accessToken,
+            },
           };
-    
+
           const response = await axios.request(config);
-          const imageUrls = response.data.map(item => baseUrl + item.url);
+          const imageUrls = response.data.map((item) => baseUrl + item.url);
           setFetchedImages(imageUrls);
           setLoading(false); // Set loading to false when images are fetched
         }
@@ -89,40 +58,68 @@ const VehicleDetailView = ({route}) => {
         console.log(error);
         setLoading(false); // Make sure to set loading to false in case of an error
       }
+
+      if (vehicleId) {
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = "Bearer " + token;
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}`,
+          headers: {
+            Authorization: accessToken,
+          },
+        };
+
+        axios
+          .request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+            setRegistrationNumber(response.data.registrationNumber);
+            const ownerId = JSON.stringify(response.data.ownerId);
+            // console.log("owner:" ,ownerId);
+
+            try {
+              // Store ownerId in AsyncStorage
+              AsyncStorage.setItem("ownerId", ownerId);
+              // console.log('ownerId has been set in AsyncStorage:', ownerId);
+            } catch (error) {
+              console.error("Error setting ownerId in AsyncStorage:", error);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     };
 
     fetchImages();
   }, [vehicleId]); // Add vehicleId as a dependency to this effect
-  
-  
 
   const renderCarouselItem = ({ item }) => {
     return (
-      <TouchableOpacity
-       onPress={() => handleOpen(item)}>
-      <Image
-        source={{ uri: item }}
-        style={styles.carouselImage}
-        contentFit="cover"
-      />
+      <TouchableOpacity onPress={() => handleOpen(item)}>
+        <Image
+          source={{ uri: item }}
+          style={styles.carouselImage}
+          contentFit="cover"
+        />
       </TouchableOpacity>
     );
   };
 
   const handleOpen = (uri) => {
     setOriginalUri(uri);
-    if(originalUri)
-    {
-    setModalVisible(true);
-  }
-};
+    if (originalUri) {
+      setModalVisible(true);
+    }
+  };
 
   const handleClose = () => {
     setModalVisible(false);
-    setOriginalUri('');
+    setOriginalUri("");
   };
-  
-  
+
   return (
     <View style={styles.maintenanceDetailView}>
       <Image
@@ -131,42 +128,37 @@ const VehicleDetailView = ({route}) => {
         source={require("../assets/light-texture2234-1.png")}
       />
 
-<View style={styles.container}>
-{loading ? (
-        <ActivityIndicator size="large" color="#007aff" />
-      ) : (
-        fetchedImages.length > 0 && (
-          <View style={styles.imageContainer}>
-            <Carousel
-              data={fetchedImages}
-              renderItem={renderCarouselItem}
-              sliderWidth={350}
-              itemWidth={400}
-              onSnapToItem={(index) => setActiveSlide(index)}
-              sliderHeight={100}
-            />
+      <View style={styles.container}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#007aff" />
+        ) : (
+          fetchedImages.length > 0 && (
+            <View style={styles.imageContainer}>
+              <Carousel
+                data={fetchedImages}
+                renderItem={renderCarouselItem}
+                sliderWidth={350}
+                itemWidth={400}
+                onSnapToItem={(index) => setActiveSlide(index)}
+                sliderHeight={100}
+              />
 
-            <Pagination
-              dotsLength={fetchedImages.length}
-              activeDotIndex={activeSlide}
-              containerStyle={styles.paginationContainer}
-              dotColor="#007aff"
-              dotStyle={styles.paginationDot}
-              inactiveDotColor="#ccc"
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
-            />
-          </View>
-        )
-      )}
-     </View>
-     
-     
- 
+              <Pagination
+                dotsLength={fetchedImages.length}
+                activeDotIndex={activeSlide}
+                containerStyle={styles.paginationContainer}
+                dotColor="#007aff"
+                dotStyle={styles.paginationDot}
+                inactiveDotColor="#ccc"
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+              />
+            </View>
+          )
+        )}
+      </View>
 
-      
-
-    {/* home  */}
+      {/* home  */}
 
       <View style={styles.breadcrumbsParent}>
         <View style={styles.breadcrumbs}>
@@ -179,31 +171,39 @@ const VehicleDetailView = ({route}) => {
           </View>
           <Text style={[styles.text, styles.textFlexBox]}>\</Text>
         </View>
-        <Text style={[styles.abc123, styles.abc123Clr]}>{registrationNumber}</Text>
+        <Text style={[styles.abc123, styles.abc123Clr]}>
+          {registrationNumber}
+        </Text>
         <View style={[styles.element, styles.housefillFlexBox]}>
           <Text style={[styles.text1, styles.textFlexBox]}>\</Text>
         </View>
         <Text style={[styles.record, styles.kmTypo]}>Vehicle</Text>
       </View>
       <View style={styles.vehicleComponent}>
-      <VehicleDetails prop={vehicleId} />
+        <VehicleDetails prop={vehicleId} />
       </View>
       {/* face icon  */}
-      
+
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
-        <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          <Image
+            source={{ uri: originalUri }}
+            style={styles.modalMedia}
+            contentFit="contain"
+          />
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-          <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+            <AntDesign
+              name="closecircle"
+              size={30}
+              color="rgba(3, 29, 68, 1)"
+            />
           </TouchableOpacity>
         </View>
       </Modal>
 
-     
-      
       <View style={[styles.cont]}>
-      <Footer  prop={"Vehicles"} />
-        </View>
+        <Footer prop={"Vehicles"} />
+      </View>
     </View>
   );
 };
@@ -211,38 +211,38 @@ const VehicleDetailView = ({route}) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalMedia: {
-    width: '100%',
-    height: '100%',
-    },
+    width: "100%",
+    height: "100%",
+  },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10, // Adjust the top positioning as needed
     right: 10, // Adjust the right positioning as needed
     zIndex: 1, // Ensure the button appears above the image
   },
   carouselImage: {
-  width: "100%",
-  height: "100%",
-  justifyContent: 'center',
-  // alignItems: 'center',
-  position:"relative",
-  left:"5%"
-},
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    // alignItems: 'center',
+    position: "relative",
+    left: "5%",
+  },
 
-  vehicleComponent:{
-    top:-230,
+  vehicleComponent: {
+    top: -230,
   },
   carouselItem: {
     width: "100%",
     height: "100%",
-    position:"relative",
-    justifyContent: 'center',
-    alignItems:'center',
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   paginationContainer: {
     paddingVertical: 5,
@@ -253,41 +253,39 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 8,
   },
-  imageUpload:{
-    position:"absolute",
-
+  imageUpload: {
+    position: "absolute",
   },
   container: {
-    top:150,
-    height:"30%",
+    top: 150,
+    height: "30%",
     // backgroundColor:"red",
-    alignItems: 'center',
-    justifyContent: 'center',
-    position:'relative',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
   },
   imageContainer: {
-    position: 'relative',
+    position: "relative",
     width: "90%",
     height: "90%",
     // backgroundColor:"blue",
-    
   },
   image: {
     width: "100%",
     height: "100%",
-    contentFit: 'cover',
+    contentFit: "cover",
   },
   childViewPosition: {
     width: 430,
     left: -6.5,
     position: "absolute",
   },
-  
-  cont:{
-    padding:6,
-    top:-290,
-    right:5,
-    zIndex:999,
+
+  cont: {
+    padding: 6,
+    top: -290,
+    right: 5,
+    zIndex: 999,
   },
   groupInnerLayout: {
     height: 43,
@@ -337,7 +335,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     textAlign: "left",
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight: 700,
   },
   parentPosition: {
     top: 167,
@@ -568,7 +566,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    
   },
   jan2023: {
     fontFamily: FontFamily.poppinsRegular,
@@ -630,7 +627,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight: 700,
   },
   detailsParent: {
     top: 385,

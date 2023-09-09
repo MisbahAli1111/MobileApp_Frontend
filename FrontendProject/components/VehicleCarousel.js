@@ -1,12 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
 const VehicleCarousel = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   const scrollViewRef = useRef(null);
 
   const images = [
@@ -14,16 +20,10 @@ const VehicleCarousel = () => {
     require("../assets/pngwing-1.png"),
     require("../assets/pngwing-2.png"),
     require("../assets/pngegg-1.png"),
-    null, 
+    null,
   ];
 
-  const imageTexts = [
-    "Car",
-    "Bike",
-    "Truck",
-    "Auto",
-    "Other",
-  ];
+  const imageTexts = ["Car", "Bike", "Truck", "Auto", "Other"];
 
   const handleNextPress = () => {
     scrollViewRef.current.scrollTo({ x: 300, animated: true });
@@ -33,13 +33,13 @@ const VehicleCarousel = () => {
     scrollViewRef.current.scrollTo({ x: 0, animated: true });
   };
 
-// ... (previous imports and code) ...
+  // ... (previous imports and code) ...
 
-return (
+  return (
     <View style={styles.container}>
       <View style={styles.navigation}>
         <TouchableOpacity onPress={handlePrevPress}>
-        <Text style={styles.arrow}>{'<'}</Text> 
+          <Text style={styles.arrow}>{"<"}</Text>
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -51,32 +51,32 @@ return (
       >
         {images.map((image, index) => (
           <TouchableOpacity
-          key={index}
-          onPress={() => {
-            let vehicleType = '';
-            switch (index) {
-              case 0:
-                vehicleType = 'Car';
-                break;
-              case 1:
-                vehicleType = 'Bike';
-                break;
-              case 2:
-                vehicleType = 'Truck';
-                break;
-              case 3:
-                vehicleType = 'Auto';
-                break;
-              case 4:
-                vehicleType = 'Other';
-                break;
-              default:
-                break;
-            }
-            
-            navigation.navigate('Vehicles', { type: vehicleType });
-          }}
-        >
+            key={index}
+            onPress={() => {
+              let vehicleType = "";
+              switch (index) {
+                case 0:
+                  vehicleType = "Car";
+                  break;
+                case 1:
+                  vehicleType = "Bike";
+                  break;
+                case 2:
+                  vehicleType = "Truck";
+                  break;
+                case 3:
+                  vehicleType = "Auto";
+                  break;
+                case 4:
+                  vehicleType = "Other";
+                  break;
+                default:
+                  break;
+              }
+
+              navigation.navigate("Vehicles", { type: vehicleType });
+            }}
+          >
             <LinearGradient
               style={styles.item}
               locations={[0, 1]}
@@ -89,75 +89,78 @@ return (
                   (index === 1 || index === 3) && styles.smallImage,
                 ]}
               />
-              <Text style={[
-                styles.imageText,
-                (index === 1 || index === 3) && styles.imageText2,
-              ]}>{imageTexts[index]}</Text>
+              <Text
+                style={[
+                  styles.imageText,
+                  (index === 1 || index === 3) && styles.imageText2,
+                ]}
+              >
+                {imageTexts[index]}
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
         ))}
       </ScrollView>
       <View style={styles.navigation}>
         <TouchableOpacity onPress={handleNextPress}>
-          <Text style={styles.arrow}>{'>'}</Text>
+          <Text style={styles.arrow}>{">"}</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-  
+
   // ... (remaining styles and export) ...
-  
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollViewContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   navigation: {
     width: 35,
     height: 90,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   arrow: {
     fontSize: 24,
-    color: '#4e6e91',
+    color: "#4e6e91",
   },
   item: {
     width: 80,
     height: 104,
     borderRadius: 5,
     marginHorizontal: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
-    width: '100%',
-    height: '70%',
-    resizeMode: 'contain',
+    width: "100%",
+    height: "70%",
+    resizeMode: "contain",
   },
   smallImage: {
-    width: '60%', 
-    height: '40%', 
+    width: "60%",
+    height: "40%",
   },
   imageText: {
     top: 4,
     fontSize: FontSize.size_sm,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsMedium,
-    color: 'black',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
   },
   imageText2: {
-    top:20,
-   
+    top: 20,
+
     fontSize: FontSize.size_sm,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsMedium,

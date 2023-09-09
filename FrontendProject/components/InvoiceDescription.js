@@ -1,53 +1,63 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet,TextInput, TouchableOpacity,FlatList ,TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  TouchableWithoutFeedback,
+  ScrollView,
+  View,
+  Text,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
 function InvoiceDescription({ onItemsChange }) {
-const navigation = useNavigation();
+  const navigation = useNavigation();
 
+  const [items, setItems] = useState([
+    { itemName: "", rate: "", quantity: "" },
+  ]);
 
-const [items, setItems] = useState([{ itemName: '', rate: '', quantity: '' }]);
+  useEffect(() => {
+    if (typeof onItemsChange === "function") {
+      onItemsChange(items);
+    }
+  }, [items]);
+  const [amount, setAmount] = useState(0);
 
-useEffect(() => {
-  if (typeof onItemsChange === 'function') {
-    onItemsChange(items);
-  }
-}, [items]);
-const [amount, setAmount] = useState(0);
-
-
-  const renderItem =({ item, index })=>(
+  const renderItem = ({ item, index }) => (
     <View style={[styles.rowContainer, styles.groupLayout]}>
-    <TextInput
-      style={[styles.addItem, styles.taxTypo1]}
-      onChangeText={(text) => handleChangeItemName(text, index)}
-      value={item.itemName}
-      placeholder="Add Item"
-    />
-    
-    <TextInput
-      style={[styles.addRate, styles.addTypo1]}
-      onChangeText={(text) => handleChangeRate(text, index)}
-      value={item.rate}
-      placeholder="Add Rate"
-      keyboardType="numeric"
-    />
-    <TextInput
-      style={[styles.text3, styles.textTypo]}
-      onChangeText={(text) => handleChangeQuantity(text, index)}
-      value={item.quantity}
-      placeholder="0"
-      keyboardType="numeric"
-    />
-    <Text style={[styles.amountt, styles.rateTypo]}>{calculateAmount(index)}</Text>
-  </View>
-  
+      <TextInput
+        style={[styles.addItem, styles.taxTypo1]}
+        onChangeText={(text) => handleChangeItemName(text, index)}
+        value={item.itemName}
+        placeholder="Add Item"
+      />
+
+      <TextInput
+        style={[styles.addRate, styles.addTypo1]}
+        onChangeText={(text) => handleChangeRate(text, index)}
+        value={item.rate}
+        placeholder="Add Rate"
+        keyboardType="numeric"
+      />
+      <TextInput
+        style={[styles.text3, styles.textTypo]}
+        onChangeText={(text) => handleChangeQuantity(text, index)}
+        value={item.quantity}
+        placeholder="0"
+        keyboardType="numeric"
+      />
+      <Text style={[styles.amountt, styles.rateTypo]}>
+        {calculateAmount(index)}
+      </Text>
+    </View>
   );
 
-  
   const handleChangeItemName = (text, index) => {
     const newItems = [...items];
     newItems[index].itemName = text;
@@ -66,126 +76,106 @@ const [amount, setAmount] = useState(0);
     setItems(newItems);
   };
 
-
   const calculateAmount = (index) => {
     const item = items[index];
     const rate = parseFloat(item.rate);
     const quantity = parseFloat(item.quantity);
-    const calculatedAmount = isNaN(rate) || isNaN(quantity) ? 0 : rate * quantity;
+    const calculatedAmount =
+      isNaN(rate) || isNaN(quantity) ? 0 : rate * quantity;
     return calculatedAmount.toFixed(2);
   };
 
   const handleAddRow = () => {
-    setItems([...items, { itemName: '', rate: '', quantity: '' }]);
+    setItems([...items, { itemName: "", rate: "", quantity: "" }]);
   };
 
   return (
-    
-      <View style={styles.main}>
-
-          <Image
-            style={styles.rectangleIcon}
-            contentFit="cover"
-            source={require("../assets/rectangle-62.png")}
-  />
-            <View style={[styles.rowContainer, styles.groupLayout]}>
+    <View style={styles.main}>
+      <Image
+        style={styles.rectangleIcon}
+        contentFit="cover"
+        source={require("../assets/rectangle-62.png")}
+      />
+      <View style={[styles.rowContainer, styles.groupLayout]}>
         <Text style={[styles.description, styles.rateTypo]}>DESCRIPTION</Text>
         <Text style={[styles.rate, styles.rateTypo]}>RATE</Text>
         <Text style={[styles.qty, styles.rateTypo]}>QTY</Text>
         <Text style={[styles.amount, styles.rateTypo]}>Amount</Text>
       </View>
-  
-<View style={[styles.rectangleView, styles.rectangleViewBg]} >
-          
-     
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
 
-  
-    </View>
-    <View
-    style={styles.wrap}
-    >
-    <TouchableOpacity 
-    onPress={handleAddRow}>
-    <View style={styles.buttonBack}>
-        <Image
-        
-        style={styles.addButton}
-         contentFit="cover"
-          source={require("../assets/vector11.png")}
+      <View style={[styles.rectangleView, styles.rectangleViewBg]}>
+        <FlatList
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
         />
-        </View>
-        
-      </TouchableOpacity>
+      </View>
+      <View style={styles.wrap}>
+        <TouchableOpacity onPress={handleAddRow}>
+          <View style={styles.buttonBack}>
+            <Image
+              style={styles.addButton}
+              contentFit="cover"
+              source={require("../assets/vector11.png")}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
-      
-     
-   
   );
 }
 const styles = StyleSheet.create({
-main:{
+  main: {
+    width: 500,
+    left: 20,
 
-width:500,
-left:20,
+    position: "relative",
+  },
+  buttonBack: {
+    elevation: 20,
+    shadowRadius: 150,
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    backgroundColor: Color.steelblue_200,
+    height: 27,
+    width: 48,
+    borderRadius: 10,
+    shadowOpacity: 30,
+    left: 160,
+    shadowOffset: {
+      width: 0,
+      height: 30,
+    },
+  },
+  inputField: {
+    borderWidth: 5,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    flex: 1,
+    marginRight: 5,
+  },
+  addButton: {
+    height: 16,
+    width: 16,
+    alignContent: "center",
+    left: 16,
+    top: 4,
+    marginTop: 0,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
 
-position:'relative',
-},
-buttonBack:{
-  elevation: 20,
-  shadowRadius: 150,
-  shadowColor: "rgba(0, 0, 0, 0.05)",
-  backgroundColor: Color.steelblue_200,
-  height: 27,
-  width: 48,
-  borderRadius:10,
-  shadowOpacity: 30,
-  left:160,
-  shadowOffset: {
-    width: 0,
-    height: 30,
-    
-  }
-
-},
-inputField: {
-  borderWidth: 5,
-  borderColor: '#ccc',
-  borderRadius: 4,
-  paddingVertical: 5,
-  paddingHorizontal: 10,
-  flex: 1,
-  marginRight: 5,
-},
-addButton:{
-  height:16,
-  width:16,
-  alignContent:'center',
-  left:16,
-  top:4,
-  marginTop:0,
- 
-},
-rowContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingHorizontal: 5,
-  paddingVertical: 10,
-  
-},
-
-groupLayout: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  left:10,
-
-},
+  groupLayout: {
+    flexDirection: "row",
+    alignItems: "center",
+    left: 10,
+  },
   // container:{
   //  // marginLeft:0,
   // },
@@ -239,7 +229,7 @@ groupLayout: {
     position: "absolute",
   },
   text5ClrName: {
-    top:5,
+    top: 5,
     color: Color.dimgray_100,
     textAlign: "left",
   },
@@ -250,7 +240,7 @@ groupLayout: {
     fontSize: FontSize.size_base,
     textAlign: "left",
     position: "absolute",
-    width:150,
+    width: 150,
   },
   lineViewPosition: {
     top: 34,
@@ -265,10 +255,10 @@ groupLayout: {
   //   width: 392,
   //   position: "absolute",
   // },
-  wrap:{
-    width:378,
-    height:40,
-    left:5,
+  wrap: {
+    width: 378,
+    height: 40,
+    left: 5,
     backgroundColor: Color.steelblue_300,
     borderRadius: 3,
     position: "relative",
@@ -560,13 +550,13 @@ groupLayout: {
     right: "4.42%",
     bottom: "79.19%",
     left: "86.28%",
-    position:"absolute",
+    position: "absolute",
   },
   text1: {
     left: 5,
   },
-  invoiceStatusPicker:{
-    top:232
+  invoiceStatusPicker: {
+    top: 232,
   },
   groupInner: {
     left: -1,
@@ -620,7 +610,7 @@ groupLayout: {
     position: "absolute",
   },
   rectangleView: {
-    marginTop:17,
+    marginTop: 17,
     width: 378,
     left: 5,
   },
@@ -639,10 +629,10 @@ groupLayout: {
     paddingVertical: 5,
     paddingHorizontal: 10,
     fontSize: 16,
-    color:'black',
-    fontWeight:'700',
-    width:100,
-    flexDirection:'column',
+    color: "black",
+    fontWeight: "700",
+    width: 100,
+    flexDirection: "column",
   },
   addItem1: {
     width: 64,
@@ -665,8 +655,8 @@ groupLayout: {
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color:'black',
-    fontWeight:'700',
+    color: "black",
+    fontWeight: "700",
   },
   addRate1: {
     top: 81,
@@ -682,8 +672,8 @@ groupLayout: {
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color:'black',
-    fontWeight:'700',
+    color: "black",
+    fontWeight: "700",
   },
   text4: {
     top: 81,
@@ -692,7 +682,7 @@ groupLayout: {
     left: 291,
     width: 57,
     top: 10,
-    
+
     position: "absolute",
   },
   amountt: {
@@ -799,7 +789,7 @@ groupLayout: {
     left: 29,
   },
   taxRate: {
-    width:80,
+    width: 80,
     fontSize: FontSize.size_smi,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsMedium,
@@ -913,7 +903,7 @@ groupLayout: {
     top: 171,
     left: 25,
     position: "absolute",
-    width:180 ,
+    width: 180,
   },
   vectorIcon4: {
     height: "2.68%",
@@ -922,7 +912,7 @@ groupLayout: {
     right: "52.79%",
     bottom: "79.08%",
     left: "41.4%",
-    position:"absolute",
+    position: "absolute",
   },
   text5: {
     left: 37,
@@ -972,7 +962,7 @@ groupLayout: {
     color: Color.snow,
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.poppinsMedium,
-    alignContent:"center",
+    alignContent: "center",
   },
   vectorContainer: {
     top: 690,
@@ -1076,15 +1066,14 @@ groupLayout: {
     left: 287,
   },
   createInvoice: {
-  //   backgroundColor: Color.white,
-  //    //flex: 6,
-  //   //overflow: "hidden",
-  //    height: 1000,
-  //    width: "100%",
-      left:-8,
-   position:"absolute",
+    //   backgroundColor: Color.white,
+    //    //flex: 6,
+    //   //overflow: "hidden",
+    //    height: 1000,
+    //    width: "100%",
+    left: -8,
+    position: "absolute",
   },
-
 });
 
 export default InvoiceDescription;

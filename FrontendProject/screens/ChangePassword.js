@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert, ImageBackground, TouchableOpacity, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  ImageBackground,
+  TouchableOpacity,
+  Text,
+} from "react-native";
+import { useNavigation } from "@react-navigation/core";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const ChangePassword = () => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState({
     currentPassword: false,
     newPassword: false,
@@ -20,11 +28,11 @@ const ChangePassword = () => {
   const navigation = useNavigation();
 
   const toggleShowPassword = (field) => {
-    if (field === 'currentPassword') {
+    if (field === "currentPassword") {
       setShowCurrentPassword(!showCurrentPassword);
-    } else if (field === 'newPassword') {
+    } else if (field === "newPassword") {
       setShowNewPassword(!showNewPassword);
-    } else if (field === 'confirmNewPassword') {
+    } else if (field === "confirmNewPassword") {
       setShowConfirmNewPassword(!showConfirmNewPassword);
     }
   };
@@ -32,7 +40,9 @@ const ChangePassword = () => {
   const renderPasswordInput = (field, placeholder, value, showPassword) => {
     return (
       <View style={styles.inputContainer}>
-        <View style={[styles.inputWrapper, errors[field] && styles.errorBorder]}>
+        <View
+          style={[styles.inputWrapper, errors[field] && styles.errorBorder]}
+        >
           <TextInput
             style={[styles.input, showPassword && styles.inputShowPassword]}
             placeholder={`Enter ${placeholder}`}
@@ -40,11 +50,18 @@ const ChangePassword = () => {
             value={value}
             onChangeText={(text) => handleFieldChange(field, text)}
           />
-          <TouchableOpacity style={styles.showHideButton} onPress={() => toggleShowPassword(field)}>
-            <Text style={styles.showHideText}>{showPassword ? 'Hide' : 'Show'}</Text>
+          <TouchableOpacity
+            style={styles.showHideButton}
+            onPress={() => toggleShowPassword(field)}
+          >
+            <Text style={styles.showHideText}>
+              {showPassword ? "Hide" : "Show"}
+            </Text>
           </TouchableOpacity>
         </View>
-        {errors[field] && <Text style={styles.errorText}>This field should be filled</Text>}
+        {errors[field] && (
+          <Text style={styles.errorText}>This field should be filled</Text>
+        )}
       </View>
     );
   };
@@ -53,11 +70,11 @@ const ChangePassword = () => {
     if (errors[field]) {
       setErrors({ ...errors, [field]: false });
     }
-    if (field === 'currentPassword') {
+    if (field === "currentPassword") {
       setCurrentPassword(value);
-    } else if (field === 'newPassword') {
+    } else if (field === "newPassword") {
       setNewPassword(value);
-    } else if (field === 'confirmNewPassword') {
+    } else if (field === "confirmNewPassword") {
       setConfirmNewPassword(value);
     }
   };
@@ -66,95 +83,98 @@ const ChangePassword = () => {
     let hasErrors = false;
     const newErrors = { ...errors };
 
-    if (currentPassword === '') {
-    newErrors.currentPassword = true;
-    hasErrors = true;
+    if (currentPassword === "") {
+      newErrors.currentPassword = true;
+      hasErrors = true;
     } else {
-    newErrors.currentPassword = false;
+      newErrors.currentPassword = false;
     }
 
-    if (newPassword === '') {
-    newErrors.newPassword = true;
-    hasErrors = true;
+    if (newPassword === "") {
+      newErrors.newPassword = true;
+      hasErrors = true;
     } else {
-    newErrors.newPassword = false;
+      newErrors.newPassword = false;
     }
 
-    if (confirmNewPassword === '') {
-    newErrors.confirmNewPassword = true;
-    hasErrors = true;
+    if (confirmNewPassword === "") {
+      newErrors.confirmNewPassword = true;
+      hasErrors = true;
     } else {
-    newErrors.confirmNewPassword = false;
+      newErrors.confirmNewPassword = false;
     }
-
 
     if (!hasErrors) {
       const userId = await AsyncStorage.getItem("userId");
 
       let data = JSON.stringify({
-        "oldPassword": currentPassword,
-        "newPassword": newPassword
+        oldPassword: currentPassword,
+        newPassword: newPassword,
       });
-      
+
       let config = {
-        method: 'put',
+        method: "put",
         maxBodyLength: Infinity,
         url: `http://192.168.100.71:8080/api/users/update-password/${userId}`,
-        headers: { 
-          'Content-Type': 'application/json'
+        headers: {
+          "Content-Type": "application/json",
         },
-        data : data
+        data: data,
       };
-      
-      axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
 
     if (!isPasswordValid(newPassword)) {
-    setErrorMessage(
-    'Password must be between 8 and 15 characters and contain at least one uppercase letter, one number, and one special character(@$!%*?&).');
-    setSuccessMessage('');
-    setTimeout(() => {
-      setErrorMessage('');
-    }, 5000);
-        
+      setErrorMessage(
+        "Password must be between 8 and 15 characters and contain at least one uppercase letter, one number, and one special character(@$!%*?&)."
+      );
+      setSuccessMessage("");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+
       return;
     }
 
     // Replace this with your actual password change logic
-    if (currentPassword === 'currentPassword123' && newPassword === confirmNewPassword) {
-      setSuccessMessage('Password changed successfully.');
-      setErrorMessage('');
-      
+    if (
+      currentPassword === "currentPassword123" &&
+      newPassword === confirmNewPassword
+    ) {
+      setSuccessMessage("Password changed successfully.");
+      setErrorMessage("");
+
       setTimeout(() => {
-        setSuccessMessage('');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmNewPassword('');
+        setSuccessMessage("");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmNewPassword("");
         setErrors({
           currentPassword: false,
           newPassword: false,
           confirmNewPassword: false,
         });
       }, 2000);
-
-    } else if(newPassword !== confirmNewPassword) {
-      setErrorMessage('New Passwords Should be same.');
-      setSuccessMessage('');
-    }
-    else{
-        setErrorMessage('Current Password is incorrect');
-        setSuccessMessage('');
+    } else if (newPassword !== confirmNewPassword) {
+      setErrorMessage("New Passwords Should be same.");
+      setSuccessMessage("");
+    } else {
+      setErrorMessage("Current Password is incorrect");
+      setSuccessMessage("");
     }
   };
 
   const isPasswordValid = (password) => {
-    const passwordPattern = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/;
+    const passwordPattern =
+      /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/;
     return passwordPattern.test(password);
   };
 
@@ -164,11 +184,26 @@ const ChangePassword = () => {
       source={require("../assets/light-texture2234-1.png")}
     >
       {/* <Text style={styles.title}>Change Password</Text> */}
-      {renderPasswordInput('currentPassword', 'Current Password', currentPassword, showCurrentPassword)}
-      {renderPasswordInput('newPassword', 'New Password', newPassword, showNewPassword)}
-      {renderPasswordInput('confirmNewPassword', 'Confirm New Password', confirmNewPassword, showConfirmNewPassword)}
-      <Text style={[styles.message, { color: 'green' }]}>{successMessage}</Text>
-      <Text style={[styles.message, { color: 'red' }]}>{errorMessage}</Text>
+      {renderPasswordInput(
+        "currentPassword",
+        "Current Password",
+        currentPassword,
+        showCurrentPassword
+      )}
+      {renderPasswordInput(
+        "newPassword",
+        "New Password",
+        newPassword,
+        showNewPassword
+      )}
+      {renderPasswordInput(
+        "confirmNewPassword",
+        "Confirm New Password",
+        confirmNewPassword,
+        showConfirmNewPassword
+      )}
+      <Text style={[styles.message, { color: "green" }]}>{successMessage}</Text>
+      <Text style={[styles.message, { color: "red" }]}>{errorMessage}</Text>
       <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
         <Text style={styles.buttonText}>Change Password</Text>
       </TouchableOpacity>
@@ -179,29 +214,29 @@ const ChangePassword = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    resizeMode: 'cover',
+    justifyContent: "center",
+    alignItems: "center",
+    resizeMode: "cover",
     width: "100%",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: 'rgba(3, 29, 68, 1)',
+    color: "rgba(3, 29, 68, 1)",
   },
   inputContainer: {
     marginBottom: 20,
-    width: '80%',
+    width: "80%",
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
     flex: 1,
     height: 40,
-    borderColor: 'rgba(203, 203, 203, 1)',
+    borderColor: "rgba(203, 203, 203, 1)",
     borderBottomWidth: 1,
     paddingHorizontal: 10,
   },
@@ -211,31 +246,31 @@ const styles = StyleSheet.create({
   },
   showHideButton: {
     paddingHorizontal: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   showHideText: {
-    color: 'rgba(3, 29, 68, 1)',
+    color: "rgba(3, 29, 68, 1)",
   },
   button: {
-    backgroundColor: 'rgba(3, 29, 68, 1)',
+    backgroundColor: "rgba(3, 29, 68, 1)",
     paddingVertical: 10,
     paddingHorizontal: 90,
     borderRadius: 10,
     marginTop: -10,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
   message: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 10,
   },
   errorBorder: {
-    borderColor: 'red',
+    borderColor: "red",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginTop: 5,
   },
 });

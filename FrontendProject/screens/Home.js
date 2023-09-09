@@ -1,96 +1,98 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
-import { StyleSheet, View,TextInput, Button, Text, Pressable, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Button,
+  Text,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import VehicleCarousel from "../components/VehicleCarousel";
-import { Color, Border,Padding, FontFamily, FontSize } from "../GlobalStyles";
+import { Color, Border, Padding, FontFamily, FontSize } from "../GlobalStyles";
 // import { TextInput } from "react-native-gesture-handler";
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableWithoutFeedback } from "react-native";
 import Footer from "../components/Footer";
-import * as Svg from 'react-native-svg';
+import * as Svg from "react-native-svg";
 import { LineChart } from "react-native-chart-kit";
 import HomeVehicleTypes from "../components/HomeVehicleTypes";
 import ProfilePopDown from "../components/ProfilePopDown";
 import DashboardGraph from "../components/DashboardGraph";
-import axios from 'axios';
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
   const navigation = useNavigation();
-  const [totalEmployees , setTotalEmployees] = useState(0);
-  const [invoiceDues,setInvoiceDues] = useState(0);
+  const [totalEmployees, setTotalEmployees] = useState(0);
+  const [invoiceDues, setInvoiceDues] = useState(0);
   const invoices = null;
 
   const data = [10, 20, 5, 25, 15, 30, 12];
 
-  const getEmployee = async () =>{
-
+  const getEmployee = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-      
 
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
       url: `http://192.168.0.236:8080/api/users/get-employees/${Business_id}`,
-      headers: { }
+      headers: {},
     };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      setTotalEmployees(response.data.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
 
-  }
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        setTotalEmployees(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  const getInvoiceDue = async () =>{
-
+  const getInvoiceDue = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
     let token = await AsyncStorage.getItem("accessToken");
-     const accessToken = "Bearer " + token;
-      
-    if(Business_id)
-    {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/${Business_id}/invoiceDue`,
-      headers: {
-        Authorization: accessToken,
-       }
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      setInvoiceDues(response.data.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-  }
+    const accessToken = "Bearer " + token;
 
+    if (Business_id) {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `http://192.168.0.236:8080/api/invoice/${Business_id}/invoiceDue`,
+        headers: {
+          Authorization: accessToken,
+        },
+      };
 
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          setInvoiceDues(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   useEffect(() => {
     getEmployee();
     getInvoiceDue();
-   });
+  });
 
   return (
     <View style={styles.home}>
-
       <Image
         style={[styles.lightTexture22341Icon, styles.iconPosition1]}
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      
+
       <View style={[styles.homeChild, styles.homeLayout]} />
       <Text style={[styles.text, styles.textTypo1]}>{invoiceDues}</Text>
       <Text style={[styles.paymentDues, styles.paymentDuesPosition]}>
@@ -128,27 +130,24 @@ const Home = () => {
           />
         </Pressable>
       </View>
-      <View style={[styles.homeInner, styles.homeInnerLayout]} >
-      <DashboardGraph/>
-           <TouchableOpacity
-            style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
-            onPress={() => navigation.navigate("SalesReport")}
-          >
-            <Text style={[styles.createInvoice, styles.text13Typo]}>
-              Generate Report
-            </Text>
-          </TouchableOpacity>
+      <View style={[styles.homeInner, styles.homeInnerLayout]}>
+        <DashboardGraph />
+        <TouchableOpacity
+          style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
+          onPress={() => navigation.navigate("SalesReport")}
+        >
+          <Text style={[styles.createInvoice, styles.text13Typo]}>
+            Generate Report
+          </Text>
+        </TouchableOpacity>
       </View>
-
-
 
       {/* car , bike, auto.. */}
 
-     {/* <HomeVehicleTypes /> */}
-     <View style={styles.container}>
-      <VehicleCarousel />
-    </View>
-
+      {/* <HomeVehicleTypes /> */}
+      <View style={styles.container}>
+        <VehicleCarousel />
+      </View>
 
       <Image
         style={[styles.users1Icon, styles.iconLayout3]}
@@ -156,16 +155,11 @@ const Home = () => {
         source={require("../assets/users-1.png")}
       />
 
-
-
       <View style={[styles.homeChild7, styles.homeChildShadowBox]} />
-      <View style={[styles.homeChild8, styles.childPosition]} >
-      </View>
-
-      
+      <View style={[styles.homeChild8, styles.childPosition]}></View>
 
       <View style={[styles.cont]}>
-        <Footer prop={"Home"} data={invoices}  />
+        <Footer prop={"Home"} data={invoices} />
       </View>
     </View>
   );
@@ -177,8 +171,8 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
   },
-  wrap:{
-    left:-5,
+  wrap: {
+    left: -5,
   },
   homeLayout: {
     width: 186,
@@ -189,12 +183,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-  dashboardd: {
-
-
-  },
+  dashboardd: {},
   textTypo1: {
-    
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     textAlign: "left",
@@ -277,8 +267,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   createInvoiceWrapper: {
-    marginTop:225,
-    marginLeft:125,
+    marginTop: 225,
+    marginLeft: 125,
     shadowColor: "rgba(0, 0, 0, 0.05)",
     shadowRadius: 20,
     elevation: 20,
@@ -384,9 +374,9 @@ const styles = StyleSheet.create({
 
   cont: {
     padding: 0,
-    top:0,
-    
-    position:'absolute',
+    top: 0,
+
+    position: "absolute",
     right: 410,
   },
   groupChildPosition2: {
@@ -480,7 +470,7 @@ const styles = StyleSheet.create({
     left: 54,
     fontSize: FontSize.size_base,
     textAlign: "left",
-    
+
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     position: "absolute",
@@ -510,12 +500,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   wrapper: {
-    left:310,
+    left: 310,
     width: 100,
     height: 29,
     top: 265,
     position: "absolute",
-    justifyContent:'center',
+    justifyContent: "center",
   },
   groupChild: {
     width: 392,
@@ -809,9 +799,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     flex: 1,
     padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-
+    alignItems: "center",
+    justifyContent: "center",
   },
   groupIcon: {
     top: 3,
@@ -841,7 +830,7 @@ const styles = StyleSheet.create({
   homeChild4: {
     top: 785,
     height: 102,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
   homeChild5: {
     top: 917,
@@ -882,14 +871,14 @@ const styles = StyleSheet.create({
   iconLayout2: {
     height: "100%",
     width: "100%",
-    right: 2
+    right: 2,
   },
   container: {
-    position:'relative',
-    marginTop:535,
+    position: "relative",
+    marginTop: 535,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   homeMutedIcon: {
     height: 27,

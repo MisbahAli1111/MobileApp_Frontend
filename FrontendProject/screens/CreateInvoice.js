@@ -70,6 +70,7 @@ const CreateInvoice = (parans) => {
   const [Name, setName] = useState('');
   const [regNumber, setregNumber] = useState('');
   const [date, setDate] = useState('');
+  const [currency , setCurrency] = useState('');
   const [status, setStatus] = useState('');
   const [totalAmount, setTotalAmount] = useState(0.0);
   const [save, setSave] = useState(false);
@@ -195,6 +196,7 @@ const CreateInvoice = (parans) => {
     setName(data.name);
     setDate(data.date);
     setDueDate(data.Duedate);
+    setCurrency(data.currency);
     setregNumber(data.regNumber);
     setStatus(data.status);
     
@@ -204,7 +206,7 @@ const CreateInvoice = (parans) => {
     setErrorMsg('');
     setErrorMsg2('');
     setSave(true);
-    if (!Name || !regNumber || !status || !date || !Duedate) {
+    if (!Name || !regNumber || !status|| !currency || !date || !Duedate) {
 
 
     }
@@ -256,12 +258,13 @@ const CreateInvoice = (parans) => {
       "invoiceDue": Duedate,
       "date": date,
       "registrationNumber": regNumber,
-      "total": parseFloat(subtotal),
+      "total": parseFloat(totalAmount),
       "status": st,
-
+      "currency":currency,
       "descriptions": descriptionArray,
       "discounts": DiscountArray,
       "taxes": TaxArray
+      // "currency":c
     });
 
     let config = {

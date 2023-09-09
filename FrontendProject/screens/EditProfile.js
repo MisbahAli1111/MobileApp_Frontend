@@ -427,8 +427,10 @@ const EditProfile = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
+        if(responseData.url !== null)
+        {
         setProfileImageLink(baseUrl + responseData.url);
-        
+        }
       } else {
         console.log("Error: " + response.statusText);
       }

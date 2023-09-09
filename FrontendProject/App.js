@@ -8,10 +8,7 @@ import MaintenanceDetailView from "./screens/MaintenanceDetailView";
 import InvoiceDetailView from "./screens/InvoiceDetailView";
 import AddEmployee from "./screens/AddEmployee";
 import SwitchBusiness from "./screens/SwitchBusiness";
-import SwitchBusiness1 from "./screens/SwitchBusiness1";
-import SwitchBusiness2 from "./screens/SwitchBusiness2";
 import BusinessInfo from "./screens/BusinessInfo";
-import SwitchBusiness3 from "./screens/SwitchBusiness3";
 import OwnerInfo from "./screens/OwnerInfo";
 import CreateInvoice from "./screens/CreateInvoice";
 import Invoices from "./screens/Invoices";
@@ -20,7 +17,7 @@ import MaintenanceRecord from "./screens/MaintenanceRecord";
 import Vehicles from "./screens/Vehicles";
 import AddVehicle from "./screens/AddVehicle";
 import Login from "./screens/Login";
-import VehicleDetails from  "./screens/VehiclesDetails";
+import VehicleDetails from "./screens/VehiclesDetails";
 import AddCustomer from "./screens/AddCustomer";
 import CustomerDetails from "./screens/CustomerDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -28,6 +25,19 @@ import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import Header from "./components/Header";
 import ChangePassword from "./screens/ChangePassword";
 import EditProfile from "./screens/EditProfile";
+import { AppRegistry, LogBox } from "react-native";
+
+// Ignore the specific warning
+LogBox.ignoreLogs([
+  "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation",
+]);
+LogBox.ignoreLogs(['Each child in a list should have a unique "key" prop']);
+LogBox.ignoreLogs([
+  " Failed prop type: Invalid prop `transform` of type `string` supplied to `Text`, expected an array",
+]);
+
+// Register your app
+AppRegistry.registerComponent("YourApp", () => YourAppComponent);
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -46,79 +56,79 @@ const App = () => {
   }
 
   return (
-    
     <>
       <NavigationContainer>
         {hideSplashScreen ? (
-          <Stack.Navigator  screenOptions={({ route, navigation }) => ({
-        header: ({ previous }) => {
-          
-          const { title = route.name, showBackArrow = previous !== undefined,onBackPress = "Home", profileImage = "No" } = route.params;
-      //     console.log("title:", title);
-      // console.log("showBackArrow:", showBackArrow);
-      // console.log("onBackPress:", onBackPress);
-          return (
-            <Header
-              title={title}
-              showBackArrow={showBackArrow}
-               onBackPress={onBackPress}
-              profileImage={profileImage}
-              
-            />
-            
-          );
-          
-        },
-      })}
-      >
-          <Stack.Screen
-          name="Login"
-          component={Login}
-          initialParams={{
-          title: '',
-          profileImage: 'No',  
-          }}/>
+          <Stack.Navigator
+            screenOptions={({ route, navigation }) => ({
+              header: ({ previous }) => {
+                const {
+                  title = route.name,
+                  showBackArrow = previous !== undefined,
+                  onBackPress = "Home",
+                  profileImage = "No",
+                } = route.params;
 
-          <Stack.Screen
+                return (
+                  <Header
+                    title={title}
+                    showBackArrow={showBackArrow}
+                    onBackPress={onBackPress}
+                    profileImage={profileImage}
+                  />
+                );
+              },
+            })}
+          >
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              initialParams={{
+                title: "",
+                profileImage: "No",
+              }}
+            />
+
+            <Stack.Screen
               name="Home"
               component={Home}
               initialParams={{
-          title: 'Dashboard', 
-          showBackArrow: false,
-          profileImage: 'Yes',
+                title: "Dashboard",
+                showBackArrow: false,
+                profileImage: "Yes",
               }}
-            /> 
+            />
 
-          <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          initialParams={{
-          title: 'Edit Profile', 
-          showBackArrow: true, 
-          onBackPress:'Home',
-          profileImage:'No'
-          }}/>
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              initialParams={{
+                title: "Edit Profile",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "No",
+              }}
+            />
 
-          
             <Stack.Screen
               name="ChangePassword"
               component={ChangePassword}
               initialParams={{
-                title: 'Change Password',
-              showBackArrow: true,
-              onBackPress:'Home',
-              profileImage:'No'
+                title: "Change Password",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "No",
               }}
-            /> 
+            />
 
-           <Stack.Screen
+            <Stack.Screen
               name="AddRecord"
               component={AddRecord}
               initialParams={{
-          title: 'Add Record', 
-          showBackArrow: true, 
-          onBackPress:'Vehicles',
-          profileImage: 'Yes', 
+                title: "Add Record",
+                showBackArrow: true,
+                onBackPress: "Vehicles",
+                profileImage: "Yes",
               }}
             />
 
@@ -126,180 +136,164 @@ const App = () => {
               name="MaintenanceDetailView"
               component={MaintenanceDetailView}
               initialParams={{
-          title: 'Maintenance Record', 
-          showBackArrow: true, 
-          onBackPress:'Vehicles',
-          profileImage: 'Yes', 
+                title: "Maintenance Record",
+                showBackArrow: true,
+                onBackPress: "MaintenanceRecord",
+                profileImage: "Yes",
               }}
-              /> 
-          <Stack.Screen
-          name="CustomerDetails"
-          component={CustomerDetails}
-          initialParams={{
-          title: 'Customer Details',
-          showBackArrow: true, 
-          onBackPress:'Vehicles',
-          profileImage: 'Yes',  
-          }}/>    
-
+            />
+            <Stack.Screen
+              name="CustomerDetails"
+              component={CustomerDetails}
+              initialParams={{
+                title: "Customer Details",
+                showBackArrow: true,
+                onBackPress: "Vehicles",
+                profileImage: "Yes",
+              }}
+            />
 
             <Stack.Screen
               name="Invoices"
               component={Invoices}
               initialParams={{
-          title: 'Invoices', 
-          showBackArrow: true, 
-          onBackPress:'Home',
-          profileImage: 'Yes',
+                title: "Invoices",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "Yes",
               }}
-               
-              />  
-               
-               <Stack.Screen
+            />
+
+            <Stack.Screen
               name="SalesReport"
               component={SalesReport}
               initialParams={{
-          title: 'Sales Report', 
-          showBackArrow: true, 
-          onBackPress:'Home',
-          
+                title: "Sales Report",
+                showBackArrow: true,
+                onBackPress: "Home",
               }}
-               
-              />  
-            
+            />
+
             <Stack.Screen
               name="AddEmployee"
               component={AddEmployee}
               initialParams={{
-              title: 'Add Employee', 
-              showBackArrow: true, 
-              onBackPress:'Home',
-              profileImage:'No'
+                title: "Add Employee",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "No",
               }}
             />
 
-            
             <Stack.Screen
               name="SwitchBusiness"
               component={SwitchBusiness}
               initialParams={{
-              title: 'Switch Business', 
-              showBackArrow: true, 
-              onBackPress:'Login',
-              profileImage:'Yes'
+                title: "Switch Business",
+                showBackArrow: true,
+                onBackPress: "Login",
+                profileImage: "Yes",
               }}
             />
-
-           
-            
 
             <Stack.Screen
               name="BusinessInfo"
               component={BusinessInfo}
               initialParams={{
-              title: 'Business Info', 
-              showBackArrow: true, 
-              onBackPress:'SwitchBusiness',
-              profileImage:'No'
+                title: "Business Info",
+                showBackArrow: true,
+                onBackPress: "SwitchBusiness",
+                profileImage: "No",
               }}
             />
 
-            
-            
             <Stack.Screen
               name="OwnerInfo"
               component={OwnerInfo}
               initialParams={{
-              title: 'Owner Info', 
-              showBackArrow: true, 
-              onBackPress:'Login',
-              profileImage:'No'
+                title: "Owner Info",
+                showBackArrow: true,
+                onBackPress: "Login",
+                profileImage: "No",
               }}
-          /> 
-
+            />
 
             <Stack.Screen
-                name="CreateInvoice"
-                component={CreateInvoice}
-                initialParams={{
-                title: 'Invoice', 
-                showBackArrow: true, 
-                onBackPress:'Invoices',
-                profileImage: 'Yes', 
-                }}
-              /> 
-            
-            
+              name="CreateInvoice"
+              component={CreateInvoice}
+              initialParams={{
+                title: "Invoice",
+                showBackArrow: true,
+                onBackPress: "Invoices",
+                profileImage: "Yes",
+              }}
+            />
+
             <Stack.Screen
               name="InvoiceDetailView"
               component={InvoiceDetailView}
               initialParams={{
-                title: 'Invoice Detail', 
-                showBackArrow: true, 
-                onBackPress:'CreateInvoice',
-                profileImage: 'Yes', 
-                }}
+                title: "Invoice Detail",
+                showBackArrow: true,
+                onBackPress: "CreateInvoice",
+                profileImage: "Yes",
+              }}
             />
-            
-              <Stack.Screen
+
+            <Stack.Screen
               name="MaintenanceRecord"
               component={MaintenanceRecord}
               initialParams={{
-                title: 'Records', 
-                showBackArrow: true, 
-                onBackPress:'Home',
-                profileImage: 'Yes', 
-                }}
-            />  
-             
-           
+                title: "Records",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "Yes",
+              }}
+            />
+
             <Stack.Screen
               name="Vehicles"
               component={Vehicles}
               initialParams={{
-                title: 'Vehicles', 
-                showBackArrow: true, 
-                onBackPress:'Home',
-                profileImage: 'Yes', 
-                }}
-            />  
+                title: "Vehicles",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "Yes",
+              }}
+            />
 
-
-             <Stack.Screen 
+            <Stack.Screen
               name="AddVehicle"
               component={AddVehicle}
               initialParams={{
-                title: 'Vehicles', 
-                showBackArrow: true, 
-                onBackPress:'Vehicle',
-                profileImage: 'Yes', 
-                }}
-            />  
+                title: "Vehicles",
+                showBackArrow: true,
+                onBackPress: "Vehicle",
+                profileImage: "Yes",
+              }}
+            />
 
             <Stack.Screen
               name="AddCustomer"
               component={AddCustomer}
               initialParams={{
-              title: 'Add Customer', 
-              showBackArrow: true, 
-              onBackPress:'AddVehicle',
-              profileImage:'No'
+                title: "Add Customer",
+                showBackArrow: true,
+                onBackPress: "AddVehicle",
+                profileImage: "No",
               }}
             />
 
-
-
-             <Stack.Screen 
+            <Stack.Screen
               name="VehicleDetails"
               component={VehicleDetails}
               initialParams={{
-                title: 'Vehicle Details', 
-                showBackArrow: true, 
-                onBackPress:'AddVehicle',
-                profileImage: 'Yes', 
-                }}
-            />  
-            
+                title: "Vehicle Details",
+                showBackArrow: true,
+                onBackPress: "Vehicles",
+                profileImage: "Yes",
+              }}
+            />
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>

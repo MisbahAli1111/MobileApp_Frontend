@@ -1,34 +1,36 @@
 import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View,TextInput, Text, Pressable, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Text,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 // import { TextInput } from "react-native-gesture-handler";
 
-
 function Footer(props) {
-
-  
   const navigation = useNavigation();
-  const [activeScreen, setActiveScreen] = useState(''); 
-
+  const [activeScreen, setActiveScreen] = useState("");
 
   useEffect(() => {
     setActiveScreen(props.prop);
   }, [props.prop]);
 
   function handleInvoicePress() {
-    //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1'] 
-    if (props.data==null){
-   //   console.warn(props.data)
-      navigation.navigate("Invoices", {data:props.data});
-     } 
-     navigation.navigate("Invoices", {data:props.data});
+    //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1']
+    if (props.data == null) {
+      //   console.warn(props.data)
+      navigation.navigate("Invoices", { data: props.data });
+    }
+    navigation.navigate("Invoices", { data: props.data });
   }
   function handleHomePress() {
-    
     navigation.navigate("Home");
   }
 
@@ -36,14 +38,13 @@ function Footer(props) {
     navigation.navigate("MaintenanceRecord");
   }
   function handleVehiclePress() {
-    navigation.navigate("Vehicles",{type:'default'});
+    navigation.navigate("Vehicles", { type: "default" });
   }
   function handleAddRecord() {
     navigation.navigate("AddRecord");
   }
   return (
     <View style={styles.cont}>
-
       <View style={[styles.rectangleView, styles.iconLayout1]} />
       <View style={styles.addVehicleChild12} />
       <Text style={[styles.home, styles.homeTypo]}>Home</Text>
@@ -56,11 +57,13 @@ function Footer(props) {
           style={[styles.ellipseIcon, styles.ellipseLayout]}
           contentFit="cover"
           source={
-            activeScreen === "Home" ?  require("../assets/ellipse-7.png") : require("../assets/ellipse-8.png") }
+            activeScreen === "Home"
+              ? require("../assets/ellipse-7.png")
+              : require("../assets/ellipse-8.png")
+          }
         />
       </TouchableOpacity>
       <View style={[styles.housefill1, styles.text4Position]}>
-
         <TouchableOpacity onPress={handleHomePress}>
           <Image
             style={styles.homeMutedIcon1}
@@ -77,7 +80,9 @@ function Footer(props) {
           style={styles.icon}
           contentFit="cover"
           source={
-            activeScreen === "MaintenanceRecord" ?  require("../assets/ellipse-7.png") : require("../assets/ellipse-8.png")
+            activeScreen === "MaintenanceRecord"
+              ? require("../assets/ellipse-7.png")
+              : require("../assets/ellipse-8.png")
           }
         />
       </TouchableOpacity>
@@ -90,7 +95,9 @@ function Footer(props) {
           style={styles.icon}
           contentFit="cover"
           source={
-            activeScreen === "Invoices" ?  require("../assets/ellipse-7.png") : require("../assets/ellipse-8.png")
+            activeScreen === "Invoices"
+              ? require("../assets/ellipse-7.png")
+              : require("../assets/ellipse-8.png")
           }
         />
       </TouchableOpacity>
@@ -111,28 +118,28 @@ function Footer(props) {
           source={require("../assets/group-111.png")}
         />
       </Pressable>
-      
-      <TouchableWithoutFeedback
-      onPress={handleAddRecord}
-      >
-      <Image
-        style={[styles.addVehicleChild13, styles.groupPressableLayout]}
-        contentFit="cover"
-        source={require("../assets/group-174.png")}
-      />
+
+      <TouchableWithoutFeedback onPress={handleAddRecord}>
+        <Image
+          style={[styles.addVehicleChild13, styles.groupPressableLayout]}
+          contentFit="cover"
+          source={require("../assets/group-174.png")}
+        />
       </TouchableWithoutFeedback>
 
-
-      <TouchableOpacity onPressIn={handleVehiclePress}
+      <TouchableOpacity
+        onPressIn={handleVehiclePress}
         style={[styles.wrapper1, styles.ellipseLayout]}
         onPress={handleVehiclePress}
       >
-
         <Image
           style={styles.icon}
           contentFit="cover"
           source={
-            activeScreen === "Vehicles" ?  require("../assets/ellipse-7.png") : require("../assets/ellipse-8.png")}
+            activeScreen === "Vehicles"
+              ? require("../assets/ellipse-7.png")
+              : require("../assets/ellipse-8.png")
+          }
         />
       </TouchableOpacity>
 
@@ -147,15 +154,15 @@ function Footer(props) {
       <TouchableOpacity onPress={handleRecordPress}>
         <Image
           style={styles.record641Icon}
-          source={require('../assets/record64-1.png')}
+          source={require("../assets/record64-1.png")}
         />
       </TouchableOpacity>
     </View>
   );
 }
 const styles = StyleSheet.create({
-  cont:{
-    top:-8,
+  cont: {
+    top: -8,
   },
   iconLayout1: {
     width: 430,
@@ -538,7 +545,7 @@ const styles = StyleSheet.create({
   },
   starIcon: {
     left: 338,
-    display: "none"
+    display: "none",
   },
   addVehicleChild3: {
     top: 610,
@@ -684,7 +691,7 @@ const styles = StyleSheet.create({
   homeMutedIcon1: {
     width: 25,
     height: 27,
-    left: -3
+    left: -3,
   },
   housefill1: {
     top: 808,
@@ -706,11 +713,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   groupPressable: {
-
     left: 155,
   },
   addVehicleChild13: {
-
     left: 155,
   },
   wrapper1: {

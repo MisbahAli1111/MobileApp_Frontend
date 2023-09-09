@@ -1,7 +1,16 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
-import { StyleSheet, View, ScrollView,TouchableOpacity, TouchableWithoutFeedback, Text, TextInput, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Text,
+  TextInput,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import VehicleRecords from "../components/VehicleRecords";
@@ -9,25 +18,22 @@ import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
 import FilterSearchVehicle from "../components/FilterSearchVehicle";
 
-
 const Vehicles = () => {
   const route = useRoute();
   const type = route.params?.type;
   const navigation = useNavigation();
-  const [search, setSearch] = useState('');
-  const [filterSearchClicked,setFilterSearchClicked] =useState(false);
-  const [searchType , setSearchType] = useState([]);
-  const [searchOrder , setSearchOrder] = useState('');
+  const [search, setSearch] = useState("");
+  const [filterSearchClicked, setFilterSearchClicked] = useState(false);
+  const [searchType, setSearchType] = useState([]);
+  const [searchOrder, setSearchOrder] = useState("");
   const handleQuery = (query) => {
     setSearch(query);
-
   };
-  const functionFilterSearch = () =>{
+  const functionFilterSearch = () => {
     setFilterSearchClicked(true);
   };
 
-  const addFilterInState = (attribute = ['default'], sort = 'default') => {
-  
+  const addFilterInState = (attribute = ["default"], sort = "default") => {
     setFilterSearchClicked(false);
     setSearchType(attribute);
     setSearchOrder(sort);
@@ -35,12 +41,9 @@ const Vehicles = () => {
     // console.log('Selected Filters:', attribute[0])
     // console.log('selected Sort: ',sort)
   };
-   
-
 
   return (
     <View style={styles.vehicles}>
-
       <Image
         style={styles.lightTexture22341Icon}
         contentFit="cover"
@@ -51,21 +54,22 @@ const Vehicles = () => {
         contentFit="cover"
         source={require("../assets/image-2.png")}
       />
-      
 
       {/* Footer */}
       <View style={[styles.rectangleParent, styles.image2IconPosition]}>
-        
         <View style={[styles.cont]}>
           <Footer prop={"Vehicles"} />
         </View>
       </View>
 
       <View contentContainerStyle={styles.contView}>
-      <VehicleRecords dsearch={search} type={type} searchType={searchType} searchOrder={searchOrder} />
-    </View>
-
-
+        <VehicleRecords
+          dsearch={search}
+          type={type}
+          searchType={searchType}
+          searchOrder={searchOrder}
+        />
+      </View>
 
       {/* filter  */}
       <View style={[styles.breadcrumbsParent, styles.frameParentLayout]}>
@@ -89,17 +93,20 @@ const Vehicles = () => {
             styles.frameParentLayout,
           ]}
         >
-          <View
-            style={styles.filt}
-          >
-          <Pressable onPress={functionFilterSearch}>
-            <Text style={styles.filterText}>Filter</Text>
+          <View style={styles.filt}>
+            <Pressable onPress={functionFilterSearch}>
+              <Text style={styles.filterText}>Filter</Text>
             </Pressable>
           </View>
-          {filterSearchClicked && <FilterSearchVehicle onFilterSelect={(attribute,sort) => addFilterInState(attribute,sort)}/>}
-      </View>
+          {filterSearchClicked && (
+            <FilterSearchVehicle
+              onFilterSelect={(attribute, sort) =>
+                addFilterInState(attribute, sort)
+              }
+            />
+          )}
         </View>
-      
+      </View>
 
       {/* search gli  */}
       <View style={[styles.rectangleGroup, styles.vehiclesChildPosition]}>
@@ -107,13 +114,13 @@ const Vehicles = () => {
           style={[styles.groupInner, styles.innerLayout]}
           onPress={() => navigation.navigate("MaintenanceRecord")}
         />
-        <TextInput style={[styles.corollaGli2015, styles.corollaTypo]}
+        <TextInput
+          style={[styles.corollaGli2015, styles.corollaTypo]}
           placeholder="Civic 2022"
           clearButtonMode="always"
           value={search}
           onChangeText={(query) => handleQuery(query)}
         />
-
 
         <Image
           style={[styles.icon1, styles.iconLayout2]}
@@ -122,24 +129,25 @@ const Vehicles = () => {
         />
       </View>
       <View>
-      <Pressable
-        style={[styles.groupWrapper, styles.groupLayoutt]}
-        onPress={() => navigation.navigate("AddVehicle")}
-      >
-        <View style={styles.rectangleGroupp}>
-          <View style={[styles.groupInnerr, styles.groupInnerLayout]} />
-          <View style={styles.addRecordParent}>
-            <Text style={[styles.addRecord, styles.addTypo]}>Add Vehicle</Text>
-            <Image
-              style={styles.vectorIcon1}
-              contentFit="cover"
-              source={require("../assets/vector14.png")}
-            />
+        <Pressable
+          style={[styles.groupWrapper, styles.groupLayoutt]}
+          onPress={() => navigation.navigate("AddVehicle")}
+        >
+          <View style={styles.rectangleGroupp}>
+            <View style={[styles.groupInnerr, styles.groupInnerLayout]} />
+            <View style={styles.addRecordParent}>
+              <Text style={[styles.addRecord, styles.addTypo]}>
+                Add Vehicle
+              </Text>
+              <Image
+                style={styles.vectorIcon1}
+                contentFit="cover"
+                source={require("../assets/vector14.png")}
+              />
+            </View>
           </View>
-        </View>
-      </Pressable>
+        </Pressable>
       </View>
-
     </View>
   );
 };
@@ -154,11 +162,9 @@ const styles = StyleSheet.create({
     padding: 6,
     top: -45,
     right: 5,
-    zIndex:999,
+    zIndex: 999,
   },
-  contView: { 
-  },
-
+  contView: {},
 
   filterTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -166,8 +172,8 @@ const styles = StyleSheet.create({
   },
   filt: {
     top: 4,
-    right:95,
-    width:70
+    right: 95,
+    width: 70,
   },
 
   iconLayout3: {
@@ -190,7 +196,7 @@ const styles = StyleSheet.create({
     left: 1,
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.size_sm,
-    color: '#000',
+    color: "#000",
     marginBottom: 10,
     fontWeight: "500",
   },
@@ -212,11 +218,8 @@ const styles = StyleSheet.create({
     width: 120,
     left: 280,
     top: -672,
-
   },
-  groupInnerLayout: {
-
-  },
+  groupInnerLayout: {},
 
   nameTypo: {
     fontFamily: FontFamily.poppinsRegular,
@@ -269,7 +272,7 @@ const styles = StyleSheet.create({
   },
   name1Clr: {
     color: Color.dimgray_200,
-    textAlign: "left", 
+    textAlign: "left",
   },
   text2Typo: {
     color: Color.gray_300,
@@ -671,7 +674,6 @@ const styles = StyleSheet.create({
     top: 10,
     height: 35,
     left: 0,
-
   },
   groupIcon: {
     width: 372,

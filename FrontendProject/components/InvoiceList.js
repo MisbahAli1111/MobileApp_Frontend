@@ -1,31 +1,60 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import isEqual from 'lodash/isEqual';
+import isEqual from "lodash/isEqual";
 import ErrorPopup from "../components/ErrorPopup";
-import { StyleSheet, TextInput, Dimensions, TouchableOpacity, ScrollView, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
+  View,
+  Text,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
 
-function Invoicelist({ dsearch }) {
+function Invoicelist({ dsearch, searchOrder }) {
   const navigation = useNavigation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [data, setData] = useState([]);
   const [Invoices, setInvoices] = useState([]);
-  const [ tempInvoiceid, setTempInvoiceId]= useState('');
+  const [tempInvoiceid, setTempInvoiceId] = useState("");
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-  const [ reload , setReload] = useState(0);
+  const [reload, setReload] = useState(0);
 
+  const displayedRecords = useMemo(() => {
+    let filteredVehicles;
 
-  const displayedRecords = search ? data : Invoices;
+    if (search) {
+      filteredVehicles = data;
+    } else {
+      filteredVehicles = Invoices;
+    }
+
+    const sortedVehicles = filteredVehicles.slice().sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      if (searchOrder === "ascending") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+
+    return sortedVehicles;
+  }, [search, data, Invoices, searchOrder]);
 
   const handlePress = (index, recordId) => {
     setCurrentPressedIndex(index);
@@ -37,60 +66,60 @@ function Invoicelist({ dsearch }) {
     // console.log(tempVehicleid);
     setShowErrorPopup(false);
     deleteVehicle();
-};
-const setPopUp = (vehicleIds) => {
-  setTempInvoiceId(vehicleIds);
-  setShowErrorPopup(true);
-}
-
-
-deleteVehicle = async () => {
-  let config = {
-    method: 'put',
-    maxBodyLength: Infinity,
-    url: `http://192.168.0.236:8080/api/invoice/${tempInvoiceid}/delete-invoice`,
-    headers: { }
   };
-  
-  axios.request(config)
-  .then((response) => {
-    // console.log(JSON.stringify(response.data));
-    // getData();
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-}
+  const setPopUp = (vehicleIds) => {
+    setTempInvoiceId(vehicleIds);
+    setShowErrorPopup(true);
+  };
+
+  deleteVehicle = async () => {
+    let config = {
+      method: "put",
+      maxBodyLength: Infinity,
+      url: `http://192.168.100.71:8080/api/invoice/${tempInvoiceid}/delete-invoice`,
+      headers: {},
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        // getData();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
-
     getData();
   });
 
   getData = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
     let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
+    const accessToken = "Bearer " + token;
 
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/get-invoices/${Business_id}`,
+      url: `http://192.168.100.71:8080/api/invoice/get-invoices/${Business_id}`,
       headers: {
-        'Authorization': accessToken
-      }
+        Authorization: accessToken,
+      },
     };
 
-    axios.request(config)
-    .then((response) => {
-      const newData = response.data;
-      const hasDataChanged = !isEqual(newData, Invoices); 
-      
-      if (hasDataChanged) {
-        console.log(JSON.stringify(newData));
-        setInvoices(newData);
-      }
-    })
+    axios
+      .request(config)
+      .then((response) => {
+        const newData = response.data;
+        const hasDataChanged = !isEqual(newData, Invoices);
+
+        if (hasDataChanged) {
+          console.log(JSON.stringify(newData));
+          setInvoices(newData);
+        }
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -98,111 +127,154 @@ deleteVehicle = async () => {
 
   useEffect(() => {
     setSearch(dsearch);
-    const formattedQuery = dsearch.trim().toLowerCase();
-    const maintained = Invoices.filter((record) =>
-      record.name && record.name.toLowerCase().includes(formattedQuery)
-    );
+
+    const formattedQuery = dsearch.toUpperCase().trim();
+    const maintained = Invoices.filter((invoice) => {
+      const nameMatches =
+        invoice.name && invoice.name.toUpperCase().includes(formattedQuery);
+      const ownerMatches =
+        invoice.vehicleOwner &&
+        invoice.vehicleOwner.toUpperCase().includes(formattedQuery);
+      const numberMatches = invoice.registrationNumber
+        .toUpperCase()
+        .includes(formattedQuery);
+      const parentCompanyMatches =
+        invoice.parentCompany &&
+        invoice.parentCompany.toUpperCase().includes(formattedQuery);
+      const totalMatches = invoice.total.toString().includes(formattedQuery);
+
+      const dateMatches = (query) => {
+        const formattedDate = query.split("/").reverse().join("-"); // Convert to 'YYYY-MM-DD' format
+        const maintanenceDate = invoice.date.split("T")[0];
+        return maintanenceDate.includes(formattedDate);
+      };
+
+      return (
+        nameMatches ||
+        parentCompanyMatches ||
+        totalMatches ||
+        numberMatches ||
+        ownerMatches ||
+        dateMatches(formattedQuery)
+      );
+    });
     setData(maintained);
   }, [dsearch]);
 
-
   return (
     <ScrollView style={styles.wrap}>
-      {
-        displayedRecords.map((record, index) => (
-          <View key={index} style={[styles.groupView,
-          currentPressedIndex === index ? styles.groupParentLayoutW : styles.groupParentLayout
-          ]}>
-
-            <Pressable
-              style={styles.press}
-              onPress={() => handlePress(index, record.id)}
-            >
-              <View style={[styles.groupFrame]}>
-                <View style={styles.rowWrap}>
-                  <Text style={[
+      {displayedRecords.map((record, index) => (
+        <View
+          key={index}
+          style={[
+            styles.groupView,
+            currentPressedIndex === index
+              ? styles.groupParentLayoutW
+              : styles.groupParentLayout,
+          ]}
+        >
+          <Pressable
+            style={styles.press}
+            onPress={() => handlePress(index, record.id)}
+          >
+            <View style={[styles.groupFrame]}>
+              <View style={styles.rowWrap}>
+                <Text
+                  style={[
                     styles.muhammadAli4,
-                    currentPressedIndex === index ? styles.text4Typo : styles.textTypo
-                  ]}>
-                    {record.name}
-                  </Text>
-                  <ErrorPopup
-                    visible={showErrorPopup}
-                    message={'Are you sure you want to remove Invoice?'}
-                    onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
-                    onCancel={() => {
-                      setShowErrorPopup(false);
-                      setTempInvoiceId(null); // Reset vehicleIds when the popup is closed
-                    }}
-
+                    currentPressedIndex === index
+                      ? styles.text4Typo
+                      : styles.textTypo,
+                  ]}
+                >
+                  {record.name}
+                </Text>
+                <ErrorPopup
+                  visible={showErrorPopup}
+                  message={"Are you sure you want to remove Invoice?"}
+                  onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
+                  onCancel={() => {
+                    setShowErrorPopup(false);
+                    setTempInvoiceId(null); // Reset vehicleIds when the popup is closed
+                  }}
+                />
+                <TouchableOpacity onPress={() => setPopUp(record.id)}>
+                  <FontAwesome
+                    name="trash"
+                    size={25}
+                    color={currentPressedIndex === index ? "white" : "black"}
                   />
-                  <TouchableOpacity
-                    onPress={() => setPopUp(record.id)}>
-                    <FontAwesome
-                      name="trash"
-                      size={25}
-                      color={currentPressedIndex === index ? "white" : "black"}
-                    />
-                  </TouchableOpacity>
+                </TouchableOpacity>
+              </View>
 
-                </View>
+              <View style={[styles.inv0001Parent]}>
+                <Text
+                  style={[
+                    currentPressedIndex === index
+                      ? styles.inv00014
+                      : styles.inv0001,
+                    currentPressedIndex === index
+                      ? styles.text4Typo
+                      : styles.textTypo,
+                  ]}
+                >
+                  INV{record.id}
+                </Text>
 
-                <View style={[styles.inv0001Parent]}>
-                  <Text style={[
-                    currentPressedIndex === index ? styles.inv00014 : styles.inv0001,
-                    currentPressedIndex === index ? styles.text4Typo : styles.textTypo
-                  ]}>INV{record.id}</Text>
-
-
-
-
-                  <Text style={[
+                <Text
+                  style={[
                     styles.muhammadAli44,
-                    currentPressedIndex === index ? styles.text4Typo : styles.paidTypo
-                  ]}>
-                    Rs. {record.total}
-                  </Text>
-                </View>
+                    currentPressedIndex === index
+                      ? styles.text4Typo
+                      : styles.paidTypo,
+                  ]}
+                >
+                  Rs. {record.total}
+                </Text>
+              </View>
 
-
-                <View style={[styles.inv0001Parent]}>
-                  <Text style={[
-                    currentPressedIndex === index ? styles.jan20234 : styles.jan2023,
-                  ]}>
-                    {record.invoiceDue}
-                  </Text>
-                  <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-                    <View style={[
+              <View style={[styles.inv0001Parent]}>
+                <Text
+                  style={[
+                    currentPressedIndex === index
+                      ? styles.jan20234
+                      : styles.jan2023,
+                  ]}
+                >
+                  {record.invoiceDue}
+                </Text>
+                <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
+                  <View
+                    style={[
                       styles.groupInner,
                       styles.groupChildLayout,
-                      record.status ? styles.groupChild1 : null
-                    ]} />
+                      record.status ? styles.groupChild1 : null,
+                    ]}
+                  />
 
-                    <Text style={[
+                  <Text
+                    style={[
                       styles.due,
                       styles.paidTypo,
-                      record.status ? styles.paid1 : null
-                    ]}>
-                      {record.status ? 'Paid' : 'Due'}
-                    </Text>
-                  </View>
+                      record.status ? styles.paid1 : null,
+                    ]}
+                  >
+                    {record.status ? "Paid" : "Due"}
+                  </Text>
                 </View>
               </View>
-            </Pressable>
-
-
-          </View>
-
-        ))}
+            </View>
+          </Pressable>
+        </View>
+      ))}
     </ScrollView>
-
   );
 }
 const styles = StyleSheet.create({
   groupParentLayout: {
     backgroundColor: Color.steelblue_300,
     marginVertical: 0.2 * rem,
-    alignSelf: 'center',
+    alignSelf: "center",
     width: screenWidth * 0.91,
     height: screenHeight * 0.108,
     borderRadius: 8,
@@ -210,14 +282,14 @@ const styles = StyleSheet.create({
   groupParentLayoutW: {
     backgroundColor: Color.darkslateblue,
     marginVertical: 0.2 * rem,
-    alignSelf: 'center',
+    alignSelf: "center",
     width: screenWidth * 0.91,
     height: screenHeight * 0.108,
     borderRadius: 8,
   },
   rowWrap: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 2,
     margin: 10,
     marginTop: 10,
@@ -258,7 +330,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   janPosition: {
-
     top: 1,
     fontSize: FontSize.size_sm,
   },
@@ -267,9 +338,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
     top: 1,
   },
-  rs3000Typo: {
-
-  },
+  rs3000Typo: {},
   rs3000TypoR: {
     fontFamily: FontFamily.poppinsBold,
     fontWeight: "700",
@@ -291,7 +360,6 @@ const styles = StyleSheet.create({
   groupChildLayout: {
     width: 53,
     height: 23,
-
   },
   groupChild4Bg: {
     backgroundColor: Color.darkslateblue,
@@ -423,7 +491,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   inv0001Parent: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   rs3000: {
     color: Color.textTxtPrimary,
@@ -469,15 +537,13 @@ const styles = StyleSheet.create({
   },
   rectangleGroup: {
     // marginLeft:10*rem,
-    textAlign: 'right',
-    position: 'absolute',
+    textAlign: "right",
+    position: "absolute",
     marginLeft: 12.8 * rem,
 
     marginTop: 0.1 * rem,
   },
-  rectangleParent: {
-
-  },
+  rectangleParent: {},
   groupChild1: {
     backgroundColor: Color.darkolivegreen,
     borderRadius: Border.br_sm,
@@ -539,7 +605,6 @@ const styles = StyleSheet.create({
   },
   rs30004: {
     color: Color.white,
-
   },
   rectangleParent2: {
     top: 315,
@@ -870,9 +935,9 @@ const styles = StyleSheet.create({
   },
   breadcrumbsParent: {
     flex: 1,
-    width: '80%',
+    width: "80%",
     height: 32,
-    position: 'absolute',
+    position: "absolute",
     marginTop: 130,
     marginLeft: 22,
   },
@@ -884,13 +949,12 @@ const styles = StyleSheet.create({
     height: 932,
   },
 
-
   serviceWrapper: {
     top: 84,
   },
   wrap: {
     width: screenWidth,
-    height: screenHeight * .64,
+    height: screenHeight * 0.64,
   },
   text2Typo: {
     color: Color.gray_300,
@@ -930,12 +994,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-
   maintainedByParent: {
     top: 28,
     left: 0,
   },
-
 
   surfaceParentFlexBox: {
     flexDirection: "row",

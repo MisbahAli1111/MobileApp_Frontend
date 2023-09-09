@@ -1,165 +1,216 @@
 import * as React from "react";
-import { useState,useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Image } from "expo-image";
-import {Button, Modal,StyleSheet, View, Text,ScrollView,TextInput, Pressable,TouchableOpacity,FlatList } from "react-native";
+import {
+  Button,
+  Modal,
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  Pressable,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import { Picker } from "@react-native-picker/picker";
-import Carousel,{Pagination} from "react-native-snap-carousel";
-import {Video} from "expo-av";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import { Video } from "expo-av";
 import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 
 //172.20.64.1 shayan ip
 //192.168.100.71 misbah ip
 
 const AddVehicle = () => {
   const navigation = useNavigation();
-  const [vehicleType, setvehicleType]=React.useState('');
-  const [vehicleModel, setvehicleModel]=React.useState('');
-  const [Registration, setRegistration]=React.useState('');
-  const [name,setName]=useState('');
-  const [keyCustomer,setKeyCustomer] = useState('');
-  const [Vehiclecolor,setvehiclecolor]=useState("");
-  const [phoneNumber, setphoneNumber]=useState('');
-  const [ customerType, setCusomterType] = useState('');
-  const [ customerTypeError, setCusomterTypeError] = useState(false);
-  const [ CompanyNameError, setCompanyNameError] = useState(false);
-  
-  const [km, setKm]=useState('');
-  const [Nmsg,setNmsg]= useState('');
-  const [vehicleTypeError, setvehicleTypeError]=useState(false);
-  const [vehicleModelError, setvehicleModelError]=useState(false);
-  const [RegistrationError, setRegistrationError]=useState(false);
-  const [nameError,setNameError]=useState(false);
-  const [VehiclecolorError,setvehiclecolorError]=useState(false);
-  const [phoneNumberError, setphoneNumberError]=useState(false);
-  const [kmError, setKmError]=useState(false);
-  const [Msg, setMsg ]=useState('');
-  const [RMsg, setRMsg ]=useState('');
-  const [make, setMake]= useState('');
-  const [year, setYear]= useState('');
-  const [ makeError, setMakeError] = useState(false);
-  const vehicleCategories = ['Bike','Car','Truck','Auto','Other'];
-  const CusomterCategories = ['Walk-in','Company'];
-  const modelCategories = [  "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",  "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",  "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",  "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",  "2020", "2021", "2022", "2023"];
+  const [vehicleType, setvehicleType] = React.useState("");
+  const [vehicleModel, setvehicleModel] = React.useState("");
+  const [Registration, setRegistration] = React.useState("");
+  const [name, setName] = useState("");
+  const [keyCustomer, setKeyCustomer] = useState("");
+  const [Vehiclecolor, setvehiclecolor] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
+  const [customerType, setCusomterType] = useState("");
+  const [customerTypeError, setCusomterTypeError] = useState(false);
+  const [CompanyNameError, setCompanyNameError] = useState(false);
+
+  const [km, setKm] = useState("");
+  const [Nmsg, setNmsg] = useState("");
+  const [vehicleTypeError, setvehicleTypeError] = useState(false);
+  const [vehicleModelError, setvehicleModelError] = useState(false);
+  const [RegistrationError, setRegistrationError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [VehiclecolorError, setvehiclecolorError] = useState(false);
+  const [phoneNumberError, setphoneNumberError] = useState(false);
+  const [kmError, setKmError] = useState(false);
+  const [Msg, setMsg] = useState("");
+  const [RMsg, setRMsg] = useState("");
+  const [make, setMake] = useState("");
+  const [year, setYear] = useState("");
+  const [makeError, setMakeError] = useState(false);
+  const vehicleCategories = ["Bike", "Car", "Truck", "Auto", "Other"];
+  const CusomterCategories = ["Walk-in", "Company"];
+  const modelCategories = [
+    "1980",
+    "1981",
+    "1982",
+    "1983",
+    "1984",
+    "1985",
+    "1986",
+    "1987",
+    "1988",
+    "1989",
+    "1990",
+    "1991",
+    "1992",
+    "1993",
+    "1994",
+    "1995",
+    "1996",
+    "1997",
+    "1998",
+    "1999",
+    "2000",
+    "2001",
+    "2002",
+    "2003",
+    "2004",
+    "2005",
+    "2006",
+    "2007",
+    "2008",
+    "2009",
+    "2010",
+    "2011",
+    "2012",
+    "2013",
+    "2014",
+    "2015",
+    "2016",
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+  ];
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
-  const [selectedImage,setSelectedImage] = useState([]);
+  const [selectedImage, setSelectedImage] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [originalUri, setOriginalUri] = useState('');
+  const [originalUri, setOriginalUri] = useState("");
   const [status, setStatus] = useState({});
   const video = React.useRef(null);
-  const [customers , setCustomers] = useState([]);
-  const [search, setSearch] = useState('');
+  const [customers, setCustomers] = useState([]);
+  const [search, setSearch] = useState("");
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState(transformedResponse);
-  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState("");
   const searchRef = useRef();
-  const [userId,setUserId] = useState('');
-  const  [ CompanyName,setCompanyName] = useState('');
-  const getCustomer = async () =>{
-    let token= await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
+  const [userId, setUserId] = useState("");
+  const [CompanyName, setCompanyName] = useState("");
+  const getCustomer = async () => {
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = "Bearer " + token;
     const Business_id = await AsyncStorage.getItem("Business_id");
 
-    
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/users/get-customer/${Business_id}`,
-      headers: { 
-        'Authorization': accessToken
-      }
+      url: `http://192.168.0.236:8080/api/users/get-customer/${Business_id}`,
+      headers: {
+        Authorization: accessToken,
+      },
     };
-    
-    axios.request(config)
-    .then((response) => {
 
-      JSON.stringify(response.data);
-      setCustomers(response.data);
-      // console.log(customers);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-
-  }
-
-
+    axios
+      .request(config)
+      .then((response) => {
+        JSON.stringify(response.data);
+        setCustomers(response.data);
+        // console.log(customers);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     getCustomer();
-   },[selectedCountry]);
- 
-   const transformedResponse = customers.map(item => {
+  }, [selectedCountry]);
+
+  const transformedResponse = customers.map((item) => {
     const { id, name } = item;
     return {
       name: name,
-      id: id
+      id: id,
     };
   });
 
-   const renderCarouselItem = ({ item, index }) => (
+  const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
       {item.type === "image" ? (
-        <Pressable style={styles.mediaContainer}
-        onPress={() => handleOpen(item.uri)}>
-        <Image source={{ uri: item.uri }} style={styles.image} />
+        <Pressable
+          style={styles.mediaContainer}
+          onPress={() => handleOpen(item.uri)}
+        >
+          <Image source={{ uri: item.uri }} style={styles.image} />
         </Pressable>
       ) : (
         <View style={styles.videoContainer1}>
-        <Pressable style={styles.mediaContainer}
-        onPress={() => handleOpen(item.uri)}>
-        <Video
-          source={{ uri: item.uri }}
-          style={styles.video}
-          controls
-        />
-       <View style={styles.iconContainer}>
-            <EvilIcons name="play" size={50} color="white" />
-          </View>
-        </Pressable>
+          <Pressable
+            style={styles.mediaContainer}
+            onPress={() => handleOpen(item.uri)}
+          >
+            <Video source={{ uri: item.uri }} style={styles.video} controls />
+            <View style={styles.iconContainer}>
+              <EvilIcons name="play" size={50} color="white" />
+            </View>
+          </Pressable>
         </View>
       )}
-      <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
+      <TouchableOpacity
+        onPress={() => handleImageDelete(index)}
+        style={styles.deleteButton}
+      >
         <Text style={styles.deleteButtonText}>Delete</Text>
       </TouchableOpacity>
     </View>
   );
 
-  
-  const onSearch = search => {
-    if (search != '') {
-      let tempData = transformedResponse.filter(item => {
+  const onSearch = (search) => {
+    if (search != "") {
+      let tempData = transformedResponse.filter((item) => {
         return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
       });
       setData(tempData);
     } else {
       setData(transformedResponse);
     }
-  }
+  };
 
   const handleClick = () => {
     setClicked(!clicked);
-
   };
-  const handleAddCustomer =() =>{
-    navigation.navigate('AddCustomer');
+  const handleAddCustomer = () => {
+    navigation.navigate("AddCustomer");
     setClicked(!clicked);
-
   };
 
   const fetchData = async () => {
     const index = parseInt(await AsyncStorage.getItem("Business_id"));
     setCurrentPressedIndex(index);
-    
   };
 
   const handlePlayButton = async () => {
@@ -167,7 +218,7 @@ const AddVehicle = () => {
       await video.current.playAsync();
     }
   };
-  
+
   const handleOpen = (uri) => {
     setOriginalUri(uri);
     setModalVisible(true);
@@ -175,250 +226,227 @@ const AddVehicle = () => {
 
   const handleClose = () => {
     setModalVisible(false);
-    setOriginalUri('');
+    setOriginalUri("");
   };
 
- 
-    const handleCameraIconClick = () => {
-      setShowCameraImagePicker(true);
-    };
-  
-    const handleGalleryIconClick = () => {
-      setShowGalleryImagePicker(true);
-    };
-  
-    const handleCameraImageSelected = (uri,type) => {
-      
-      setSelectedImage([...selectedImage, { uri, type }]);
-      setShowGalleryImagePicker(false);
-      console.log(selectedImage);
-    };
-  
-    const handleGalleryImageSelected = (uri,type) => {
-      
-      setSelectedImage([...selectedImage, { uri, type }]);
-      setShowGalleryImagePicker(false);
-      console.log(selectedImage);
-    };
-  
-    const handleImageDelete = (index) => {
-      const newSelectedImage = [...selectedImage];
-      newSelectedImage.splice(index, 1);
-      setSelectedImage(newSelectedImage);
-    };
-    
-  
-    const handleVechileTypeSelect = (code) => {
-      setvehicleType(code);
-      
-    };
+  const handleCameraIconClick = () => {
+    setShowCameraImagePicker(true);
+  };
 
-    const handleCustomerTypeSelect = (code) => {
-      setCusomterType(code);
-      
-    };
+  const handleGalleryIconClick = () => {
+    setShowGalleryImagePicker(true);
+  };
 
-    const uploadImage = async (vehicleId) => {
-      if(selectedImage)
-      {
-      let token= await AsyncStorage.getItem("accessToken");
-      const accessToken = 'Bearer ' + token;
+  const handleCameraImageSelected = (uri, type) => {
+    setSelectedImage([...selectedImage, { uri, type }]);
+    setShowGalleryImagePicker(false);
+    console.log(selectedImage);
+  };
+
+  const handleGalleryImageSelected = (uri, type) => {
+    setSelectedImage([...selectedImage, { uri, type }]);
+    setShowGalleryImagePicker(false);
+    console.log(selectedImage);
+  };
+
+  const handleImageDelete = (index) => {
+    const newSelectedImage = [...selectedImage];
+    newSelectedImage.splice(index, 1);
+    setSelectedImage(newSelectedImage);
+  };
+
+  const handleVechileTypeSelect = (code) => {
+    setvehicleType(code);
+  };
+
+  const handleCustomerTypeSelect = (code) => {
+    setCusomterType(code);
+  };
+
+  const uploadImage = async (vehicleId) => {
+    if (selectedImage) {
+      let token = await AsyncStorage.getItem("accessToken");
+      const accessToken = "Bearer " + token;
       const imageData = new FormData();
-        // Iterate through the image array and append images to the FormData
-        try {
-          selectedImage.forEach((entry, index) => {
-            const image_uri = entry.uri;
-            imageData.append('files', {
-              uri: image_uri,
-              name: new Date() + ".jpeg",
-              type: 'image/jpeg',
-            });
+      // Iterate through the image array and append images to the FormData
+      try {
+        selectedImage.forEach((entry, index) => {
+          const image_uri = entry.uri;
+          imageData.append("files", {
+            uri: image_uri,
+            name: new Date() + ".jpeg",
+            type: "image/jpeg",
           });
+        });
 
-          // imageData.append('files', {
-          //   uri: selectedImage,
-          //   name: new Date + "_profile"+".jpeg",
-          //   type: 'image/jpeg', // Adjust the MIME type as needed
-          // });
-          console.log("formData: " ,imageData );
+        // imageData.append('files', {
+        //   uri: selectedImage,
+        //   name: new Date + "_profile"+".jpeg",
+        //   type: 'image/jpeg', // Adjust the MIME type as needed
+        // });
+        console.log("formData: ", imageData);
 
-          
-      
-          const response = await axios.post(
-            `http://192.168.100.71:8080/api/file/upload/vehicle/${vehicleId}`,
-            imageData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }
-          );
-      
-          console.log('ResponseVehicle :', response.data);
-          if (response.data.status == "OK") {
-            console.log("image uploaded");
+        const response = await axios.post(
+          `http://192.168.0.236:8080/api/file/upload/vehicle/${vehicleId}`,
+          imageData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           }
-      
-          console.log('Images uploaded successfully');
-        } catch (error) {
-          console.error('Error:', error.message);
+        );
+
+        console.log("ResponseVehicle :", response.data);
+        if (response.data.status == "OK") {
+          console.log("image uploaded");
         }
-    }};
-    
-    
 
-    
+        console.log("Images uploaded successfully");
+      } catch (error) {
+        console.error("Error:", error.message);
+      }
+    }
+  };
 
+  const saveVehicle = async () => {
+    let isValid = true;
 
-
-    const  saveVehicle= async () => {
-      let isValid = true;
-      
-      if (!vehicleType) {
-        setMsg('Please Enter Vehicle Type');
+    if (!vehicleType) {
+      setMsg("Please Enter Vehicle Type");
+      setvehicleTypeError(true);
+      isValid = false;
+    } else {
+      if (!vehicleModel) {
+        setMsg("Please Enter Vehicle Modal");
         setvehicleTypeError(true);
         isValid = false;
       } else {
-        if (!vehicleModel) {
-          setMsg('Please Enter Vehicle Modal');
-          setvehicleTypeError(true);
-          isValid = false;
-        } else {
-          setvehicleTypeError(false);
-        }
+        setvehicleTypeError(false);
       }
-    
-      if (!Registration) {
-        setRMsg('Please Enter Registration Number');
+    }
+
+    if (!Registration) {
+      setRMsg("Please Enter Registration Number");
+      setRegistrationError(true);
+      isValid = false;
+    } else {
+      if (!Vehiclecolor) {
+        setRMsg("Please Enter Vehicle Color");
         setRegistrationError(true);
         isValid = false;
       } else {
-        if (!Vehiclecolor) {
-          setRMsg('Please Enter Vehicle Color');
-          setRegistrationError(true);
-          isValid = false;
-        } else {
-          setRegistrationError(false);
-        }
+        setRegistrationError(false);
+      }
+    }
+
+    if (!make || !year) {
+      setMakeError(true);
+      setNmsg("Please provide make and Year of vehicle");
+    } else {
+      setMakeError(false);
+    }
+
+    if (!customerType) {
+      setCusomterTypeError(true);
+      isValid = false;
+    } else {
+      setCusomterTypeError(false);
+    }
+
+    if (customerType == "Company") {
+      setCompanyNameError(false);
+      if (!CompanyName) {
+        setCompanyNameError(true);
+      }
+    }
+
+    if (!keyCustomer) {
+      setNameError(true);
+      isValid = false;
+    } else {
+      setNameError(false);
+    }
+
+    if (!phoneNumber) {
+      setphoneNumberError(true);
+      isValid = false;
+    } else {
+      setphoneNumberError(false);
+    }
+
+    if (!km) {
+      setKmError(true);
+      isValid = false;
+    } else {
+      setKmError(false);
+    }
+
+    if (isValid) {
+      let token = await AsyncStorage.getItem("accessToken");
+      const accessToken = "Bearer " + token;
+      const Business_id = await AsyncStorage.getItem("Business_id");
+
+      let data = JSON.stringify({
+        type: vehicleType,
+        model: vehicleModel,
+        make: make,
+        year: year,
+
+        registrationNumber: Registration,
+        color: Vehiclecolor,
+        ownerId: keyCustomer,
+        kilometerDriven: km,
+        customerType: customerType,
+        parentCompany: customerType === "Walk-in" ? null : CompanyName,
+      });
+
+      const ownerId = toString(keyCustomer);
+
+      try {
+        // Store ownerId in AsyncStorage
+        await AsyncStorage.setItem("ownerId", ownerId);
+        console.log("ownerId has been set in AsyncStorage:", ownerId);
+      } catch (error) {
+        console.error("Error setting ownerId in AsyncStorage:", error);
       }
 
-      if(!make || !year){
-        setMakeError(true);
-        setNmsg('Please provide make and Year of vehicle');
-      }else{
-        setMakeError(false);
-      }
-    
-      if (!customerType) {
-        setCusomterTypeError(true);
-        isValid = false;
-      } else {
-        setCusomterTypeError(false);
-      }
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/add-vehicle`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: accessToken,
+        },
+        data: data,
+      };
 
-      
-      if(customerType== 'Company'){
-        setCompanyNameError(false);
-        if(!CompanyName){
-          setCompanyNameError(true);
-        }
-      }
-
-
-
-      if (!keyCustomer) {
-        setNameError(true);
-        isValid = false;
-      } else {
-        setNameError(false);
-      }
-    
-      if (!phoneNumber) {
-        setphoneNumberError(true);
-        isValid = false;
-      } else {
-        setphoneNumberError(false);
-      }
-    
-      if (!km) {
-        setKmError(true);
-        isValid = false;
-      } else {
-        setKmError(false);
-      }
-    
-      if (isValid) {
-        let token= await AsyncStorage.getItem("accessToken");
-        const accessToken = 'Bearer ' + token;
-        const Business_id = await AsyncStorage.getItem("Business_id");
-        
-
-        
-        let data = JSON.stringify({
-          "type": vehicleType,
-          "model": vehicleModel,
-          "make": make,
-          "year": year,
-      
-          "registrationNumber": Registration,
-          "color": Vehiclecolor,
-          "ownerId": keyCustomer,
-          "kilometerDriven": km,
-          "customerType":customerType,
-          "parentCompany": customerType === 'Walk-in' ? null : CompanyName
-        });
-
-        const ownerId = toString(keyCustomer);
-
-        try {
-          // Store ownerId in AsyncStorage
-          await AsyncStorage.setItem('ownerId', ownerId);
-          console.log('ownerId has been set in AsyncStorage:', ownerId);
-        } catch (error) {
-          console.error('Error setting ownerId in AsyncStorage:', error);
-        }
-        
-        let config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `http://192.168.100.71:8080/api/vehicle/${Business_id}/add-vehicle`,
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': accessToken
-          },
-          data : data
-        };
-        
-        axios.request(config)
+      axios
+        .request(config)
         .then((response) => {
           console.log(JSON.stringify(response.data));
-          if (response.data.status === 'OK') {
-          
+          if (response.data.status === "OK") {
             const createdUserId = response.data.data;
             console.log(response.data.data);
             setUserId(createdUserId);
-            
-            
+
             if (createdUserId) {
               uploadImage(createdUserId);
             }
-            navigation.navigate('Vehicles', { type: 'default' });
+            navigation.navigate("Vehicles", { type: "default" });
           }
         })
         .catch((error) => {
           console.log(error);
         });
-        
     }
   };
 
-  const customer = customers.map(customer => ({
+  const customer = customers.map((customer) => ({
     key: customer.id.toString(),
     value: customer.name,
   }));
 
-
-  
   return (
     <View style={styles.addVehicle}>
       <Image
@@ -431,463 +459,481 @@ const AddVehicle = () => {
         contentFit="cover"
         source={require("../assets/image-2.png")}
       />
-      <View style={[styles.housefill
-        , styles.housefillFlexBox]}>
-      <Pressable
-      onPress={() => navigation.navigate("Home")}>
-        <Image
-          style={styles.homeMutedIcon}
-          contentFit="cover"
-          source={require("../assets/homemuted.png")}
-        />
+      <View style={[styles.housefill, styles.housefillFlexBox]}>
+        <Pressable onPress={() => navigation.navigate("Home")}>
+          <Image
+            style={styles.homeMutedIcon}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
         </Pressable>
-        <Text style={[styles.text, styles.textTypo,]}>\</Text>
+        <Text style={[styles.text, styles.textTypo]}>\</Text>
       </View>
-      
-    
+
       {/* Image Upload  */}
- 
+
       <ScrollView style={styles.wrap}>
-      <View style={styles.noImageFoundParent}>
+        <View style={styles.noImageFoundParent}>
+          <View style={styles.container}>
+            {selectedImage.length > 0 && (
+              <View style={styles.imageContainer}>
+                <Carousel
+                  data={selectedImage}
+                  renderItem={renderCarouselItem}
+                  sliderWidth={350}
+                  itemWidth={400}
+                  onSnapToItem={(index) => setActiveSlide(index)}
+                  sliderHeight={100}
+                />
+                {/* {console.log(selectedImage)} */}
+                <Pagination
+                  dotsLength={selectedImage.length}
+                  activeDotIndex={activeSlide}
+                  containerStyle={styles.paginationContainer}
+                  dotColor="#007aff"
+                  dotStyle={styles.paginationDot}
+                  inactiveDotColor="#ccc"
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                />
+              </View>
+            )}
+          </View>
 
-
-      <View style={styles.container}>
-     {selectedImage.length > 0 && (
-       <View style={styles.imageContainer}>
-         <Carousel
-           data={selectedImage}
-           renderItem={renderCarouselItem}
-           sliderWidth={350}
-           itemWidth={400}
-           onSnapToItem={(index) => setActiveSlide(index)}
-           sliderHeight={100}
-         />
-         {/* {console.log(selectedImage)} */}
-         <Pagination
-           dotsLength={selectedImage.length}
-           activeDotIndex={activeSlide}
-           containerStyle={styles.paginationContainer}
-           dotColor="#007aff"
-           dotStyle={styles.paginationDot}
-           inactiveDotColor="#ccc"
-           inactiveDotOpacity={0.4}
-           inactiveDotScale={0.6}
-         />
-         
-       </View>
-     )}
-     
-     
-     
-   </View>    
-
-
-       
-       <View style={[styles.uploadParent, styles.uploadPosition]}>
-
- 
-           {showCameraImagePicker && (
-           <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
-         )}
-         {showGalleryImagePicker && (
-           <ImagePickerGallery onImageSelected={(uri, type) => handleGalleryImageSelected(uri, type)} />
-         )}
-                <TouchableOpacity
-         onPress={handleGalleryIconClick}>
-           <Text style={[styles.upload]}  >Upload</Text>
-           </TouchableOpacity>
-          <TouchableOpacity
-          onPress={handleCameraIconClick}
-          >
-           <Image
-             style={[styles.vectorIcon1]}
-             contentFit="cover"
-             source={require("../assets/vector16.png")}
-           />
-           </TouchableOpacity>
-         </View>
-
-   
-             
-       
-         
-       </View>
+          <View style={[styles.uploadParent, styles.uploadPosition]}>
+            {showCameraImagePicker && (
+              <ImagePickerCamera
+                onImageSelected={(uri, type) =>
+                  handleCameraImageSelected(uri, type)
+                }
+              />
+            )}
+            {showGalleryImagePicker && (
+              <ImagePickerGallery
+                onImageSelected={(uri, type) =>
+                  handleGalleryImageSelected(uri, type)
+                }
+              />
+            )}
+            <TouchableOpacity onPress={handleGalleryIconClick}>
+              <Text style={[styles.upload]}>Upload</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleCameraIconClick}>
+              <Image
+                style={[styles.vectorIcon1]}
+                contentFit="cover"
+                source={require("../assets/vector16.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {/* form start */}
         <View style={styles.formWrap}>
-      <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
-        <View style={styles.vehicleTypeParent}>
-          <TextInput
-            style={[styles.vehicleType, styles.vehicleTypo] }
-            placeholder="Vehicle Type   "
-            
-        value={vehicleType}
-        editable={false}
-          ></TextInput>
-          <View style={styles.carParent}>
-          
-            <Image
-              style={[styles.frameChild, styles.childLayout]}
-              contentFit="cover"
-              source={require("../assets/vector-61.png")}
-            />
-          
-            { (
-        <View  style={styles.vechilePicker}>
-        <Picker
-        style={styles.picker}
-          selectedValue={vehicleType}
-          onValueChange={(itemValue) =>handleVechileTypeSelect(itemValue)}
-        >
-          <Picker.Item label="Select Vehicle Type" value="" />
-          {vehicleCategories.map((code) => (
-            <Picker.Item key={code} label={code} value={code} />
-          ))}
-        </Picker>
-        </View>
-      )}
+          <View style={[styles.addVehicleInner, styles.addInnerPosition]}>
+            <View style={styles.vehicleTypeParent}>
+              <TextInput
+                style={[styles.vehicleType, styles.vehicleTypo]}
+                placeholder="Vehicle Type   "
+                value={vehicleType}
+                editable={false}
+              ></TextInput>
+              <View style={styles.carParent}>
+                <Image
+                  style={[styles.frameChild, styles.childLayout]}
+                  contentFit="cover"
+                  source={require("../assets/vector-61.png")}
+                />
 
-
+                {
+                  <View style={styles.vechilePicker}>
+                    <Picker
+                      style={styles.picker}
+                      selectedValue={vehicleType}
+                      onValueChange={(itemValue) =>
+                        handleVechileTypeSelect(itemValue)
+                      }
+                    >
+                      <Picker.Item label="Select Vehicle Type" value="" />
+                      {vehicleCategories.map((code) => (
+                        <Picker.Item key={code} label={code} value={code} />
+                      ))}
+                    </Picker>
+                  </View>
+                }
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-      <View style={[styles.lineView,
-        vehicleTypeError  ? styles.childBorderR :styles.childBorder
-         ]} />
-      
-
-
-      
-      <TextInput style={[styles.vehicleModel, styles.vehicleTypo]} 
-      placeholder="Model "
-      onChangeText={text => setvehicleModel(text)}
-      value={vehicleModel}
-        
-        />
-     
-      
-      
-<View style={[styles.addVehicleChild1,
- vehicleTypeError  ? styles.childBorderR :styles.childBorder
-   ]} />
-
-{vehicleTypeError ? <Text style={styles.nameError}>{Msg}</Text> : null}
-
-
-
-      <View style={[styles.frameParent, styles.lineParentLayout]}>
-        <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <TextInput
-              style={[styles.vehicleType, styles.vehicleTypo]}
-            placeholder="Registration Number     "
-            onChangeText={text => setRegistration(text)}
-            value={Registration}
-            ></TextInput>
-          </View>
-        </View>
-        <View style={[
-         RegistrationError ? styles.groupChildR : styles.groupChild
-          , styles.groupPosition]} />
-        <View style={[
-         RegistrationError ?  styles.groupItemR: styles.groupItem 
-          , styles.savePosition]} />
-        <View style={styles.frameContainer}>
-          <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]} 
-              placeholder="Vehicle Color   " 
-              onChangeText={text => setvehiclecolor(text)}
-              value={Vehiclecolor}
-              />
-              
-            
-            
-          </View>
-        </View>
-      </View>
-      {RegistrationError ? <Text style={styles.nameError}>{RMsg}</Text> : null}
-      
-      
-      <View style={[styles.lineParentm, styles.lineParentLayout]}>
-         <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <TextInput style={[
-             makeError ? styles.davidDanielmR : styles.davidDanielm
-              ,
-               styles.vehicleTypo]} value={make} onChangeText={text => setMake(text)} placeholder="Make">
-          
-            </TextInput>
-            <TextInput style={[
-              makeError ? styles.davidDanielmR : styles.davidDanielm
-              , 
-              styles.vehicleTypo
-              ]}  value={year} onChangeText={text => setYear(text)}placeholder="Year">
-          
-            </TextInput>
-            
-          </View>
-        </View>
-      </View>
-      {makeError ? <Text style={styles.nameError}>{Nmsg}</Text> : null}
-     
-      <TouchableOpacity
-      onPress={handleClick}>
-      <View style={[styles.lineParent, styles.lineParentLayout]}>
-         <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <Text style={[styles.davidDaniel, styles.vehicleTypo]} 
-            
-            >{selectedCountry == '' ? 'Select Customer' : selectedCountry}</Text>
-            
-          </View>
-        </View>
-      </View>
-      </TouchableOpacity>
-      <Image
-        style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/mdiusercircleoutline.png")}
-      />
-      <View style={[
-        styles.groupInner,
-        nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
-      {nameError ? <Text style={styles.nameError}>Please Provide Name</Text> : null}
-
-   
-      
-      
-      {clicked ? (
-        <Modal transparent={true} animationType="slide">
-        <View
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-    }}>
-        <View
-          style={{
-            elevation: 5,
-            marginTop: 20,
-            height: 600,
-            alignSelf: 'center',
-            width: '90%',
-            backgroundColor: '#fff',
-            borderRadius: 10,
-          }}>
-          <TextInput
-            placeholder="Search.."
-            value={search}
-            ref={searchRef}
-            onChangeText={txt => {
-              onSearch(txt);
-              setSearch(txt);
-            }}
-            style={{
-              width: '90%',
-              height: 50,
-              alignSelf: 'center',
-              borderWidth: 0.2,
-              borderColor: '#8e8e8e',
-              borderRadius: 7,
-              marginTop: 20,
-              paddingLeft: 20,
-            }}
+          <View
+            style={[
+              styles.lineView,
+              vehicleTypeError ? styles.childBorderR : styles.childBorder,
+            ]}
           />
-          <ScrollView>
-          <FlatList
-            data={data}
-            style={styles.FlatList}
-            renderItem={({item, index}) => {
-              return (
+
+          <TextInput
+            style={[styles.vehicleModel, styles.vehicleTypo]}
+            placeholder="Model "
+            onChangeText={(text) => setvehicleModel(text)}
+            value={vehicleModel}
+          />
+
+          <View
+            style={[
+              styles.addVehicleChild1,
+              vehicleTypeError ? styles.childBorderR : styles.childBorder,
+            ]}
+          />
+
+          {vehicleTypeError ? (
+            <Text style={styles.nameError}>{Msg}</Text>
+          ) : null}
+
+          <View style={[styles.frameParent, styles.lineParentLayout]}>
+            <View style={styles.frameWrapper}>
+              <View style={styles.vehicleTypeParent}>
+                <TextInput
+                  style={[styles.vehicleType, styles.vehicleTypo]}
+                  placeholder="Registration Number     "
+                  onChangeText={(text) => setRegistration(text)}
+                  value={Registration}
+                ></TextInput>
+              </View>
+            </View>
+            <View
+              style={[
+                RegistrationError ? styles.groupChildR : styles.groupChild,
+                styles.groupPosition,
+              ]}
+            />
+            <View
+              style={[
+                RegistrationError ? styles.groupItemR : styles.groupItem,
+                styles.savePosition,
+              ]}
+            />
+            <View style={styles.frameContainer}>
+              <View style={styles.vehicleTypeParent}>
+                <TextInput
+                  style={[styles.vehicleType, styles.vehicleTypo]}
+                  placeholder="Vehicle Color   "
+                  onChangeText={(text) => setvehiclecolor(text)}
+                  value={Vehiclecolor}
+                />
+              </View>
+            </View>
+          </View>
+          {RegistrationError ? (
+            <Text style={styles.nameError}>{RMsg}</Text>
+          ) : null}
+
+          <View style={[styles.lineParentm, styles.lineParentLayout]}>
+            <View style={styles.frameWrapper}>
+              <View style={styles.vehicleTypeParent}>
+                <TextInput
+                  style={[
+                    makeError ? styles.davidDanielmR : styles.davidDanielm,
+                    styles.vehicleTypo,
+                  ]}
+                  value={make}
+                  onChangeText={(text) => setMake(text)}
+                  placeholder="Make"
+                ></TextInput>
+                <TextInput
+                  style={[
+                    makeError ? styles.davidDanielmR : styles.davidDanielm,
+                    styles.vehicleTypo,
+                  ]}
+                  value={year}
+                  onChangeText={(text) => setYear(text)}
+                  placeholder="Year"
+                ></TextInput>
+              </View>
+            </View>
+          </View>
+          {makeError ? <Text style={styles.nameError}>{Nmsg}</Text> : null}
+
+          <TouchableOpacity onPress={handleClick}>
+            <View style={[styles.lineParent, styles.lineParentLayout]}>
+              <View style={styles.frameWrapper}>
+                <View style={styles.vehicleTypeParent}>
+                  <Text style={[styles.davidDaniel, styles.vehicleTypo]}>
+                    {selectedCountry == ""
+                      ? "Select Customer"
+                      : selectedCountry}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <Image
+            style={[styles.mdiuserCircleOutlineIcon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/mdiusercircleoutline.png")}
+          />
+          <View
+            style={[
+              styles.groupInner,
+              nameError ? styles.groupInnerLayoutR : styles.groupInnerLayout,
+            ]}
+          />
+          {nameError ? (
+            <Text style={styles.nameError}>Please Provide Name</Text>
+          ) : null}
+
+          {clicked ? (
+            <Modal transparent={true} animationType="slide">
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+                }}
+              >
+                <View
+                  style={{
+                    elevation: 5,
+                    marginTop: 20,
+                    height: 600,
+                    alignSelf: "center",
+                    width: "90%",
+                    backgroundColor: "#fff",
+                    borderRadius: 10,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Search.."
+                    value={search}
+                    ref={searchRef}
+                    onChangeText={(txt) => {
+                      onSearch(txt);
+                      setSearch(txt);
+                    }}
+                    style={{
+                      width: "90%",
+                      height: 50,
+                      alignSelf: "center",
+                      borderWidth: 0.2,
+                      borderColor: "#8e8e8e",
+                      borderRadius: 7,
+                      marginTop: 20,
+                      paddingLeft: 20,
+                    }}
+                  />
+                  <ScrollView>
+                    <FlatList
+                      data={data}
+                      style={styles.FlatList}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <TouchableOpacity
+                            style={{
+                              width: "85%",
+                              alignSelf: "center",
+                              height: 50,
+                              justifyContent: "center",
+                              borderBottomWidth: 0.5,
+                              borderColor: "#8e8e8e",
+                            }}
+                            onPress={() => {
+                              setSelectedCountry(item.name);
+                              setKeyCustomer(item.id);
+                              setClicked(!clicked);
+                              onSearch("");
+                              setSearch("");
+                            }}
+                          >
+                            <Text style={{ fontWeight: "600" }}>
+                              {item.name}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  </ScrollView>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "rgba(3, 29, 68, 1)",
+                      paddingVertical: 10,
+                      alignSelf: "center",
+                      borderRadius: 5,
+                      paddingLeft: 10,
+                      width: "50%",
+                      marginTop: 10,
+                      position: "fixed",
+                      zIndex: 999,
+                      bottom: 5,
+                    }}
+                    onPress={handleAddCustomer}
+                  >
+                    <Text
+                      style={{
+                        fontSize: FontSize.size_sm,
+                        fontFamily: FontFamily.poppinsMedium,
+                        color: "white",
+                        textAlign: "center",
+                      }}
+                    >
+                      Add Customer
+                    </Text>
+                  </TouchableOpacity>
+                </View>
                 <TouchableOpacity
                   style={{
-                    width: '85%',
-                    alignSelf: 'center',
-                    height: 50,
-                    justifyContent: 'center',
-                    borderBottomWidth: 0.5,
-                    borderColor: '#8e8e8e',
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    zIndex: 999,
                   }}
-                  onPress={() => {
-                    setSelectedCountry(item.name);
-                    setKeyCustomer(item.id);
-                    setClicked(!clicked);
-                    onSearch('');
-                    setSearch('');
-                  }}>
-                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
+                  onPress={handleClick}
+                >
+                  <AntDesign
+                    name="closecircle"
+                    size={24}
+                    color="rgba(3, 29, 68, 1)"
+                  />
                 </TouchableOpacity>
-              );
-            }}
-          />
-          </ScrollView>
-          <TouchableOpacity
-          style={{
-            backgroundColor: 'rgba(3, 29, 68, 1)',
-            paddingVertical: 10,
-            alignSelf:"center",
-            borderRadius: 5,
-            paddingLeft:10,
-            width:"50%",
-            marginTop: 10,
-            position:"fixed",
-            zIndex:999,
-            bottom:5,
-          }}
-          onPress={handleAddCustomer}
-        >
-          <Text style={{
-            fontSize: FontSize.size_sm,
-            fontFamily: FontFamily.poppinsMedium,
-            color: 'white',
-            textAlign: 'center',
-          }}>Add Customer</Text>
-        </TouchableOpacity>
+              </View>
+            </Modal>
+          ) : null}
+
+          <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
+            <View style={styles.vehicleTypeParent}>
+              <TextInput
+                style={[styles.vehicleType, styles.vehicleTypo]}
+                onChangeText={(text) => setphoneNumber(text)}
+                placeholder="Phone Number    "
+                keyboardType="numeric"
+                maxLength={11}
+                value={phoneNumber}
+              ></TextInput>
+            </View>
           </View>
-          <TouchableOpacity
-        style={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            zIndex: 999,
-          }}
-        onPress={
-          handleClick
-        }>
-        
-        <AntDesign name="closecircle" size={24} color="rgba(3, 29, 68, 1)" />
-        
-      </TouchableOpacity>
-        </View>  
-          </Modal>
-      ) : null}
-    
-
-     
-
-      <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
-        <View style={styles.vehicleTypeParent}>
-          <TextInput style={[styles.vehicleType, styles.vehicleTypo]}    
-         onChangeText={text => setphoneNumber(text)} placeholder="Phone Number    "
-          keyboardType="numeric"
-          maxLength={11}
-          value={phoneNumber}>
-           
-          </TextInput>
-        </View>
-      </View>
-      <Image
-        style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/materialsymbolspermcontactcalendaroutline2.png")}
-      />
-      <View style={[
-        styles.groupInner
-        , 
-        phoneNumberError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
-      {phoneNumberError ? <Text style={styles.nameError}>Please Provide Contact Number</Text> : null}
-     
-
-      <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
-        <View style={styles.vehicleTypeParent}>
-          <TextInput style={[styles.vehicleTypeC, styles.vehicleTypo]}    
-         onChangeText={text => setCusomterType(text)} placeholder="Customer Type"
-          editable={false}
-          value={customerType}>
-           
-
-            {/* here  */}
-          </TextInput>
-          <View style={styles.carParentC}>
-          
           <Image
-            style={[styles.frameChild, styles.childLayout]}
+            style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
             contentFit="cover"
-            source={require("../assets/vector-61.png")}
+            source={require("../assets/materialsymbolspermcontactcalendaroutline2.png")}
           />
-        
-          { (
-      <View  style={styles.vechilePicker}>
-      <Picker
-      style={styles.picker}
-        selectedValue={customerType}
-        onValueChange={(itemValue) =>handleCustomerTypeSelect(itemValue)}
-      >
-        <Picker.Item label="Select Customer Type" value="" />
-        {CusomterCategories.map((code) => (
-          <Picker.Item key={code} label={code} value={code} />
-        ))}
-      </Picker>
-      </View>
-    )}
-     </View>
-        </View>
-      </View>
+          <View
+            style={[
+              styles.groupInner,
+              phoneNumberError
+                ? styles.groupInnerLayoutR
+                : styles.groupInnerLayout,
+            ]}
+          />
+          {phoneNumberError ? (
+            <Text style={styles.nameError}>Please Provide Contact Number</Text>
+          ) : null}
 
-      <View style={[
-        styles.groupInnerC
-        , 
-        customerTypeError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
-      {customerTypeError ? <Text style={styles.nameError}>Please provide Customer Type</Text> : null}
+          <View style={[styles.addVehicleInner1, styles.addInnerPosition]}>
+            <View style={styles.vehicleTypeParent}>
+              <TextInput
+                style={[styles.vehicleTypeC, styles.vehicleTypo]}
+                onChangeText={(text) => setCusomterType(text)}
+                placeholder="Customer Type"
+                editable={false}
+                value={customerType}
+              >
+                {/* here  */}
+              </TextInput>
+              <View style={styles.carParentC}>
+                <Image
+                  style={[styles.frameChild, styles.childLayout]}
+                  contentFit="cover"
+                  source={require("../assets/vector-61.png")}
+                />
 
-
-
-
-
-      {customerType === 'Company' && (
-         <View style={[styles.lineGroup, styles.lineParentLayout]}>
-         <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <TextInput style={[
-             CompanyNameError ?  styles.vehicleTypeeR :styles.vehicleTypee 
-              , styles.vehicleTypo]}
-            onChangeText={text => setCompanyName(text)} placeholder="Company Name   "
-            value={CompanyName}> 
-            </TextInput>
+                {
+                  <View style={styles.vechilePicker}>
+                    <Picker
+                      style={styles.picker}
+                      selectedValue={customerType}
+                      onValueChange={(itemValue) =>
+                        handleCustomerTypeSelect(itemValue)
+                      }
+                    >
+                      <Picker.Item label="Select Customer Type" value="" />
+                      {CusomterCategories.map((code) => (
+                        <Picker.Item key={code} label={code} value={code} />
+                      ))}
+                    </Picker>
+                  </View>
+                }
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-      )}
-     {CompanyNameError ? <Text style={styles.nameError}>Please provide company Name</Text> : null}
-   
 
+          <View
+            style={[
+              styles.groupInnerC,
+              customerTypeError
+                ? styles.groupInnerLayoutR
+                : styles.groupInnerLayout,
+            ]}
+          />
+          {customerTypeError ? (
+            <Text style={styles.nameError}>Please provide Customer Type</Text>
+          ) : null}
 
+          {customerType === "Company" && (
+            <View style={[styles.lineGroup, styles.lineParentLayout]}>
+              <View style={styles.frameWrapper}>
+                <View style={styles.vehicleTypeParent}>
+                  <TextInput
+                    style={[
+                      CompanyNameError
+                        ? styles.vehicleTypeeR
+                        : styles.vehicleTypee,
+                      styles.vehicleTypo,
+                    ]}
+                    onChangeText={(text) => setCompanyName(text)}
+                    placeholder="Company Name   "
+                    value={CompanyName}
+                  ></TextInput>
+                </View>
+              </View>
+            </View>
+          )}
+          {CompanyNameError ? (
+            <Text style={styles.nameError}>Please provide company Name</Text>
+          ) : null}
 
-      <View style={[styles.lineGroup, styles.lineParentLayout]}>
-         <View style={styles.frameWrapper}>
-          <View style={styles.vehicleTypeParent}>
-            <TextInput style={[styles.vehicleType, styles.vehicleTypo]}
-            onChangeText={text => setKm(text)} placeholder="Km Driven   "
-            keyboardType="numeric" value={km}> 
-            </TextInput>
+          <View style={[styles.lineGroup, styles.lineParentLayout]}>
+            <View style={styles.frameWrapper}>
+              <View style={styles.vehicleTypeParent}>
+                <TextInput
+                  style={[styles.vehicleType, styles.vehicleTypo]}
+                  onChangeText={(text) => setKm(text)}
+                  placeholder="Km Driven   "
+                  keyboardType="numeric"
+                  value={km}
+                ></TextInput>
+              </View>
+            </View>
           </View>
+          {/* odometersvgrepocom-1@3x */}
+          <Image
+            style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/odometersvgrepocom-1.png")}
+          />
+          <View
+            style={[
+              styles.groupInner,
+              kmError ? styles.groupInnerLayoutR : styles.groupInnerLayout,
+            ]}
+          />
+          {kmError ? (
+            <Text style={styles.nameError}>Please provide Mileage</Text>
+          ) : null}
+
+          {customerType === "Company" && <View style={styles.gap}></View>}
+          {km && <View style={styles.gape}></View>}
         </View>
-      </View>
-      {/* odometersvgrepocom-1@3x */}
-      <Image
-        style={[styles.materialSymbolspermContactIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/odometersvgrepocom-1.png")}
-      />
-      <View style={[
-        styles.groupInner, 
-        kmError ? styles.groupInnerLayoutR : styles.groupInnerLayout ]} />
-      {kmError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
-      
-      {customerType === 'Company' && (
-        <View  style={styles.gap}></View>
-      )}
-      {km  && (
-        <View  style={styles.gape}></View>
-      )}
-      </View>
       </ScrollView>
 
-      
-      
-
-      
       <Image
         style={[styles.odometerSvgrepoCom1Icon, styles.iconLayout]}
         contentFit="cover"
@@ -895,7 +941,7 @@ const AddVehicle = () => {
       />
       <TouchableOpacity
         style={[styles.groupParent, styles.groupLayout]}
-        onPress= {saveVehicle}
+        onPress={saveVehicle}
       >
         <Image
           style={[styles.groupChild, styles.groupLayout]}
@@ -904,9 +950,8 @@ const AddVehicle = () => {
         />
         <Text style={[styles.savebutton, styles.saveTypo]}>Save</Text>
       </TouchableOpacity>
-      
-      
-     <Image
+
+      <Image
         style={[styles.addVehicleChild10, styles.addChildLayout]}
         contentFit="cover"
         source={require("../assets/vector-71.png")}
@@ -917,144 +962,145 @@ const AddVehicle = () => {
         source={require("../assets/vector-8.png")}
       />
 
-
       <View style={[styles.cont]}>
-        <Footer prop={"Vehicles"}/>
+        <Footer prop={"Vehicles"} />
       </View>
 
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
-          {originalUri.endsWith('.mp4') ? (
+          {originalUri.endsWith(".mp4") ? (
             <View style={styles.videoContainer}>
-            <Video
-            ref={video}
-            source={{ uri: originalUri }}
-            style={styles.modalMedia}
-            useNativeControls
-            contentFit="contain"
-            isLooping
-            onPlaybackStatusUpdate={setStatus}
-            />
-            <View style={styles.iconContainer1}>
-            {!status.isPlaying && ( 
-              <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
-            <EvilIcons name="play" size={50} color="white" />
-            </TouchableOpacity>
-            )}
-          </View>
-          </View>
+              <Video
+                ref={video}
+                source={{ uri: originalUri }}
+                style={styles.modalMedia}
+                useNativeControls
+                contentFit="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+              />
+              <View style={styles.iconContainer1}>
+                {!status.isPlaying && (
+                  <TouchableOpacity
+                    onPress={handlePlayButton}
+                    style={styles.playButton}
+                  >
+                    <EvilIcons name="play" size={50} color="white" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
           ) : (
-            <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+            <Image
+              source={{ uri: originalUri }}
+              style={styles.modalMedia}
+              contentFit="contain"
+            />
           )}
           <TouchableOpacity onPress={handleClose} style={styles.deleteButton1}>
             <Text style={styles.deleteButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
       </Modal>
-
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  FlatList:{
-    overflow:"scroll",
+  FlatList: {
+    overflow: "scroll",
   },
   videoContainer1: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   videoContainer: {
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    
-    
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
-  iconContainer1:{
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+  iconContainer1: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     transform: [{ translateX: -25 }, { translateY: -25 }],
   },
   iconContainer: {
-    position: 'absolute',
-    top: '60%',
-    left: '50%',
+    position: "absolute",
+    top: "60%",
+    left: "50%",
     transform: [{ translateX: -25 }, { translateY: -25 }], // Adjust the values based on the icon size
   },
-  gap:{
-    marginTop:70,
+  gap: {
+    marginTop: 70,
   },
-  gape:{
-    marginTop:60,
+  gape: {
+    marginTop: 60,
   },
   modalContainer: {
     flex: 1,
-    alignItems:"center",
-    justifyContent:"center"
+    alignItems: "center",
+    justifyContent: "center",
   },
   modalMedia: {
-    width: '100%',
-    height: '100%',
-    
+    width: "100%",
+    height: "100%",
   },
   modalImage: {
     width: "100%",
-    height:"100%",
+    height: "100%",
   },
   modalVideo: {
-    width: '100%',
-    height:"100%"
-    
+    width: "100%",
+    height: "100%",
   },
   mediaContainer: {
     width: 350,
     height: 160,
-    position: 'relative',
-    alignItems:"center",
-    justifyContent:"center"
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   media: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
 
   playIcon: {
-    position: 'absolute',
+    position: "absolute",
     width: 50, // Adjust the size of the play icon as needed
     height: 50, // Adjust the size of the play icon as needed
-    alignSelf: 'center',
-    tintColor: 'white', // Customize the play icon color
+    alignSelf: "center",
+    tintColor: "white", // Customize the play icon color
   },
   deleteButton1: {
     position: "relative",
     top: -30,
-    left:0,
+    left: 0,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
-  formWrap:{
-    marginTop:100,
-    position:'relative',
+  formWrap: {
+    marginTop: 100,
+    position: "relative",
   },
-video: {
+  video: {
     width: "100%",
-    height:"100%",
-    left:80
+    height: "100%",
+    left: 80,
   },
   carouselItem: {
     width: 350,
     height: 200,
-    position:"relative",
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   paginationContainer: {
     paddingVertical: 5,
@@ -1065,73 +1111,69 @@ video: {
     borderRadius: 5,
     marginHorizontal: 8,
   },
-  imageUpload:{
-    position:"absolute",
-
+  imageUpload: {
+    position: "absolute",
   },
   container: {
     flex: 1,
-    marginTop:-50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position:'relative',
+    marginTop: -50,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: -180,
     // position: 'relative',
     width: "100%",
     height: "100%",
-    
   },
   image: {
     width: "100%",
     height: "100%",
-    contentFit: 'cover',
+    contentFit: "cover",
   },
   deleteButton: {
     position: "relative",
     top: 10,
-    left:0,
+    left: 0,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   deleteButtonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   iconLayout1: {
     width: 430,
     left: 0,
   },
-  cont:{
-    position:'absolute',
+  cont: {
+    position: "absolute",
   },
- vehicleModelPicker:{
-  top:0,
-  marginTop:-38,
-  width: 60,
-  left: 359
- },
- vehicleColorPicker:{
-  
- },
- nameError: {
-  marginTop: 5,
-  marginBottom:4,
-  marginLeft: 28,
-  color: 'red',
-},
-wrap:{
-  // backgroundColor:'red',
-  marginTop:145,
-  marginVertical:225,
-  flex:1,
-  overflow:'hidden',
-},
+  vehicleModelPicker: {
+    top: 0,
+    marginTop: -38,
+    width: 60,
+    left: 359,
+  },
+  vehicleColorPicker: {},
+  nameError: {
+    marginTop: 5,
+    marginBottom: 4,
+    marginLeft: 28,
+    color: "red",
+  },
+  wrap: {
+    // backgroundColor:'red',
+    marginTop: 145,
+    marginVertical: 225,
+    flex: 1,
+    overflow: "hidden",
+  },
   text1Position: {
     display: "none",
     position: "absolute",
@@ -1176,7 +1218,7 @@ wrap:{
   },
   uploadPosition: {
     top: -100,
-    left:-25,
+    left: -25,
     position: "absolute",
   },
   addInnerPosition: {
@@ -1186,7 +1228,6 @@ wrap:{
   childLayout: {
     height: 9,
     width: 14,
-    
   },
   childBorder: {
     height: 2,
@@ -1222,7 +1263,7 @@ wrap:{
     width: 375,
     height: 2,
     borderTopWidth: 2,
-    
+
     borderStyle: "solid",
     position: "relative",
   },
@@ -1330,8 +1371,8 @@ wrap:{
   text: {
     textAlign: "left",
     color: Color.textTxtPrimary,
-    top:-15,
-    left:12
+    top: -15,
+    left: 12,
   },
   addVehicle1: {
     top: -2,
@@ -1397,14 +1438,14 @@ wrap:{
     color: Color.textTxtPrimary,
   },
   upload: {
-    top:220,
-    left:35,
+    top: 220,
+    left: 35,
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
     color: Color.textTxtPrimary,
     fontWeight: "500",
-    position:'relative',
+    position: "relative",
   },
   vectorIcon1: {
     height: "39.67%",
@@ -1424,10 +1465,10 @@ wrap:{
   },
   noImageFoundParent: {
     top: 147,
-      left: 157,
-      width: 116,
-      height: 200,
-      position: "relative",
+    left: 157,
+    width: 116,
+    height: 200,
+    position: "relative",
   },
   vehicleType: {
     fontSize: FontSize.size_base,
@@ -1437,25 +1478,25 @@ wrap:{
   vehicleTypee: {
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
-        borderBottomWidth: 2,
-        borderColor: "#cbcbcb",
-    paddingBottom:9,
-    
-    width:'98%',
+    borderBottomWidth: 2,
+    borderColor: "#cbcbcb",
+    paddingBottom: 9,
+
+    width: "98%",
   },
   vehicleTypeeR: {
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
-        borderBottomWidth: 2,
-        borderColor: 'red',
-    paddingBottom:9,
-    
-    width:'98%',
+    borderBottomWidth: 2,
+    borderColor: "red",
+    paddingBottom: 9,
+
+    width: "98%",
   },
   vehicleTypeC: {
     fontSize: FontSize.size_base,
     color: Color.darkslateblue,
-    width:'80%',
+    width: "80%",
   },
   car: {
     fontSize: FontSize.size_base,
@@ -1467,12 +1508,12 @@ wrap:{
   vechilePicker: {
     left: -12,
     width: 30,
-    bottom:-1,
+    bottom: -1,
   },
   vechileColor: {
     left: -12,
     width: 30,
-    bottom:-1,
+    bottom: -1,
   },
   carParent: {
     marginLeft: 16,
@@ -1483,7 +1524,7 @@ wrap:{
     marginLeft: -10,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom:-5,
+    marginBottom: -5,
   },
   carParent1: {
     marginLeft: 24,
@@ -1495,8 +1536,8 @@ wrap:{
   },
   addVehicleInner: {
     top: 0,
-    marginTop:0,
-    marginBottom:10,
+    marginTop: 0,
+    marginBottom: 10,
   },
   lineView: {
     width: 167,
@@ -1514,16 +1555,16 @@ wrap:{
     borderTopWidth: 2,
     borderColor: "#cbcbcb",
     borderStyle: "solid",
-    marginTop:-5,
+    marginTop: -5,
     top: 0,
   },
   vehicleModel: {
-    marginLeft:230,
+    marginLeft: 230,
     marginTop: -54,
     fontSize: FontSize.size_base,
     color: Color.Black,
     position: "relative",
-    marginBottom:10,
+    marginBottom: 10,
   },
   text2: {
     left: 349,
@@ -1583,24 +1624,24 @@ wrap:{
   },
   frameParent: {
     top: 0,
-    marginTop:18,
+    marginTop: 18,
   },
   groupInner: {
-    left:20,
-    marginTop:6,
-    marginBottom:5,
+    left: 20,
+    marginTop: 6,
+    marginBottom: 5,
     borderColor: "#cbcbcb",
   },
   groupInnerC: {
-    left:20,
-    marginTop:0,
-    marginBottom:5,
+    left: 20,
+    marginTop: 0,
+    marginBottom: 5,
     borderColor: "#cbcbcb",
   },
   groupInnerR: {
-    left:20,
-    marginTop:8,
-    marginBottom:5,
+    left: 20,
+    marginTop: 8,
+    marginBottom: 5,
     borderColor: "red",
   },
   davidDanielm: {
@@ -1609,7 +1650,7 @@ wrap:{
     color: Color.darkslateblue,
     borderBottomWidth: 2,
     borderBottomColor: "#c4bfbe",
-    width: '49%',
+    width: "49%",
   },
   davidDanielmR: {
     width: 168,
@@ -1617,45 +1658,44 @@ wrap:{
     color: Color.darkslateblue,
     borderBottomWidth: 2,
     borderBottomColor: "red",
-    width: '49%',
+    width: "49%",
   },
   davidDaniel: {
     width: 350,
     fontSize: FontSize.size_base,
-    color: 'black',
- 
+    color: "black",
   },
   lineParent: {
     top: 0,
-    marginTop:18,
+    marginTop: 18,
   },
   lineParentm: {
     top: 0,
-    marginTop:18,
+    marginTop: 18,
   },
   lineGroup: {
-    marginTop:20,
+    marginTop: 20,
   },
   lineContainer: {
     top: 687,
   },
   starIcon: {
     left: 338,
-    display:"none"
+    display: "none",
   },
   addVehicleChild3: {
     top: 610,
     left: 23,
   },
   addVehicleInner1: {
-    marginTop:8,
+    marginTop: 8,
   },
   mdiuserCircleOutlineIcon: {
-    marginTop:-37,
+    marginTop: -37,
   },
   materialSymbolspermContactIcon: {
     top: 0,
-    marginTop:-28,
+    marginTop: -28,
   },
   addVehicleChild4: {
     left: 359,
@@ -1678,7 +1718,7 @@ wrap:{
   },
   odometerSvgrepoCom1Icon: {
     top: 0,
-    marginTop:-40,
+    marginTop: -40,
   },
   rectangleIcon: {
     top: 737,
@@ -1789,7 +1829,7 @@ wrap:{
   homeMutedIcon1: {
     width: 25,
     height: 27,
-    left:-3
+    left: -3,
   },
   housefill1: {
     top: 808,
@@ -1811,11 +1851,9 @@ wrap:{
     overflow: "hidden",
   },
   groupPressable: {
-   
     left: 155,
   },
   addVehicleChild13: {
-    
     left: 155,
   },
   wrapper1: {
@@ -1843,7 +1881,7 @@ wrap:{
     overflow: "hidden",
     height: 932,
     width: "100%",
-    position:"absolute"
+    position: "absolute",
   },
   groupParent: {
     top: 700,
@@ -1888,37 +1926,35 @@ wrap:{
   selectedCustomer: {
     marginTop: 10,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   customerName: {
     fontSize: 16,
     paddingVertical: 5,
   },
   customerList: {
-    width: '100%',
+    width: "100%",
     marginTop: 10,
   },
   customerListHeader: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   selectedCustomer: {
     marginTop: 10,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
-  listButton:{
+  listButton: {
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginTop: 10,
   },
-  centeredFlatList:{
+  centeredFlatList: {
     // alignSelf:"center",
-
   },
-
 });
 
 export default AddVehicle;

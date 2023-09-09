@@ -4,8 +4,11 @@ import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 import BusinessList from "../components/BusinessList";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from "react-native-responsive-screen";
 
 const SwitchBusiness = () => {
   const navigation = useNavigation();
@@ -13,9 +16,7 @@ const SwitchBusiness = () => {
   return (
     <View style={styles.container}>
       <Image
-        style={[
-          styles.backgroundImage,
-        ]}
+        style={[styles.backgroundImage]}
         source={require("../assets/light-texture2234-1.png")}
       />
 
@@ -24,9 +25,9 @@ const SwitchBusiness = () => {
       </Text> */}
 
       <ScrollView style={styles.businessListContainer}>
-      <View >
-        <BusinessList />
-      </View>
+        <View>
+          <BusinessList />
+        </View>
       </ScrollView>
 
       <Pressable
@@ -37,9 +38,7 @@ const SwitchBusiness = () => {
           style={styles.createNewBusinessIcon}
           source={require("../assets/rectangle-731.png")}
         />
-        <Text style={styles.createNewBusinessText}>
-          Create New Business
-        </Text>
+        <Text style={styles.createNewBusinessText}>Create New Business</Text>
       </Pressable>
     </View>
   );
@@ -48,42 +47,42 @@ const SwitchBusiness = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   backgroundImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   switchBusinessText: {
-    fontSize: heightPercentageToDP('3%'),
-    fontWeight: 'bold',
-    marginTop: heightPercentageToDP('10%'),
+    fontSize: heightPercentageToDP("3%"),
+    fontWeight: "bold",
+    marginTop: heightPercentageToDP("10%"),
   },
   businessListContainer: {
     flex: 1,
-    width: '90%',
+    width: "90%",
     // alignItems: 'center',
     // backgroundColor:'red',
-    height: heightPercentageToDP('100%'), 
-    marginTop: heightPercentageToDP('10%'),
+    height: heightPercentageToDP("100%"),
+    marginTop: heightPercentageToDP("10%"),
   },
   createNewBusinessButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center', // Center the content horizontally
-    backgroundColor: 'rgba(3, 29, 68, 1)',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center", // Center the content horizontally
+    backgroundColor: "rgba(3, 29, 68, 1)",
     borderRadius: 10,
-    paddingVertical: heightPercentageToDP('2%'),
-    paddingHorizontal: widthPercentageToDP('30%'),
-    marginTop: heightPercentageToDP('1%'),
-    marginBottom: heightPercentageToDP('1%'), // Adjusted marginTop
+    paddingVertical: heightPercentageToDP("2%"),
+    paddingHorizontal: widthPercentageToDP("30%"),
+    marginTop: heightPercentageToDP("1%"),
+    marginBottom: heightPercentageToDP("1%"), // Adjusted marginTop
   },
   createNewBusinessText: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
 });
 

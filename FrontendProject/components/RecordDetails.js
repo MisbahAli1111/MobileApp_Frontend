@@ -1,40 +1,45 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text, Modal, TouchableOpacity,ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import {AntDesign} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import {
   widthPercentageToDP,
   heightPercentageToDP,
-} from 'react-native-responsive-screen';
+} from "react-native-responsive-screen";
 
-
-function RecordDetails({recordId}) {
-
-  const [ownerId,setOwnerId] = useState('');
-  const [ownerName,setOwnerName] = useState('');
-  const [detail , setDetail]=useState('');
-  const [name, setName]=useState('');
-  const [Mileage,setMileage]=useState('');
-  const [service,setService]=useState('');
-  const [type,setTyoe]=useState('');
-  const [dateTime,setDateTime]=useState('');
-  const [datePart, timePart] = dateTime.split('T');
-  const [fetchedServiceDue,setFetchedServiceDue] = useState('');
-  const[serviceDue,setServiceDue] = fetchedServiceDue.split('T');
-  const [registrationNumber,setRegistrationNumber]=useState('');
-  const [imageResponce,setImageResponce] = useState([]);
+function RecordDetails({ recordId }) {
+  const [ownerId, setOwnerId] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [detail, setDetail] = useState("");
+  const [name, setName] = useState("");
+  const [Mileage, setMileage] = useState("");
+  const [service, setService] = useState("");
+  const [type, setTyoe] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [datePart, timePart] = dateTime.split("T");
+  const [fetchedServiceDue, setFetchedServiceDue] = useState("");
+  const [serviceDue, setServiceDue] = fetchedServiceDue.split("T");
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [imageResponce, setImageResponce] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [fetchedImages,setFetchedImages] = React.useState([]);
-  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
+  const [fetchedImages, setFetchedImages] = React.useState([]);
+  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
   const navigation = useNavigation();
-  const [originalUri,setOriginalUri] = useState('');
+  const [originalUri, setOriginalUri] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -44,20 +49,20 @@ function RecordDetails({recordId}) {
       try {
         setLoading(true); // Set loading to true while fetching
         let token = await AsyncStorage.getItem("accessToken");
-        const accessToken = 'Bearer ' + token;
+        const accessToken = "Bearer " + token;
 
         if (recordId) {
           let config = {
-            method: 'get',
+            method: "get",
             maxBodyLength: Infinity,
             url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/images`,
             headers: {
-              'Authorization': accessToken
-            }
+              Authorization: accessToken,
+            },
           };
-    
+
           const response = await axios.request(config);
-          const imageUrls = response.data.map(item => baseUrl + item.url);
+          const imageUrls = response.data.map((item) => baseUrl + item.url);
           setFetchedImages(imageUrls);
           setLoading(false); // Set loading to false when images are fetched
         }
@@ -68,172 +73,127 @@ function RecordDetails({recordId}) {
     };
 
     fetchImages();
+  }, [recordId, ownerId]);
 
-    const getOwnerId = async () => {
-      try {
-        const storedOwnerId = await AsyncStorage.getItem('ownerId');
-        if (storedOwnerId !== null) {
-          setOwnerId(storedOwnerId);
-          console.log('Successfully retrieved ownerId from AsyncStorage:', storedOwnerId);
-        } else {
-          console.log('ownerId not found in AsyncStorage.');
-        }
-      } catch (error) {
-        console.error('Error retrieving ownerId from AsyncStorage:', error);
-      }
-    };
-    
-    getOwnerId();
-    if(ownerId)
-    {
-      getOwnerInfo(ownerId);
+  getData = async () => {
+    let token = await AsyncStorage.getItem("accessToken");
+    const accessToken = "Bearer " + token;
+    if (recordId) {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
+        headers: {
+          Authorization: accessToken,
+        },
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          setDetail(response.data[0].maintanenceDetail);
+          setName(response.data[0].name);
+          setMileage(response.data[0].kilometerDriven);
+          setService(response.data[0].service);
+          setRegistrationNumber(response.data[0].registrationNumber);
+          setTyoe(response.data[0].type);
+          setDateTime(response.data[0].maintanenceDateTime);
+          setFetchedServiceDue(response.data[0].serviceDue);
+          setOwnerName(response.data[0].vehicleOwner);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-
-  },[recordId,ownerId]);
-
-  const getOwnerInfo = async (ownerId) => {
-    if(ownerId)
-    {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/${ownerId}`, // Use backticks
-      headers: {}
-    };
-  
-    axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        setOwnerName(response.data.firstName);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }};
-
-  getData=async()=>{
-    let token= await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
-    if(recordId)
-    {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
-      headers: { 
-        'Authorization':accessToken
-      }
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      // console.log(JSON.stringify(response.data));
-      setDetail(response.data[0].maintanenceDetail);
-      setName(response.data[0].name);
-      setMileage(response.data[0].kilometerDriven);
-      setService(response.data[0].service);
-      setRegistrationNumber(response.data[0].registrationNumber);
-      setTyoe(response.data[0].type);
-      setDateTime(response.data[0].maintanenceDateTime);
-      setFetchedServiceDue(response.data[0].serviceDue);
-     
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
   };
-
 
   const renderCarouselItem = ({ item }) => {
     return (
-      <TouchableOpacity
-       onPress={() => handleOpen(item)}>
-      <Image
-        source={{ uri: item }}
-        style={styles.carouselImage}
-        contentFit="cover"
-      />
+      <TouchableOpacity onPress={() => handleOpen(item)}>
+        <Image
+          source={{ uri: item }}
+          style={styles.carouselImage}
+          contentFit="cover"
+        />
       </TouchableOpacity>
     );
   };
 
   const handleOpen = (uri) => {
     setOriginalUri(uri);
-    if(originalUri)
-    {
-    setModalVisible(true);
-  }
-};
+    if (originalUri) {
+      setModalVisible(true);
+    }
+  };
 
   const handleClose = () => {
     setModalVisible(false);
-    setOriginalUri('');
+    setOriginalUri("");
   };
-
-  
-  
-
-  
 
   return (
     <ScrollView style={styles.wrap}>
+      {/* car image  */}
 
-     
-{/* car image  */}
+      <View style={styles.Carousalcontainer}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#007aff" />
+        ) : (
+          fetchedImages.length > 0 && (
+            <View style={styles.imageContainer}>
+              <Carousel
+                data={fetchedImages}
+                renderItem={renderCarouselItem}
+                sliderWidth={350}
+                itemWidth={400}
+                onSnapToItem={(index) => setActiveSlide(index)}
+                sliderHeight={100}
+              />
 
-     <View style={styles.Carousalcontainer}>
-     {loading ? (
-        <ActivityIndicator size="large" color="#007aff" />
-      ) : (
-        fetchedImages.length > 0 && (
-          <View style={styles.imageContainer}>
-            <Carousel
-              data={fetchedImages}
-              renderItem={renderCarouselItem}
-              sliderWidth={350}
-              itemWidth={400}
-              onSnapToItem={(index) => setActiveSlide(index)}
-              sliderHeight={100}
-            />
+              <Pagination
+                dotsLength={fetchedImages.length}
+                activeDotIndex={activeSlide}
+                containerStyle={styles.paginationContainer}
+                dotColor="#007aff"
+                dotStyle={styles.paginationDot}
+                inactiveDotColor="#ccc"
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+              />
+            </View>
+          )
+        )}
+      </View>
+      {/* modal */}
 
-            <Pagination
-              dotsLength={fetchedImages.length}
-              activeDotIndex={activeSlide}
-              containerStyle={styles.paginationContainer}
-              dotColor="#007aff"
-              dotStyle={styles.paginationDot}
-              inactiveDotColor="#ccc"
-              inactiveDotOpacity={0.4}
-              inactiveDotScale={0.6}
-            />
-          </View>
-        )
-      )}
-     </View>
-     {/* modal */}
-
-     <Modal visible={modalVisible} animationType="slide">
+      <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
-        <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
+          <Image
+            source={{ uri: originalUri }}
+            style={styles.modalMedia}
+            contentFit="contain"
+          />
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-          <AntDesign name="closecircle" size={30} color="rgba(3, 29, 68, 1)" />
+            <AntDesign
+              name="closecircle"
+              size={30}
+              color="rgba(3, 29, 68, 1)"
+            />
           </TouchableOpacity>
         </View>
       </Modal>
 
-     {/* details  */}
+      {/* details  */}
       <View style={styles.detailsParent}>
         <Text style={[styles.details, styles.abc123Clr]}>Details:</Text>
         <Text style={[styles.carWasMaintained, styles.jan2023Positionn]}>
-        {detail}
+          {detail}
         </Text>
       </View>
 
       {/* blue div  */}
 
       <View style={[styles.vectorGroup, styles.vectorGroupLayout]}>
-
         <View style={[styles.frameParent, styles.frameParentPosition]}>
           <View style={styles.frameWrapper}>
             <View style={styles.mileageWrapper}>
@@ -248,14 +208,15 @@ function RecordDetails({recordId}) {
           <View />
         </View>
         <Text
-          style={[styles.registrationNumber, styles.dateTypo]}>{`Registration Number `}</Text>
-        <Text style={[styles.abc1231, styles.kmTypo]}>{registrationNumber}</Text>
+          style={[styles.registrationNumber, styles.dateTypo]}
+        >{`Registration Number `}</Text>
+        <Text style={[styles.abc1231, styles.kmTypo]}>
+          {registrationNumber}
+        </Text>
         <Text style={[styles.maintainedBy, styles.dateTypo]}>
           Maintained By
         </Text>
-        <Text style={[styles.waleedAli, styles.waleedAliPosition]}>
-          {name}
-        </Text>
+        <Text style={[styles.waleedAli, styles.waleedAliPosition]}>{name}</Text>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>
           <Text style={[styles.jan2023, styles.jan2023Position]}>
             {datePart}
@@ -263,18 +224,27 @@ function RecordDetails({recordId}) {
           <Text style={[styles.date, styles.dateTypo]}>Date</Text>
         </View>
         <View style={styles.carWashParent}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>{service}</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>
+            {service}
+          </Text>
           <Text style={[styles.date, styles.dateTypo]}>Service</Text>
         </View>
         <View style={styles.carWashParent1}>
-        <TouchableOpacity 
-        onPress={()=> navigation.navigate("CustomerDetails")}>
-          <Text style={[styles.jan2023, styles.jan2023Position,styles.hyperlink]}>{ownerName}</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CustomerDetails")}
+          >
+            <Text
+              style={[styles.jan2023, styles.jan2023Position, styles.hyperlink]}
+            >
+              {ownerName.split(" ")[0]}
+            </Text>
           </TouchableOpacity>
           <Text style={[styles.date, styles.dateTypo]}>Vehicle Owner</Text>
         </View>
         <View style={[styles.pmParent, styles.parentPosition]}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>{timePart}</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>
+            {timePart}
+          </Text>
           <Text style={[styles.date, styles.dateTypo]}>Time</Text>
         </View>
         <View style={[styles.carWrapper, styles.typePosition]}>
@@ -282,58 +252,55 @@ function RecordDetails({recordId}) {
         </View>
         <Text style={[styles.type, styles.typePosition]}>{`Type `}</Text>
         <View style={styles.carWashParent2}>
-          <Text style={[styles.jan2023, styles.jan2023Position]}>{serviceDue}</Text>
+          <Text style={[styles.jan2023, styles.jan2023Position]}>
+            {serviceDue}
+          </Text>
           <Text style={[styles.date, styles.dateTypo]}>Service Due</Text>
         </View>
-      
       </View>
-     
-
-
-
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   hyperlink: {
-    textDecorationLine: 'underline',
-    color: '#0073e6', // Change the color to your desired hyperlink color
+    textDecorationLine: "underline",
+    color: "#0073e6", // Change the color to your desired hyperlink color
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
   },
   modalMedia: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     // aspectRatio: 1, // This maintains the original image's aspect ratio
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10, // Adjust the top positioning as needed
     right: 10, // Adjust the right positioning as needed
     zIndex: 1, // Ensure the button appears above the image
   },
   carouselImage: {
-  width: "100%",
-  height: "100%",
-  justifyContent: 'center',
-  // alignItems: 'center',
-  position:"relative",
-  left:"5%"
-},
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    // alignItems: 'center',
+    position: "relative",
+    left: "5%",
+  },
 
-  vehicleComponent:{
-    top:-230,
+  vehicleComponent: {
+    top: -230,
   },
   carouselItem: {
     width: "100%",
     height: "100%",
-    position:"relative",
-    justifyContent: 'center',
-    alignItems:'center',
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   paginationContainer: {
     paddingVertical: 5,
@@ -344,40 +311,38 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 8,
   },
-  imageUpload:{
-    position:"absolute",
-
+  imageUpload: {
+    position: "absolute",
   },
   Carousalcontainer: {
-    height:"40%",
+    height: "40%",
     // backgroundColor:"red",
-    alignItems: 'center',
-    justifyContent: 'center',
-    position:'relative',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
   },
   imageContainer: {
-    position: 'relative',
+    position: "relative",
     width: "90%",
     height: "90%",
     // backgroundColor:"blue",
-    
   },
   image: {
     width: "100%",
     height: "100%",
-    contentFit: 'cover',
+    contentFit: "cover",
   },
-  
+
   childViewPosition: {
     width: 430,
     left: -6.5,
     position: "relative",
   },
-  cont:{
-    padding:6,
-    top:-14,
-    right:5,
-    zIndex:999,
+  cont: {
+    padding: 6,
+    top: -14,
+    right: 5,
+    zIndex: 999,
   },
   groupInnerLayout: {
     height: 43,
@@ -387,12 +352,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
   },
-  wrap:{
-    marginTop:0,
+  wrap: {
+    marginTop: 0,
     // height:538,
-    width:"100%",
-    zIndex:1,
-    overflow:"hidden",
+    width: "100%",
+    zIndex: 1,
+    overflow: "hidden",
   },
   textFlexBox: {
     textAlign: "left",
@@ -414,14 +379,14 @@ const styles = StyleSheet.create({
   vectorGroupLayout: {
     height: 380,
     width: 400,
-    marginTop:20,
+    marginTop: 20,
     position: "relative",
-    backgroundColor:"#c2e0f2",
+    backgroundColor: "#c2e0f2",
   },
   vectorGroupLayoutt: {
     height: 301,
     width: 392,
-    
+
     position: "relative",
   },
   frameParentPosition: {
@@ -431,11 +396,11 @@ const styles = StyleSheet.create({
   jan2023Position: {
     top: 26,
     position: "relative",
-    width:200
+    width: 200,
   },
   jan2023Positionn: {
     top: 0,
-    marginTop:5,
+    marginTop: 5,
     position: "relative",
   },
   waleedAliPosition: {
@@ -679,7 +644,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    
   },
   jan2023: {
     fontFamily: FontFamily.poppinsRegular,
@@ -692,7 +656,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     position: "absolute",
-    width:200
+    width: 200,
   },
   jan2023Parent: {
     width: 98,
@@ -745,7 +709,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     color: Color.Black,
     left: 0,
-    
   },
   carWasMaintained: {
     left: 1,
@@ -755,7 +718,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.Black,
     fontSize: FontSize.size_base,
-    fontWeight:700,
+    fontWeight: 700,
   },
   detailsParent: {
     top: 0,
@@ -885,7 +848,6 @@ const styles = StyleSheet.create({
     height: 932,
     width: "100%",
   },
-
 });
 
 export default RecordDetails;

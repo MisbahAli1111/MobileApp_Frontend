@@ -1,35 +1,42 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, TouchableOpacity,TextInput,FlatList ,TouchableWithoutFeedback, ScrollView, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  TouchableWithoutFeedback,
+  ScrollView,
+  View,
+  Text,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
-function InvoiceDiscount({ onItemsChange}) {
-const navigation = useNavigation();
-const [items, setItems] = useState([{ taxName: '', taxRate: ''}]);
+function InvoiceDiscount({ onItemsChange }) {
+  const navigation = useNavigation();
+  const [items, setItems] = useState([{ taxName: "", taxRate: "" }]);
 
-
-  const renderItem =({ item, index })=>(
+  const renderItem = ({ item, index }) => (
     <View style={[styles.rowContainer, styles.groupLayout]}>
-    <TextInput
-      style={[styles.addItem, styles.taxTypo1]}
-      onChangeText={(text) => handleChangeItemName(text, index)}
-      value={item.taxName}
-      placeholder="Tax Name"
-    />
-    <TextInput
-      style={[styles.addRate, styles.addTypo1]}
-      onChangeText={(text) => handleChangeRate(text, index)}
-      value={item.taxRate}
-      placeholder="Tax Rate"
-      keyboardType="numeric"
-    /> 
-  </View>
-  
+      <TextInput
+        style={[styles.addItem, styles.taxTypo1]}
+        onChangeText={(text) => handleChangeItemName(text, index)}
+        value={item.taxName}
+        placeholder="Tax Name"
+      />
+      <TextInput
+        style={[styles.addRate, styles.addTypo1]}
+        onChangeText={(text) => handleChangeRate(text, index)}
+        value={item.taxRate}
+        placeholder="Tax Rate"
+        keyboardType="numeric"
+      />
+    </View>
   );
 
-  
   const handleChangeItemName = (text, index) => {
     const newItems = [...items];
     newItems[index].taxName = text;
@@ -43,120 +50,106 @@ const [items, setItems] = useState([{ taxName: '', taxRate: ''}]);
   };
 
   useEffect(() => {
-    if (typeof onItemsChange === 'function') {
+    if (typeof onItemsChange === "function") {
       onItemsChange(items);
     }
   }, [items]);
 
   const handleAddRow = () => {
-    setItems([...items, { taxName: '', taxRate: ''}]);
+    setItems([...items, { taxName: "", taxRate: "" }]);
   };
 
   return (
-   
-      <View style={styles.main}>
-
-          <Image
-            style={styles.rectangleIcon}
-            contentFit="cover"
-            source={require("../assets/rectangle-62.png")}
-          />
-            <View style={[styles.rowContainer, styles.groupLayout]}>
+    <View style={styles.main}>
+      <Image
+        style={styles.rectangleIcon}
+        contentFit="cover"
+        source={require("../assets/rectangle-62.png")}
+      />
+      <View style={[styles.rowContainer, styles.groupLayout]}>
         <Text style={[styles.description, styles.rateTypo]}>TAX</Text>
         <Text style={[styles.rate, styles.rateTypo]}>TAX RATE</Text>
-       </View>
-  
-<View style={[styles.rectangleView, styles.rectangleViewBg]} >
-          
-     
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
-</View>
-<View
-style={styles.wrap}
->
-<TouchableOpacity onPress={handleAddRow}>
-    <View style={styles.buttonBack}>
-        <Image
-        
-        style={styles.addButton}
-         contentFit="cover"
-          source={require("../assets/vector11.png")}
+      </View>
+
+      <View style={[styles.rectangleView, styles.rectangleViewBg]}>
+        <FlatList
+          data={items}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
         />
-        </View>
-      </TouchableOpacity>
- </View>   
+      </View>
+      <View style={styles.wrap}>
+        <TouchableOpacity onPress={handleAddRow}>
+          <View style={styles.buttonBack}>
+            <Image
+              style={styles.addButton}
+              contentFit="cover"
+              source={require("../assets/vector11.png")}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
-      
-     
-    
   );
 }
 const styles = StyleSheet.create({
-main:{
-width:500,
-left:20,
-marginTop:20,
+  main: {
+    width: 500,
+    left: 20,
+    marginTop: 20,
 
-position:'relative',
-},
-wrap:{
-  height:40,
-  width:185,
-  left:5,
-  backgroundColor: Color.steelblue_300,
-  borderRadius: 1,
-  position: "relative",
-},
-buttonBack:{
-  elevation: 20,
-  shadowRadius: 150,
-  shadowColor: "rgba(0, 0, 0, 0.05)",
-  backgroundColor: Color.steelblue_200,
-  height: 27,
-  width: 48,
-  borderRadius:10,
-  shadowOpacity: 30,
-  left:60,
-  shadowOffset: {
-    width: 0,
-    height: 30,
-    
-  }
+    position: "relative",
+  },
+  wrap: {
+    height: 40,
+    width: 185,
+    left: 5,
+    backgroundColor: Color.steelblue_300,
+    borderRadius: 1,
+    position: "relative",
+  },
+  buttonBack: {
+    elevation: 20,
+    shadowRadius: 150,
+    shadowColor: "rgba(0, 0, 0, 0.05)",
+    backgroundColor: Color.steelblue_200,
+    height: 27,
+    width: 48,
+    borderRadius: 10,
+    shadowOpacity: 30,
+    left: 60,
+    shadowOffset: {
+      width: 0,
+      height: 30,
+    },
+  },
+  inputField: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    flex: 1,
+    marginRight: 5,
+  },
+  addButton: {
+    height: 16,
+    width: 16,
+    alignContent: "center",
+    left: 16,
+    top: 4,
+    marginTop: 0,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
 
-},
-inputField: {
-  
-  paddingVertical: 5,
-  paddingHorizontal: 10,
-  flex: 1,
-  marginRight: 5,
-},
-addButton:{
- height:16,
- width:16,
- alignContent:'center',
- left:16,
- top:4,
- marginTop:0,
-
-},
-rowContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingHorizontal: 5,
-  paddingVertical: 10,
-},
-
-groupLayout: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  left:10,
-},
+  groupLayout: {
+    flexDirection: "row",
+    alignItems: "center",
+    left: 10,
+  },
   // container:{
   //  // marginLeft:0,
   // },
@@ -210,7 +203,7 @@ groupLayout: {
     position: "absolute",
   },
   text5ClrName: {
-    top:5,
+    top: 5,
     color: Color.dimgray_100,
     textAlign: "left",
   },
@@ -221,7 +214,7 @@ groupLayout: {
     fontSize: FontSize.size_base,
     textAlign: "left",
     position: "absolute",
-    width:150,
+    width: 150,
   },
   lineViewPosition: {
     top: 34,
@@ -247,7 +240,7 @@ groupLayout: {
     fontFamily: FontFamily.poppinsMedium,
     textAlign: "left",
     fontWeight: "700",
-    flexDirection:'row',
+    flexDirection: "row",
   },
   taxTypo1: {
     color: Color.dimgray_200,
@@ -263,7 +256,7 @@ groupLayout: {
     fontSize: FontSize.size_sm,
     textAlign: "left",
     position: "absolute",
-    flexDirection:'row',
+    flexDirection: "row",
   },
   textTypo: {
     width: 30,
@@ -525,13 +518,13 @@ groupLayout: {
     right: "4.42%",
     bottom: "79.19%",
     left: "86.28%",
-    position:"absolute",
+    position: "absolute",
   },
   text1: {
     left: 5,
   },
-  invoiceStatusPicker:{
-    top:232
+  invoiceStatusPicker: {
+    top: 232,
   },
   groupInner: {
     left: -1,
@@ -585,7 +578,7 @@ groupLayout: {
     position: "absolute",
   },
   rectangleView: {
-    marginTop:17,
+    marginTop: 17,
     width: 185,
     left: 5,
   },
@@ -598,18 +591,18 @@ groupLayout: {
     left: 10,
     position: "absolute",
     top: 10,
-    flexDirection:'row',
+    flexDirection: "row",
   },
   addItem: {
     flex: 1,
     paddingVertical: 5,
     paddingHorizontal: 10,
     fontSize: 16,
-    color:'black',
-    fontWeight:'700',
-    width:100,
-    flexDirection:'column',
-    left:-10,
+    color: "black",
+    fontWeight: "700",
+    width: 100,
+    flexDirection: "column",
+    left: -10,
   },
   addItem1: {
     width: 64,
@@ -626,16 +619,16 @@ groupLayout: {
     width: 100,
     top: 10,
     position: "absolute",
-    flexDirection:'column',
+    flexDirection: "column",
   },
   addRate: {
     flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color:'black',
-    fontWeight:'700',
-    flexDirection:'row',
+    color: "black",
+    fontWeight: "700",
+    flexDirection: "row",
   },
   addRate1: {
     top: 81,
@@ -651,8 +644,8 @@ groupLayout: {
     paddingVertical: 8,
     paddingHorizontal: 10,
     fontSize: 16,
-    color:'black',
-    fontWeight:'700',
+    color: "black",
+    fontWeight: "700",
   },
   text4: {
     top: 81,
@@ -661,7 +654,7 @@ groupLayout: {
     left: 291,
     width: 57,
     top: 10,
-    
+
     position: "absolute",
   },
   amountt: {
@@ -768,7 +761,7 @@ groupLayout: {
     left: 29,
   },
   taxRate: {
-    width:80,
+    width: 80,
     fontSize: FontSize.size_smi,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsMedium,
@@ -882,7 +875,7 @@ groupLayout: {
     top: 171,
     left: 30,
     position: "absolute",
-    width:180 ,
+    width: 180,
   },
   vectorIcon4: {
     height: "2.68%",
@@ -891,7 +884,7 @@ groupLayout: {
     right: "52.79%",
     bottom: "79.08%",
     left: "41.4%",
-    position:"absolute",
+    position: "absolute",
   },
   text5: {
     left: 37,
@@ -941,7 +934,7 @@ groupLayout: {
     color: Color.snow,
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.poppinsMedium,
-    alignContent:"center",
+    alignContent: "center",
   },
   vectorContainer: {
     top: 690,
@@ -1045,15 +1038,14 @@ groupLayout: {
     left: 287,
   },
   createInvoice: {
-  //   backgroundColor: Color.white,
-  //    //flex: 6,
-  //   //overflow: "hidden",
-  //    height: 1000,
-  //    width: "100%",
-      left:-8,
-   position:"absolute",
+    //   backgroundColor: Color.white,
+    //    //flex: 6,
+    //   //overflow: "hidden",
+    //    height: 1000,
+    //    width: "100%",
+    left: -8,
+    position: "absolute",
   },
-
 });
 
 export default InvoiceDiscount;

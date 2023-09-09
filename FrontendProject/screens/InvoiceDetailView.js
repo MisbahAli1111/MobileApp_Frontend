@@ -1,13 +1,22 @@
 import React, { useCallback } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Dimensions, Pressable, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import Footer from "../components/Footer";
-import { printToFileAsync } from 'expo-print';
-import * as FileSystem from 'expo-file-system';
-import { shareAsync } from 'expo-sharing';
-import * as Sharing from 'expo-sharing';
+import { printToFileAsync } from "expo-print";
+import * as FileSystem from "expo-file-system";
+import { shareAsync } from "expo-sharing";
+import * as Sharing from "expo-sharing";
 import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 import { useRoute } from "@react-navigation/native";
 import { useState, useEffect, useMemo } from "react";
@@ -16,86 +25,79 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function InvoiceDetailView() {
   const route = useRoute();
 
-
   const invoiceId = route.params?.recordId;
   const [Invoice, setInvoice] = useState([]);
 
-
-
   const navigation = useNavigation();
-  const [invoiceID, setInvoiceID] = useState('');
-  const [date, setDate] = useState('');
-  const [due, setDue] = useState('');
-  const [balance, setBalance] = useState('');
-  const [name, setName] = useState('')
-  const [registrationNumber, setRegistrationNumber] = useState('');
-  const [status, setStatus] = useState('');
-  const [subTotal, setSubTotal] = useState('');
-  const [tax, setTax] = useState('');
-  const [discount, setDiscount] = useState('');
-  const [total, setTotal] = useState('');
-  const [balanceDue, setBalanceDue] = useState('');
+  const [invoiceID, setInvoiceID] = useState("");
+  const [date, setDate] = useState("");
+  const [due, setDue] = useState("");
+  const [balance, setBalance] = useState("");
+  const [name, setName] = useState("");
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [status, setStatus] = useState("");
+  const [subTotal, setSubTotal] = useState("0");
+  const [tax, setTax] = useState("");
+  const [discount, setDiscount] = useState("");
+  const [total, setTotal] = useState("");
+  const [balanceDue, setBalanceDue] = useState("");
   const [description, setDescription] = useState([]);
   const [taxr, setTaxr] = useState([]);
   const [discountr, setDiscountr] = useState([]);
-  const [vehicle, setVehicle] = useState('');
+  const [vehicle, setVehicle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const screenHeight = Dimensions.get('window').height;
-  const screenWidth = Dimensions.get('window').width;
-  const [businessProfile,setBusinessProfile] =useState("");
-  const [baseUrl, setBaseUrl] = useState('http://192.168.0.236:8080');
-  const [baseUrlM, setBaseUrlM]= useState('http://192.168.100.71:8080');
-
+  const screenHeight = Dimensions.get("window").height;
+  const screenWidth = Dimensions.get("window").width;
+  const [businessProfile, setBusinessProfile] = useState("");
+  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
+  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
+  const [currency, setCurrency] = useState("");
   useEffect(() => {
-
     getData();
     getProfileImage();
-
   }, [invoiceId]);
   useEffect(() => {
-
     calculateTotalAmount();
-
   });
-
 
   const getData = async () => {
     setIsLoading(true);
     let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
-
+    const accessToken = "Bearer " + token;
 
     let config = {
-      method: 'get',
+      method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/get-invoice/${invoiceId}`,
+      url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
       headers: {
-        'Authorization': accessToken
-      }
+        Authorization: accessToken,
+      },
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
         // setInvoice(response.data);
         // setDate(response.data[0].date);
         const dateObj = new Date(response.data[0].date);
         const year = dateObj.getFullYear();
-        const month = dateObj.getMonth() + 1; 
+        const month = dateObj.getMonth() + 1;
         const day = dateObj.getDate();
         setDate(`${month}/${day}/${year}`);
         // console.log(formattedDate);
         setDue(response.data[0].invoiceDue);
         setInvoiceID(response.data[0].id);
-        setSubTotal(response.data[0].total);
+        setTotal(response.data[0].total);
         setDescription(response.data[0].descriptions);
         setTaxr(response.data[0].taxes);
         setDiscountr(response.data[0].discounts);
         setName(response.data[0].name);
         setRegistrationNumber(response.data[0].registrationNumber);
         setVehicle(response.data[0].vehicleName);
+        setCurrency(response.data[0].currency);
         let st = response.data[0].status;
-        setStatus(st ? 'Paid' : 'Due');
+        setStatus(st ? "Paid" : "Due");
         setBalance(st ? 0 : response.data[0].total);
         // console.log(Invoice.data);
         calculateTotalAmount();
@@ -104,23 +106,21 @@ function InvoiceDetailView() {
       .catch((error) => {
         console.log(error);
       });
-
-  }
+  };
 
   const getProfileImage = async () => {
     try {
-      const accessTokens = await AsyncStorage.getItem('accessToken');
-      const token = 'Bearer ' + accessTokens;
+      const accessTokens = await AsyncStorage.getItem("accessToken");
+      const token = "Bearer " + accessTokens;
       const Business_id = await AsyncStorage.getItem("Business_id");
-      
 
       if (Business_id) {
         console.log("userID found");
 
         const config = {
-          method: 'get',
+          method: "get",
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/business/${Business_id}/profile-image`,
+          url: `http://192.168.100.71:8080/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -130,22 +130,25 @@ function InvoiceDetailView() {
 
         if (response.status === 200) {
           const responseData = response.data;
-          console.log("Data Image:",response.data)
-          setBusinessProfile(baseUrl+responseData.url); // Update the state directly
+          console.log("Data Image:", response.data);
+          setBusinessProfile(baseUrl + responseData.url);
         } else {
-          console.log('Error: ' + response.statusText);
+          console.log("Error: " + response.statusText);
         }
       }
     } catch (error) {
-      console.log('Error fetching profile image:', error);
-    } 
+      console.log("Error fetching profile image:", error);
+    }
   };
-
 
   const calculateTotalAmount = () => {
     setDiscount(0);
     setTax(0);
-    if (description.length === 0 && discountr.length === 0 && taxr.length === 0) {
+    if (
+      description.length === 0 &&
+      discountr.length === 0 &&
+      taxr.length === 0
+    ) {
       setTotal(0.0);
       return;
     }
@@ -157,7 +160,7 @@ function InvoiceDetailView() {
       totalAmount += isNaN(itemAmount) ? 0 : itemAmount;
     }
 
-
+    setSubTotal(totalAmount);
 
     let totalDiscount = 0.0;
     for (const disc of discountr) {
@@ -169,10 +172,8 @@ function InvoiceDetailView() {
 
     setDiscount(totalDiscount);
 
-
     let totaltax = 0.0;
     for (const t of taxr) {
-
       const taxRate = parseFloat(t.taxRate);
 
       if (!isNaN(taxRate)) {
@@ -181,29 +182,31 @@ function InvoiceDetailView() {
     }
     setTax(totaltax);
 
-
     totalAmount -= totalDiscount;
     totalAmount += totaltax;
 
     totalAmount = totalAmount.toFixed(2);
-    
-    console.log(totalAmount);
+
+    // console.log(totalAmount);
 
     setTotal(totalAmount);
   };
 
-  const descriptionRows = description.map((desc, index) => `
+  const descriptionRows = description
+    .map(
+      (desc, index) => `
   <tr>
     <td>${desc.item}</td>
     <td>$${desc.rate.toFixed(2)}</td>
     <td>${desc.quantity}</td>
     <td>$${desc.amount.toFixed(2)}</td>
+
   </tr>
-`).join('');
+`
+    )
+    .join("");
 
-
-
-const html = `
+  const html = `
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -295,6 +298,7 @@ const html = `
         <p>Registration Number: ${registrationNumber}</p>
         <p>Status: ${status}</p>
         <p>Balance Due: ${total}</p>
+        <p>Currency: ${currency}</p>
       </div>
     </div>
     <table class="items-table">
@@ -320,48 +324,44 @@ const html = `
 </body>
 </html>`;
 
-
-
   const generatePDF = async () => {
     const file = await printToFileAsync({
       html: html,
-      base64: false
+      base64: false,
     });
     await shareAsync(file.uri);
-
   };
 
   const printPDf = async () => {
     try {
       const file = await printToFileAsync({
         html: html,
-        base64: false
+        base64: false,
       });
 
-      const downloadObject = await FileSystem.downloadAsync(file.uri, FileSystem.documentDirectory + 'invoice.pdf');
+      const downloadObject = await FileSystem.downloadAsync(
+        file.uri,
+        FileSystem.documentDirectory + "invoice.pdf"
+      );
       if (downloadObject.status === 200) {
-        console.log('PDF downloaded successfully:', downloadObject.uri);
+        console.log("PDF downloaded successfully:", downloadObject.uri);
         // You can also share the downloaded PDF if needed
         // await Sharing.shareAsync(downloadObject.uri);
       } else {
-        console.error('Error downloading the PDF.');
+        console.error("Error downloading the PDF.");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-
   };
   function editInvoiceFunction() {
     navigation.navigate("CreateInvoice", { InvoiceId: invoiceId });
   }
-  const [invoiceNumber, setinvoiceNumber] = useState('');
+  const [invoiceNumber, setinvoiceNumber] = useState("");
 
   return (
     <>
-
       <View style={styles.invoiceDetailView}>
-
-
         <Image
           style={styles.lightTexture22341Icon}
           contentFit="cover"
@@ -386,8 +386,6 @@ const html = `
             </View>
             <Text style={[styles.invoice, styles.dueTypo]}>Invoice</Text>
           </View>
-
-
         </View>
 
         <View style={styles.head}>
@@ -413,7 +411,6 @@ const html = `
         <View style={[styles.groupItem, styles.groupItemPosition]} />
 
         <ScrollView style={styles.wrap}>
-
           {description.map((desc, index) => (
             <View key={index} style={styles.dataRow}>
               <Text style={styles.dataCell}>{desc.item}</Text>
@@ -424,23 +421,29 @@ const html = `
           ))}
         </ScrollView>
 
-
-
-        <View style={{ flex: 1, justifyContent: 'center', position: 'absolute', width: screenWidth, height: screenHeight, alignItems: 'center' }}>
-
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            position: "absolute",
+            width: screenWidth,
+            height: screenHeight,
+            alignItems: "center",
+          }}
+        >
           {isLoading ? (
             <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
           ) : (
-            <View>
-            </View>
+            <View></View>
           )}
         </View>
-
 
         <View style={[styles.element2, styles.housefillFlexBox]}>
           <Text style={styles.text}>\</Text>
         </View>
-        <Text style={[styles.inv0001, styles.inv0001Position]}>{invoiceID}</Text>
+        <Text style={[styles.inv0001, styles.inv0001Position]}>
+          {invoiceID}
+        </Text>
         <LinearGradient
           style={styles.rectangleLineargradient}
           locations={[0, 1]}
@@ -482,9 +485,8 @@ const html = `
             <Text style={styles.rs3000Typo}></Text>
             <Text style={[styles.text14, styles.textLayout]}>-</Text>
           </View>
-          <Text style={[styles.inv00011, styles.invoiceTypo]}>{balance}</Text>
+          <Text style={[styles.inv00011, styles.invoiceTypo]}>{total}</Text>
           <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
-
         </View>
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>
@@ -503,16 +505,14 @@ const html = `
               <Text style={[styles.total1, styles.total1Typo]}>Total</Text>
 
               <Text style={[styles.rs3550, styles.rs0Typo]}>{total}</Text>
-
             </View>
           </View>
           <View style={[styles.groupChild2, styles.groupLayout]} />
         </View>
 
-
         <Pressable
           style={[styles.container, styles.framePosition]}
-          onPress={printPDf}//printer button
+          onPress={printPDf} //printer button
         >
           <Image
             style={styles.iconP}
@@ -521,9 +521,8 @@ const html = `
           />
         </Pressable>
 
-
         <Pressable
-          style={[styles.frame, styles.framePosition]}//share button
+          style={[styles.frame, styles.framePosition]} //share button
           onPress={generatePDF}
         >
           <Image
@@ -533,13 +532,13 @@ const html = `
           />
         </Pressable>
 
-        <View style={styles.foot} >
+        <View style={styles.foot}>
           <Footer prop={"Invoices"} />
         </View>
       </View>
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   editInvoice2: {
@@ -547,24 +546,21 @@ const styles = StyleSheet.create({
     left: -9,
     // lineHeight: 18,
     textAlign: "center",
-    alignSelf: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
+    alignSelf: "center",
+    alignContent: "center",
+    justifyContent: "center",
     fontSize: FontSize.caption2Regular_size,
     width: 80,
-
-
   },
   dataRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 0.8,
-    borderColor: 'white',
+    borderColor: "white",
     paddingVertical: 8,
   },
   dataCell: {
     flex: 1,
-    textAlign: 'center',
-
+    textAlign: "center",
   },
   groupChild6: {
     borderRadius: Border.br_7xs,
@@ -591,8 +587,8 @@ const styles = StyleSheet.create({
 
   head: {
     marginTop: 290,
-    alignContent: 'center',
-    justifyContent: 'center',
+    alignContent: "center",
+    justifyContent: "center",
     marginLeft: 12,
   },
   // Blue:{
@@ -605,7 +601,6 @@ const styles = StyleSheet.create({
   //   height:500,
   // },
   vectorContainer: {
-
     top: -8,
     left: 250,
     backgroundColor: Color.darkslateblue,
@@ -649,7 +644,7 @@ const styles = StyleSheet.create({
   },
   setstyle: {
     top: -50,
-    position: 'absolute',
+    position: "absolute",
   },
   invoiceTypo1: {
     textAlign: "center",
@@ -658,7 +653,7 @@ const styles = StyleSheet.create({
   },
   foot: {
     flex: 1,
-    position: 'absolute',
+    position: "absolute",
   },
   parentLayout: {
     height: 179,
@@ -672,7 +667,6 @@ const styles = StyleSheet.create({
   groupItemPosition: {
     backgroundColor: Color.steelblue_300,
     left: 0,
-
   },
   changePosition: {
     left: 15,
@@ -822,11 +816,11 @@ const styles = StyleSheet.create({
   },
   framePosition: {
     left: 364,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: "center",
+    alignItems: "center",
     position: "absolute",
     borderRadius: 20,
-    backgroundColor: '#3894c9'
+    backgroundColor: "#3894c9",
   },
   groupPressableLayout: {
     height: 104,
@@ -1187,8 +1181,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
     color: Color.textTxtPrimary,
     textAlign: "left",
-    alignContent: 'flex-end',
-    justifyContent: 'flex-end',
+    alignContent: "flex-end",
+    justifyContent: "flex-end",
     position: "absolute",
   },
   loritaDanielV: {
@@ -1203,7 +1197,7 @@ const styles = StyleSheet.create({
     // alignContent:'flex-end',
     // justifyContent:'flex-end',
     position: "relative",
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   loritaDanielS: {
     marginTop: 0,
@@ -1212,12 +1206,12 @@ const styles = StyleSheet.create({
     left: 200,
     width: 180,
     fontSize: FontSize.size_sm,
-    color: 'green',
+    color: "green",
     textAlign: "right",
     // alignContent:'flex-end',
     // justifyContent:'flex-end',
     position: "relative",
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   date: {
     color: Color.darkslateblue,
@@ -1436,12 +1430,11 @@ const styles = StyleSheet.create({
     width: "100%",
     right: 0,
     top: -20,
-    position: "absolute"
+    position: "absolute",
   },
   iconP: {
     height: 25,
     width: 25,
-
   },
   wrapper: {
     left: 277,
@@ -1571,7 +1564,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 932,
     width: "100%",
-
   },
 });
 

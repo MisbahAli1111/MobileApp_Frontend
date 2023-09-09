@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet,TextInput, TouchableWithoutFeedback, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+  Text,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontFamily, Color, Border, FontSize,Padding } from "../GlobalStyles";
+import { FontFamily, Color, Border, FontSize, Padding } from "../GlobalStyles";
 import Footer from "../components/Footer";
-import MaintenanceRecordList from  "../components/MaintenanceRecordList";
+import MaintenanceRecordList from "../components/MaintenanceRecordList";
 import FilterSearchVehicle from "../components/FilterSearchVehicle";
 import InvoiceList from "../components/InvoiceList";
 const Invoices = () => {
   const navigation = useNavigation();
-  const [search, setSearch] = useState('');
-  const handleQuery= (query) => {
+  const [search, setSearch] = useState("");
+  const handleQuery = (query) => {
     setSearch(query);
-  }
+  };
 
   return (
     <View style={styles.maintenanceRecord}>
-      
       <Image
         style={styles.lightTexture22341Icon}
         contentFit="cover"
@@ -28,69 +34,67 @@ const Invoices = () => {
         source={require("../assets/image-2.png")}
       />
 
-
-<View style={styles.breadcrumbsParent}>
-          <View style={[styles.breadcrumbs, styles.housefill1Position]}>
-            <View style={[styles.housefill1, styles.housefill1Position]}>
-              <Image
-                style={styles.homeMutedIcon1}
-                contentFit="cover"
-                source={require("../assets/homemuted.png")}
-              />
-            </View>
-            <View style={styles.elementPosition} />
-            <View style={styles.elementPosition}>
-              <Text style={[styles.text13, styles.text13Typo]}>\</Text>
-            </View>
-            <Text style={[styles.invoices3, styles.totalTypo]}>Invoices</Text>
+      <View style={styles.breadcrumbsParent}>
+        <View style={[styles.breadcrumbs, styles.housefill1Position]}>
+          <View style={[styles.housefill1, styles.housefill1Position]}>
+            <Image
+              style={styles.homeMutedIcon1}
+              contentFit="cover"
+              source={require("../assets/homemuted.png")}
+            />
           </View>
-          <Pressable
-            style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
-            onPress={() => navigation.navigate("MaintenanceRecord", { fromPreviousScreen: true })}
-          >
-            <Text style={[styles.createInvoice, styles.text13Typo]}>
-              Create Invoice
-            </Text>
-          </Pressable>
+          <View style={styles.elementPosition} />
+          <View style={styles.elementPosition}>
+            <Text style={[styles.text13, styles.text13Typo]}>\</Text>
+          </View>
+          <Text style={[styles.invoices3, styles.totalTypo]}>Invoices</Text>
         </View>
-
-
+        <Pressable
+          style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
+          onPress={() =>
+            navigation.navigate("MaintenanceRecord", {
+              fromPreviousScreen: true,
+            })
+          }
+        >
+          <Text style={[styles.createInvoice, styles.text13Typo]}>
+            Create Invoice
+          </Text>
+        </Pressable>
+      </View>
 
       {/* search */}
       <View style={[styles.rectangleParent18, styles.rectangleLayout]}>
-          <Pressable
-            style={[styles.rectanglePressable, styles.rectangleLayout]}
-           
-          />
-         <TextInput style={[styles.searchInvoice, styles.paidTypo]}
-        placeholder="Search Invoice "
-        clearButtonMode="always"
-        value={search}
-        onChangeText={(query) => handleQuery(query)}
+        <Pressable
+          style={[styles.rectanglePressable, styles.rectangleLayout]}
         />
-          <Pressable
-            style={styles.vector}
-            onPress={() => navigation.navigate("MaintenanceRecord")}
-          >
-            <Image
-              style={[styles.icon, styles.iconLayout1]}
-              contentFit="cover"
-              source={require("../assets/vector13.png")}
-            />
-          </Pressable>
-        </View>
- 
-  <View style={styles.cont}>
-      <Footer  prop={"Invoices"} />
+        <TextInput
+          style={[styles.searchInvoice, styles.paidTypo]}
+          placeholder="Search Invoice "
+          clearButtonMode="always"
+          value={search}
+          onChangeText={(query) => handleQuery(query)}
+        />
+        <Pressable
+          style={styles.vector}
+          onPress={() => navigation.navigate("MaintenanceRecord")}
+        >
+          <Image
+            style={[styles.icon, styles.iconLayout1]}
+            contentFit="cover"
+            source={require("../assets/vector13.png")}
+          />
+        </Pressable>
       </View>
 
-    <View style={styles.boxContianer}>
-    <InvoiceList dsearch={search} />
-    </View>     
-      
-    </View>
-    
+      <View style={styles.cont}>
+        <Footer prop={"Invoices"} />
+      </View>
 
+      <View style={styles.boxContianer}>
+        <InvoiceList dsearch={search} />
+      </View>
+    </View>
   );
 };
 
@@ -103,22 +107,21 @@ const styles = StyleSheet.create({
     },
     left: 0,
   },
-  FilterSearch:{
-    left:228,
-    top:10
+  FilterSearch: {
+    left: 228,
+    top: 10,
   },
-  cont:{
-    marginLeft:1,
-    
+  cont: {
+    marginLeft: 1,
   },
-  boxContianer :{
-    flex:1,
-    flexWrap:"wrap",
-    marginTop:250,
-   
+  boxContianer: {
+    flex: 1,
+    flexWrap: "wrap",
+    marginTop: 250,
+
     // marginBottom:90,
-   maxHeight:525,
-    // alignItems: 'flex-end', 
+    maxHeight: 525,
+    // alignItems: 'flex-end',
   },
   iconLayout1: {
     maxHeight: "100%",
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   createInvoiceWrapper: {
-    left:226,
+    left: 226,
     shadowColor: "rgba(0, 0, 0, 0.05)",
     shadowRadius: 20,
     elevation: 20,
@@ -240,11 +243,11 @@ const styles = StyleSheet.create({
 
   breadcrumbsParent: {
     flex: 1,
-    width: '80%', 
-    height: 32, 
-    position: 'absolute',
-    marginTop:130,
-    marginLeft:22,
+    width: "80%",
+    height: 32,
+    position: "absolute",
+    marginTop: 130,
+    marginLeft: 22,
   },
   paidTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -308,8 +311,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleParent18: {
-    marginTop:180,
-    marginLeft:21,
+    marginTop: 180,
+    marginLeft: 21,
   },
   rectanglePressable: {
     borderRadius: Border.br_5xs,
@@ -487,7 +490,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-
   groupParent: {
     top: 100,
     height: 33,
@@ -507,8 +509,8 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.caption2Regular,
     fontWeight: "800",
     position: "absolute",
-    
-    color:'black',
+
+    color: "black",
   },
   icon1: {
     maxHeight: "100%",
@@ -537,7 +539,6 @@ const styles = StyleSheet.create({
     top: 145,
     left: 20,
   },
-
 
   maintenanceRecord: {
     backgroundColor: Color.white,
