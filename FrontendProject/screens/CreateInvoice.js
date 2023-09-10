@@ -3,7 +3,17 @@ import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { StyleSheet, View, Text, Pressable,Dimensions,ActivityIndicator, ScrollView, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  Dimensions,
+  ActivityIndicator,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
@@ -13,13 +23,12 @@ import ErrorPopup from "../components/ErrorPopup";
 import ErrorPopup2 from "../components/ErrorPopup2";
 
 import InvoiceDetailView from "./InvoiceDetailView";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import CreateInvoiceForm from "../components/CreateInvoiceForm";
 import InvoiceDescription from "../components/InvoiceDescription";
 import InvoiceTax from "../components/InvoiceDiscount";
 import InvoiceDiscount from "../components/InvoiceTax";
 import { useRef } from "react";
-
 
 const CreateInvoice = (parans) => {
   const navigation = useNavigation();
@@ -33,45 +42,38 @@ const CreateInvoice = (parans) => {
   const recordId = route.params?.InvoiceRecord;
   const invoiceId = route.params?.InvoiceId;
   // console.log(invoiceId);
-  const screenHeight = Dimensions.get('window').height;
-  const screenWidth = Dimensions.get('window').width;
-
-
-
-
-
-
+  const screenHeight = Dimensions.get("window").height;
+  const screenWidth = Dimensions.get("window").width;
 
   const [showPicker, setShowPicker] = useState(false);
 
-  const [itemName, setItemName] = useState('');
-  const [rate, setRate] = useState('');
+  const [itemName, setItemName] = useState("");
+  const [rate, setRate] = useState("");
   const [amount, setAmount] = useState(0);
-  const [quantity, setQuantity] = useState('');
+  const [quantity, setQuantity] = useState("");
 
-  const [ subtotal , setSubTotal]= useState(0);
+  const [subtotal, setSubTotal] = useState(0);
 
   const [disRateper, setdisRateper] = useState(0);
-  const [total, setTotal] = useState('');
+  const [total, setTotal] = useState("");
   const [calculation, setCalculation] = useState(0);
 
-
-  const [Description, setDescription] = useState(['']);
-  const [discount, setDiscount] = useState(['']);
-  const [tax, setTax] = useState(['']);
+  const [Description, setDescription] = useState([""]);
+  const [discount, setDiscount] = useState([""]);
+  const [tax, setTax] = useState([""]);
 
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showErrorPopups, setShowErrorPopups] = useState(false);
 
-  const [errorMsg, setErrorMsg] = useState('');
-  const [errorMsg2, setErrorMsg2] = useState('');
-  const [Duedate, setDueDate] = useState('');
-  const invoiceStatus = ['Paid', 'Due'];
-  const [Name, setName] = useState('');
-  const [regNumber, setregNumber] = useState('');
-  const [date, setDate] = useState('');
-  const [currency , setCurrency] = useState('');
-  const [status, setStatus] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg2, setErrorMsg2] = useState("");
+  const [Duedate, setDueDate] = useState("");
+  const invoiceStatus = ["Paid", "Due"];
+  const [Name, setName] = useState("");
+  const [regNumber, setregNumber] = useState("");
+  const [date, setDate] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [status, setStatus] = useState("");
   const [totalAmount, setTotalAmount] = useState(0.0);
   const [save, setSave] = useState(false);
   const [EmptyItem, setEmptyItem] = useState(false);
@@ -93,7 +95,6 @@ const CreateInvoice = (parans) => {
       const rate = item.rate;
 
       if (!itemName && !quantity && !rate) {
-
         setEmptyItem(true);
       }
       if (
@@ -102,29 +103,28 @@ const CreateInvoice = (parans) => {
         (itemName && quantity && !rate) ||
         (itemName && !quantity && !rate) ||
         (!itemName && !quantity && rate) ||
-        (!itemName && quantity && !rate)) {
-
+        (!itemName && quantity && !rate)
+      ) {
         setEmptyFeildsDesc(true);
       }
-
-
-
     }
 
-    const filteredItems = items.filter(item => {
-      return !(item.rate === "" && item.quantity === "" && item.itemName === "");
+    const filteredItems = items.filter((item) => {
+      return !(
+        item.rate === "" &&
+        item.quantity === "" &&
+        item.itemName === ""
+      );
     });
 
-    const descriptions = filteredItems.map(item => ({
+    const descriptions = filteredItems.map((item) => ({
       item: item.itemName,
       rate: parseFloat(item.rate),
       quantity: parseInt(item.quantity),
-      amount: parseFloat(item.rate) * parseInt(item.quantity)
+      amount: parseFloat(item.rate) * parseInt(item.quantity),
     }));
 
     setDescriptionArray(descriptions);
-
-
   };
   // const changeRecord = () =>{
   //   navigation.navigate("MaintenanceRecord", { fromPreviousScreen: true })
@@ -133,7 +133,6 @@ const CreateInvoice = (parans) => {
   const handleTaxChange = (items) => {
     setDiscount(items);
 
-
     setEmptyFeildsDisc(false);
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -141,26 +140,23 @@ const CreateInvoice = (parans) => {
       const rate = item.discountRate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
-
         setEmptyFeildsDisc(true);
       }
     }
 
-    const filteredItems = items.filter(item => {
+    const filteredItems = items.filter((item) => {
       return !(item.discountRate === "" && item.discountName === "");
     });
 
-    const taxes = filteredItems.map(item => ({
+    const taxes = filteredItems.map((item) => ({
       discountName: item.discountName,
-      discountRate: parseFloat(item.discountRate)
+      discountRate: parseFloat(item.discountRate),
     }));
 
     setDiscountArray(taxes);
-  }
-
+  };
 
   const handleDiscount = (items) => {
-
     setTax(items);
     setEmptyFeildsTax(false);
     for (let i = 0; i < items.length; i++) {
@@ -169,28 +165,21 @@ const CreateInvoice = (parans) => {
       const rate = item.taxRate;
 
       if ((!itemName && rate) || (itemName && !rate)) {
-
         setEmptyFeildsTax(true);
       }
     }
 
-
-    const filteredItems = items.filter(item => {
+    const filteredItems = items.filter((item) => {
       return !(item.taxRate === "" && item.taxName === "");
     });
 
-    const taxes = filteredItems.map(item => ({
+    const taxes = filteredItems.map((item) => ({
       taxName: item.taxName,
-      taxRate: parseFloat(item.taxRate)
+      taxRate: parseFloat(item.taxRate),
     }));
 
     setTaxArray(taxes);
-
-  }
-
-
-
-
+  };
 
   const handleFormDataChange = (data) => {
     setName(data.name);
@@ -199,49 +188,36 @@ const CreateInvoice = (parans) => {
     setCurrency(data.currency);
     setregNumber(data.regNumber);
     setStatus(data.status);
-    
   };
 
   const handleSave = () => {
-    setErrorMsg('');
-    setErrorMsg2('');
+    setErrorMsg("");
+    setErrorMsg2("");
     setSave(true);
-    if (!Name || !regNumber || !status|| !currency || !date || !Duedate) {
-
-
-    }
-    else {
-
+    if (!Name || !regNumber || !status || !currency || !date || !Duedate) {
+    } else {
       if (EmptyFeildsDesc || EmptyFeildsTax || EmptyFeildsDisc) {
-        setErrorMsg2('Please provide complete detail for entered feild');
+        setErrorMsg2("Please provide complete detail for entered feild");
         setShowErrorPopups(true);
-
       } else {
         if (EmptyItem) {
-          setErrorMsg('You are about to create empty invoice. Are you sure you want to proceed?');
+          setErrorMsg(
+            "You are about to create empty invoice. Are you sure you want to proceed?"
+          );
           setShowErrorPopup(true);
         } else {
-          
-            // console.log("create");
-            sendData();
-          
-
+          // console.log("create");
+          sendData();
         }
       }
-
     }
-
-
   };
-
- 
-
 
   sendData = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-      
+
     const token = await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
+    const accessToken = "Bearer " + token;
 
     let st;
 
@@ -252,44 +228,41 @@ const CreateInvoice = (parans) => {
     }
     console.log("subtotal here");
     console.log(subtotal);
-      
 
     let data = JSON.stringify({
-      "invoiceDue": Duedate,
-      "date": date,
-      "registrationNumber": regNumber,
-      "total": parseFloat(totalAmount),
-      "status": st,
-      "currency":currency,
-      "descriptions": descriptionArray,
-      "discounts": DiscountArray,
-      "taxes": TaxArray
+      invoiceDue: Duedate,
+      date: date,
+      registrationNumber: regNumber,
+      total: parseFloat(totalAmount),
+      status: st,
+      currency: currency,
+      descriptions: descriptionArray,
+      discounts: DiscountArray,
+      taxes: TaxArray,
       // "currency":c
     });
 
     let config = {
-      method: 'post',
+      method: "post",
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
+      url: `http://192.168.0.236:8080/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': accessToken
+        "Content-Type": "application/json",
+        Authorization: accessToken,
       },
-      data: data
+      data: data,
     };
 
-    axios.request(config)
+    axios
+      .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        navigation.navigate('Invoices');
+        navigation.navigate("Invoices");
       })
       .catch((error) => {
         console.log(error);
       });
-
-
   };
-
 
   useEffect(() => {
     setAmount(0.0);
@@ -310,8 +283,6 @@ const CreateInvoice = (parans) => {
     }
     setSubTotal(totalAmount);
 
-
-
     let totalDiscount = 0.0;
     for (const disc of discount) {
       const discountRate = parseFloat(disc.discountRate);
@@ -319,12 +290,9 @@ const CreateInvoice = (parans) => {
         totalDiscount += (discountRate / 100) * totalAmount; // Convert rate to decimal
       }
     }
-    
-
 
     let totaltax = 0.0;
     for (const t of tax) {
-
       const taxRate = parseFloat(t.taxRate);
 
       if (!isNaN(taxRate)) {
@@ -340,16 +308,22 @@ const CreateInvoice = (parans) => {
     setTotalAmount(totalAmount);
   };
 
-
   return (
     <View style={styles.createInvoice}>
-      <View style={{ flex: 1, justifyContent: 'center', position: 'absolute', width: screenWidth, height: screenHeight, alignItems: 'center' }}>
-
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          position: "absolute",
+          width: screenWidth,
+          height: screenHeight,
+          alignItems: "center",
+        }}
+      >
         {isLoading ? (
           <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
         ) : (
-          <View>
-          </View>
+          <View></View>
         )}
       </View>
 
@@ -374,15 +348,12 @@ const CreateInvoice = (parans) => {
         <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
       </View>
 
-
       {/* reg number  */}
       <Image
         style={[styles.groupIcon, styles.iconLayout]}
         contentFit="cover"
         source={require("../assets/group-141.png")}
       />
-
-
 
       <View style={[styles.element2, styles.elementFlexBox]}>
         <Text style={styles.textt}>\</Text>
@@ -391,40 +362,43 @@ const CreateInvoice = (parans) => {
 
       <ScrollView style={styles.wrap}>
         <View style={styles.form}>
-          <CreateInvoiceForm onFormDataChange={handleFormDataChange} APIData={APIData} recordId={recordId} save={save} setSave={setSave} />
+          <CreateInvoiceForm
+            onFormDataChange={handleFormDataChange}
+            APIData={APIData}
+            recordId={recordId}
+            save={save}
+            setSave={setSave}
+          />
         </View>
         <View style={styles.scroll}>
           <View>
-            <InvoiceDescription onItemsChange={handleItemsChange} APIDescription={APIDescription} />
+            <InvoiceDescription
+              onItemsChange={handleItemsChange}
+              APIDescription={APIDescription}
+            />
           </View>
           <View style={styles.tableRow}>
             <View style={styles.taxd}>
               <InvoiceDiscount onItemsChange={handleDiscount} APITax={APITax} />
             </View>
             <View style={styles.taxdd}>
-              <InvoiceTax onItemsChange={handleTaxChange} APIDiscount={APIDiscount} />
+              <InvoiceTax
+                onItemsChange={handleTaxChange}
+                APIDiscount={APIDiscount}
+              />
             </View>
           </View>
         </View>
       </ScrollView>
 
-
-
-
-
       <View style={[styles.createInvoiceChild6, styles.createChildLayout1]} />
       <View style={[styles.createInvoiceChild7, styles.createChildPosition]} />
-
 
       <View style={styles.group}>
         <Text style={[styles.text5, styles.text5Clr]}>-</Text>
         <Text style={[styles.total, styles.totalTypo]}>Total</Text>
         <Text style={[styles.rs3050, styles.text5Clr]}>Rs {totalAmount}</Text>
       </View>
-
-
-
-
 
       {/* Submit Button  */}
       <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
@@ -434,13 +408,12 @@ const CreateInvoice = (parans) => {
             contentFit="cover"
             source={require("../assets/rectangle-73.png")}
           />
-        
-            <TouchableOpacity onPress={handleSave}>
-              <Text style={[styles.createInvoice3, styles.totalTypo]}>
-                Create Invoice
-              </Text>
-            </TouchableOpacity>
-        
+
+          <TouchableOpacity onPress={handleSave}>
+            <Text style={[styles.createInvoice3, styles.totalTypo]}>
+              Create Invoice
+            </Text>
+          </TouchableOpacity>
         </TouchableOpacity>
       </View>
 
@@ -466,22 +439,20 @@ const CreateInvoice = (parans) => {
         onCancel={() => setShowErrorPopups(false)}
       />
     </View>
-
   );
 };
 
 const styles = StyleSheet.create({
-
   tableRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     top: 0,
 
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    justifyContent: "space-between",
+    alignItems: "flex-start",
   },
   form: {
     marginTop: 0,
-    position: 'relative',
+    position: "relative",
     // backgroundColor:'red',
   },
   picker: {
@@ -498,7 +469,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 0,
     paddingVertical: 0,
-
   },
   containerr: {
     flex: 1,
@@ -511,10 +481,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption2Regular_size,
     width: 120,
     left: -13,
-
   },
   vectorContainerr: {
-
     marginTop: 112,
     left: 275,
     backgroundColor: Color.darkslateblue,
@@ -529,7 +497,7 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    position: 'absolute',
+    position: "absolute",
     paddingRight: 10,
     left: 8,
   },
@@ -548,7 +516,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // maxHeight: 300,
 
-    position: 'relative',
+    position: "relative",
     // marginTop:0,
     // backgroundColor:'red',
   },
@@ -934,7 +902,7 @@ const styles = StyleSheet.create({
     left: 5,
   },
   invoiceStatusPicker: {
-    top: 232
+    top: 232,
   },
   groupInner: {
     left: -1,
@@ -1295,10 +1263,10 @@ const styles = StyleSheet.create({
     top: -25,
   },
   group: {
-    left: 300,
-    alignContent: 'flex-end',
-    justifyContent: 'flex-end',
-    textAlign: 'right',
+    left: 280,
+    alignContent: "flex-end",
+    justifyContent: "flex-end",
+    textAlign: "right",
     width: 132,
     height: 0,
     top: 680,
@@ -1326,9 +1294,9 @@ const styles = StyleSheet.create({
   },
   createInvoice3E: {
     top: 10,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignSelf: "center",
+    alignItems: "center",
     color: Color.snow,
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.poppinsMedium,

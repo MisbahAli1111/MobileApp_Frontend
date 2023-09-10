@@ -127,7 +127,7 @@ const App = () => {
               initialParams={{
                 title: "Add Record",
                 showBackArrow: true,
-                onBackPress: "Vehicles",
+                onBackPress: "MaintenanceRecord",
                 profileImage: "Yes",
               }}
             />
@@ -235,7 +235,7 @@ const App = () => {
               initialParams={{
                 title: "Invoice Detail",
                 showBackArrow: true,
-                onBackPress: "CreateInvoice",
+                onBackPress: "Invoices",
                 profileImage: "Yes",
               }}
             />
@@ -268,7 +268,7 @@ const App = () => {
               initialParams={{
                 title: "Vehicles",
                 showBackArrow: true,
-                onBackPress: "Vehicle",
+                onBackPress: "Vehicles",
                 profileImage: "Yes",
               }}
             />

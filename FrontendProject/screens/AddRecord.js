@@ -333,7 +333,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/${carNumber}/type`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/${carNumber}/type`,
       headers: { 
         'Authorization': accessToken
       }
@@ -364,7 +364,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-registration-number/${Business_id}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-registration-number/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -390,7 +390,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -469,7 +469,7 @@ const [userId,setUserId] = useState('');
         
     
         const response = await axios.post(
-          `http://192.168.100.71:8080/api/file/upload/record/${recordId}`,
+          `http://192.168.0.236:8080/api/file/upload/record/${recordId}`,
           imageData,
           {
             headers: {
@@ -575,7 +575,7 @@ const [userId,setUserId] = useState('');
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: `http://192.168.100.71:8080/api/maintenance-record/add-record/${Business_id}`,
+          url: `http://192.168.0.236:8080/api/maintenance-record/add-record/${Business_id}`,
           headers: { 
             'Content-Type': 'application/json', 
             'Authorization': accessToken

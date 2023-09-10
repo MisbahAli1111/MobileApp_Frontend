@@ -348,7 +348,7 @@ const CreateInvoiceForm = ({
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
       headers: {
         Authorization: accessToken,
       },
@@ -382,7 +382,7 @@ const CreateInvoiceForm = ({
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/maintenance-record/${recordId}/registration-number`,
+      url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/registration-number`,
       headers: {},
     };
 

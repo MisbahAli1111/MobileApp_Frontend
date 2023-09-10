@@ -115,7 +115,7 @@ const ChangePassword = () => {
       let config = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `http://192.168.100.71:8080/api/users/update-password/${userId}`,
+        url: `http://192.168.0.236:8080/api/users/update-password/${userId}`,
         headers: {
           "Content-Type": "application/json",
         },

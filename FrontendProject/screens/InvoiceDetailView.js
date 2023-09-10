@@ -61,7 +61,6 @@ function InvoiceDetailView() {
   });
   const rem = screenWidth / 16;
 
-
   const getData = async () => {
     setIsLoading(true);
     let token = await AsyncStorage.getItem("accessToken");
@@ -289,7 +288,10 @@ function InvoiceDetailView() {
   <div class="container">
     <p class="header">
       <span class="header-left">Invoice ID: ${invoiceID}</span>
-      <span class="header-middle"><img src="${businessProfile}" alt="Logo"></span>
+      <span class="header-middle">
+        <img src="${businessProfile}" alt="Logo" style="width: 30px; height: 30px;">
+      </span>
+
       <span class="header-right">Invoice</span>
     </p>
     <p><br></p>
@@ -376,31 +378,37 @@ function InvoiceDetailView() {
             locations={[0, 1]}
             colors={["rgba(7, 132, 199, 0.16)", "rgba(217, 217, 217, 0)"]}
           >
-            <View style={{
-              alignSelf: 'flex-start',
-            }}>
-
-              <View style={{ flexDirection: 'row' }}>
+            <View
+              style={{
+                alignSelf: "flex-start",
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
                 <Text
                   style={{
                     fontSize: rem * 0.8,
                     fontWeight: 500,
-                    fontStyle: 'italic',
+                    // fontStyle: 'italic',
                   }}
-                >#INV</Text>
+                >
+                  #INV
+                </Text>
                 <Text
                   style={{
                     fontSize: rem * 0.8,
                     fontWeight: 500,
                   }}
-                >{invoiceID}</Text>
+                >
+                  {invoiceID}
+                </Text>
               </View>
 
-
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Text
                   style={{
                     fontSize: rem * 0.55,
@@ -415,18 +423,19 @@ function InvoiceDetailView() {
                     fontSize: rem * 0.6,
                     fontWeight: 600,
                     width: screenWidth * 0.34,
-                    textAlign: 'right', // Align text to the right
+                    textAlign: "right", // Align text to the right
                   }}
                 >
                   Invoice To
                 </Text>
               </View>
 
-
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Text
                   style={{
                     fontSize: rem * 0.55,
@@ -441,17 +450,19 @@ function InvoiceDetailView() {
                     fontSize: rem * 0.6,
                     fontWeight: 600,
                     width: screenWidth * 0.34,
-                    textAlign: 'right',
+                    textAlign: "right",
                   }}
                   numberOfLines={1}
                 >
                   {name}
                 </Text>
               </View>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Text
                   style={{
                     fontSize: rem * 0.55,
@@ -466,43 +477,47 @@ function InvoiceDetailView() {
                     fontSize: rem * 0.6,
                     fontWeight: 600,
                     width: screenWidth * 0.34,
-                    textAlign: 'right',
+                    textAlign: "right",
                   }}
                 >
                   {registrationNumber}
                 </Text>
               </View>
-              <View style={{ 
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-}}>
-  <Text
-    style={{
-      fontSize: rem * 0.55,
-      fontWeight: 500,
-      width: screenWidth * 0.4,
-    }}
-  >
-    Currency: {currency}
-  </Text>
-  <Text
-  style={{
-    fontSize: rem * 0.6,
-    fontWeight: 600,
-    color:"#91cff2",
-    width: screenWidth * 0.34,
-    textAlign: 'right',
-  }}
->
-  {status}
-</Text>
-</View>
-
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: rem * 0.55,
+                    fontWeight: 500,
+                    width: screenWidth * 0.4,
+                  }}
+                >
+                  Currency: {currency}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: rem * 0.6,
+                    fontWeight: 600,
+                    color:
+                      status === "Paid"
+                        ? "green"
+                        : status === "Due"
+                        ? "#ffcc00"
+                        : "black",
+                    width: screenWidth * 0.34,
+                    textAlign: "right",
+                  }}
+                >
+                  {status}
+                </Text>
+              </View>
             </View>
           </LinearGradient>
-
         </View>
-
 
         <Text style={styles.total}>Total</Text>
         <View style={styles.invoiceDetailViewChild} />
@@ -582,10 +597,6 @@ function InvoiceDetailView() {
           {invoiceID}
         </Text>
 
-
-
-
-
         {/* <Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
         <Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text> */}
 
@@ -623,9 +634,6 @@ function InvoiceDetailView() {
           <Text style={[styles.inv00011, styles.invoiceTypo]}>{total}</Text>
           <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
         </View> */}
-
-
-
 
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>
@@ -692,8 +700,8 @@ const styles = StyleSheet.create({
     width: 80,
   },
   containerView: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
 
     marginTop: 160,
   },

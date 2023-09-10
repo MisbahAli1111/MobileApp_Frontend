@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
 import {
@@ -45,7 +45,7 @@ const SalesReport = () => {
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
   const [Error, setError] = useState("");
-  const [businessProfile,setBusinessProfile] = useState("");
+  const [businessProfile, setBusinessProfile] = useState("");
   const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
   const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
 
@@ -176,7 +176,9 @@ const SalesReport = () => {
       <div class="container">
         <p class="header">
           <span class="header-left">Date: ${formatedDate}</span>
-          <span class="header-middle"><img src="${businessProfile}" alt="Logo"></span>
+          <span class="header-middle">
+            <img src="${businessProfile}" alt="Logo" style="width: 30px; height: 30px;">
+          </span>
           <span class="header-right">Sales Report</span>
         </p>
         <p><br></p>
