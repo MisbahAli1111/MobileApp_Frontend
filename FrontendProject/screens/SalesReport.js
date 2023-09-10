@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
 import {
@@ -45,6 +45,46 @@ const SalesReport = () => {
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
   const [Error, setError] = useState("");
+  const [businessProfile,setBusinessProfile] = useState("");
+  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
+  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
+
+  const getProfileImage = async () => {
+    try {
+      const accessTokens = await AsyncStorage.getItem("accessToken");
+      const token = "Bearer " + accessTokens;
+      const Business_id = await AsyncStorage.getItem("Business_id");
+
+      if (Business_id) {
+        console.log("userID found");
+
+        const config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `http://192.168.0.236:8080/api/business/${Business_id}/profile-image`,
+          headers: {
+            Authorization: token,
+          },
+        };
+
+        const response = await axios.request(config);
+
+        if (response.status === 200) {
+          const responseData = response.data;
+          console.log("Data Image:", response.data);
+          setBusinessProfile(baseUrl + responseData.url);
+        } else {
+          console.log("Error: " + response.statusText);
+        }
+      }
+    } catch (error) {
+      console.log("Error fetching profile image:", error);
+    }
+  };
+
+  useEffect(() => {
+    getProfileImage();
+  }, []);
 
   function generatehtml(
     data,
@@ -136,7 +176,7 @@ const SalesReport = () => {
       <div class="container">
         <p class="header">
           <span class="header-left">Date: ${formatedDate}</span>
-          <span class="header-middle"><img src="logo.png" alt="Logo"></span>
+          <span class="header-middle"><img src="${businessProfile}" alt="Logo"></span>
           <span class="header-right">Sales Report</span>
         </p>
         <p><br></p>
@@ -283,7 +323,7 @@ const SalesReport = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `http://192.168.100.71:8080/api/invoice/get-invoice-salesReport/${Business_id}`,
+        url: `http://192.168.0.236:8080/api/invoice/get-invoice-salesReport/${Business_id}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,

@@ -59,6 +59,8 @@ function InvoiceDetailView() {
   useEffect(() => {
     calculateTotalAmount();
   });
+  const rem = screenWidth / 16;
+
 
   const getData = async () => {
     setIsLoading(true);
@@ -68,7 +70,7 @@ function InvoiceDetailView() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.100.71:8080/api/invoice/get-invoice/${invoiceId}`,
+      url: `http://192.168.0.236:8080/api/invoice/get-invoice/${invoiceId}`,
       headers: {
         Authorization: accessToken,
       },
@@ -120,7 +122,7 @@ function InvoiceDetailView() {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://192.168.100.71:8080/api/business/${Business_id}/profile-image`,
+          url: `http://192.168.0.236:8080/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -367,6 +369,141 @@ function InvoiceDetailView() {
           contentFit="cover"
           source={require("../assets/light-texture2234-1.png")}
         />
+
+        <View style={styles.containerView}>
+          <LinearGradient
+            style={styles.rectangleLineargradient}
+            locations={[0, 1]}
+            colors={["rgba(7, 132, 199, 0.16)", "rgba(217, 217, 217, 0)"]}
+          >
+            <View style={{
+              alignSelf: 'flex-start',
+            }}>
+
+              <View style={{ flexDirection: 'row' }}>
+                <Text
+                  style={{
+                    fontSize: rem * 0.8,
+                    fontWeight: 500,
+                    fontStyle: 'italic',
+                  }}
+                >#INV</Text>
+                <Text
+                  style={{
+                    fontSize: rem * 0.8,
+                    fontWeight: 500,
+                  }}
+                >{invoiceID}</Text>
+              </View>
+
+
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+                <Text
+                  style={{
+                    fontSize: rem * 0.55,
+                    fontWeight: 500,
+                    width: screenWidth * 0.5,
+                  }}
+                >
+                  Date: {date}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: rem * 0.6,
+                    fontWeight: 600,
+                    width: screenWidth * 0.34,
+                    textAlign: 'right', // Align text to the right
+                  }}
+                >
+                  Invoice To
+                </Text>
+              </View>
+
+
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+                <Text
+                  style={{
+                    fontSize: rem * 0.55,
+                    fontWeight: 500,
+                    width: screenWidth * 0.4,
+                  }}
+                >
+                  Invoice Due: {due}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: rem * 0.6,
+                    fontWeight: 600,
+                    width: screenWidth * 0.34,
+                    textAlign: 'right',
+                  }}
+                  numberOfLines={1}
+                >
+                  {name}
+                </Text>
+              </View>
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+                <Text
+                  style={{
+                    fontSize: rem * 0.55,
+                    fontWeight: 500,
+                    width: screenWidth * 0.4,
+                  }}
+                >
+                  Balance: {total}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: rem * 0.6,
+                    fontWeight: 600,
+                    width: screenWidth * 0.34,
+                    textAlign: 'right',
+                  }}
+                >
+                  {registrationNumber}
+                </Text>
+              </View>
+              <View style={{ 
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+}}>
+  <Text
+    style={{
+      fontSize: rem * 0.55,
+      fontWeight: 500,
+      width: screenWidth * 0.4,
+    }}
+  >
+    Currency: {currency}
+  </Text>
+  <Text
+  style={{
+    fontSize: rem * 0.6,
+    fontWeight: 600,
+    color:"#91cff2",
+    width: screenWidth * 0.34,
+    textAlign: 'right',
+  }}
+>
+  {status}
+</Text>
+</View>
+
+            </View>
+          </LinearGradient>
+
+        </View>
+
+
         <Text style={styles.total}>Total</Text>
         <View style={styles.invoiceDetailViewChild} />
         <View style={styles.invoiceDetailViewItem} />
@@ -444,29 +581,27 @@ function InvoiceDetailView() {
         <Text style={[styles.inv0001, styles.inv0001Position]}>
           {invoiceID}
         </Text>
-        <LinearGradient
-          style={styles.rectangleLineargradient}
-          locations={[0, 1]}
-          colors={["rgba(7, 132, 199, 0.16)", "rgba(217, 217, 217, 0)"]}
-        />
 
-        <Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
-        <Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text>
 
-        <View style={styles.setstyle}>
+
+
+
+        {/* <Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
+        <Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text> */}
+
+        {/* <View style={styles.setstyle}>
           <Text style={[styles.corollaGli2016, styles.dueTypo]}>
-            {/* {regNumber} */}
+ 
           </Text>
           <View style={[styles.ellipseParent, styles.ellipseLayout]}>
-            {/* // status */}
 
-            {/* <Image
-              style={[styles.ellipseIcon, styles.ellipseLayout]}
-              contentFit="cover"
-              source={require("../assets/ellipse-10.png")}
-            /> */}
-            {/* <Text style={styles.paid}>sdfsfd</Text> */}
           </View>
+
+            <View style={styles.rightwrap}>
+
+
+            </View>
+
 
           <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
 
@@ -487,7 +622,11 @@ function InvoiceDetailView() {
           </View>
           <Text style={[styles.inv00011, styles.invoiceTypo]}>{total}</Text>
           <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
-        </View>
+        </View> */}
+
+
+
+
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>
             <Text style={[styles.text17, styles.textTypo]}>-</Text>
@@ -552,6 +691,12 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption2Regular_size,
     width: 80,
   },
+  containerView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    marginTop: 160,
+  },
   dataRow: {
     flexDirection: "row",
     borderBottomWidth: 0.8,
@@ -586,7 +731,7 @@ const styles = StyleSheet.create({
   },
 
   head: {
-    marginTop: 290,
+    marginTop: 25,
     alignContent: "center",
     justifyContent: "center",
     marginLeft: 12,
@@ -1136,13 +1281,14 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   rectangleLineargradient: {
-    top: 180,
+    top: 0,
     borderRadius: Border.br_5xs,
     width: 391,
     height: 97,
     backgroundColor: "transparent",
-    left: 11,
-    position: "absolute",
+    left: 0,
+    paddingLeft: 30,
+    position: "relative",
   },
   corollaGli2016: {
     top: 280,
