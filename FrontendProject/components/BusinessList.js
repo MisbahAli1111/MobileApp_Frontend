@@ -24,7 +24,7 @@ import {
 function BusinessList({}) {
   const navigation = useNavigation();
   const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
-  const [Business, setBusiness] = useState([""]);
+  const [Business, setBusiness] = useState([]);
   const [loginTime, setLoginTime] = useState(null);
 
   const fetchData = async () => {
@@ -48,7 +48,7 @@ function BusinessList({}) {
         return "";
       }
     } catch (error) {
-      // console.error('Error fetching login time:', error);
+
       return "";
     }
   };
@@ -113,9 +113,7 @@ function BusinessList({}) {
   const handlePress = (index) => {
     const loginTime = new Date().getTime();
     AsyncStorage.setItem("BusinessId_" + index, JSON.stringify(loginTime));
-    // fetchTime(1);
-    // const storedLoginTime = await AsyncStorage.getItem(`BusinessId_${5}`);
-
+   
     AsyncStorage.setItem("Business_id", JSON.stringify(index));
     setCurrentPressedIndex(index);
 
@@ -141,15 +139,21 @@ function BusinessList({}) {
 
   useEffect(() => {
     const fetchAllTimes = async () => {
+      if (Business.length === 0) {
+        // If there are no businesses, do nothing
+        return;
+      }
+  
       const times = {};
       for (const business of Business) {
         times[business.id] = await fetchTime(business.id);
       }
       setFetchedTimes(times);
     };
-
+  
     fetchAllTimes();
-  });
+  }, [Business]); // Specify Business as a dependency
+  
 
   return (
     <View style={styles.wrap}>

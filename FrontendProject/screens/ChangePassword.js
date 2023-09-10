@@ -144,7 +144,7 @@ const ChangePassword = () => {
       return;
     }
 
-    // Replace this with your actual password change logic
+    // How to check users password from api 
     if (
       currentPassword === "currentPassword123" &&
       newPassword === confirmNewPassword

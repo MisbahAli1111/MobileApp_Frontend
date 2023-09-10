@@ -120,6 +120,7 @@ const AddVehicle = () => {
   const searchRef = useRef();
   const [userId, setUserId] = useState("");
   const [CompanyName, setCompanyName] = useState("");
+
   const getCustomer = async () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
@@ -148,7 +149,7 @@ const AddVehicle = () => {
 
   useEffect(() => {
     getCustomer();
-  }, [selectedCountry]);
+  }, []);
 
   const transformedResponse = customers.map((item) => {
     const { id, name } = item;
@@ -268,6 +269,8 @@ const AddVehicle = () => {
       let token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
       const imageData = new FormData();
+      if(selectedImage)
+      {
       // Iterate through the image array and append images to the FormData
       try {
         selectedImage.forEach((entry, index) => {
@@ -306,6 +309,7 @@ const AddVehicle = () => {
         console.error("Error:", error.message);
       }
     }
+  }
   };
 
   const saveVehicle = async () => {

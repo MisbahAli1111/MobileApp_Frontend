@@ -35,6 +35,7 @@ LogBox.ignoreLogs(['Each child in a list should have a unique "key" prop']);
 LogBox.ignoreLogs([
   " Failed prop type: Invalid prop `transform` of type `string` supplied to `Text`, expected an array",
 ]);
+LogBox.ignoreLogs(['Failed prop type: Invalid prop `value` of type `boolean` supplied to `TextInput`, expected `string`']);
 
 // Register your app
 AppRegistry.registerComponent("YourApp", () => YourAppComponent);

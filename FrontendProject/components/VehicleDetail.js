@@ -122,7 +122,7 @@ function VehicleDetails(props) {
               styles.hyperlink,
             ]}
           >
-            {vechileDetails.name.split(" ")[0]}
+            {vechileDetails.name}
           </Text>
         </TouchableOpacity>
         <View style={[styles.jan2023Parent, styles.parentPosition]}>

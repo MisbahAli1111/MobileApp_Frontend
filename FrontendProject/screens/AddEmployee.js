@@ -597,7 +597,7 @@ const AddEmployee = () => {
               </Text>
             )}
             {passwordValidError && (
-              <Text style={styles.errorText}>Enter Correct Password</Text>
+              <Text style={styles.errorText}>Password must meet all criteria: include at least one lowercase letter, one uppercase letter, one digit (number), one special character (@, $, !, %, ?, or &), and be 8 to 15 characters long.</Text>
             )}
             <TouchableOpacity onPress={togglePasswordVisibility}>
               <AntDesign name="eyeo" style={styles.passwordIcon} />
