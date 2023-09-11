@@ -1,6 +1,7 @@
 import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { Image } from "expo-image";
 import {
   StyleSheet,
@@ -20,9 +21,11 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from "react-native-responsive-screen";
-
-function BusinessList({}) {
+import Config from "../screens/Config";
+import { useIsFocused } from '@react-navigation/native';
+function BusinessList() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
   const [Business, setBusiness] = useState([]);
   const [loginTime, setLoginTime] = useState(null);
@@ -68,10 +71,13 @@ function BusinessList({}) {
     }
   };
 
+
   useEffect(() => {
-    fetchData();
-    getData();
-  }, []);
+    if (isFocused) {
+      fetchData();
+      getData();
+    }
+  }, [isFocused]);
 
   getData = () => {
     AsyncStorage.getItem("accessToken")
@@ -81,7 +87,7 @@ function BusinessList({}) {
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: "http://192.168.0.236:8080/api/business/get-my-businesses",
+          url: `${Config.apiServerUrl}/api/business/get-my-businesses`,
           headers: {
             Authorization: token,
           },

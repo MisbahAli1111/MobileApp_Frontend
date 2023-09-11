@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import RecordDetails from "../components/RecordDetails";
 import { useRoute } from "@react-navigation/native";
 import ProfileDropdown from "../components/ProfilePopDown";
+import Config from "./Config";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const MaintenanceDetailView = () => {
@@ -23,7 +24,7 @@ const MaintenanceDetailView = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
+        url: `${Config.apiServerUrl}/api/maintenance-record/get-records/${recordId}`,
         headers: {
           Authorization: accessToken,
         },

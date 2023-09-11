@@ -18,6 +18,7 @@ const windowWidth = Dimensions.get("window").width;
 import axios from "axios";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import { AntDesign } from "@expo/vector-icons";
+import Config from "./Config";
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -286,7 +287,7 @@ const EditProfile = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/${userId}`, // Use backticks
+      url: `${Config.apiServerUrl}/api/users/${userId}`, // Use backticks
       headers: {},
     };
 
@@ -327,7 +328,7 @@ const EditProfile = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/update-user/${userId}`,
+      url: `${Config.apiServerUrl}/api/users/update-user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -394,7 +395,7 @@ const EditProfile = () => {
     console.log("formData: ", imageData);
 
     const response = await axios.post(
-      `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -417,7 +418,7 @@ const EditProfile = () => {
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/${userId}/profile-image`,
+        url: `${Config.apiServerUrl}/api/users/${userId}/profile-image`,
         headers: {
           Authorization: token,
         },

@@ -3,6 +3,8 @@ import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
 import ErrorPopup from "../components/ErrorPopup";
+import Config from "../screens/Config";
+import { useIsFocused } from '@react-navigation/native';
 import {
   StyleSheet,
   View,
@@ -21,6 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
 function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [VehicleType, setVehicleType] = useState([]);
@@ -73,7 +76,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
+      url: `${Config.apiServerUrl}/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
       headers: {},
     };
 
@@ -190,7 +193,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/get-all-vehicles`,
+      url: `${Config.apiServerUrl}/api/vehicle/${Business_id}/get-all-vehicles`,
       headers: {
         Authorization: accessToken,
       },
@@ -215,10 +218,14 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       });
   };
 
+
+
   useEffect(() => {
-    setVehicleType(type);
-    getData();
-  }, [type]);
+    if (isFocused) {
+      setVehicleType(type);
+      getData();
+    }
+  }, [isFocused],[type]);
 
   const handleDeleteVehicle = () => {
     // console.log(tempVehicleid);

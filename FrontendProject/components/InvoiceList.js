@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
 import isEqual from "lodash/isEqual";
 import ErrorPopup from "../components/ErrorPopup";
+import Config from "../screens/Config";
 import {
   StyleSheet,
   TextInput,
@@ -18,13 +19,14 @@ import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
-
+import { useIsFocused } from '@react-navigation/native';
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
 
 function Invoicelist({ dsearch, searchOrder }) {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [search, setSearch] = useState("");
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [data, setData] = useState([]);
@@ -58,7 +60,6 @@ function Invoicelist({ dsearch, searchOrder }) {
 
   const handlePress = (index, recordId) => {
     setCurrentPressedIndex(index);
-    // console.log(recordId);
     navigation.navigate("InvoiceDetailView", { recordId });
   };
 
@@ -76,7 +77,7 @@ function Invoicelist({ dsearch, searchOrder }) {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/${tempInvoiceid}/delete-invoice`,
+      url: `${Config.apiServerUrl}/api/invoice/${tempInvoiceid}/delete-invoice`,
       headers: {},
     };
 
@@ -92,8 +93,10 @@ function Invoicelist({ dsearch, searchOrder }) {
   };
 
   useEffect(() => {
-    getData();
-  });
+    if (isFocused) {
+      getData();
+    }
+  }, [isFocused]);
 
   getData = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
@@ -103,7 +106,7 @@ function Invoicelist({ dsearch, searchOrder }) {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/get-invoices/${Business_id}`,
+      url: `${Config.apiServerUrl}/api/invoice/get-invoices/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },

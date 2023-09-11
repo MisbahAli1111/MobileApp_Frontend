@@ -9,6 +9,7 @@ import {
   Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import Config from "./Config";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const ChangePassword = () => {
@@ -26,6 +27,7 @@ const ChangePassword = () => {
     confirmNewPassword: false,
   });
   const navigation = useNavigation();
+
 
   const toggleShowPassword = (field) => {
     if (field === "currentPassword") {
@@ -115,7 +117,7 @@ const ChangePassword = () => {
       let config = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/update-password/${userId}`,
+        url: `${Config.apiServerUrl}/api/users/update-password/${userId}`,
         headers: {
           "Content-Type": "application/json",
         },

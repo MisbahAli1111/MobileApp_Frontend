@@ -15,7 +15,7 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import Vehicles from "../screens/Vehicles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import Config from "../screens/Config";
 function VehicleDetails(props) {
   const navigation = useNavigation();
   const [vehicleId, setVehicleId] = useState("");
@@ -33,7 +33,7 @@ function VehicleDetails(props) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}`,
+        url: `${Config.apiServerUrl}/api/vehicle/${vehicleId}`,
         headers: {
           Authorization: accessToken,
         },

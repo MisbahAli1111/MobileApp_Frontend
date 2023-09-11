@@ -16,7 +16,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const windowHeight = Dimensions.get('window').height;
-
+import Config from "./Config";
 const AddRecord = () => {
   const navigation = useNavigation();
 
@@ -333,7 +333,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/${carNumber}/type`,
+      url: `${Config.apiServerUrl}/api/maintenance-record/${carNumber}/type`,
       headers: { 
         'Authorization': accessToken
       }
@@ -364,7 +364,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/get-registration-number/${Business_id}`,
+      url: `${Config.apiServerUrl}/api/maintenance-record/get-registration-number/${Business_id}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -390,7 +390,7 @@ const [userId,setUserId] = useState('');
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `${Config.apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
       headers: { 
         'Authorization': accessToken
       }
@@ -469,7 +469,7 @@ const [userId,setUserId] = useState('');
         
     
         const response = await axios.post(
-          `http://192.168.0.236:8080/api/file/upload/record/${recordId}`,
+          `${Config.apiServerUrl}/api/file/upload/record/${recordId}`,
           imageData,
           {
             headers: {
@@ -575,7 +575,7 @@ const [userId,setUserId] = useState('');
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/maintenance-record/add-record/${Business_id}`,
+          url: `${Config.apiServerUrl}/api/maintenance-record/add-record/${Business_id}`,
           headers: { 
             'Content-Type': 'application/json', 
             'Authorization': accessToken

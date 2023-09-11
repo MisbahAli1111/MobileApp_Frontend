@@ -22,7 +22,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BusinessList from "../components/BusinessList";
 import SwitchBusiness from "./SwitchBusiness";
 import * as ImagePicker from "expo-image-picker";
+import Config from "./Config";
 const windowWidth = Dimensions.get("window");
+
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -128,7 +130,7 @@ const BusinessInfo = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: "http://192.168.0.236:8080/api/business/add-business/",
+        url: `${Config.apiServerUrl}/api/business/add-business/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,
@@ -210,7 +212,7 @@ const BusinessInfo = () => {
     console.log("formData: ", imageData);
 
     const response = await axios.post(
-      `http://192.168.0.236:8080/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
+      `${Config.apiServerUrl}/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {

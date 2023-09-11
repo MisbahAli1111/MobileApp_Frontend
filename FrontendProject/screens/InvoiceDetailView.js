@@ -21,6 +21,7 @@ import { FontFamily, Border, Color, FontSize, Padding } from "../GlobalStyles";
 import { useRoute } from "@react-navigation/native";
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import Config from "./Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 function InvoiceDetailView() {
   const route = useRoute();
@@ -69,7 +70,7 @@ function InvoiceDetailView() {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/get-invoice/${invoiceId}`,
+      url: `${Config.apiServerUrl}/api/invoice/get-invoice/${invoiceId}`,
       headers: {
         Authorization: accessToken,
       },
@@ -121,7 +122,7 @@ function InvoiceDetailView() {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/business/${Business_id}/profile-image`,
+          url: `${Config.apiServerUrl}:8080/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },

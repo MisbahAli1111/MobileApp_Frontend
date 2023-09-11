@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import Config from "./Config";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize, Color, Border, Padding } from "../GlobalStyles";
 import axios from "axios";
@@ -245,7 +246,7 @@ const CreateInvoice = (parans) => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
+      url: `${Config.apiServerUrl}/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: accessToken,

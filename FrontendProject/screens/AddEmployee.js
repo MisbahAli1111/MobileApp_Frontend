@@ -24,6 +24,7 @@ import {
   heightPercentageToDP,
 } from "react-native-responsive-screen";
 import { AntDesign } from "@expo/vector-icons";
+import Config from "./Config";
 
 const AddEmployee = () => {
   const navigation = useNavigation();
@@ -135,7 +136,7 @@ const AddEmployee = () => {
       console.log("formData: ", imageData);
 
       const response = await axios.post(
-        `http://192.168.0.236:8080/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+        `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
         imageData,
         {
           headers: {

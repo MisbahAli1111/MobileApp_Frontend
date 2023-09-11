@@ -25,9 +25,8 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
+import Config from "./Config";
 
-//172.20.64.1 shayan ip
-//192.168.100.71 misbah ip
 
 const AddVehicle = () => {
   const navigation = useNavigation();
@@ -129,7 +128,7 @@ const AddVehicle = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/get-customer/${Business_id}`,
+      url: `${Config.apiServerUrl}/api/users/get-customer/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },
@@ -290,7 +289,7 @@ const AddVehicle = () => {
         console.log("formData: ", imageData);
 
         const response = await axios.post(
-          `http://192.168.0.236:8080/api/file/upload/vehicle/${vehicleId}`,
+          `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
           imageData,
           {
             headers: {
@@ -417,7 +416,7 @@ const AddVehicle = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/vehicle/${Business_id}/add-vehicle`,
+        url: `${Config.apiServerUrl}/api/vehicle/${Business_id}/add-vehicle`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,

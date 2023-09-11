@@ -23,6 +23,7 @@ import HomeVehicleTypes from "../components/HomeVehicleTypes";
 import ProfilePopDown from "../components/ProfilePopDown";
 import DashboardGraph from "../components/DashboardGraph";
 import axios from "axios";
+import Config from "./Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ const Home = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/users/get-employees/${Business_id}`,
+      url: `${Config.apiServerUrl}/api/users/get-employees/${Business_id}`,
       headers: {},
     };
 
@@ -62,7 +63,7 @@ const Home = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/invoice/${Business_id}/invoiceDue`,
+        url: `${Config.apiServerUrl}/api/invoice/${Business_id}/invoiceDue`,
         headers: {
           Authorization: accessToken,
         },

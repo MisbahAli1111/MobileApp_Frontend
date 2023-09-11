@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
+import { useIsFocused } from '@react-navigation/native';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -17,7 +18,7 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import Config from "../screens/Config";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
@@ -31,7 +32,7 @@ const RecordList = ({
   setCreate,
 }) => {
   const navigation = useNavigation();
-
+  const isFocused = useIsFocused();
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [records, setRecords] = useState([]);
@@ -64,7 +65,7 @@ const RecordList = ({
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/get-all-records/${Business_id}`,
+      url: `${Config.apiServerUrl}/api/maintenance-record/get-all-records/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },
@@ -83,9 +84,13 @@ const RecordList = ({
       });
   };
 
+
+
   useEffect(() => {
-    getData();
-  }, []);
+    if (isFocused) {
+      getData();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     setInvoiceScreen(false);

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import Config from "../screens/Config";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
@@ -55,7 +56,7 @@ function RecordDetails({ recordId }) {
           let config = {
             method: "get",
             maxBodyLength: Infinity,
-            url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/images`,
+            url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/images`,
             headers: {
               Authorization: accessToken,
             },
@@ -82,7 +83,7 @@ function RecordDetails({ recordId }) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/maintenance-record/get-records/${recordId}`,
+        url: `${Config.apiServerUrl}/api/maintenance-record/get-records/${recordId}`,
         headers: {
           Authorization: accessToken,
         },

@@ -27,6 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { printToFileAsync } from "expo-print";
 import * as FileSystem from "expo-file-system";
 import { shareAsync } from "expo-sharing";
+import Config from "./Config";
 import {
   widthPercentageToDP,
   heightPercentageToDP,
@@ -61,7 +62,7 @@ const SalesReport = () => {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/business/${Business_id}/profile-image`,
+          url: `${Config.apiServerUrl}/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -325,7 +326,7 @@ const SalesReport = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/invoice/get-invoice-salesReport/${Business_id}`,
+        url: `${Config.apiServerUrl}/api/invoice/get-invoice-salesReport/${Business_id}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,

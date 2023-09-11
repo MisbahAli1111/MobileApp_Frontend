@@ -44,7 +44,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/users/${userId}/profile-image`,
+          url: `${Config.apiServerUrl}/api/users/${userId}/profile-image`,
           headers: {
             Authorization: token,
           },

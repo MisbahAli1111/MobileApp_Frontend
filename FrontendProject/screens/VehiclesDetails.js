@@ -18,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { AntDesign } from "@expo/vector-icons";
-
+import Config from "./Config";
 const VehicleDetailView = ({ route }) => {
   const [imageResponce, setImageResponce] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,7 +43,7 @@ const VehicleDetailView = ({ route }) => {
           let config = {
             method: "get",
             maxBodyLength: Infinity,
-            url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}/images`,
+            url: `${Config.apiServerUrl}/api/vehicle/${vehicleId}/images`,
             headers: {
               Authorization: accessToken,
             },
@@ -65,7 +65,7 @@ const VehicleDetailView = ({ route }) => {
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://192.168.0.236:8080/api/vehicle/${vehicleId}`,
+          url: `${Config.apiServerUrl}/api/vehicle/${vehicleId}`,
           headers: {
             Authorization: accessToken,
           },

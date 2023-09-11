@@ -287,7 +287,7 @@ const EditProfile = () => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/${ownerId}`, // Use backticks
+        url: `${Config.apiServerUrl}/api/users/${ownerId}`, // Use backticks
         headers: {},
       };
 
@@ -347,7 +347,7 @@ const EditProfile = () => {
       let config = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/update-user/${ownerId}`,
+        url: `${Config.apiServerUrl}/api/users/update-user/${ownerId}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -415,7 +415,7 @@ const EditProfile = () => {
       console.log("formData: ", imageData);
 
       const response = await axios.post(
-        `http://192.168.0.236:8080/api/file/upload/profile/${ownerId}`, // Change the endpoint as needed
+        `${Config.apiServerUrl}/api/file/upload/profile/${ownerId}`, // Change the endpoint as needed
         imageData,
         {
           headers: {
@@ -437,7 +437,7 @@ const EditProfile = () => {
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/${await AsyncStorage.getItem(
+        url: `${Config.apiServerUrl}/api/users/${await AsyncStorage.getItem(
           "ownerId"
         )}/profile-image`,
         headers: {
