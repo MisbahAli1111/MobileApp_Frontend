@@ -10,6 +10,7 @@ import {
   StyleSheet,
   ImageBackground,
 } from "react-native";
+import Config from "../screens/Config";
 import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
 import { Dimensions } from "react-native";
@@ -37,8 +38,7 @@ const EditProfile = () => {
   const [isImageModalVisible, setImageModalVisible] = useState("false");
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
   const [profileImageLink, setProfileImageLink] = useState(null);
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
-  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
+
 
   const [loading, setLoading] = useState(true);
   const countryCodes = [
@@ -450,7 +450,7 @@ const EditProfile = () => {
       if (response.status === 200) {
         // console.log(response);
         const responseData = response.data;
-        setProfileImageLink(baseUrl + responseData.url);
+        setProfileImageLink(`${Config.baseUrl}` + responseData.url);
         // console.log("profile: ", profileImageLink);
       } else {
         console.log("Error: " + response.statusText);

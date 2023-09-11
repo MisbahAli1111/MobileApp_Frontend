@@ -50,8 +50,6 @@ function InvoiceDetailView() {
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
   const [businessProfile, setBusinessProfile] = useState("");
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
-  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
   const [currency, setCurrency] = useState("");
   useEffect(() => {
     getData();
@@ -122,7 +120,7 @@ function InvoiceDetailView() {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}:8080/api/business/${Business_id}/profile-image`,
+          url: `${Config.apiServerUrl}/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -132,8 +130,9 @@ function InvoiceDetailView() {
 
         if (response.status === 200) {
           const responseData = response.data;
-          console.log("Data Image:", response.data);
-          setBusinessProfile(baseUrl + responseData.url);
+          
+          setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
+          console.log("Busienss: ",businessProfile);
         } else {
           console.log("Error: " + response.statusText);
         }

@@ -14,14 +14,13 @@ import { Color } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
+import Config from "../screens/Config";
 
 const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   const navigation = useNavigation();
   const [isProfileDropdownVisible, setProfileDropdownVisible] = useState(false);
   const [userId, setUserId] = useState("");
   const [profileImageLink, setProfileImageLink] = useState("");
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
-  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
   const [loading, setLoading] = useState(false); // Add loading state
 
   const handleProfileImagePress = () => {
@@ -55,7 +54,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         if (response.status === 200) {
           const responseData = response.data;
           if (responseData.url !== null) {
-            setProfileImageLink(baseUrl + responseData.url);
+            setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
           } // Update the state directly
         } else {
           console.log("Error: " + response.statusText);

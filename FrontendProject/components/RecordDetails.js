@@ -38,7 +38,6 @@ function RecordDetails({ recordId }) {
   const [imageResponce, setImageResponce] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [fetchedImages, setFetchedImages] = React.useState([]);
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
   const navigation = useNavigation();
   const [originalUri, setOriginalUri] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
@@ -63,7 +62,7 @@ function RecordDetails({ recordId }) {
           };
 
           const response = await axios.request(config);
-          const imageUrls = response.data.map((item) => baseUrl + item.url);
+          const imageUrls = response.data.map((item) => `${Config.baseUrl1}` + item.url);
           setFetchedImages(imageUrls);
           setLoading(false); // Set loading to false when images are fetched
         }

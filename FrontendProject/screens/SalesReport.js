@@ -47,8 +47,6 @@ const SalesReport = () => {
   const screenWidth = Dimensions.get("window").width;
   const [Error, setError] = useState("");
   const [businessProfile, setBusinessProfile] = useState("");
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
-  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
 
   const getProfileImage = async () => {
     try {
@@ -73,7 +71,7 @@ const SalesReport = () => {
         if (response.status === 200) {
           const responseData = response.data;
           console.log("Data Image:", response.data);
-          setBusinessProfile(baseUrl + responseData.url);
+          setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
         } else {
           console.log("Error: " + response.statusText);
         }

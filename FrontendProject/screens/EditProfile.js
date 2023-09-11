@@ -39,8 +39,6 @@ const EditProfile = () => {
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
   const [userId, setUserId] = useState("");
   const [profileImageLink, setProfileImageLink] = useState(null);
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080");
-  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
 
   const [loading, setLoading] = useState(true);
   const countryCodes = [
@@ -430,7 +428,7 @@ const EditProfile = () => {
         const responseData = response.data;
         if(responseData.url !== null)
         {
-        setProfileImageLink(baseUrl + responseData.url);
+        setProfileImageLink(`${Config.baseUrl}` + responseData.url);
         }
       } else {
         console.log("Error: " + response.statusText);

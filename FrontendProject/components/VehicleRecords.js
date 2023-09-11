@@ -37,8 +37,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
   const screenWidth = Dimensions.get("window").width;
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [tempVehicleid, setTempVehicleId] = useState("");
-  const [baseUrl, setBaseUrl] = useState("http://192.168.0.236:8080/api/file/");
-  const [baseUrlM, setBaseUrlM] = useState("http://192.168.100.71:8080");
 
   const displayedVehicles = useMemo(() => {
     let filteredVehicles;
@@ -369,7 +367,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
                   <Image
                     style={[styles.rectangleIcon, styles.iconPosition]}
                     contentFit="cover"
-                    source={{ uri: baseUrl + vehicle.vehicleMediaList[0] }}
+                    source={{ uri: `${Config.baseUrl}` + vehicle.vehicleMediaList[0] }}
                   />
                 ) : (
                   <Image
