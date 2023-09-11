@@ -14,7 +14,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import VehicleCarousel from "../components/VehicleCarousel";
 import { Color, Border, Padding, FontFamily, FontSize } from "../GlobalStyles";
-// import { TextInput } from "react-native-gesture-handler";
 import { TouchableWithoutFeedback } from "react-native";
 import Footer from "../components/Footer";
 import * as Svg from "react-native-svg";

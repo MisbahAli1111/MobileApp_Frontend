@@ -55,7 +55,6 @@ const SalesReport = () => {
       const Business_id = await AsyncStorage.getItem("Business_id");
 
       if (Business_id) {
-        console.log("userID found");
 
         const config = {
           method: "get",
@@ -70,7 +69,6 @@ const SalesReport = () => {
 
         if (response.status === 200) {
           const responseData = response.data;
-          console.log("Data Image:", response.data);
           setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
         } else {
           console.log("Error: " + response.statusText);
@@ -250,9 +248,6 @@ const SalesReport = () => {
         FileSystem.documentDirectory + "invoice.pdf"
       );
       if (downloadObject.status === 200) {
-        console.log("PDF downloaded successfully:", downloadObject.uri);
-        // You can also share the downloaded PDF if needed
-        // await Sharing.shareAsync(downloadObject.uri);
       } else {
         console.error("Error downloading the PDF.");
       }

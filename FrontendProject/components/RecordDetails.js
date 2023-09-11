@@ -64,11 +64,11 @@ function RecordDetails({ recordId }) {
           const response = await axios.request(config);
           const imageUrls = response.data.map((item) => `${Config.baseUrl1}` + item.url);
           setFetchedImages(imageUrls);
-          setLoading(false); // Set loading to false when images are fetched
+          setLoading(false); 
         }
       } catch (error) {
         console.log(error);
-        setLoading(false); // Make sure to set loading to false in case of an error
+        setLoading(false); 
       }
     };
 

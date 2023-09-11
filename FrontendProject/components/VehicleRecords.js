@@ -52,7 +52,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
         filteredVehicles = vehicles;
       }
     }
-    // console.log(searchOrder);
     const sortedVehicles = filteredVehicles.slice().sort((a, b) => {
       const dateA = new Date(a.dateCreated);
       const dateB = new Date(b.dateCreated);
@@ -69,7 +68,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 
   deleteVehicle = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-    console.log(tempVehicleid);
 
     let config = {
       method: "put",
@@ -81,7 +79,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     axios
       .request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data));
         getData();
       })
       .catch((error) => {
@@ -95,7 +92,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
   };
   const handlePress = (vehicleId) => {
     setCurrentPressedIndex(vehicleId);
-    // console.log(vehicleId);
     navigation.navigate("VehicleDetails", { vehicleId });
   };
 
@@ -103,7 +99,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     setSearch(dsearch);
     setSearchType(searchType);
     setSearchOrder(searchOrder);
-    // console.log(searchType);
     const formattedQuery = dsearch.trim().toUpperCase();
 
     if (VehicleType === "default") {
@@ -199,7 +194,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         setVehicles(response.data.data);
         AsyncStorage.setItem(
           "VehicleId",
@@ -209,7 +203,6 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
           "registrationNumber",
           JSON.stringify(response.data.data[0].registrationNumber)
         );
-        // console.log("id",JSON.stringify(response.data.data[0].registrationNumber));
       })
       .catch((error) => {
         console.log(error);
@@ -223,15 +216,12 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       setVehicleType(type);
       getData();
     }
-  }, [isFocused],[type]);
+  }, [isFocused], [type]);
 
   const handleDeleteVehicle = () => {
-    // console.log(tempVehicleid);
     setShowErrorPopup(false);
     deleteVehicle();
   };
-
-  //   console.log(displayedVehicles);
 
   return (
     <View>
@@ -363,7 +353,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 
                 {/* car image */}
                 {vehicle.vehicleMediaList &&
-                vehicle.vehicleMediaList.length > 0 ? (
+                  vehicle.vehicleMediaList.length > 0 ? (
                   <Image
                     style={[styles.rectangleIcon, styles.iconPosition]}
                     contentFit="cover"

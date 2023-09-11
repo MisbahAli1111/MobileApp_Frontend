@@ -124,7 +124,6 @@ const AddCustomer = () => {
   };
 
   const uploadImage = async (userId) => {
-    console.log(userId);
     if (profileImage) {
       const imageData = new FormData();
       imageData.append("files", {
@@ -132,9 +131,6 @@ const AddCustomer = () => {
         name: new Date() + "_profile" + ".jpeg",
         type: "image/jpeg", // Adjust the MIME type as needed
       });
-
-      console.log("formData: ", imageData);
-
       const response = await axios.post(
         `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
         imageData,
@@ -454,10 +450,8 @@ const AddCustomer = () => {
 
     if (!hasErrors) {
       const Business_id = await AsyncStorage.getItem("Business_id");
-      console.log(Business_id);
       let token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
-      console.log(accessToken);
       let data = JSON.stringify({
         firstName: name,
         lastName: name,
@@ -481,13 +475,11 @@ const AddCustomer = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           if (response.data.status === "OK") {
             const createdUserId = response.data.data;
             console.log(response.data.data);
             setUserId(createdUserId);
 
-            // Perform logic using the updated userId here
             if (createdUserId) {
               uploadImage(createdUserId, accessToken);
             }

@@ -54,7 +54,7 @@ const Login = () => {
         method: "post",
         maxBodyLength: Infinity,
 
-        
+
         url: `${Config.apiServerUrl}/login`,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -65,7 +65,6 @@ const Login = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           if (response.data === "Invalid Credentials!") {
             setError(response.data);
             setMError(true);

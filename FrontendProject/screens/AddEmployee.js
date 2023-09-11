@@ -124,7 +124,6 @@ const AddEmployee = () => {
   };
 
   const uploadImage = async (userId) => {
-    console.log(userId);
     if (profileImage) {
       const imageData = new FormData();
       imageData.append("files", {
@@ -478,13 +477,10 @@ const AddEmployee = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           if (response.data.status === "OK") {
             const createdUserId = response.data.data;
-            console.log(response.data.data);
             setUserId(createdUserId);
 
-            // Perform logic using the updated userId here
             if (createdUserId) {
               uploadImage(createdUserId);
             }

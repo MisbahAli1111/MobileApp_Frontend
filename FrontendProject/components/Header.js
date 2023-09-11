@@ -38,8 +38,6 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
       }
 
       if (userId) {
-        console.log("userID found");
-
         const config = {
           method: "get",
           maxBodyLength: Infinity,
@@ -55,7 +53,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
           const responseData = response.data;
           if (responseData.url !== null) {
             setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
-          } // Update the state directly
+          }
         } else {
           console.log("Error: " + response.statusText);
         }
@@ -63,13 +61,13 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
     } catch (error) {
       console.log("Error fetching profile image:", error);
     } finally {
-      setLoading(false); // Set loading state to false regardless of success or error
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getProfileImage();
-  }, [userId]); // Fetch the profile image whenever userId changes
+  }, [userId]); 
 
   return (
     <ImageBackground
@@ -91,7 +89,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
           <View style={styles.placeholderImage} />
         )}
         <Text style={styles.title}>{title}</Text>
-        {console.log(profileImageLink)}
+        
 
         {loading ? (
           <ActivityIndicator size="small" color="black" />

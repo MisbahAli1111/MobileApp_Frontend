@@ -39,15 +39,12 @@ function BusinessList() {
     try {
       const storedLoginTime = await AsyncStorage.getItem(`BusinessId_${index}`);
       if (storedLoginTime) {
-        // console.warn(storedLoginTime);
         const parsedLoginTime = JSON.parse(storedLoginTime);
         const timeDifferenceText = getTimeElapsedString(
           Date.now() - parsedLoginTime
         );
-        // console.warn(timeDifferenceText);
         return timeDifferenceText;
       } else {
-        // console.warn(`No login time found for Business ID ${index}`);
         return "";
       }
     } catch (error) {
@@ -128,25 +125,12 @@ function BusinessList() {
     }, 1);
   };
 
-  // const setData = async () => {
-  //     await AsyncStorage.setItem("name","Misbah");
-  //   };
-
-  //   const getData = async () => {
-  //     const name = await AsyncStorage.getItem("name");
-  //     console.warn(name);
-  //   };
-
-  //   const removeData = async () => {
-  //     await AsyncStorage.removeItem("name");
-  //   };
 
   const [fetchedTimes, setFetchedTimes] = useState({});
 
   useEffect(() => {
     const fetchAllTimes = async () => {
       if (Business.length === 0) {
-        // If there are no businesses, do nothing
         return;
       }
   

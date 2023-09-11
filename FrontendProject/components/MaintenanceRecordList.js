@@ -74,9 +74,7 @@ const RecordList = ({
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         setRecords(response.data);
-
         return response.data;
       })
       .catch((error) => {
@@ -115,7 +113,6 @@ const RecordList = ({
     } else {
       filteredVehicles = records;
     }
-    // console.log(searchOrder);
     const sortedVehicles = filteredVehicles.slice().sort((a, b) => {
       const dateA = new Date(a.maintanenceDateTime);
       const dateB = new Date(b.maintanenceDateTime);
@@ -132,8 +129,6 @@ const RecordList = ({
 
   useEffect(() => {
     setSearch(dsearch);
-
-    console.log(searchOrder);
 
     const formattedQuery = dsearch.toUpperCase().trim();
     const maintained = records.filter((record) => {
@@ -184,7 +179,6 @@ const RecordList = ({
   return (
     <ScrollView style={styles.wrap}>
       {displayedRecords.map((record, index) => {
-        // console.log(user);
         return (
           <View
             key={index}

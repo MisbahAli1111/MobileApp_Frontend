@@ -292,7 +292,6 @@ const EditProfile = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         setName(response.data.firstName);
         setCnic(response.data.cnicNumber);
         setPhoneNumber(response.data.phone_number);
@@ -336,7 +335,6 @@ const EditProfile = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         if (userId) {
           uploadImage(userId);
         }
@@ -382,7 +380,6 @@ const EditProfile = () => {
   };
 
   const uploadImage = async (userId) => {
-    console.log(userId);
     const imageData = new FormData();
     imageData.append("files", {
       uri: profileImageLink,
@@ -390,7 +387,6 @@ const EditProfile = () => {
       type: "image/jpeg", // Adjust the MIME type as needed
     });
 
-    console.log("formData: ", imageData);
 
     const response = await axios.post(
       `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
@@ -403,13 +399,10 @@ const EditProfile = () => {
       }
     );
 
-    console.log("Upload response:", response.data);
-    console.log("Success", "Files uploaded successfully");
   };
 
   const getProfileImage = async (userId) => {
     try {
-      console.log(userId);
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
 
@@ -426,9 +419,8 @@ const EditProfile = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
-        if(responseData.url !== null)
-        {
-        setProfileImageLink(`${Config.baseUrl}` + responseData.url);
+        if (responseData.url !== null) {
+          setProfileImageLink(`${Config.baseUrl}` + responseData.url);
         }
       } else {
         console.log("Error: " + response.statusText);

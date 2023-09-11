@@ -1,17 +1,17 @@
-import {React} from "react";
+import { React } from "react";
 import { Image } from "expo-image";
 import { AntDesign } from '@expo/vector-icons';
-import {Dimensions,Modal,ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput,FlatList  } from "react-native";
+import { Dimensions, Modal, ScrollView, TouchableOpacity, StyleSheet, View, Text, Pressable, TextInput, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useState,useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
 import ImagePickerCamera from "../components/ImagePickerCamera";
 import ImagePickerGallery from "../components/ImagePickerGallery";
 import Footer from "../components/Footer";
-import Carousel,{Pagination} from "react-native-snap-carousel";
-import {Video} from "expo-av";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import { Video } from "expo-av";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,8 +20,8 @@ import Config from "./Config";
 const AddRecord = () => {
   const navigation = useNavigation();
 
-const [Msg,setMsg]=useState('');
-const [userId,setUserId] = useState('');
+  const [Msg, setMsg] = useState('');
+  const [userId, setUserId] = useState('');
   const [NumberError, setNumberError] = useState('');
   const [carNumber, setCarNumber] = useState('');
   const [date, setDate] = useState(new Date());
@@ -29,7 +29,7 @@ const [userId,setUserId] = useState('');
   const [driven, setDriven] = useState('');
   const [user, setUser] = useState('');
   const [service, setService] = useState('');
-  const [type,setType] =useState('');
+  const [type, setType] = useState('');
 
   const [details, setDetails] = useState(false);
   const [NameError, setNameError] = useState(false);
@@ -56,46 +56,46 @@ const [userId,setUserId] = useState('');
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState('');
-  const [serviceDue,setServiceDue] = useState('');
+  const [serviceDue, setServiceDue] = useState('');
   const services = ['Oil Change', 'Car Wash', 'Car Maintenance', 'Servicing', 'Alignment'];
   const [showCameraImagePicker, setShowCameraImagePicker] = useState(false);
   const [showGalleryImagePicker, setShowGalleryImagePicker] = useState(false);
- const [selectedImage,setSelectedImage] = useState([]);
- const [activeSlide, setActiveSlide] = useState(0);
-  const [OwnerName,setOwnerName]= useState('');
-  const [numberPlates,setNumberPlates] = useState([]);
+  const [selectedImage, setSelectedImage] = useState([]);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [OwnerName, setOwnerName] = useState('');
+  const [numberPlates, setNumberPlates] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [originalUri, setOriginalUri] = useState('');
   const [status, setStatus] = useState({});
   const video = useRef(null);
-  const [ RegMsg , setRegMsg ]=useState('');
+  const [RegMsg, setRegMsg] = useState('');
   const [search, setSearch] = useState('');
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState(transformedResponse);
   const [selectedCountry, setSelectedCountry] = useState('');
   const searchRef = useRef();
 
-  
-   const renderCarouselItem = ({ item, index }) => (
+
+  const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
       {item.type === "image" ? (
         <Pressable style={styles.mediaContainer}
-        onPress={() => handleOpen(item.uri)}>
-        <Image source={{ uri: item.uri }} style={styles.image} />
+          onPress={() => handleOpen(item.uri)}>
+          <Image source={{ uri: item.uri }} style={styles.image} />
         </Pressable>
       ) : (
         <View style={styles.videoContainer1}>
-        <Pressable style={styles.mediaContainer}
-        onPress={() => handleOpen(item.uri)}>
-        <Video
-          source={{ uri: item.uri }}
-          style={styles.video}
-          controls
-        />
-       <View style={styles.iconContainer}>
-            <EvilIcons name="play" size={50} color="white" />
-          </View>
-        </Pressable>
+          <Pressable style={styles.mediaContainer}
+            onPress={() => handleOpen(item.uri)}>
+            <Video
+              source={{ uri: item.uri }}
+              style={styles.video}
+              controls
+            />
+            <View style={styles.iconContainer}>
+              <EvilIcons name="play" size={50} color="white" />
+            </View>
+          </Pressable>
         </View>
       )}
       <TouchableOpacity onPress={() => handleImageDelete(index)} style={styles.deleteButton}>
@@ -109,7 +109,7 @@ const [userId,setUserId] = useState('');
       await video.current.playAsync();
     }
   };
-  
+
   const handleOpen = (uri) => {
     setOriginalUri(uri);
     setModalVisible(true);
@@ -120,32 +120,32 @@ const [userId,setUserId] = useState('');
     setOriginalUri('');
   };
 
- 
-    const handleCameraIconClick = () => {
-      setShowCameraImagePicker(true);
-    };
-  
-    const handleGalleryIconClick = () => {
-      setShowGalleryImagePicker(true);
-    };
-  
-    const handleCameraImageSelected = (uri,type) => {
-      
-      setSelectedImage([...selectedImage, { uri, type }]);
-      setShowGalleryImagePicker(false);
-    };
-  
-    const handleGalleryImageSelected = (uri,type) => {
-      
-      setSelectedImage([...selectedImage, { uri, type }]);
-      setShowGalleryImagePicker(false);
-    };
-  
-    const handleImageDelete = (index) => {
-      const newSelectedImage = [...selectedImage];
-      newSelectedImage.splice(index, 1);
-      setSelectedImage(newSelectedImage);
-    };
+
+  const handleCameraIconClick = () => {
+    setShowCameraImagePicker(true);
+  };
+
+  const handleGalleryIconClick = () => {
+    setShowGalleryImagePicker(true);
+  };
+
+  const handleCameraImageSelected = (uri, type) => {
+
+    setSelectedImage([...selectedImage, { uri, type }]);
+    setShowGalleryImagePicker(false);
+  };
+
+  const handleGalleryImageSelected = (uri, type) => {
+
+    setSelectedImage([...selectedImage, { uri, type }]);
+    setShowGalleryImagePicker(false);
+  };
+
+  const handleImageDelete = (index) => {
+    const newSelectedImage = [...selectedImage];
+    newSelectedImage.splice(index, 1);
+    setSelectedImage(newSelectedImage);
+  };
 
   const handleDateChange = (event, date) => {
     setShowDatePicker(false);
@@ -180,15 +180,13 @@ const [userId,setUserId] = useState('');
     setShowDropdown(false);
   };
 
-  const handleAddCustomer =() =>{
+  const handleAddCustomer = () => {
     navigation.navigate('AddVehicle');
   };
 
 
 
-  const calculateServiceDue = (type ,selectedCode) => {
-    console.log(type);
-    console.log(selectedCode)
+  const calculateServiceDue = (type, selectedCode) => {
     const serviceTypeMap = {
       'Car': {
         'Oil Change': {
@@ -301,133 +299,121 @@ const [userId,setUserId] = useState('');
         },
       },
     };
-  
-  
-  
-  
+
+
+
+
     if (serviceTypeMap[type] && serviceTypeMap[type][selectedCode]) {
       const { kilometersDrivenPerDay, totalKilometersBetweenServices } = serviceTypeMap[type][selectedCode];
       const daysUntilNextService = totalKilometersBetweenServices / kilometersDrivenPerDay;
       return addDays(selectedDate, Math.floor(daysUntilNextService));
     }
-  
-    return addDays(selectedDate, 30); // Default value if service or type is unknown
+
+    return addDays(selectedDate, 30);
   };
-  
-  
+
+
 
   // Function to add days to a date
   const addDays = (date, days) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
     setServiceDue(newDate.toISOString());
-    console.log("ServiceDue: ",serviceDue);
   };
 
 
 
 
   const getType = async (carNumber) => {
-    let token= await AsyncStorage.getItem("accessToken");
+    let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `${Config.apiServerUrl}/api/maintenance-record/${carNumber}/type`,
-      headers: { 
+      headers: {
         'Authorization': accessToken
       }
     };
-    
-    axios.request(config)
-    .then((response) => {
 
-      JSON.stringify(response.data);
-      setType(response.data);
-      console.log("Type: ",type);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    axios.request(config)
+      .then((response) => {
+        setType(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
   };
-  
-  const getRegistrationNumber = async () =>{
-    let token= await AsyncStorage.getItem("accessToken");
+
+  const getRegistrationNumber = async () => {
+    let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
     const Business_id = await AsyncStorage.getItem("Business_id");
-    // console.log(Business_id);
-    // console.log(accessToken);
-    //172.16.82.53 shayan uni ip
 
-    
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `${Config.apiServerUrl}/api/maintenance-record/get-registration-number/${Business_id}`,
-      headers: { 
+      headers: {
         'Authorization': accessToken
       }
     };
-    
-    axios.request(config)
-    .then((response) => {
 
-      JSON.stringify(response.data);
-      setNumberPlates(response.data);
-      console.log(numberPlates);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    axios.request(config)
+      .then((response) => {
+
+        JSON.stringify(response.data);
+        setNumberPlates(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
   }
 
-  getCustomer = async (carNumber)=>{
-    
-    let token= await AsyncStorage.getItem("accessToken");
+  getCustomer = async (carNumber) => {
+
+    let token = await AsyncStorage.getItem("accessToken");
     const accessToken = 'Bearer ' + token;
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `${Config.apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
-      headers: { 
+      headers: {
         'Authorization': accessToken
       }
     };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
 
-      const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
-      setUser(Name);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    axios.request(config)
+      .then((response) => {
+
+        const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
+        setUser(Name);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
     setUser('No Customer Found');
     getCustomer(carNumber);
     getRegistrationNumber();
-    if(carNumber){
-    getType(carNumber);
+    if (carNumber) {
+      getType(carNumber);
     }
-    if(type && selectedCode)
-    {
-      console.log("calcltaing....");
-      calculateServiceDue(type,selectedCode);
-      
+    if (type && selectedCode) {
+      calculateServiceDue(type, selectedCode);
+
     }
-  },[carNumber,selectedCode]);
+  }, [carNumber, selectedCode]);
 
   const transformedResponse = numberPlates.map(item => {
     const { registration_number } = item;
     return {
       name: registration_number,
-      
+
     };
   });
 
@@ -448,11 +434,10 @@ const [userId,setUserId] = useState('');
   };
 
   const uploadImage = async (recordId) => {
-    if(selectedImage)
-    {
-    let token= await AsyncStorage.getItem("accessToken");
-    const accessToken = 'Bearer ' + token;
-    const imageData = new FormData();
+    if (selectedImage) {
+      let token = await AsyncStorage.getItem("accessToken");
+      const accessToken = 'Bearer ' + token;
+      const imageData = new FormData();
       // Iterate through the image array and append images to the FormData
       try {
         selectedImage.forEach((entry, index) => {
@@ -464,10 +449,6 @@ const [userId,setUserId] = useState('');
           });
         });
 
-        console.log("formData: " ,imageData );
-
-        
-    
         const response = await axios.post(
           `${Config.apiServerUrl}/api/file/upload/record/${recordId}`,
           imageData,
@@ -477,20 +458,17 @@ const [userId,setUserId] = useState('');
             },
           }
         );
-    
-        console.log('Response:', response.data);
-        if (response.data.status == 'OK') {
-          console.log("image uploaded");
-        }
-    
-        console.log('Images uploaded successfully');
+
+
+
       } catch (error) {
         console.error('Error:', error.message);
       }
-  }};
+    }
+  };
 
   const handleSave = async () => {
-    
+
     let hasErrors = false; // Initialize the flag
     setNumberError(false);
     if (!carNumber) {
@@ -498,16 +476,13 @@ const [userId,setUserId] = useState('');
       setRegMsg('Please provide Vehicle Registration Number');
       hasErrors = true;
     } else {
-      
+
       setNumberError(false);
     }
-  
-    // console.log(selectedDate.toDateString());
-    // console.log(selectedTime.toTimeString());
-    // console.log(selectedImage);
-    
+
+
     if (!selectedDate) {
-      
+
       setDateError(true);
       setTimeError(true);
       setMsg('Please provide Date');
@@ -516,50 +491,49 @@ const [userId,setUserId] = useState('');
 
       setTimeError(false);
       setDateError(false); // Clear any previous date errors
-      
+
       if (!selectedTime) {
-        console.log(selectedTime);
         setDateError(true);
         setMsg('Please provide Time');
         hasErrors = true;
       }
     }
-  
+
     if (!user) {
       setNameError(true);
       hasErrors = true;
     } else {
-    
-      
+
+
       setNameError(false);
     }
-  
+
     if (!driven) {
       setDrivenError(true);
       hasErrors = true;
     } else {
       setDrivenError(false);
     }
-  
+
     if (!selectedCode) {
       setServiceError(true);
       hasErrors = true;
     } else {
       setServiceError(false);
     }
-  
+
     if (!details) {
       setDetailError(true);
       hasErrors = true;
     } else {
       setDetailError(false);
     }
-  
+
     if (!hasErrors) {
       try {
-        const dateTime=`${selectedDate.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`;
+        const dateTime = `${selectedDate.toISOString().split('T')[0]}T${selectedTime.toISOString().split('T')[1]}`;
         const Business_id = await AsyncStorage.getItem("Business_id");
-    
+
         const token = await AsyncStorage.getItem("accessToken");
         const accessToken = 'Bearer ' + token;
         // const axios = require('axios');
@@ -569,49 +543,45 @@ const [userId,setUserId] = useState('');
           "maintanenceDetail": details,
           "registrationNumber": carNumber,
           "maintanenceDateTime": selectedDate,
-          "serviceDue" : serviceDue
+          "serviceDue": serviceDue
         };
-          
+
         const config = {
           method: 'post',
           maxBodyLength: Infinity,
           url: `${Config.apiServerUrl}/api/maintenance-record/add-record/${Business_id}`,
-          headers: { 
-            'Content-Type': 'application/json', 
+          headers: {
+            'Content-Type': 'application/json',
             'Authorization': accessToken
           },
           data: data
         };
-          
+
         const response = await axios.request(config);
-        // console.log(JSON.stringify(response.data));
-        if(response.data.status=="EXPECTATION_FAILED"){
-         setRegMsg(JSON.stringify(response.data.message));
-        setNumberError(true);
-        }else{
-          console.log(JSON.stringify(response.data));
+       if (response.data.status == "EXPECTATION_FAILED") {
+          setRegMsg(JSON.stringify(response.data.message));
+          setNumberError(true);
+        } else {
           if (response.data.status === 'OK') {
-          
+
             const createdUserId = response.data.data;
-            console.log(response.data.data);
             setUserId(createdUserId);
-            
-            // Perform logic using the updated userId here
-            if (createdUserId) {
+
+             if (createdUserId) {
               uploadImage(createdUserId);
             }
             navigation.navigate('MaintenanceRecord');
           }
         }
-        
-        
+
+
       } catch (error) {
         console.error(error);
       }
     }
-    
+
   };
-  
+
 
 
 
@@ -646,361 +616,357 @@ const [userId,setUserId] = useState('');
       />
 
 
-      <ScrollView  style={styles.wrap}>
+      <ScrollView style={styles.wrap}>
 
 
-      <TouchableOpacity onPress={handleClick}>
-      <Text style={[styles.jxc7789, styles.pmTypof]}>
-       {selectedCountry == '' ? 'Select Number Plate' : selectedCountry}
-      
-      </Text>
-      <Image
-        style={styles.licensePlateNumberSvgrepoCIcon}
-        contentFit="cover"
-        source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
-      />
-      </TouchableOpacity>
-{clicked ? (
-        <Modal transparent={true} animationType="slide">
-        <View
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-    }}>
-        <View
-          style={{
-            elevation: 5,
-            marginTop: 20,
-            height: 600,
-            alignSelf: 'center',
-            width: '90%',
-            backgroundColor: '#fff',
-            borderRadius: 10,
-          }}>
-          <TextInput
-            placeholder="Search.."
-            value={search}
-            ref={searchRef}
-            onChangeText={txt => {
-              onSearch(txt);
-              setSearch(txt);
-            }}
-            style={{
-              width: '90%',
-              height: 50,
-              alignSelf: 'center',
-              borderWidth: 0.2,
-              borderColor: '#8e8e8e',
-              borderRadius: 7,
-              marginTop: 20,
-              paddingLeft: 20,
-            }}
+        <TouchableOpacity onPress={handleClick}>
+          <Text style={[styles.jxc7789, styles.pmTypof]}>
+            {selectedCountry == '' ? 'Select Number Plate' : selectedCountry}
+
+          </Text>
+          <Image
+            style={styles.licensePlateNumberSvgrepoCIcon}
+            contentFit="cover"
+            source={require("../assets/licenseplatenumbersvgrepocom-1.png")}
           />
-          <ScrollView>
-          <FlatList
-            data={data}
-            style={styles.FlatList}
-            renderItem={({item, index}) => {
-              return (
+        </TouchableOpacity>
+        {clicked ? (
+          <Modal transparent={true} animationType="slide">
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+              }}>
+              <View
+                style={{
+                  elevation: 5,
+                  marginTop: 20,
+                  height: 600,
+                  alignSelf: 'center',
+                  width: '90%',
+                  backgroundColor: '#fff',
+                  borderRadius: 10,
+                }}>
+                <TextInput
+                  placeholder="Search.."
+                  value={search}
+                  ref={searchRef}
+                  onChangeText={txt => {
+                    onSearch(txt);
+                    setSearch(txt);
+                  }}
+                  style={{
+                    width: '90%',
+                    height: 50,
+                    alignSelf: 'center',
+                    borderWidth: 0.2,
+                    borderColor: '#8e8e8e',
+                    borderRadius: 7,
+                    marginTop: 20,
+                    paddingLeft: 20,
+                  }}
+                />
+                <ScrollView>
+                  <FlatList
+                    data={data}
+                    style={styles.FlatList}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity
+                          style={{
+                            width: '85%',
+                            alignSelf: 'center',
+                            height: 50,
+                            justifyContent: 'center',
+                            borderBottomWidth: 0.5,
+                            borderColor: '#8e8e8e',
+                          }}
+                          onPress={() => {
+                            setSelectedCountry(item.name);
+                            setCarNumber(item.name)
+                            setClicked(!clicked);
+                            onSearch('');
+                            setSearch('');
+                          }}>
+                          <Text style={{ fontWeight: '600' }}>{item.name}</Text>
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </ScrollView>
                 <TouchableOpacity
                   style={{
-                    width: '85%',
-                    alignSelf: 'center',
-                    height: 50,
-                    justifyContent: 'center',
-                    borderBottomWidth: 0.5,
-                    borderColor: '#8e8e8e',
+                    backgroundColor: 'rgba(3, 29, 68, 1)',
+                    paddingVertical: 10,
+                    alignSelf: "center",
+                    borderRadius: 5,
+                    paddingLeft: 10,
+                    width: "50%",
+                    marginTop: 10,
+                    position: "fixed",
+                    zIndex: 999,
+                    bottom: 5,
                   }}
-                  onPress={() => {
-                    setSelectedCountry(item.name);
-                    setCarNumber(item.name)
-                    setClicked(!clicked);
-                    onSearch('');
-                    setSearch('');
-                  }}>
-                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
+                  onPress={handleAddCustomer}
+                >
+                  <Text style={{
+                    fontSize: FontSize.size_sm,
+                    fontFamily: FontFamily.poppinsMedium,
+                    color: 'white',
+                    textAlign: 'center',
+                  }}>Add Vehicle</Text>
                 </TouchableOpacity>
-              );
-            }}
-          />
-          </ScrollView>
-          <TouchableOpacity
-          style={{
-            backgroundColor: 'rgba(3, 29, 68, 1)',
-            paddingVertical: 10,
-            alignSelf:"center",
-            borderRadius: 5,
-            paddingLeft:10,
-            width:"50%",
-            marginTop: 10,
-            position:"fixed",
-            zIndex:999,
-            bottom:5,
-          }}
-          onPress={handleAddCustomer}
-        >
-          <Text style={{
-            fontSize: FontSize.size_sm,
-            fontFamily: FontFamily.poppinsMedium,
-            color: 'white',
-            textAlign: 'center',
-          }}>Add Vehicle</Text>
-        </TouchableOpacity>
-          </View>
-        <TouchableOpacity
-           style={{
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            zIndex: 999,
-          }}
-        onPress={
-          handleClick
-        }>
-        
-        <AntDesign name="closecircle" size={24} color="rgba(3, 29, 68, 1)" />
-        {/* //rgba(3, 29, 68, 1) */}
+              </View>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  zIndex: 999,
+                }}
+                onPress={
+                  handleClick
+                }>
 
-      </TouchableOpacity>
-        </View>  
+                <AntDesign name="closecircle" size={24} color="rgba(3, 29, 68, 1)" />
+                {/* //rgba(3, 29, 68, 1) */}
+
+              </TouchableOpacity>
+            </View>
           </Modal>
-      ) : null}
+        ) : null}
 
 
-      <View style={[styles.addRecordChild3,
-          NumberError ? styles.childLayoutR :styles.childLayout
-         ]} />
-      {NumberError ? <Text style={styles.nameError}>{RegMsg}</Text> : null}
+        <View style={[styles.addRecordChild3,
+        NumberError ? styles.childLayoutR : styles.childLayout
+        ]} />
+        {NumberError ? <Text style={styles.nameError}>{RegMsg}</Text> : null}
 
 
-      <TextInput style={[styles.text2, styles.pmTypo]}
-        value={selectedDate ? selectedDate.toDateString() : ''}
-        placeholder="Select a date"
-        editable={false}
-      ></TextInput>
-      <Pressable
-        onPress={openDatePicker}
-      >
-        <Image
-          style={[styles.date2SvgrepoCom11, styles.svgrepoIconLayout1]}
-          contentFit="cover"
-          source={require("../assets/date2svgrepocom-1-1.png")}
-        />
-      </Pressable>
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-      <View style={[styles.addRecordItem, 
-         TimeError ? styles.addPositionR:styles.addPosition
+        <TextInput style={[styles.text2, styles.pmTypo]}
+          value={selectedDate ? selectedDate.toDateString() : ''}
+          placeholder="Select a date"
+          editable={false}
+        ></TextInput>
+        <Pressable
+          onPress={openDatePicker}
+        >
+          <Image
+            style={[styles.date2SvgrepoCom11, styles.svgrepoIconLayout1]}
+            contentFit="cover"
+            source={require("../assets/date2svgrepocom-1-1.png")}
+          />
+        </Pressable>
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+        <View style={[styles.addRecordItem,
+        TimeError ? styles.addPositionR : styles.addPosition
         ]} />
 
 
-      <TextInput style={[styles.pm, styles.pmTypo]}
-        placeholder="06: 00pm"
-        value={selectedTime ? selectedTime.toLocaleTimeString() : ''}
-        editable={false}
-      ></TextInput>
-      <Pressable
-        onPress={openTimePicker}>
-        <Image
-          style={[styles.timeOclockSvgrepoCom1Icon, styles.svgrepoIconLayout1]}
-          contentFit="cover"
-          source={require("../assets/timeoclocksvgrepocom-1.png")}
-        />
-      </Pressable>
-      {showTimePicker && (
-        <DateTimePicker
-          value={selectedTime || new Date()}
-          mode="time"
-          display="default"
-          onChange={handleTimeChange}
-        />
-      )}
-      <View style={[styles.addRecordInner,
-        DateError ? styles.addPositionR:styles.addPosition
-         ]} />
-      {DateError ? <Text style={styles.nameError}>{Msg}</Text> : null}
-
-
-      <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
-        placeholder="Lorita Daniel"
-        value={user}
-        onFocus={() => setUserFocused(true)}
-        onBlur={() => setUserFocused(false)}
-        editable={false}
-      ></TextInput>
-    <Image
-        style={[styles.vectorIcon1, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector1.png")}
-      />
-      <View style={[styles.groupChild,
-          styles.childLayout
-         ]} />
-     
-
-      <TextInput style={[styles.kmDriven, styles.pmTypo]}
-        placeholder="KM Driven"
-        keyboardType="numeric"
-        value={driven}
-        onFocus={() => setDrivenFocused(true)}
-        onBlur={() => setDrivenFocused(false)}
-        onChangeText={setDriven}
-      ></TextInput>
-      <Image
-        style={[styles.groupIcon, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/group-92.png")}
-      />
-<View style={[styles.lineView,
-   drivenError ? styles.childLayoutR :styles.childLayout
-   ]} />
-{drivenError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
-
-
-
-      <TextInput style={[styles.oilChange, styles.pmTypo]}
-        placeholder="Oil Change"
-        value={selectedCode}
-        editable={false}
-      ></TextInput>
-      <Image
-        style={[styles.vectorIcon3, styles.iconLayout]}
-        contentFit="cover"
-        source={require("../assets/vector3.png")}
-      />
-       {(
-        <View style={styles.servicesClick} >
-          <Picker
-            selectedValue={selectedCode}
-            onValueChange={(itemValue) => handleCodeSelect(itemValue)}
-          >
-            <Picker.Item label="Select Maintenance Type " value="" />
-            {services.map((code) => (
-              <Picker.Item key={code} label={code} value={code} />
-            ))}
-          </Picker>
-        </View>
-      )}
-       <View style={[styles.addRecordChild2,
-          serviceError ? styles.childLayoutR :styles.childLayout
-         ]} />
-       {serviceError ? <Text style={styles.nameError}>Please provide service</Text> : null}
-
-      
-      
-      
-     
-
-      {/* this  */}
-
-      <View style={styles.enterDetailParent}>
-        <TextInput style={[styles.enterDetail, styles.pmTypo]}
-          placeholder="Enter Detail..."
-          value={details}
-          onFocus={() => setDetailFocused(true)}
-          onBlur={() => setDetailFocused(false)}
-          onChangeText={setDetails}
+        <TextInput style={[styles.pm, styles.pmTypo]}
+          placeholder="06: 00pm"
+          value={selectedTime ? selectedTime.toLocaleTimeString() : ''}
+          editable={false}
         ></TextInput>
-        <View style={[position = "absolute"]}>
-          {/* gallery image start  */}
-          <Pressable onPress={handleGalleryIconClick} >
-            <Image
-              style={[styles.gallerySvgrepoCom1Icon, styles.svgrepoIconLayout1]}
-              contentFit="cover"
-              source={require("../assets/gallerysvgrepocom-1.png")}
-            />
-          </Pressable>
+        <Pressable
+          onPress={openTimePicker}>
+          <Image
+            style={[styles.timeOclockSvgrepoCom1Icon, styles.svgrepoIconLayout1]}
+            contentFit="cover"
+            source={require("../assets/timeoclocksvgrepocom-1.png")}
+          />
+        </Pressable>
+        {showTimePicker && (
+          <DateTimePicker
+            value={selectedTime || new Date()}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
+        <View style={[styles.addRecordInner,
+        DateError ? styles.addPositionR : styles.addPosition
+        ]} />
+        {DateError ? <Text style={styles.nameError}>{Msg}</Text> : null}
 
-          {/* gallery image end  */}
 
-          {/* camera image start */}
-          <Pressable onPress={handleCameraIconClick}
-          >
-            <Image
-              style={[styles.cameraSvgrepoCom61, 
+        <TextInput style={[styles.loritaDaniel, styles.pmTypo]}
+          placeholder="Lorita Daniel"
+          value={user}
+          onFocus={() => setUserFocused(true)}
+          onBlur={() => setUserFocused(false)}
+          editable={false}
+        ></TextInput>
+        <Image
+          style={[styles.vectorIcon1, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/vector1.png")}
+        />
+        <View style={[styles.groupChild,
+        styles.childLayout
+        ]} />
+
+
+        <TextInput style={[styles.kmDriven, styles.pmTypo]}
+          placeholder="KM Driven"
+          keyboardType="numeric"
+          value={driven}
+          onFocus={() => setDrivenFocused(true)}
+          onBlur={() => setDrivenFocused(false)}
+          onChangeText={setDriven}
+        ></TextInput>
+        <Image
+          style={[styles.groupIcon, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/group-92.png")}
+        />
+        <View style={[styles.lineView,
+        drivenError ? styles.childLayoutR : styles.childLayout
+        ]} />
+        {drivenError ? <Text style={styles.nameError}>Please provide Mileage</Text> : null}
+
+
+
+        <TextInput style={[styles.oilChange, styles.pmTypo]}
+          placeholder="Oil Change"
+          value={selectedCode}
+          editable={false}
+        ></TextInput>
+        <Image
+          style={[styles.vectorIcon3, styles.iconLayout]}
+          contentFit="cover"
+          source={require("../assets/vector3.png")}
+        />
+        {(
+          <View style={styles.servicesClick} >
+            <Picker
+              selectedValue={selectedCode}
+              onValueChange={(itemValue) => handleCodeSelect(itemValue)}
+            >
+              <Picker.Item label="Select Maintenance Type " value="" />
+              {services.map((code) => (
+                <Picker.Item key={code} label={code} value={code} />
+              ))}
+            </Picker>
+          </View>
+        )}
+        <View style={[styles.addRecordChild2,
+        serviceError ? styles.childLayoutR : styles.childLayout
+        ]} />
+        {serviceError ? <Text style={styles.nameError}>Please provide service</Text> : null}
+
+
+
+
+
+
+        {/* this  */}
+
+        <View style={styles.enterDetailParent}>
+          <TextInput style={[styles.enterDetail, styles.pmTypo]}
+            placeholder="Enter Detail..."
+            value={details}
+            onFocus={() => setDetailFocused(true)}
+            onBlur={() => setDetailFocused(false)}
+            onChangeText={setDetails}
+          ></TextInput>
+          <View style={[position = "absolute"]}>
+            {/* gallery image start  */}
+            <Pressable onPress={handleGalleryIconClick} >
+              <Image
+                style={[styles.gallerySvgrepoCom1Icon, styles.svgrepoIconLayout1]}
+                contentFit="cover"
+                source={require("../assets/gallerysvgrepocom-1.png")}
+              />
+            </Pressable>
+
+            {/* gallery image end  */}
+
+            {/* camera image start */}
+            <Pressable onPress={handleCameraIconClick}
+            >
+              <Image
+                style={[styles.cameraSvgrepoCom61,
                 styles.svgrepoIconLayout1
-              ]}
-              contentFit="cover"
-              source={require("../assets/camerasvgrepocom-6-1.png")}
-            />
-          </Pressable>
+                ]}
+                contentFit="cover"
+                source={require("../assets/camerasvgrepocom-6-1.png")}
+              />
+            </Pressable>
 
-          {/* camera image end  */}
+            {/* camera image end  */}
+          </View>
+          <View style={[styles.addRecordChild22,
+          DetailError ? styles.childLayoutR : styles.childLayout
+          ]} />
+          {DetailError ? <Text style={styles.nameError}>Please provide Details</Text> : null}
+
+
+          {showCameraImagePicker && (
+            <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
+          )}
+          {showGalleryImagePicker && (
+            <ImagePickerGallery onImageSelected={(uri, type) => handleGalleryImageSelected(uri, type)} />
+          )}
+
+
+
         </View>
-        <View style={[styles.addRecordChild22,
-          DetailError ? styles.childLayoutR :styles.childLayout
-           ]} />
-        {DetailError ? <Text style={styles.nameError}>Please provide Details</Text> : null}
 
 
-        {showCameraImagePicker && (
-          <ImagePickerCamera onImageSelected={(uri, type) => handleCameraImageSelected(uri, type)} />
+
+        {selectedImage.length > 0 && (
+          <View style={styles.imageContainer}>
+            <Carousel
+              data={selectedImage}
+              renderItem={renderCarouselItem}
+              sliderWidth={350}
+              itemWidth={400}
+              onSnapToItem={(index) => setActiveSlide(index)}
+              sliderHeight={100}
+            />
+            <Pagination
+              dotsLength={selectedImage.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotColor="#007aff"
+              dotStyle={styles.paginationDot}
+              inactiveDotColor="#ccc"
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+
+          </View>
         )}
-        {showGalleryImagePicker && (
-          <ImagePickerGallery onImageSelected={(uri, type) => handleGalleryImageSelected(uri, type)} />
-        )}
-        
-       
-     
-      </View>
 
-      
-      
-    {selectedImage.length > 0 && (
-      <View style={styles.imageContainer}>
-        <Carousel
-          data={selectedImage}
-          renderItem={renderCarouselItem}
-          sliderWidth={350}
-          itemWidth={400}
-          onSnapToItem={(index) => setActiveSlide(index)}
-          sliderHeight={100}
-        />
-    <Pagination
-          dotsLength={selectedImage.length}
-          activeDotIndex={activeSlide}
-          containerStyle={styles.paginationContainer}
-          dotColor="#007aff"
-          dotStyle={styles.paginationDot}
-          inactiveDotColor="#ccc"
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-        />
-        
-      </View>
-    )} 
-     
       </ScrollView>
-     
 
-      
 
-      
 
-    
-      
+
+
+
+
+
       <View style={[styles.vectorParent, styles.groupItemLayout]}>
-      <Pressable onPress={handleSave}>
+        <Pressable onPress={handleSave}>
           <Image
             style={[styles.groupItem, styles.groupItemLayout]}
             contentFit="cover"
             source={require("../assets/rectangle-73.png")}
           />
           <Text style={styles.save}>Save</Text>
-          </Pressable>
-        </View>
-      
-      
-
-      
+        </Pressable>
+      </View>
 
 
 
@@ -1013,7 +979,11 @@ const [userId,setUserId] = useState('');
 
 
 
-    
+
+
+
+
+
 
       <View style={[styles.cont]}>
         <Footer prop={"MaintenanceRecord"} />
@@ -1022,23 +992,23 @@ const [userId,setUserId] = useState('');
         <View style={styles.modalContainer}>
           {originalUri.endsWith('.mp4') ? (
             <View style={styles.videoContainer}>
-            <Video
-            ref={video}
-            source={{ uri: originalUri }}
-            style={styles.modalMedia}
-            useNativeControls
-            contentFit="contain"
-            isLooping
-            onPlaybackStatusUpdate={setStatus}
-            />
-            <View style={styles.iconContainer1}>
-            {!status.isPlaying && ( 
-              <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
-            <EvilIcons name="play" size={50} color="white" />
-            </TouchableOpacity>
-            )}
-          </View>
-          </View>
+              <Video
+                ref={video}
+                source={{ uri: originalUri }}
+                style={styles.modalMedia}
+                useNativeControls
+                contentFit="contain"
+                isLooping
+                onPlaybackStatusUpdate={setStatus}
+              />
+              <View style={styles.iconContainer1}>
+                {!status.isPlaying && (
+                  <TouchableOpacity onPress={handlePlayButton} style={styles.playButton}>
+                    <EvilIcons name="play" size={50} color="white" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
           ) : (
             <Image source={{ uri: originalUri }} style={styles.modalMedia} contentFit="contain" />
           )}
@@ -1067,8 +1037,8 @@ const [userId,setUserId] = useState('');
 
 
 
-      
-     
+
+
 
 
     </View>
@@ -1077,8 +1047,8 @@ const [userId,setUserId] = useState('');
 };
 
 const styles = StyleSheet.create({
-  pgContainer:{
-    top:200,
+  pgContainer: {
+    top: 200,
   },
   videoContainer1: {
     flex: 1,
@@ -1091,10 +1061,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    
-    
+
+
   },
-  iconContainer1:{
+  iconContainer1: {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -1108,29 +1078,29 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    alignItems:"center",
-    justifyContent:"center"
+    alignItems: "center",
+    justifyContent: "center"
   },
   modalMedia: {
     width: '100%',
     height: '100%',
-    
+
   },
   modalImage: {
     width: "100%",
-    height:"100%",
+    height: "100%",
   },
   modalVideo: {
     width: '100%',
-    height:"100%"
-    
+    height: "100%"
+
   },
   mediaContainer: {
     width: 350,
     height: 160,
     position: 'relative',
-    alignItems:"center",
-    justifyContent:"center"
+    alignItems: "center",
+    justifyContent: "center"
   },
 
   media: {
@@ -1148,23 +1118,23 @@ const styles = StyleSheet.create({
   deleteButton1: {
     position: "relative",
     top: -30,
-    left:0,
+    left: 0,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
-video: {
+  video: {
     width: "100%",
-    height:"100%",
-    left:80
+    height: "100%",
+    left: 80
   },
 
-  imageUpload:{
-    position:"absolute",
+  imageUpload: {
+    position: "absolute",
 
   },
-  
+
   imageContainer: {
     alignItems: 'center',
     marginTop: 30,
@@ -1172,7 +1142,7 @@ video: {
     width: "100%",
     height: "60%",
     justifyContent: 'center',
-    
+
   },
   image: {
     width: "100%",
@@ -1186,8 +1156,8 @@ video: {
     alignItems: 'center',
   },
   paginationContainer: {
-    top:-100,
-    position:"relative"
+    top: -100,
+    position: "relative"
   },
   paginationDot: {
     width: 10,
@@ -1195,8 +1165,8 @@ video: {
     borderRadius: 5,
     marginHorizontal: 8,
   },
-  imageUpload:{
-    position:"absolute",
+  imageUpload: {
+    position: "absolute",
 
   },
   container: {
@@ -1205,13 +1175,13 @@ video: {
     justifyContent: 'center',
   },
   image: {
-    height:"100%",
-    width:"100%",
+    height: "100%",
+    width: "100%",
   },
   deleteButton: {
     position: "absolute",
     top: 190,
-    left:130,
+    left: 130,
     backgroundColor: "#ff0000", // Customize the background color as needed
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -1234,7 +1204,7 @@ video: {
   nameErrorL: {
     marginTop: 12,
     marginLeft: 28,
-   position:'relative',
+    position: 'relative',
     color: 'red',
   },
   text1Position: {
@@ -1272,7 +1242,7 @@ video: {
     textAlign: "left",
     position: "relative",
     width: 200,
-    
+
   },
   addPosition: {
     height: 2,
@@ -1280,7 +1250,7 @@ video: {
     borderColor: "#cbcbcb",
     borderStyle: "solid",
     top: 0,
-marginTop:5,
+    marginTop: 5,
     position: "relative",
   },
   addPositionR: {
@@ -1289,7 +1259,7 @@ marginTop:5,
     borderColor: "red",
     borderStyle: "solid",
     top: 0,
-marginTop:5,
+    marginTop: 5,
     position: "relative",
   },
 
@@ -1329,14 +1299,14 @@ marginTop:5,
     top: 0,
     width: 80,
     left: 323,
-    marginTop:-45,
-    marginBottom:2,
+    marginTop: -45,
+    marginBottom: 2,
 
   },
   cont: {
-    position:'absolute',
+    position: 'absolute',
   },
-  
+
   svgrepoIconLayout1: {
     height: 25,
     width: 25,
@@ -1344,14 +1314,14 @@ marginTop:5,
     overflow: "hidden",
   },
 
-  wrap:{
+  wrap: {
     // backgroundColor:'red',
     // marginVertical:90,
-    maxHeight:510,
-    marginTop:190,
+    maxHeight: 510,
+    marginTop: 190,
     // flex:1,
-    overflow:'hidden',
-    
+    overflow: 'hidden',
+
     // justifyContent: 'center',
   },
   groupItemLayout: {
@@ -1493,7 +1463,7 @@ marginTop:5,
   addRecordInner: {
     left: 220,
     width: 182,
-    marginTop:16,
+    marginTop: 16,
   },
   pm: {
     left: 221,
@@ -1503,41 +1473,41 @@ marginTop:5,
   },
   loritaDaniel: {
     top: 0,
-    marginTop:16,
-    marginBottom:6,
+    marginTop: 16,
+    marginBottom: 6,
     left: 24,
   },
   kmDriven: {
     top: 0,
     left: 24,
-    marginTop:16,
-    marginBottom:5,
+    marginTop: 16,
+    marginBottom: 5,
   },
   oilChange: {
     top: 0,
     left: 25,
-    marginTop:25,
+    marginTop: 25,
   },
   lineView: {
     top: 0,
     left: 23,
-    marginTop:5,
+    marginTop: 5,
   },
   addRecordChild1: {
     top: 0,
     left: 23,
-    
+
   },
   addRecordChild22: {
     top: 0,
     left: 12,
-    marginTop:6,
-    marginBottom:6,
+    marginTop: 6,
+    marginBottom: 6,
   },
   addRecordChild2: {
     top: 0,
     left: 23,
-    marginTop:-10,
+    marginTop: -10,
   },
   addRecordChild3: {
     top: 0,
@@ -1562,8 +1532,8 @@ marginTop:5,
     left: "89.20%",
     bottom: "66.63%",
     top: 0,
-    marginTop:-35,
-    marginBottom:5,
+    marginTop: -35,
+    marginBottom: 5,
     width: 25,
     height: 25,
     maxWidth: "100%",
@@ -1573,11 +1543,11 @@ marginTop:5,
     height: 25,
     width: 25,
     top: 0,
-    marginTop:-35,
+    marginTop: -35,
     right: "6.95%",
     bottom: "60.6%",
     left: "88.99%",
-    marginBottom:6,
+    marginBottom: 6,
   },
   date2SvgrepoCom11: {
     marginLeft: 178,
@@ -1602,18 +1572,18 @@ marginTop:5,
   groupChild: {
     top: 0,
     left: 22,
-    marginTop:10,
+    marginTop: 10,
   },
   gallerySvgrepoCom1Icon: {
     left: 345,
     top: 0,
-    marginTop:-30,
+    marginTop: -30,
     position: "relative"
   },
   cameraSvgrepoCom61: {
     left: 310,
     top: 0,
-    marginTop:-30,
+    marginTop: -30,
     position: "relative"
   },
   enterDetailParent: {
@@ -1621,14 +1591,14 @@ marginTop:5,
     width: 382,
     height: 35,
     left: 10,
-    marginTop:25,
+    marginTop: 25,
     position: "relative",
   },
   timeOclockSvgrepoCom1Icon: {
     left: 365,
     top: 0,
     height: 25,
-    marginTop:-30,
+    marginTop: -30,
   },
   groupItem: {
     borderRadius: Border.br_7xs,
@@ -1638,9 +1608,9 @@ marginTop:5,
   save: {
     top: 0,
     left: 171,
-    
+
     color: Color.snow,
-    marginTop:10,
+    marginTop: 10,
     fontFamily: FontFamily.poppinsMedium,
     fontSize: FontSize.size_base,
     textAlign: "left",
@@ -1732,7 +1702,7 @@ marginTop:5,
     left: 30,
   },
   // invoicecss
- 
+
   carCitroenTopVehicleSvgrepIcon: {
     overflow: "hidden",
   },
@@ -1822,8 +1792,8 @@ marginTop:5,
     height: "4.00%",
     width: "4.00%",
     top: -10,
-    marginTop:-15,
-    marginBottom:5,
+    marginTop: -15,
+    marginBottom: 5,
     right: "7.67%",
     bottom: "55.39%",
     left: "89.80%",
@@ -1832,7 +1802,7 @@ marginTop:5,
     backgroundColor: Color.white,
     flex: 1,
     overflow: "hidden",
-    
+
     width: "100%",
     position: "relative",
     // justifyContent: 'center',

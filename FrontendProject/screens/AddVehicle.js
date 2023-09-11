@@ -139,7 +139,6 @@ const AddVehicle = () => {
       .then((response) => {
         JSON.stringify(response.data);
         setCustomers(response.data);
-        // console.log(customers);
       })
       .catch((error) => {
         console.log(error);
@@ -240,13 +239,13 @@ const AddVehicle = () => {
   const handleCameraImageSelected = (uri, type) => {
     setSelectedImage([...selectedImage, { uri, type }]);
     setShowGalleryImagePicker(false);
-    console.log(selectedImage);
+
   };
 
   const handleGalleryImageSelected = (uri, type) => {
     setSelectedImage([...selectedImage, { uri, type }]);
     setShowGalleryImagePicker(false);
-    console.log(selectedImage);
+
   };
 
   const handleImageDelete = (index) => {
@@ -268,47 +267,35 @@ const AddVehicle = () => {
       let token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
       const imageData = new FormData();
-      if(selectedImage)
-      {
-      // Iterate through the image array and append images to the FormData
-      try {
-        selectedImage.forEach((entry, index) => {
-          const image_uri = entry.uri;
-          imageData.append("files", {
-            uri: image_uri,
-            name: new Date() + ".jpeg",
-            type: "image/jpeg",
+      if (selectedImage) {
+        // Iterate through the image array and append images to the FormData
+        try {
+          selectedImage.forEach((entry, index) => {
+            const image_uri = entry.uri;
+            imageData.append("files", {
+              uri: image_uri,
+              name: new Date() + ".jpeg",
+              type: "image/jpeg",
+            });
           });
-        });
 
-        // imageData.append('files', {
-        //   uri: selectedImage,
-        //   name: new Date + "_profile"+".jpeg",
-        //   type: 'image/jpeg', // Adjust the MIME type as needed
-        // });
-        console.log("formData: ", imageData);
 
-        const response = await axios.post(
-          `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
-          imageData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
 
-        console.log("ResponseVehicle :", response.data);
-        if (response.data.status == "OK") {
-          console.log("image uploaded");
+          const response = await axios.post(
+            `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
+            imageData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+        } catch (error) {
+          console.error("Error:", error.message);
         }
-
-        console.log("Images uploaded successfully");
-      } catch (error) {
-        console.error("Error:", error.message);
       }
     }
-  }
   };
 
   const saveVehicle = async () => {
@@ -408,7 +395,6 @@ const AddVehicle = () => {
       try {
         // Store ownerId in AsyncStorage
         await AsyncStorage.setItem("ownerId", ownerId);
-        console.log("ownerId has been set in AsyncStorage:", ownerId);
       } catch (error) {
         console.error("Error setting ownerId in AsyncStorage:", error);
       }
@@ -427,10 +413,8 @@ const AddVehicle = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           if (response.data.status === "OK") {
             const createdUserId = response.data.data;
-            console.log(response.data.data);
             setUserId(createdUserId);
 
             if (createdUserId) {
@@ -488,7 +472,6 @@ const AddVehicle = () => {
                   onSnapToItem={(index) => setActiveSlide(index)}
                   sliderHeight={100}
                 />
-                {/* {console.log(selectedImage)} */}
                 <Pagination
                   dotsLength={selectedImage.length}
                   activeDotIndex={activeSlide}

@@ -32,7 +32,6 @@ const MaintenanceDetailView = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           setRegistrationNumber(response.data[0].registrationNumber);
         })
         .catch((error) => {

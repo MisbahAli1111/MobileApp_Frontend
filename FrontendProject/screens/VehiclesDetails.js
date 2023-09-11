@@ -73,15 +73,11 @@ const VehicleDetailView = ({ route }) => {
         axios
           .request(config)
           .then((response) => {
-            console.log(JSON.stringify(response.data));
             setRegistrationNumber(response.data.registrationNumber);
             const ownerId = JSON.stringify(response.data.ownerId);
-            // console.log("owner:" ,ownerId);
 
             try {
-              // Store ownerId in AsyncStorage
               AsyncStorage.setItem("ownerId", ownerId);
-              // console.log('ownerId has been set in AsyncStorage:', ownerId);
             } catch (error) {
               console.error("Error setting ownerId in AsyncStorage:", error);
             }
@@ -93,7 +89,7 @@ const VehicleDetailView = ({ route }) => {
     };
 
     fetchImages();
-  }, [vehicleId]); // Add vehicleId as a dependency to this effect
+  }, [vehicleId]);
 
   const renderCarouselItem = ({ item }) => {
     return (

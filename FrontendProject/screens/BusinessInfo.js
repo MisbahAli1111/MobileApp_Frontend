@@ -141,10 +141,8 @@ const BusinessInfo = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
-          if (response.data.status === "OK") {
+         if (response.data.status === "OK") {
             const createdUserId = response.data.data;
-            console.log(response.data.data);
             setUserId(createdUserId);
 
             // Perform logic using the updated userId here
@@ -201,7 +199,7 @@ const BusinessInfo = () => {
   };
 
   const uploadImage = async (BusinessId) => {
-    console.log(BusinessId);
+
     const imageData = new FormData();
     imageData.append("files", {
       uri: profileImage,
@@ -209,7 +207,7 @@ const BusinessInfo = () => {
       type: "image/jpeg", // Adjust the MIME type as needed
     });
 
-    console.log("formData: ", imageData);
+
 
     const response = await axios.post(
       `${Config.apiServerUrl}/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
@@ -222,8 +220,6 @@ const BusinessInfo = () => {
       }
     );
 
-    console.log("Upload response:", response.data);
-    console.log("Success", "Files uploaded successfully");
   };
 
   const [NameEror, setNameError] = useState(false);

@@ -23,9 +23,8 @@ function Footer(props) {
   }, [props.prop]);
 
   function handleInvoicePress() {
-    //const invoices=  ['Tayyab',"Oil Change", 'Paid','05-15-2000', '1200', '2400','2','2400','1','1']
-    if (props.data == null) {
-      //   console.warn(props.data)
+   if (props.data == null) {
+
       navigation.navigate("Invoices", { data: props.data });
     }
     navigation.navigate("Invoices", { data: props.data });

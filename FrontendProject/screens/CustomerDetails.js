@@ -294,7 +294,6 @@ const EditProfile = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           setName(response.data.firstName);
           setCnic(response.data.cnicNumber);
           setPhoneNumber(response.data.phone_number);
@@ -313,10 +312,6 @@ const EditProfile = () => {
         const storedOwnerId = await AsyncStorage.getItem("ownerId");
         if (storedOwnerId !== null) {
           setOwnerId(storedOwnerId);
-          console.log(
-            "Successfully retrieved ownerId from AsyncStorage:",
-            storedOwnerId
-          );
         } else {
           console.log("ownerId not found in AsyncStorage.");
         }
@@ -357,7 +352,6 @@ const EditProfile = () => {
       axios
         .request(config)
         .then((response) => {
-          console.log(JSON.stringify(response.data));
           if (ownerId) {
             uploadImage(ownerId);
           }
@@ -412,7 +406,6 @@ const EditProfile = () => {
         type: "image/jpeg", // Adjust the MIME type as needed
       });
 
-      console.log("formData: ", imageData);
 
       const response = await axios.post(
         `${Config.apiServerUrl}/api/file/upload/profile/${ownerId}`, // Change the endpoint as needed
@@ -420,13 +413,10 @@ const EditProfile = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            // Authorization: accessToken, // Add your authorization token if required
           },
         }
       );
     }
-    console.log("Upload response:", response.data);
-    console.log("Success", "Files uploaded successfully");
   };
 
   const getProfileImage = async (ownerId) => {
@@ -448,10 +438,8 @@ const EditProfile = () => {
       const response = await axios.request(config);
 
       if (response.status === 200) {
-        // console.log(response);
         const responseData = response.data;
         setProfileImageLink(`${Config.baseUrl}` + responseData.url);
-        // console.log("profile: ", profileImageLink);
       } else {
         console.log("Error: " + response.statusText);
       }

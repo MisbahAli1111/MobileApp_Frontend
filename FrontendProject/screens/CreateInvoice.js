@@ -2,7 +2,6 @@ import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
-import { Picker } from "@react-native-picker/picker";
 import {
   StyleSheet,
   View,
@@ -22,14 +21,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Footer from "../components/Footer";
 import ErrorPopup from "../components/ErrorPopup";
 import ErrorPopup2 from "../components/ErrorPopup2";
-
-import InvoiceDetailView from "./InvoiceDetailView";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import CreateInvoiceForm from "../components/CreateInvoiceForm";
 import InvoiceDescription from "../components/InvoiceDescription";
 import InvoiceTax from "../components/InvoiceDiscount";
 import InvoiceDiscount from "../components/InvoiceTax";
-import { useRef } from "react";
 
 const CreateInvoice = (parans) => {
   const navigation = useNavigation();
@@ -39,19 +34,12 @@ const CreateInvoice = (parans) => {
   const [APIDiscount, setAPIDiscount] = useState();
   const [APITax, setAPITax] = useState();
   const [APIDescription, setAPIDescription] = useState();
-  // contains the record id details
   const recordId = route.params?.InvoiceRecord;
   const invoiceId = route.params?.InvoiceId;
-  // console.log(invoiceId);
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
-
   const [showPicker, setShowPicker] = useState(false);
-
-  const [itemName, setItemName] = useState("");
-  const [rate, setRate] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [quantity, setQuantity] = useState("");
+  onst[amount, setAmount] = useState(0);
 
   const [subtotal, setSubTotal] = useState(0);
 
@@ -207,7 +195,6 @@ const CreateInvoice = (parans) => {
           );
           setShowErrorPopup(true);
         } else {
-          // console.log("create");
           sendData();
         }
       }
@@ -227,8 +214,6 @@ const CreateInvoice = (parans) => {
     } else {
       st = false;
     }
-    console.log("subtotal here");
-    console.log(subtotal);
 
     let data = JSON.stringify({
       invoiceDue: Duedate,
@@ -257,7 +242,6 @@ const CreateInvoice = (parans) => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         navigation.navigate("Invoices");
       })
       .catch((error) => {

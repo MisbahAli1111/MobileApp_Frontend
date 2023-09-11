@@ -20,9 +20,6 @@ const SwitchBusiness = () => {
         source={require("../assets/light-texture2234-1.png")}
       />
 
-      {/* <Text style={[styles.switchBusinessText]}>
-        Switch Business
-      </Text> */}
 
       <ScrollView style={styles.businessListContainer}>
         <View>

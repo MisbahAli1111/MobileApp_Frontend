@@ -38,8 +38,6 @@ const Vehicles = () => {
     setSearchType(attribute);
     setSearchOrder(sort);
 
-    // console.log('Selected Filters:', attribute[0])
-    // console.log('selected Sort: ',sort)
   };
 
   return (

@@ -77,15 +77,11 @@ function InvoiceDetailView() {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
-        // setInvoice(response.data);
-        // setDate(response.data[0].date);
-        const dateObj = new Date(response.data[0].date);
+               const dateObj = new Date(response.data[0].date);
         const year = dateObj.getFullYear();
         const month = dateObj.getMonth() + 1;
         const day = dateObj.getDate();
         setDate(`${month}/${day}/${year}`);
-        // console.log(formattedDate);
         setDue(response.data[0].invoiceDue);
         setInvoiceID(response.data[0].id);
         setTotal(response.data[0].total);
@@ -99,7 +95,6 @@ function InvoiceDetailView() {
         let st = response.data[0].status;
         setStatus(st ? "Paid" : "Due");
         setBalance(st ? 0 : response.data[0].total);
-        // console.log(Invoice.data);
         calculateTotalAmount();
         setIsLoading(false);
       })
@@ -115,8 +110,7 @@ function InvoiceDetailView() {
       const Business_id = await AsyncStorage.getItem("Business_id");
 
       if (Business_id) {
-        console.log("userID found");
-
+    
         const config = {
           method: "get",
           maxBodyLength: Infinity,
@@ -130,10 +124,9 @@ function InvoiceDetailView() {
 
         if (response.status === 200) {
           const responseData = response.data;
-          
+
           setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
-          console.log("Busienss: ",businessProfile);
-        } else {
+            } else {
           console.log("Error: " + response.statusText);
         }
       }
@@ -187,9 +180,6 @@ function InvoiceDetailView() {
     totalAmount += totaltax;
 
     totalAmount = totalAmount.toFixed(2);
-
-    // console.log(totalAmount);
-
     setTotal(totalAmount);
   };
 
@@ -348,10 +338,7 @@ function InvoiceDetailView() {
         FileSystem.documentDirectory + "invoice.pdf"
       );
       if (downloadObject.status === 200) {
-        console.log("PDF downloaded successfully:", downloadObject.uri);
-        // You can also share the downloaded PDF if needed
-        // await Sharing.shareAsync(downloadObject.uri);
-      } else {
+           } else {
         console.error("Error downloading the PDF.");
       }
     } catch (error) {
@@ -506,8 +493,8 @@ function InvoiceDetailView() {
                       status === "Paid"
                         ? "green"
                         : status === "Due"
-                        ? "#ffcc00"
-                        : "black",
+                          ? "#ffcc00"
+                          : "black",
                     width: screenWidth * 0.34,
                     textAlign: "right",
                   }}
@@ -596,44 +583,6 @@ function InvoiceDetailView() {
         <Text style={[styles.inv0001, styles.inv0001Position]}>
           {invoiceID}
         </Text>
-
-        {/* <Text style={[styles.loritaDanielV, styles.dueTypo]}>{vehicle}</Text>
-        <Text style={[styles.loritaDanielS, styles.dueTypo]}>{status}</Text> */}
-
-        {/* <View style={styles.setstyle}>
-          <Text style={[styles.corollaGli2016, styles.dueTypo]}>
- 
-          </Text>
-          <View style={[styles.ellipseParent, styles.ellipseLayout]}>
-
-          </View>
-
-            <View style={styles.rightwrap}>
-
-
-            </View>
-
-
-          <Text style={[styles.loritaDaniel, styles.dueTypo]}>{name}</Text>
-
-          <View style={[styles.dateParent, styles.parentLayout1]}>
-            <Text style={[styles.date, styles.dueTypo]}>DATE</Text>
-            <Text style={[styles.jan2023, styles.rs3000Typo]}>{date}</Text>
-            <Text style={[styles.text14, styles.textLayout]}>-</Text>
-          </View>
-          <View style={[styles.dueParent, styles.parentLayout1]}>
-            <Text style={[styles.due, styles.textLayout1]}>Due </Text>
-            <Text style={[styles.onReceipt, styles.rs3000Typo]}>{due}</Text>
-            <Text style={[styles.text14, styles.textLayout]}>-</Text>
-          </View>
-          <View style={[styles.balanceParent, styles.parentLayout1]}>
-            <Text style={[styles.date, styles.dueTypo]}>Balance</Text>
-            <Text style={styles.rs3000Typo}></Text>
-            <Text style={[styles.text14, styles.textLayout]}>-</Text>
-          </View>
-          <Text style={[styles.inv00011, styles.invoiceTypo]}>{total}</Text>
-          <Text style={[styles.invoiceTo, styles.invoiceTypo]}>Invoice To</Text>
-        </View> */}
 
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>

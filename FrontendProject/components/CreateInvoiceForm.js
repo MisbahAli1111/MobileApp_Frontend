@@ -240,7 +240,6 @@ const CreateInvoiceForm = ({
   const [city, setCity] = useState("");
   const [numberPlates, setNumberPlates] = useState([]);
   const [data, setData] = useState(transformedResponse);
-  // console.warn(name);
   const [status, setStatus] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDueDatePicker, setShowDueDatePicker] = useState(false);
@@ -249,7 +248,6 @@ const CreateInvoiceForm = ({
   const [localDate, setLocalDate] = useState();
   const [localDueDate, setLocalDueDate] = useState();
   const [regNumber, setregNumber] = useState("");
-  // const [status,setStatus] = useState('');
   const searchRef = useRef();
   const transformedResponse = numberPlates.map((item) => {
     const { registration_number } = item;
@@ -260,10 +258,6 @@ const CreateInvoiceForm = ({
 
   useEffect(() => {
     if (APIData) {
-      console.log("API");
-      console.log(APIData);
-
-      console.log(APIData[0]);
       const data = APIData[0];
       setName(data.name);
       setregNumber(data.registrationNumber);
@@ -275,20 +269,14 @@ const CreateInvoiceForm = ({
       }
       setStatus(st);
 
-      // console.log(d);
-
       const date = formatDate(data.date);
       const DueDate = formatDate(data.invoiceDue);
-      // console.log(date);
-      // setDate(date);
-      // setSelectedDueDate(data.invoiceDue);
-      // setSelectedDate(date);
       setLocalDate(data.date);
       setLocalDueDate(data.invoiceDue);
       setAPDate(date);
       setAPDueDate(DueDate);
     }
-    // // setData();
+
   }, [APIData]);
 
   const formatDate = (dateString) => {
@@ -357,9 +345,7 @@ const CreateInvoiceForm = ({
     axios
       .request(config)
       .then((response) => {
-        // console.log(JSON.stringify(response.data));
         const Name = `${response.data[0].firstName} ${response.data[0].lastName}`;
-        // setUser(Name);
         setName(Name);
       })
       .catch((error) => {
@@ -474,7 +460,6 @@ const CreateInvoiceForm = ({
       Duedate = selectedDueDate;
     }
     if (APDate && APDueDate) {
-      console.log("dates present");
       date = localDate;
       Duedate = localDueDate;
       date = localDate;
