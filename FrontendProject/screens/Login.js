@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -22,6 +22,11 @@ import {
 } from "react-native-responsive-screen";
 import { AntDesign } from "@expo/vector-icons";
 import Config from "./Config";
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+
+
+
 
 const Login = () => {
   const navigation = useNavigation();
@@ -32,6 +37,43 @@ const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  WebBrowser.maybeCompleteAuthSession();
+  const [accessToken,setAccessToken]=useState();
+  const [userInfo,setUserInfo]=useState();
+  const [userData,setUserData]=useState('');
+  const [request, response, promptAsync] = Google.useAuthRequest({
+      androidClientId: '159538002521-199497apkh3id1o8uilp14nflhbgbff6.apps.googleusercontent.com',
+      expoClientId:'159538002521-6qlfa8iieuccon89qdnt6elouc1fctej.apps.googleusercontent.com'
+     
+    });
+
+    useEffect(()=>{
+      if(response?.type=='success')
+      {
+          setAccessToken(response.authentication.accessToken);
+          console.log("AccessToken: ",accessToken);
+          getUserData();
+      }
+    },[response]);
+
+    const getUserData=async()=>{
+      try {
+          const resp = await fetch(
+            "https://www.googleapis.com/userinfo/v2/me",
+            {
+              headers: { Authorization: `Bearer ${response.authentication.accessToken}` },
+            }
+          );
+    
+          const user = await resp.json();
+          console.log("user Details",user) 
+          // setUserInfo(user); 
+          // setUserData(user);
+          // await Services.setUserAuth(user);
+        } catch (error) {
+          console.log("Error: ",error);
+        }
+      }
 
   const handleLogin = async () => {
     setMError(false);
@@ -140,7 +182,9 @@ const Login = () => {
 
       {/* Sign in with Google Button */}
       <View style={styles.googleButtonContainer}>
-        <Pressable style={styles.googleButton}>
+        <Pressable 
+        onPress={() => promptAsync()}
+        style={styles.googleButton}>
         <AntDesign name="google" size={24} color="white" />
           <Text style={styles.googleButtonText}>Sign in with Google</Text>
         </Pressable>

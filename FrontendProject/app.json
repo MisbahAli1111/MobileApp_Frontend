@@ -3,6 +3,7 @@
     "name": "myproject",
     "slug": "myproject",
     "version": "1.0.0",
+    "scheme": "myproject",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -24,10 +25,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.oilChange.myproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1fb18d87-79ef-440e-bed4-7bd57f06952b"
+      }
     }
   }
 }

@@ -8,7 +8,6 @@ import {
   Dimensions,
   Pressable,
   ActivityIndicator,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -33,13 +32,16 @@ import {
   heightPercentageToDP,
 } from "react-native-responsive-screen";
 import { AntDesign } from "@expo/vector-icons";
-
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
+const rem = screenWidth / 16;
 const SalesReport = () => {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate2, setSelectedDate2] = useState(null);
   const [DateError, setDataError] = useState(false);
+  const [Data, setData] = useState([]);
   const [Date2Error, setData2Error] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDate2Picker, setShowDate2Picker] = useState(false);
@@ -306,11 +308,6 @@ const SalesReport = () => {
       const token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
 
-      // let data = JSON.stringify({
-      //   "date": "2023-08-31T00:00",
-      //   "invoiceDue": "2023-09-06T00:00"
-      // });
-
       let data = JSON.stringify({
         date: selectedDate,
         invoiceDue: selectedDate2,
@@ -330,7 +327,9 @@ const SalesReport = () => {
       axios
         .request(config)
         .then((response) => {
+          setData(response.data);
           const data = response.data
+          
             .map(
               (item) => `
           <tr>
@@ -355,15 +354,15 @@ const SalesReport = () => {
           const currency = response.data[0].currency;
           const dateTo = formatDate(selectedDate2);
           const businessName = response.data[0].businessName;
-          generatePDF(
-            data,
-            total,
-            currency,
-            formatedDate,
-            dateFrom,
-            dateTo,
-            businessName
-          );
+          // generatePDF(
+          //   data,
+          //   total,
+          //   currency,
+          //   formatedDate,
+          //   dateFrom,
+          //   dateTo,
+          //   businessName
+          // );
         })
         .catch((error) => {
           console.log(error);
@@ -451,27 +450,70 @@ const SalesReport = () => {
         {Date2Error ? (
           <Text style={styles.nameError}>Please provide Date</Text>
         ) : null}
+      </View>
+      <View
+        style={{
+          marginTop: 28,
+          alignItems: "center",
+          justifyContent: "center",
+          width: widthPercentageToDP("90%"),
+        }}
+      >
+        <Text>{Error}</Text>
+      </View>
 
-        <View
-          style={{
-            marginTop: 28,
-            alignItems: "center",
-            justifyContent: "center",
-            width: widthPercentageToDP("90%"),
-          }}
-        >
-          <Text>{Error}</Text>
+      <View style={styles.wrap}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ flex: 1, marginLeft: rem * 0.8 }}>Date: 8/9/2023</Text>
+          <Text style={{ fontSize: FontSize.size_lg, fontWeight: 600, flex: 1, textAlign: 'center' }}>Sales Report</Text> 
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleDate} style={styles.button}>
-            <Image
-              style={styles.buttonImage}
-              source={require("../assets/rectangle-73.png")}
-            />
-            <Text style={styles.buttonText}>Generate PDF</Text>
-          </TouchableOpacity>
+        <View>
+        <Text style={{ marginTop:20 , marginLeft: rem * 0.8 }}>Date From: 8/9/2023</Text>
+        <Text style={{  marginLeft: rem * 0.8 }}>Date To: 8/9/2023</Text>
+        <Text style={{  marginLeft: rem * 0.8 }}>Business Name</Text>
         </View>
       </View>
+          {/* <Image
+            style={[styles.groupChild, styles.groupLayout2]}
+            contentFit="cover"
+            source={require("../assets/rectangle-62.png")}
+          /> */}
+          <View style={{ 
+            flexDirection:'row',paddingHorizontal:40,width:screenWidth,alignItems:'flex-start' , justifyContent:'space-between'}}>
+            
+            <Text>Id</Text>
+            <Text>Maintained by</Text>
+            <Text>Vehicle</Text>
+            <Text>Currency</Text>
+            <Text>Total</Text>
+            
+          </View>
+       
+        <View style={[styles.groupItem, styles.groupItemPosition]} />
+
+        <ScrollView style={styles.wrapS}>
+          {Data.map((desc, index) => (
+            <View key={index} style={styles.dataRow}>
+              <Text style={styles.dataCell}>{desc.id}</Text>
+              <Text style={styles.dataCell}>{desc.parentCompany|| item.name}</Text>
+              <Text style={styles.dataCell}>{desc.vehicleType}</Text>
+              <Text style={styles.dataCell}>{desc.currency}</Text>
+              <Text style={styles.dataCell}>{desc.total}</Text>
+            </View>
+          ))}
+        </ScrollView>
+        <Text style={{textAlign:'right'}}>This here</Text>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handleDate} style={styles.button}>
+          <Image
+            style={styles.buttonImage}
+            source={require("../assets/rectangle-73.png")}
+          />
+          <Text style={styles.buttonText}>Generate Report</Text>
+        </TouchableOpacity>
+      </View>
+
 
       <View
         style={{
@@ -496,9 +538,147 @@ const SalesReport = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     backgroundColor: "#dcebf5",
+  },
+  text5: {
+    top: 42,
+  },
+  amount: {
+    width: 57,
+    fontSize: FontSize.size_smi,
+    top: 9,
+    fontFamily: FontFamily.poppinsMedium,
+    color: Color.textTxtPrimary,
+    fontWeight: "500",
+  },
+  textPosition1: {
+    left: 313,
+    textAlign: "left",
+    position: "absolute",
+  },
+  qty: {
+    width: 28,
+    left: 238,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    position: "absolute",
+  },
+  dataCell: {
+    flex: 1,
+    textAlign: "center",
+  },
+  dataRow: {
+    flexDirection: "row",
+    borderBottomWidth: 0.8,
+    borderColor: "white",
+    paddingVertical: 8,
+    backgroundColor: Color.steelblue_300,
+    borderRadius:8,
+  },
+  wrapS: {
+    marginTop: 16,
+    maxHeight: 178,
+    width: "94%",
+    marginLeft: 16,
+    borderRadius: 14,
+
+    flexGrow: 1,
+    flex: 1,
+  },
+  wrap: {
+    // justifyContent:'center',
+    // alignItems: "center",
+  },
+  textTypo4: {
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: FontSize.size_sm,
+  },
+  groupChild: {
+    height: 38,
+    left: 0,
+    top: 0,
+    position: "absolute",
+  },
+  textTypo2: {
+    width: 38,
+    fontFamily: FontFamily.poppinsRegular,
+    top: 42,
+    fontSize: FontSize.size_sm,
+    color: Color.textTxtPrimary,
+  },
+  groupLayout2: {
+    borderRadius: Border.br_3xs,
+    width: 392,
+  },
+  textTypo1: {
+    width: 30,
+    left: 238,
+    color: Color.darkslateblue,
+    fontFamily: FontFamily.poppinsRegular,
+    fontSize: FontSize.size_sm,
+    textAlign: "left",
+    position: "absolute",
+  },
+  description: {
+    width: 91,
+    fontSize: FontSize.size_smi,
+    top: 9,
+    fontFamily: FontFamily.poppinsMedium,
+    color: Color.textTxtPrimary,
+    fontWeight: "500",
+  },
+  changePosition: {
+    left: 15,
+    textAlign: "left",
+    position: "absolute",
+  },
+  oilChange: {
+    color: Color.darkslateblue,
+    top: 42,
+    left: 15,
+    textAlign: "left",
+    position: "absolute",
+    width: 79,
+  },
+  rate: {
+    width: 35,
+    left: 134,
+    fontSize: FontSize.size_smi,
+    textAlign: "left",
+    position: "absolute",
+  },
+  qtyTypo: {
+    top: 9,
+    fontSize: FontSize.size_smi,
+    fontFamily: FontFamily.poppinsMedium,
+    color: Color.textTxtPrimary,
+    fontWeight: "500",
+  },
+  amount: {
+    width: 57,
+    fontSize: FontSize.size_smi,
+    top: 9,
+    fontFamily: FontFamily.poppinsMedium,
+    color: Color.textTxtPrimary,
+    fontWeight: "500",
+  },
+  text9: {
+    width: 38,
+    fontFamily: FontFamily.poppinsRegular,
+    top: 42,
+    fontSize: FontSize.size_sm,
+    color: Color.textTxtPrimary,
+  },
+  text1: {
+    left: 164,
+    textAlign: "left",
+    position: "absolute",
+  },
+  head: {
+    marginTop: 10,
+    alignContent: "center",
+    justifyContent: "center",
+    marginLeft: 12,
   },
   Formcontainer: {
     // backgroundColor:'red',
@@ -507,9 +687,11 @@ const styles = StyleSheet.create({
     marginTop: heightPercentageToDP("1%"),
   },
   buttonContainer: {
-    marginTop: heightPercentageToDP("65%"),
-    alignItems: "center",
+    marginTop: heightPercentageToDP("85%"),
+    width: screenWidth * 0.8,
     position: "absolute",
+    left: "10%", 
+    alignItems: "center", 
   },
   button: {
     flexDirection: "row",
