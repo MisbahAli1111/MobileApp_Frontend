@@ -452,8 +452,6 @@ const OwnerInfo = () => {
 
     if (!hasErrors) {
       const Business_id = await AsyncStorage.getItem("Business_id");
-      let token = await AsyncStorage.getItem("accessToken");
-      const accessToken = "Bearer " + token;
       let data = JSON.stringify({
         firstName: name,
         lastName: name,
@@ -469,7 +467,6 @@ const OwnerInfo = () => {
         url: `${Config.apiServerUrl}/api/users/register/owner`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: accessToken,
         },
         data: data,
       };

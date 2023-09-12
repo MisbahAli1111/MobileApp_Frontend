@@ -39,7 +39,7 @@ const CreateInvoice = (parans) => {
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
   const [showPicker, setShowPicker] = useState(false);
-  onst[amount, setAmount] = useState(0);
+  const[amount, setAmount] = useState(0);
 
   const [subtotal, setSubTotal] = useState(0);
 

@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
+import Config from "../screens/Config";
 import { BarChart } from "react-native-chart-kit";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -336,7 +337,7 @@ const CreateInvoiceForm = ({
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/get-customer/${carNumber}`,
+      url: `${Config.apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
       headers: {
         Authorization: accessToken,
       },
@@ -368,7 +369,7 @@ const CreateInvoiceForm = ({
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://192.168.0.236:8080/api/maintenance-record/${recordId}/registration-number`,
+      url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/registration-number`,
       headers: {},
     };
 
