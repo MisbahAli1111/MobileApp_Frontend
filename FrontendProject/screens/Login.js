@@ -54,7 +54,6 @@ const Login = () => {
         method: "post",
         maxBodyLength: Infinity,
 
-
         url: `${Config.apiServerUrl}/login`,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -134,6 +133,16 @@ const Login = () => {
             source={require("../assets/rectangle-73.png")}
           />
           <Text style={styles.buttonText}>Login</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.grayBorder}></View>
+
+      {/* Sign in with Google Button */}
+      <View style={styles.googleButtonContainer}>
+        <Pressable style={styles.googleButton}>
+        <AntDesign name="google" size={24} color="white" />
+          <Text style={styles.googleButtonText}>Sign in with Google</Text>
         </Pressable>
       </View>
     </ImageBackground>
@@ -230,6 +239,33 @@ const styles = StyleSheet.create({
     fontSize: heightPercentageToDP("2%"),
     fontFamily: FontFamily.poppinsMedium,
   },
+  grayBorder: {
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    marginVertical: heightPercentageToDP("3%"),
+    width: "100%",
+  },
+  // Google Sign-in Button Styles
+  googleButtonContainer: {
+    marginTop: heightPercentageToDP("1%"),
+    alignItems: "center",
+  },
+  googleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(3, 29, 68, 1)", // Google Blue
+    borderRadius: 10,
+    width: "100%",
+    height: heightPercentageToDP("6%"),
+    paddingHorizontal: widthPercentageToDP("19%"), // Adjust as needed
+  },
+  googleButtonText: {
+    fontSize: 16,
+    color: "white",
+    marginLeft: 10,
+  },
+  
 });
 
 export default Login;
