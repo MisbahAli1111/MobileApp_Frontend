@@ -37,13 +37,15 @@ const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  WebBrowser.maybeCompleteAuthSession();
+ 
   const [accessToken,setAccessToken]=useState();
   const [userInfo,setUserInfo]=useState();
   const [userData,setUserData]=useState('');
+  WebBrowser.maybeCompleteAuthSession();
   const [request, response, promptAsync] = Google.useAuthRequest({
       androidClientId: '159538002521-199497apkh3id1o8uilp14nflhbgbff6.apps.googleusercontent.com',
-      expoClientId:'159538002521-6qlfa8iieuccon89qdnt6elouc1fctej.apps.googleusercontent.com'
+      expoClientId:'159538002521-6qlfa8iieuccon89qdnt6elouc1fctej.apps.googleusercontent.com',
+      redirectUri: 'https://auth.expo.io/@shayanpirani/myproject',
      
     });
 
