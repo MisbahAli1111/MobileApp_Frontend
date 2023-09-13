@@ -44,16 +44,7 @@ function VehicleDetails(props) {
         .then((response) => {
           // console.log(JSON.stringify(response.data));
           setVehicleDetails(response.data);
-          const ownerId = JSON.stringify(response.data.ownerId);
-          // console.log("owner:" ,ownerId);
-
-          try {
-            // Store ownerId in AsyncStorage
-            AsyncStorage.setItem("ownerId", ownerId);
-            // console.log('ownerId has been set in AsyncStorage:', ownerId);
-          } catch (error) {
-            console.error("Error setting ownerId in AsyncStorage:", error);
-          }
+          // console.log(vechileDetails.ownerId);
         })
         .catch((error) => {
           console.log(error);
@@ -113,7 +104,11 @@ function VehicleDetails(props) {
         </Text>
         <Text style={[styles.maintainedBy, styles.dateTypo]}>Client Name</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate("CustomerDetails")}
+          onPress={() =>
+            navigation.navigate("CustomerDetails", {
+              ownerid: vechileDetails.ownerId, // Pass the ownerid as a parameter
+            })
+          }
         >
           <Text
             style={[

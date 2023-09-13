@@ -45,6 +45,7 @@ function RecordDetails({ recordId }) {
 
   useEffect(() => {
     getData();
+    
     const fetchImages = async () => {
       try {
         setLoading(true); // Set loading to true while fetching
@@ -72,8 +73,34 @@ function RecordDetails({ recordId }) {
       }
     };
 
+    const getOwnerId = async (recordId) => {
+      try {
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = "Bearer " + token;
+
+        if (recordId) {
+          let config = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/get-owner-id`,
+            headers: {
+              Authorization: accessToken,
+            },
+          };
+
+          const response = await axios.request(config);
+          setOwnerId(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+         
+      }
+    };
+
+
     fetchImages();
-  }, [recordId, ownerId]);
+    getOwnerId(recordId);
+  }, [recordId]);
 
   getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
@@ -230,9 +257,13 @@ function RecordDetails({ recordId }) {
           <Text style={[styles.date, styles.dateTypo]}>Service</Text>
         </View>
         <View style={styles.carWashParent1}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("CustomerDetails")}
-          >
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("CustomerDetails", {
+              ownerid: ownerId, // Pass the ownerid as a parameter
+            })
+          }
+        >
             <Text
               style={[styles.jan2023, styles.jan2023Position, styles.hyperlink]}
             >

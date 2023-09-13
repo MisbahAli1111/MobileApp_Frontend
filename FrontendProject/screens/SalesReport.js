@@ -42,6 +42,7 @@ const SalesReport = () => {
   const [selectedDate2, setSelectedDate2] = useState(null);
   const [DateError, setDataError] = useState(false);
   const [Data, setData] = useState([]);
+  const [htmlData, sethtmlData] = useState([]);
   const [Date2Error, setData2Error] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDate2Picker, setShowDate2Picker] = useState(false);
@@ -49,7 +50,13 @@ const SalesReport = () => {
   const screenWidth = Dimensions.get("window").width;
   const [Error, setError] = useState("");
   const [businessProfile, setBusinessProfile] = useState("");
-
+  const [DateFrom, setDateFrom] = useState('');
+  const [DateTo, setDateTo] = useState('');
+  const [OnDate , setOnDate] = useState('');
+  const [Currency, setCurrency] = useState('');  
+  const [ Total, setTotal] = useState('0');
+  const [businessName, setBusinessName] = useState('');
+  const [visible,setVisible]=useState(false);
   const getProfileImage = async () => {
     try {
       const accessTokens = await AsyncStorage.getItem("accessToken");
@@ -85,15 +92,7 @@ const SalesReport = () => {
     getProfileImage();
   }, []);
 
-  function generatehtml(
-    data,
-    total,
-    currency,
-    formatedDate,
-    dateFrom,
-    dateTo,
-    businessName
-  ) {
+  function generatehtml() {
     const html = `
     <html lang="en">
     <head>
@@ -174,7 +173,7 @@ const SalesReport = () => {
     <body>
       <div class="container">
         <p class="header">
-          <span class="header-left">Date: ${formatedDate}</span>
+          <span class="header-left">Date: ${OnDate}</span>
           <span class="header-middle">
             <img src="${businessProfile}" alt="Logo" style="width: 30px; height: 30px;">
           </span>
@@ -183,8 +182,8 @@ const SalesReport = () => {
         <p><br></p>
         <div class="details">
           <div>
-            <p>Date From : ${dateFrom}</p>
-            <p>Date To : ${dateTo}</p>
+            <p>Date From : ${DateFrom}</p>
+            <p>Date To : ${DateTo}</p>
             <p>Business Name: ${businessName}</p>
             </div>
         </div>
@@ -200,11 +199,11 @@ const SalesReport = () => {
             </tr>
           </thead>
           <tbody>
-            ${data}
+            ${htmlData}
           </tbody>
         </table>
         <div class="total">
-        <p>Total: ${total}</p>
+        <p>Total: ${Total}</p>
       </div>
       </div>
     </body>
@@ -212,24 +211,8 @@ const SalesReport = () => {
     return html;
   }
 
-  const generatePDF = async (
-    data,
-    total,
-    currency,
-    formatedDate,
-    dateFrom,
-    dateTo,
-    businessName
-  ) => {
-    let html = generatehtml(
-      data,
-      total,
-      currency,
-      formatedDate,
-      dateFrom,
-      dateTo,
-      businessName
-    );
+  const generatePDF = async () => {
+    let html = generatehtml();
 
     const file = await printToFileAsync({
       html: html,
@@ -343,17 +326,24 @@ const SalesReport = () => {
         `
             )
             .join("");
-
+          sethtmlData(data);
           const total = response.data.reduce(
             (accumulator, item) => accumulator + item.total,
             0
           );
+          setTotal(total);
           const currentDate = new Date();
           const formatedDate = formatDate(currentDate);
+          setOnDate(formatedDate);
           const dateFrom = formatDate(selectedDate);
+          setDateFrom(dateFrom);
           const currency = response.data[0].currency;
+          setCurrency(currency);
           const dateTo = formatDate(selectedDate2);
+          setDateTo(dateTo);
           const businessName = response.data[0].businessName;
+          setBusinessName(businessName);
+          setVisible(true);
           // generatePDF(
           //   data,
           //   total,
@@ -461,48 +451,61 @@ const SalesReport = () => {
       >
         <Text>{Error}</Text>
       </View>
-
-      <View style={styles.wrap}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ flex: 1, marginLeft: rem * 0.8 }}>Date: 8/9/2023</Text>
-          <Text style={{ fontSize: FontSize.size_lg, fontWeight: 600, flex: 1, textAlign: 'center' }}>Sales Report</Text> 
-        </View>
-        <View>
-        <Text style={{ marginTop:20 , marginLeft: rem * 0.8 }}>Date From: 8/9/2023</Text>
-        <Text style={{  marginLeft: rem * 0.8 }}>Date To: 8/9/2023</Text>
-        <Text style={{  marginLeft: rem * 0.8 }}>Business Name</Text>
-        </View>
+      {visible && ( // Check if visible is true
+  <ScrollView style={{height:screenHeight*0.48}}>
+    <View style={styles.wrap}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ flex: 1, marginLeft: rem * 0.8 }}>Date: {OnDate}</Text>
+        <Text style={{ fontSize: FontSize.size_lg, fontWeight: 600, flex: 1, textAlign: 'center' }}>Sales Report</Text> 
       </View>
-          {/* <Image
-            style={[styles.groupChild, styles.groupLayout2]}
-            contentFit="cover"
-            source={require("../assets/rectangle-62.png")}
-          /> */}
-          <View style={{ 
-            flexDirection:'row',paddingHorizontal:40,width:screenWidth,alignItems:'flex-start' , justifyContent:'space-between'}}>
-            
-            <Text>Id</Text>
-            <Text>Maintained by</Text>
-            <Text>Vehicle</Text>
-            <Text>Currency</Text>
-            <Text>Total</Text>
-            
-          </View>
-       
-        <View style={[styles.groupItem, styles.groupItemPosition]} />
+      <View>
+        <Text style={{ marginTop: 20, marginLeft: rem * 0.8 }}>Date From: {DateFrom}</Text>
+        <Text style={{ marginLeft: rem * 0.8 }}>Date To: {DateTo}</Text>
+        <Text style={{ marginLeft: rem * 0.8 }}>Business Name  {businessName}</Text>
+      </View>
+    </View>
 
-        <ScrollView style={styles.wrapS}>
-          {Data.map((desc, index) => (
-            <View key={index} style={styles.dataRow}>
-              <Text style={styles.dataCell}>{desc.id}</Text>
-              <Text style={styles.dataCell}>{desc.parentCompany|| item.name}</Text>
-              <Text style={styles.dataCell}>{desc.vehicleType}</Text>
-              <Text style={styles.dataCell}>{desc.currency}</Text>
-              <Text style={styles.dataCell}>{desc.total}</Text>
-            </View>
-          ))}
-        </ScrollView>
-        <Text style={{textAlign:'right'}}>This here</Text>
+    <Image
+      style={[styles.groupChild, styles.groupLayout2]}
+      contentFit="cover"
+      source={require("../assets/rectangle-62.png")}
+    />
+
+    <View style={{ 
+      flexDirection: 'row', marginTop: 10, paddingHorizontal: 40, width: screenWidth, alignItems: 'flex-start', justifyContent: 'space-between'}}>
+      <Text>Id</Text>
+      <Text>Maintained by</Text>
+      <Text>Vehicle</Text>
+      <Text>Currency</Text>
+      <Text>Total</Text>
+    </View>
+
+    <View style={[styles.groupItem, styles.groupItemPosition]} />
+
+    <View style={styles.wrapS}>
+      {Data.map((desc, index) => (
+        <View key={index} style={styles.dataRow}>
+          <Text style={styles.dataCell}>{desc.id}</Text>
+          <Text style={styles.dataCell}>{desc.parentCompany || desc.name}</Text>
+          <Text style={styles.dataCell}>{desc.vehicleType}</Text>
+          <Text style={styles.dataCell}>{desc.currency}</Text>
+          <Text style={styles.dataCell}>{desc.total}</Text>
+        </View>
+      ))}
+    </View>
+    <Text style={{ textAlign: 'right', marginRight: '5%' }}>Total Amount {Total}</Text>
+    <Pressable
+          style={[styles.frame, styles.framePosition]} //share button
+          onPress={generatePDF}
+        >
+          <Image
+            style={[styles.iconP]}
+            contentFit="cover"
+            source={require("../assets/icbaselineshare.png")}
+          />
+        </Pressable>
+  </ScrollView>
+)}
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleDate} style={styles.button}>
@@ -537,11 +540,27 @@ const SalesReport = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#dcebf5",
+    
+    // backgroundColor: "#dcebf5",
   },
   text5: {
     top: 42,
+  },
+  iconP: {
+    height: 25,
+    width: 25,
+  },
+  framePosition: {
+    left: 360,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop:screenWidth*0.1,
+    borderRadius: 20,
+    backgroundColor: "#3894c9",
+  },
+  frame: {
+    height: 40,
+    width: 40,
   },
   amount: {
     width: 57,
@@ -576,10 +595,10 @@ const styles = StyleSheet.create({
     borderRadius:8,
   },
   wrapS: {
-    marginTop: 16,
+    marginTop: 12,
     maxHeight: 178,
     width: "94%",
-    marginLeft: 16,
+    marginLeft: 14,
     borderRadius: 14,
 
     flexGrow: 1,
@@ -595,8 +614,8 @@ const styles = StyleSheet.create({
   },
   groupChild: {
     height: 38,
-    left: 0,
-    top: 0,
+    left: 10,
+    top: 105,
     position: "absolute",
   },
   textTypo2: {

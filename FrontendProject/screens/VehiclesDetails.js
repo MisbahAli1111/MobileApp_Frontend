@@ -74,13 +74,8 @@ const VehicleDetailView = ({ route }) => {
           .request(config)
           .then((response) => {
             setRegistrationNumber(response.data.registrationNumber);
-            const ownerId = JSON.stringify(response.data.ownerId);
 
-            try {
-              AsyncStorage.setItem("ownerId", ownerId);
-            } catch (error) {
-              console.error("Error setting ownerId in AsyncStorage:", error);
-            }
+           
           })
           .catch((error) => {
             console.log(error);
