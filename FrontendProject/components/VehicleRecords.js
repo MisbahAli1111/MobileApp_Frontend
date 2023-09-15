@@ -195,6 +195,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       .request(config)
       .then((response) => {
         setVehicles(response.data.data);
+        console.log(response.data.data);
         AsyncStorage.setItem(
           "VehicleId",
           JSON.stringify(response.data.data[0].id)
@@ -357,7 +358,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
                   <Image
                     style={[styles.rectangleIcon, styles.iconPosition]}
                     contentFit="cover"
-                    source={{ uri: `${Config.baseUrl}` + vehicle.vehicleMediaList[0] }}
+                    source={{ uri: `${Config.baseUrl1}` + vehicle.vehicleMediaList[0] }}
                   />
                 ) : (
                   <Image

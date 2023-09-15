@@ -44,8 +44,8 @@ const Login = () => {
   WebBrowser.maybeCompleteAuthSession();
   const [request, response, promptAsync] = Google.useAuthRequest({
       androidClientId: '159538002521-199497apkh3id1o8uilp14nflhbgbff6.apps.googleusercontent.com',
-      // ClientId:'159538002521-6qlfa8iieuccon89qdnt6elouc1fctej.apps.googleusercontent.com',
-      // redirectUri: 'https://auth.expo.io/@shayanpirani/myproject',
+      expoClientId:'159538002521-6qlfa8iieuccon89qdnt6elouc1fctej.apps.googleusercontent.com',
+      redirectUri: 'https://auth.expo.io/@shayanpirani/myproject',
      
     });
 

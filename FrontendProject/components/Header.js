@@ -10,11 +10,15 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ProfileDropdown from "./ProfilePopDown";
-import { Color } from "../GlobalStyles";
+import { Color,FontSize } from "../GlobalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
 import Config from "../screens/Config";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   const navigation = useNavigation();
@@ -66,7 +70,10 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
   };
 
   useEffect(() => {
+    if(profileImage === 'Yes')
+    {
     getProfileImage();
+    }
   }, [userId]); 
 
   return (
@@ -127,41 +134,40 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   container: {
-    top: 40,
+    marginTop: hp("3%"), // Adjust the marginTop to create spacing from the top
     flexDirection: "row",
     alignItems: "center",
-    height: 60,
+    height: hp("10%"), // Use heightPercentageToDP for responsive height
     backgroundColor: "transparent", // Make the background transparent so that the image background is visible
-    // borderBottomWidth: 0.5,
-    // borderBottomColor: Color.steelblue_200,
   },
   title: {
     flex: 1,
-    fontSize: 20,
+    fontSize: FontSize.size_3xl,
     fontWeight: "700",
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
   },
   backButton: {
-    paddingHorizontal: 15,
+    paddingHorizontal: wp("3%"), // Use widthPercentageToDP for responsive padding
   },
   arrowImage: {
-    width: 20,
-    height: 20,
+    width: wp("5%"),
+    height: hp("5%"),
     resizeMode: "contain",
   },
   profileImage: {
-    width: 30,
-    height: 30,
-    borderRadius: 20,
-    marginRight: 15,
+    width: wp("7%"),
+    height: wp("7%"), // Set the height to the same as the width to make it circular
+    borderRadius: wp("3.5%"), // Half of the width to make it circular
+    marginRight: wp("3%"),
   },
+  
   placeholderImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 15,
+    width: wp("8%"),
+    height: hp("8%"),
+    borderRadius: wp("3.5%"),
+    marginRight: wp("3%"),
   },
 });
 
