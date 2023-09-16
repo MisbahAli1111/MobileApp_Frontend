@@ -81,7 +81,7 @@ const App = () => {
               },
             })}
           >
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Login"
               component={Login}
               initialParams={{
@@ -261,7 +261,7 @@ const App = () => {
                 onBackPress: "Home",
                 profileImage: "Yes",
               }}
-            />
+            /> */}
 
             <Stack.Screen
               name="AddVehicle"
