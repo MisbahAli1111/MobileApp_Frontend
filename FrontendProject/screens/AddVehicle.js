@@ -35,19 +35,19 @@ import {
 
 const AddVehicle = () => {
   const navigation = useNavigation();
-  const [vehicleType, setvehicleType] = React.useState("");
+  const [vehicleType, setvehicleType] = React.useState("Type");
   const [vehicleModel, setvehicleModel] = React.useState("");
   const [Registration, setRegistration] = React.useState("");
-  const [name, setName] = useState("");
+  const [profileImageLink, setProfileImageLink] = useState("");
   const [keyCustomer, setKeyCustomer] = useState("");
   const [Vehiclecolor, setvehiclecolor] = useState("");
   const [phoneNumber, setphoneNumber] = useState("");
-  const [customerType, setCusomterType] = useState("");
+  const [customerType, setCusomterType] = useState("Customer Type");
   const [customerTypeError, setCusomterTypeError] = useState(false);
   const [CompanyNameError, setCompanyNameError] = useState(false);
 
   const [km, setKm] = useState("");
-  const [Nmsg, setNmsg] = useState("");
+  const [yearError,setYearError] = useState(false);
   const [error, setError] = useState("Enter this field");
   const [vehicleTypeError, setvehicleTypeError] = useState(false);
   const [vehicleModelError, setvehicleModelError] = useState(false);
@@ -56,10 +56,10 @@ const AddVehicle = () => {
   const [VehiclecolorError, setvehiclecolorError] = useState(false);
   const [phoneNumberError, setphoneNumberError] = useState(false);
   const [kmError, setKmError] = useState(false);
-  const [Msg, setMsg] = useState("");
+  const [vehicleColorError,setvehicleColorError] = useState(false);
   const [RMsg, setRMsg] = useState("");
   const [make, setMake] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState("Year");
   const [profileImage, setProfileImage] = useState(null);
   const [isImageModalVisible, setImageModalVisible] = useState("false");
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
@@ -140,6 +140,8 @@ const AddVehicle = () => {
     setCompanyNameError("");
     setCusomterTypeError("");
     setKmError("");
+    setYearError("");
+    setvehicleColorError("");
   };
 
   const handleImageUpload = () => {
@@ -173,7 +175,7 @@ const AddVehicle = () => {
 
   const handleImageFromGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [1, 1],
       quality: 1,
       allowsMultipleSelection: true, // Enable multiple image selection
@@ -216,6 +218,7 @@ const AddVehicle = () => {
 
   useEffect(() => {
     getCustomer();
+    getCustomerImage(keyCustomer);
   }, []);
 
   const transformedResponse = customers.map((item) => {
@@ -228,10 +231,30 @@ const AddVehicle = () => {
 
   const renderCarouselItem = ({ item, index }) => (
     <View key={index} style={styles.carouselItem}>
-      <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={() => handleShowImage(item.uri)}>
-          <Image source={{ uri: item.uri }} style={styles.image} />
-        </TouchableOpacity>
+      <View style={styles.mediaContainer}>
+        {item.type === "image" ? (
+          <TouchableOpacity onPress={() => handleShowImage(item.uri)}>
+            <Image source={{ uri: item.uri }} style={styles.image} />
+          </TouchableOpacity>
+        ) : item.type === "video" ? (
+          <View>
+            <TouchableOpacity onPress={() => handleShowImage(item.uri)}>
+              <Video
+                source={{ uri: item.uri }}
+                style={styles.video}
+                resizeMode="contain"
+                controls // Enable video controls
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleShowImage(item.uri)} // Add your video play action here
+              style={styles.playButton}
+            >
+              <AntDesign name="playcircleo" size={60} color="white" />{" "}
+              {/* Adjust the size and color */}
+            </TouchableOpacity>
+          </View>
+        ) : null}
         <TouchableOpacity
           onPress={() => handleImageDelete(index)}
           style={styles.closeButtonDelete}
@@ -280,6 +303,38 @@ const AddVehicle = () => {
     setCusomterType(code);
   };
 
+  const getCustomerImage = async (keyCustomer) => {
+    try {
+      const accessTokens = await AsyncStorage.getItem("accessToken");
+      const token = "Bearer " + accessTokens;
+
+      if (keyCustomer) {
+        const config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `${Config.apiServerUrl}/api/users/${keyCustomer}/profile-image`,
+          headers: {
+            Authorization: token,
+          },
+        };
+
+        const response = await axios.request(config);
+
+        if (response.status === 200) {
+          const responseData = response.data;
+          if (responseData.url !== null) {
+            setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+            console.log(profileImageLink);
+          }
+        } else {
+          console.log("Error: " + response.statusText);
+        }
+      }
+    } catch (error) {
+      console.log("Error fetching profile image:", error);
+    }
+  };
+
   const uploadImage = async (vehicleId) => {
     if (selectedImage) {
       let token = await AsyncStorage.getItem("accessToken");
@@ -316,54 +371,61 @@ const AddVehicle = () => {
   const saveVehicle = async () => {
     let isValid = true;
 
-    if (!vehicleType) {
-      setMsg("Please Enter Vehicle Type");
+    if (vehicleType === 'Type') {
       setvehicleTypeError(true);
       isValid = false;
-    } else {
-      if (!vehicleModel) {
-        setMsg("Please Enter Vehicle Modal");
-        setvehicleTypeError(true);
+    } 
+    else {
+      setvehicleTypeError(false);
+    }
+    
+    if (!vehicleModel) {
+       
+        setvehicleModelError(true);
         isValid = false;
       } else {
-        setvehicleTypeError(false);
+        setvehicleModelError(false);
       }
-    }
+    
 
     if (!Registration) {
-      setRMsg("Please Enter Registration Number");
+      
       setRegistrationError(true);
       isValid = false;
-    } else {
+    }
+     
       if (!Vehiclecolor) {
-        setRMsg("Please Enter Vehicle Color");
+        
         setvehiclecolorError(true);
         isValid = false;
       } else {
         setvehiclecolorError(false);
       }
-    }
+    
 
-    if (!make || !year) {
+    if (!make ) {
       setMakeError(true);
-      setNmsg("Please provide make and Year of vehicle");
+      
     } else {
       setMakeError(false);
     }
+    if( year === 'Year')
+    {
+      setYearError(true);
+    }
 
-    if (!customerType) {
+    if (customerType === "Customer Type") {
       setCusomterTypeError(true);
       isValid = false;
     } else {
       setCusomterTypeError(false);
     }
 
-    if (customerType == "Company") {
-      setCompanyNameError(false);
+    
       if (!CompanyName) {
         setCompanyNameError(true);
       }
-    }
+    
 
     if (!keyCustomer) {
       setNameError(true);
@@ -453,7 +515,26 @@ const AddVehicle = () => {
   }));
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require("../assets/light-texture2234-1.png")}
+      style={styles.container}
+    >
+      <View style={styles.breadcrumbContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image
+            style={styles.breadcrumbImage}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <TouchableOpacity onPress={() =>  navigation.navigate("Vehicles")}>
+          <Text style={styles.breadcrumbText}>Vehicles</Text>
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <Text style={styles.breadcrumbText}>Add Vehicle</Text>
+      </View>
+
       {/* ScrollView */}
       <ScrollView style={styles.scrollViewContainer}>
         {/* Image Carousel */}
@@ -492,24 +573,29 @@ const AddVehicle = () => {
         </View>
 
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isFullImageModalVisible}
-          onRequestClose={() => setFullImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-            {profileImage && (
-              <Image source={{ uri: profileImage }} style={styles.fullImage} />
-            )}
+  animationType="slide"
+  transparent={true}
+  visible={isFullImageModalVisible}
+  onRequestClose={() => setFullImageModalVisible(false)}
+>
+  <View style={styles.imageModalContainer}>
+    {profileImage && (
+      <Image
+        source={{ uri: profileImage }}
+        style={styles.fullImage}
+        contentFit="contain"// Ensure the image fits within its container
+      />
+    )}
 
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setFullImageModalVisible(false)}
-            >
-              <AntDesign name="closecircle" size={30} color="red" />
-            </TouchableOpacity>
-          </View>
-        </Modal>
+    <TouchableOpacity
+      style={styles.closeButton}
+      onPress={() => setFullImageModalVisible(false)}
+    >
+      <AntDesign name="closecircle" size={hp("4%")} color="red" />
+    </TouchableOpacity>
+  </View>
+</Modal>
+
 
         <Modal
           animationType="slide"
@@ -554,86 +640,110 @@ const AddVehicle = () => {
         <View style={styles.formContainer}>
           {/* Row 1 */}
           <View style={styles.inputContainer}>
-            <Picker
-              style={styles.textInput}
-              selectedValue={vehicleType}
-              onValueChange={(itemValue, itemIndex) =>
-                setvehicleType(itemValue)
-              }
-            >
-              <Picker.Item label="Type" value="" />
-              {vehicleCategories.map((category, index) => (
-                <Picker.Item label={category} value={category} key={index} />
-              ))}
-            </Picker>
-            <Picker
-              style={styles.textInput}
-              selectedValue={year}
-              onValueChange={(itemValue, itemIndex) => setYear(itemValue)}
-            >
-              <Picker.Item label="Year" value="" />
-              {modelCategories.map((category, index) => (
-                <Picker.Item label={category} value={category} key={index} />
-              ))}
-            </Picker>
-            {vehicleTypeError ||
-              (makeError && <Text style={styles.errorText}>{error}</Text>)}
-          </View>
+        <View style={styles.inputRow}>
+          <Picker
+            style={styles.textInput}
+            selectedValue={vehicleType}
+            onValueChange={(itemValue) => setvehicleType(itemValue)}
+          >
+            <Picker.Item label="Type" value="" />
+            {vehicleCategories.map((category, index) => (
+        <Picker.Item label={category} value={category} key={index} />
+      ))}
+          </Picker>
+          <Picker
+            style={styles.textInput}
+            selectedValue={year}
+            onValueChange={(itemValue) => setYear(itemValue)}
+          >
+            <Picker.Item label="Year" value="" />
+            {modelCategories.map((category, index) => (
+        <Picker.Item label={category} value={category} key={index} />
+      ))}
+          </Picker>
+        </View>
+        {(vehicleTypeError || yearError) && (
+  <Text style={styles.errorText}>Enter this field</Text>
+)}
+
+      </View>
 
           {/* Row 2 */}
           <View style={styles.formRow}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Make"
-              onChangeText={(text) => setMake(text)}
-              value={make}
-            />
-            <TextInput
-              style={styles.textInput}
-              placeholder="Model"
-              onChangeText={(text) => setvehicleModel(text)}
-              value={vehicleModel}
-            />
-            {vehicleTypeError ||
-              (makeError && <Text style={styles.errorText}>{error}</Text>)}
-          </View>
+  <View style={styles.textInputContainer}>
+    <TextInput
+      style={styles.textInput}
+      placeholder="Make"
+      onChangeText={(text) => setMake(text)}
+      value={make}
+    />
+    {makeError ? (
+      <Text style={styles.errorText}>{error}</Text>
+    ) : null}
+  </View>
+  <View style={styles.textInputContainer}>
+    <TextInput
+      style={styles.textInput}
+      placeholder="Model"
+      onChangeText={(text) => setvehicleModel(text)}
+      value={vehicleModel}
+    />
+    {vehicleModelError ? (
+      <Text style={styles.errorText}>{error}</Text>
+    ) : null}
+  </View>
+</View>
+
+
 
           {/* Row 3 */}
           <View style={styles.formRow}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Registration Number"
-              onChangeText={(text) => setRegistration(text)}
-              value={Registration}
-            />
-            <TextInput
-              style={styles.textInput}
-              placeholder="Vehicle Colour"
-              onChangeText={(text) => setvehiclecolor(text)}
-              value={Vehiclecolor}
-            />
-            {VehiclecolorError ||
-              (RegistrationError && (
-                <Text style={styles.errorText}>{error}</Text>
-              ))}
-          </View>
+  <View style={styles.textInputContainer}>
+    <TextInput
+      style={styles.textInput}
+      placeholder="Registration Number"
+      onChangeText={(text) => setRegistration(text)}
+      value={Registration}
+    />
+    {RegistrationError && <Text style={styles.errorText}>{error}</Text>}
+  </View>
+  <View style={styles.textInputContainer}>
+    <TextInput
+      style={styles.textInput}
+      placeholder="Vehicle Colour"
+      onChangeText={(text) => setvehiclecolor(text)}
+      value={Vehiclecolor}
+    />
+    {VehiclecolorError && <Text style={styles.errorText}>{error}</Text>}
+  </View>
+</View>
+
 
           {/* Single Text Inputs */}
 
-          <View style={styles.singleTextInputContainer}>
-            <View style={styles.inputWithIcon}>
+          <View style={styles.singleTextInputContainer1}>
+            <View style={styles.inputWithIcon1}>
               <TouchableOpacity onPress={handleClick}>
-                <Text style={styles.singleTextInput}>
+                <Text style={styles.customerText} >
                   {selectedCountry == "" ? "Select Customer" : selectedCountry}
                 </Text>
               </TouchableOpacity>
-              <AntDesign
-                name="user"
-                size={24}
-                color="rgba(3, 29, 68, 1)"
-                style={styles.inputIcon}
-              />
+              
+              {profileImageLink ? (
+                <Image
+                  source={{ uri: profileImageLink }}
+                  style={styles.profileImageIcon} // Assuming you have a style for the profile image
+                />
+              ) : (
+                <AntDesign
+                  name="user"
+                  size={24}
+                  color="rgba(3, 29, 68, 1)"
+                  style={styles.inputIcon}
+                />
+              )}
             </View>
+
             {clicked ? (
               <Modal transparent={true} animationType="slide">
                 <View
@@ -752,7 +862,7 @@ const AddVehicle = () => {
             ) : null}
             {nameError && <Text style={styles.errorText}>{error}</Text>}
           </View>
-          <View style={styles.singleTextInputContainer1}>
+          <View style={styles.singleTextInputContainer}>
             <View style={styles.inputWithIcon}>
               <TextInput
                 style={styles.singleTextInput}
@@ -772,10 +882,10 @@ const AddVehicle = () => {
             {phoneNumberError && <Text style={styles.errorText}>{error}</Text>}
           </View>
 
-          <View style={styles.singleTextInputContainer1}>
+          <View style={styles.singleTextInputContainer}>
             <View style={styles.inputContainer1}>
               <Picker
-                style={styles.singleTextInput}
+                style={styles.picker}
                 selectedValue={customerType}
                 onValueChange={(itemValue, itemIndex) =>
                   setCusomterType(itemValue)
@@ -794,7 +904,7 @@ const AddVehicle = () => {
               <TextInput
                 style={styles.singleTextInput}
                 onChangeText={(text) => setCompanyName(text)}
-                placeholder="Company Name   "
+                placeholder="Company Name"
                 value={CompanyName}
               />
               {CompanyNameError && (
@@ -826,22 +936,52 @@ const AddVehicle = () => {
 
       {/* Save Button */}
       <TouchableOpacity style={styles.saveButton} onPress={saveVehicle}>
-        <Text style={styles.buttonText}>Save</Text>
+        <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
       {/* Footer */}
       <View style={styles.footer}>{/* <Footer prop={"Vehicles"} /> */}</View>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    contentFit: "cover",
+    justifyContent: "center",
   },
+  breadcrumbContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("11%"), // Adjust this value as needed to move the breadcrumbs down // Set the background color to match the container's background
+    paddingLeft: wp("5%"), // Add padding to align with the content
+    paddingRight: wp("5%"), // Add padding to align with the content
+  },
+  // Move the breadcrumb below the header
+
+  breadcrumbImage: {
+    width: wp("4%"), // Adjust the width as needed
+    height: hp("2%"), // Adjust the height as needed
+    marginRight: wp("1%"), // Add margin to separate the image from text
+    // Adjust the color of the image
+  },
+
+  breadcrumbText: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)",
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.5%"), // Breadcrumb text color
+  },
+
+  breadcrumbSeparator: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)", // Separator text color
+    paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+  },
+
   scrollViewContainer: {
     flexGrow: 1,
-    backgroundColor: "white",
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
     // Add paddingBottom to accommodate the "Km Driven" input
@@ -850,7 +990,7 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp("10%"),
+    marginTop: hp("3%"),
   },
   profileImage: {
     width: wp("30%"),
@@ -901,7 +1041,7 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     height: hp("5%"), // Adjust the height as needed
-    width: wp("80%"), // Adjust the width as needed
+    width: wp("90.5%"), // Adjust the width as needed
     backgroundColor: "rgba(3, 29, 68, 1)",
     alignItems: "center",
     justifyContent: "center",
@@ -909,24 +1049,36 @@ const styles = StyleSheet.create({
     borderRadius: wp("1%"), // Add border radius if needed
     paddingHorizontal: wp("2%"), // Add horizontal padding
     marginBottom: hp("1%"),
+    left: wp("0.5%"),
   },
   buttonText: {
     color: "white",
     fontSize: wp("4%"), // Adjust the font size as needed
   },
-
+  customerText:{
+    fontFamily:FontFamily.poppinsMedium,
+    fontSize:wp("4%"),
+    
+  },
   imageModalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingHorizontal: wp("5%"), // Adjust horizontal padding using wp
+    paddingVertical: hp("5%"), // Adjust vertical padding using hp
+  },
+  fullImage: {
+    width: "100%", // Display the image at its original width
+    height: "100%", // Display the image at its original height
   },
   closeButton: {
     position: "absolute",
-    top: hp("1%"), // Adjust as needed
-    right: wp("2%"), // Adjust as needed
+    top: hp("2%"), // Adjust top position using hp
+    right: wp("2%"), // Adjust right position using wp
     zIndex: 999,
   },
+  
   imageModalContent: {
     backgroundColor: "white",
     padding: wp("4%"), // Adjust the percentage as needed
@@ -998,26 +1150,32 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  playButton: {
+    position: "absolute",
+    top: "20%", // Center vertically
+    left: "50%", // Center horizontally
+    transform: [{ translateX: "-50%" }, { translateY: "-50%" }], // Center the play button
+    width: wp("15%"), // Adjust the width as needed (percentage of screen width)
+    height: wp("15%"), // Adjust the height as needed (percentage of screen width)
+    borderRadius: wp("7.5%"), // Half of the width for a circular button
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1, // Ensure the play button is above the video
+    borderWidth: 2, // Add a border
+    borderColor: "white", // White border color
+  },
   formContainer: {
-    paddingHorizontal: wp("5%"),
-    backgroundColor: "white",
+    paddingHorizontal: wp("0%"),
     borderBottomLeftRadius: wp("2%"),
     borderBottomRightRadius: wp("2%"),
-    shadowColor: "rgba(0, 0, 0, 0.1)",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
-    elevation: 3,
     marginBottom: hp("2%"), // Add marginBottom to create space for the "Save" button
   },
 
   formRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: hp("1%"), // Add vertical margin using responsive screen
+    marginVertical: hp("1%"),
   },
 
   textInput: {
@@ -1026,60 +1184,60 @@ const styles = StyleSheet.create({
     height: hp("5%"), // Set height using responsive screen
     borderBottomWidth: 1,
     borderColor: "gray",
-    paddingHorizontal: wp("2%"),
-    fontFamily: FontFamily.poppinsMedium, // Add padding using responsive screen
+    paddingHorizontal: wp("0%"),
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: wp("4%"), // Add padding using responsive screen
   },
 
   singleTextInputContainer: {
-    marginTop: hp("1%"),
+    marginTop: hp("0%"),
     marginBottom: hp("1%"), // Add spacing between single text inputs using responsive screen
   },
   singleTextInputContainer1: {
-    marginTop: hp("0%"),
+    marginTop: hp("1%"),
     marginBottom: hp("1%"),
     // Add spacing between single text inputs using responsive screen
   },
 
   singleTextInput: {
-    width: wp("80%"), // Set width using responsive screen
+    width: wp("90%"), // Set width using responsive screen
     height: hp("5%"), // Set height using responsive screen
     borderBottomWidth: 1,
     borderColor: "gray",
-    paddingHorizontal: wp("2%"),
-    fontFamily: FontFamily.poppinsMedium, // Add padding using responsive screen
+    paddingHorizontal: wp("0%"),
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: wp("4%"), // Add padding using responsive screen
   },
-  singleTextInput1: {
-    width: wp("80%"), // Set width using responsive screen
-    height: hp("5%"), // Set height using responsive screen
+
+  inputContainer: {
+    width: '100%', // Adjust the width as needed
+  },
+  inputRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: "gray",
-    paddingHorizontal: wp("2%"),
-    fontFamily: FontFamily.poppinsMedium, // Add padding using responsive screen
+    borderColor: 'gray',
+    marginBottom: hp("1%"),
   },
   picker: {
     flex: 1,
-    marginRight: wp("2%"),
     height: hp("5%"),
-    borderWidth: 0,
-    borderBottomWidth: 1, // Add bottom border
-    borderColor: "gray", // Border color
+    width: "100%",
+    
   },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 1, // Add bottom border to the container
-    borderColor: "gray", // Border color
-    marginVertical: hp("1%"),
-  },
+
   inputContainer1: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1, // Add bottom border to the container
-    borderColor: "gray", // Border color
-    marginVertical: hp("0%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    
+    marginBottom: hp("1%"),
+    flex: 1,
   },
+
   errorText: {
     color: "red",
     fontSize: wp("3%"),
@@ -1089,10 +1247,18 @@ const styles = StyleSheet.create({
   inputWithIcon: {
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "gray",
     marginTop: hp("1%"),
     marginBottom: hp("1%"),
+  },
+  inputWithIcon1: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("1%"),
+    marginBottom: hp("1%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("0%"),
+    paddingVertical: wp("1%")
   },
   // Style for the Ant Design icons in the input with icon
   inputIcon: {
@@ -1107,6 +1273,18 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     paddingHorizontal: wp("2%"),
   },
+  profileImageIcon: {
+    width: wp("8%"), // Adjust the width using wp for responsiveness
+    height: wp("8%"), // Adjust the height using wp for responsiveness
+    borderRadius: wp("4%"),
+    marginLeft:wp("50%"),
+    marginBottom:wp("1%")
+  },
+  textInputContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  
 
   footer: {
     height: hp("10%"), // Increase the height of the footer as needed
