@@ -22,7 +22,7 @@ const rem = screenWidth / 16;
 
 const MaintenanceRecord = ({ route }) => {
   const { fromPreviousScreen } = route.params;
-
+  console.log(fromPreviousScreen);
   const navigation = useNavigation();
   const [searchType, setSearchType] = useState([]);
   const [searchOrder, setSearchOrder] = useState("");
@@ -41,6 +41,7 @@ const MaintenanceRecord = ({ route }) => {
   };
   const handleSavePress = () => {
     setCreate(true);
+    
   };
 
   const handleQuery = (query) => {
@@ -121,7 +122,7 @@ const MaintenanceRecord = ({ route }) => {
                 Select Record to Create Invoice
               </Text>
             </View>
-            {/* onPress={handleSavePress} */}
+            
             <TouchableOpacity onPress={handleSavePress}>
               <View style={styles.saveContainer}>
                 <Text style={styles.blueTextB}>Create</Text>

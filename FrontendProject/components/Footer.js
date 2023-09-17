@@ -161,6 +161,7 @@ function Footer(props) {
 }
 const styles = StyleSheet.create({
   cont: {
+    position:'relative',
     top: -8,
   },
   iconLayout1: {
@@ -299,6 +300,7 @@ const styles = StyleSheet.create({
     height: 45,
     top: 800,
     width: 45,
+    // bottom:0,
     position: "absolute",
   },
   groupPressableLayout: {

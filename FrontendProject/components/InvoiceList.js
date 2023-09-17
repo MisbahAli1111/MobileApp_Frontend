@@ -117,7 +117,7 @@ function Invoicelist({ dsearch, searchOrder }) {
         const hasDataChanged = !isEqual(newData, Invoices);
 
         if (hasDataChanged) {
-          console.log(JSON.stringify(newData));
+          // console.log(JSON.stringify(newData));
           setInvoices(newData);
         }
       })
