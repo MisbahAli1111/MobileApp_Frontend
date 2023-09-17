@@ -127,6 +127,7 @@ function Footer(props) {
               source={require("../assets/record64-1.png")}
             />
             <Text>Records</Text>
+            {/* checking  */}
           </TouchableOpacity>
 
           <TouchableOpacity
