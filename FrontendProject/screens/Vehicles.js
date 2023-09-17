@@ -54,12 +54,8 @@ const Vehicles = () => {
       />
 
       {/* Footer */}
-      <View style={[styles.rectangleParent, styles.image2IconPosition]}>
-        <View style={[styles.cont]}>
           <Footer prop={"Vehicles"} />
-        </View>
-      </View>
-
+     
       <View contentContainerStyle={styles.contView}>
         <VehicleRecords
           dsearch={search}
@@ -157,10 +153,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   cont: {
-    padding: 6,
-    top: -45,
-    right: 5,
-    zIndex: 999,
+    // padding: 6,
+    // top: -45,
+    // right: 5,
+    // zIndex: 999,
   },
   contView: {},
 
