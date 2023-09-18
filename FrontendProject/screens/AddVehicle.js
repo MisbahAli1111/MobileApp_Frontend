@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   Button,
   Modal,
@@ -45,9 +46,9 @@ const AddVehicle = () => {
   const [customerType, setCusomterType] = useState("Customer Type");
   const [customerTypeError, setCusomterTypeError] = useState(false);
   const [CompanyNameError, setCompanyNameError] = useState(false);
-
+  const videos = useRef(null);
   const [km, setKm] = useState("");
-  const [yearError,setYearError] = useState(false);
+  const [yearError, setYearError] = useState(false);
   const [error, setError] = useState("Enter this field");
   const [vehicleTypeError, setvehicleTypeError] = useState(false);
   const [vehicleModelError, setvehicleModelError] = useState(false);
@@ -56,7 +57,7 @@ const AddVehicle = () => {
   const [VehiclecolorError, setvehiclecolorError] = useState(false);
   const [phoneNumberError, setphoneNumberError] = useState(false);
   const [kmError, setKmError] = useState(false);
-  const [vehicleColorError,setvehicleColorError] = useState(false);
+  const [vehicleColorError, setvehicleColorError] = useState(false);
   const [RMsg, setRMsg] = useState("");
   const [make, setMake] = useState("");
   const [year, setYear] = useState("Year");
@@ -64,6 +65,7 @@ const AddVehicle = () => {
   const [isImageModalVisible, setImageModalVisible] = useState("false");
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
   const [makeError, setMakeError] = useState(false);
+  const isVideo = profileImage && profileImage.endsWith('.mp4');
   const vehicleCategories = ["Bike", "Car", "Truck", "Auto", "Other"];
   const CusomterCategories = ["Walk-in", "Company"];
   const modelCategories = [
@@ -229,41 +231,46 @@ const AddVehicle = () => {
     };
   });
 
-  const renderCarouselItem = ({ item, index }) => (
-    <View key={index} style={styles.carouselItem}>
-      <View style={styles.mediaContainer}>
-        {item.type === "image" ? (
-          <TouchableOpacity onPress={() => handleShowImage(item.uri)}>
-            <Image source={{ uri: item.uri }} style={styles.image} />
-          </TouchableOpacity>
-        ) : item.type === "video" ? (
-          <View>
+  const renderCarouselItem = ({ item, index }) => {
+    const fileExtension = item.uri.split('.').pop().toLowerCase();
+  
+    return (
+      <View key={index} style={styles.carouselItem}>
+        <View style={styles.mediaContainer}>
+          {fileExtension === "jpeg" ? (
             <TouchableOpacity onPress={() => handleShowImage(item.uri)}>
-              <Video
-                source={{ uri: item.uri }}
-                style={styles.video}
-                resizeMode="contain"
-                controls // Enable video controls
-              />
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: item.uri }} style={styles.fullVideo} />
+              </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleShowImage(item.uri)} // Add your video play action here
-              style={styles.playButton}
-            >
-              <AntDesign name="playcircleo" size={60} color="white" />{" "}
-              {/* Adjust the size and color */}
+          ) : fileExtension === "mp4" ? (
+            <TouchableOpacity onPress={() => handleShowImage(item.uri)}>
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: item.uri }} style={styles.fullVideo} />
+              </View>
+            
+                <View style={styles.playIconContainer}>
+                  <AntDesign name="playcircleo" size={wp("10%")} color="white" />
+                </View>
+              
             </TouchableOpacity>
-          </View>
-        ) : null}
-        <TouchableOpacity
-          onPress={() => handleImageDelete(index)}
-          style={styles.closeButtonDelete}
-        >
-          <AntDesign name="closecircle" size={30} color="red" />
-        </TouchableOpacity>
+          ) : null}
+          <TouchableOpacity
+            onPress={() => handleImageDelete(index)}
+            style={styles.closeButtonDelete}
+          >
+          <Icon name="trash" size={30} color="red" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
+  
+  
+  
+  
+
+  
 
   const onSearch = (search) => {
     if (search != "") {
@@ -335,82 +342,114 @@ const AddVehicle = () => {
     }
   };
 
-  const uploadImage = async (vehicleId) => {
-    if (selectedImage) {
-      let token = await AsyncStorage.getItem("accessToken");
-      const accessToken = "Bearer " + token;
-      const imageData = new FormData();
-      if (selectedImage) {
-        // Iterate through the image array and append images to the FormData
-        try {
-          selectedImage.forEach((entry, index) => {
-            const image_uri = entry.uri;
-            imageData.append("files", {
-              uri: image_uri,
-              name: new Date() + ".jpeg",
-              type: "image/jpeg",
-            });
-          });
+  // const uploadImage = async (vehicleId) => {
+  //   if (selectedImage) {
+  //     let token = await AsyncStorage.getItem("accessToken");
+  //     const accessToken = "Bearer " + token;
+  //     const imageData = new FormData();
+  //     if (selectedImage) {
+  //       // Iterate through the image array and append images to the FormData
+  //       try {
+  //         selectedImage.forEach((entry, index) => {
+  //           const image_uri = entry.uri;
+  //           imageData.append("files", {
+  //             uri: image_uri,
+  //             name: new Date() + ".jpeg",
+  //             type: "image/jpeg",
+  //           });
+  //         });
 
-          const response = await axios.post(
-            `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
-            imageData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-        } catch (error) {
-          console.error("Error:", error.message);
-        }
+  //         const response = await axios.post(
+  //           `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
+  //           imageData,
+  //           {
+  //             headers: {
+  //               "Content-Type": "multipart/form-data",
+  //             },
+  //           }
+  //         );
+  //       } catch (error) {
+  //         console.error("Error:", error.message);
+  //       }
+  //     }
+  //   }
+  // };
+
+  const uploadImage = async (vehicleId) => {
+    try {
+      if (selectedImage) {
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = "Bearer " + token;
+        const formData = new FormData();
+  
+        selectedImage.forEach((entry, index) => {
+          const fileUri = entry.uri;
+          const fileType = fileUri.endsWith(".mp4") ? "video/mp4" : "image/jpeg";
+  
+          formData.append("files", {
+            uri: fileUri,
+            name: new Date().getTime() + (fileType === "video/mp4" ? ".mp4" : ".jpeg"),
+            type: fileType,
+          });
+        });
+  
+        const response = await axios.post(
+          `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: accessToken,
+            },
+          }
+        );
+  
+        // Handle the response from the server if needed
+        console.log("Upload success:", response.data);
       }
+    } catch (error) {
+      console.error("Error:", error.message);
+      // Handle errors as necessary
+      // For example, you can show an error message to the user
+      // or perform some error handling logic.
     }
   };
-
+  
   const saveVehicle = async () => {
     let isValid = true;
 
-    if (vehicleType === 'Type') {
+    if (vehicleType === "Type") {
       setvehicleTypeError(true);
       isValid = false;
-    } 
-    else {
+    } else {
       setvehicleTypeError(false);
     }
-    
+
     if (!vehicleModel) {
-       
-        setvehicleModelError(true);
-        isValid = false;
-      } else {
-        setvehicleModelError(false);
-      }
-    
+      setvehicleModelError(true);
+      isValid = false;
+    } else {
+      setvehicleModelError(false);
+    }
 
     if (!Registration) {
-      
       setRegistrationError(true);
       isValid = false;
     }
-     
-      if (!Vehiclecolor) {
-        
-        setvehiclecolorError(true);
-        isValid = false;
-      } else {
-        setvehiclecolorError(false);
-      }
-    
 
-    if (!make ) {
+    if (!Vehiclecolor) {
+      setvehiclecolorError(true);
+      isValid = false;
+    } else {
+      setvehiclecolorError(false);
+    }
+
+    if (!make) {
       setMakeError(true);
-      
     } else {
       setMakeError(false);
     }
-    if( year === 'Year')
-    {
+    if (year === "Year") {
       setYearError(true);
     }
 
@@ -421,11 +460,9 @@ const AddVehicle = () => {
       setCusomterTypeError(false);
     }
 
-    
-      if (!CompanyName) {
-        setCompanyNameError(true);
-      }
-    
+    if (!CompanyName) {
+      setCompanyNameError(true);
+    }
 
     if (!keyCustomer) {
       setNameError(true);
@@ -528,7 +565,7 @@ const AddVehicle = () => {
           />
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
-        <TouchableOpacity onPress={() =>  navigation.navigate("Vehicles")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Vehicles")}>
           <Text style={styles.breadcrumbText}>Vehicles</Text>
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
@@ -573,28 +610,43 @@ const AddVehicle = () => {
         </View>
 
         <Modal
-  animationType="slide"
-  transparent={true}
-  visible={isFullImageModalVisible}
-  onRequestClose={() => setFullImageModalVisible(false)}
->
-  <View style={styles.imageModalContainer}>
-    {profileImage && (
-      <Image
-        source={{ uri: profileImage }}
-        style={styles.fullImage}
-        contentFit="contain"// Ensure the image fits within its container
-      />
-    )}
-
-    <TouchableOpacity
-      style={styles.closeButton}
-      onPress={() => setFullImageModalVisible(false)}
+      animationType="slide"
+      transparent={true}
+      visible={isFullImageModalVisible}
+      onRequestClose={() => setFullImageModalVisible(false)}
     >
-      <AntDesign name="closecircle" size={hp("4%")} color="red" />
-    </TouchableOpacity>
-  </View>
-</Modal>
+      <View style={styles.modalContainer}>
+        <View style={styles.imageModalContainer}>
+          {profileImage ? (
+            isVideo ? (
+              <Video
+                source={{ uri: profileImage }}
+                style={styles.fullVideo}
+                resizeMode="contain"
+                shouldPlay
+                isLooping
+                useNativeControls
+              />
+            ) : (
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.fullImage}
+                resizeMode="contain"
+              />
+            )
+          ) : null}
+          
+          <TouchableOpacity
+            style={isVideo ? styles.videoCloseButton : styles.imageCloseButton}
+            onPress={() => setFullImageModalVisible(false)}
+          >
+            <AntDesign name="closecircle" size={hp("4%")} color="rgba(3, 29, 68, 1)" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+
+
 
 
         <Modal
@@ -603,11 +655,15 @@ const AddVehicle = () => {
           visible={isImageModalVisible}
           onRequestClose={() => setImageModalVisible(false)}
         >
-          <View style={styles.imageModalContainer}>
+          <View style={styles.imageModalContainer1}>
             {/* Background Close Button */}
+           
+
+            {/* Image Source Options */}
+            <View style={styles.imageModalContent}>
             <TouchableOpacity
               onPress={() => setImageModalVisible(false)}
-              style={styles.closeButton}
+              style={styles.closeButton1}
             >
               <AntDesign
                 name="closecircle"
@@ -615,9 +671,6 @@ const AddVehicle = () => {
                 color="rgba(3, 29, 68, 1)"
               />
             </TouchableOpacity>
-
-            {/* Image Source Options */}
-            <View style={styles.imageModalContent}>
               <TouchableOpacity
                 style={styles.imageModalButton}
                 onPress={handleImageFromCamera}
@@ -640,95 +693,93 @@ const AddVehicle = () => {
         <View style={styles.formContainer}>
           {/* Row 1 */}
           <View style={styles.inputContainer}>
-        <View style={styles.inputRow}>
-          <Picker
-            style={styles.textInput}
-            selectedValue={vehicleType}
-            onValueChange={(itemValue) => setvehicleType(itemValue)}
-          >
-            <Picker.Item label="Type" value="" />
-            {vehicleCategories.map((category, index) => (
-        <Picker.Item label={category} value={category} key={index} />
-      ))}
-          </Picker>
-          <Picker
-            style={styles.textInput}
-            selectedValue={year}
-            onValueChange={(itemValue) => setYear(itemValue)}
-          >
-            <Picker.Item label="Year" value="" />
-            {modelCategories.map((category, index) => (
-        <Picker.Item label={category} value={category} key={index} />
-      ))}
-          </Picker>
-        </View>
-        {(vehicleTypeError || yearError) && (
-  <Text style={styles.errorText}>Enter this field</Text>
-)}
-
-      </View>
+            <View style={styles.inputRow}>
+              <Picker
+                style={styles.textInput}
+                selectedValue={vehicleType}
+                onValueChange={(itemValue) => setvehicleType(itemValue)}
+              >
+                <Picker.Item label="Type" value="" />
+                {vehicleCategories.map((category, index) => (
+                  <Picker.Item label={category} value={category} key={index} />
+                ))}
+              </Picker>
+              <Picker
+                style={styles.textInput}
+                selectedValue={year}
+                onValueChange={(itemValue) => setYear(itemValue)}
+              >
+                <Picker.Item label="Year" value="" />
+                {modelCategories.map((category, index) => (
+                  <Picker.Item label={category} value={category} key={index} />
+                ))}
+              </Picker>
+            </View>
+            {(vehicleTypeError || yearError) && (
+              <Text style={styles.errorText}>Enter this field</Text>
+            )}
+          </View>
 
           {/* Row 2 */}
           <View style={styles.formRow}>
-  <View style={styles.textInputContainer}>
-    <TextInput
-      style={styles.textInput}
-      placeholder="Make"
-      onChangeText={(text) => setMake(text)}
-      value={make}
-    />
-    {makeError ? (
-      <Text style={styles.errorText}>{error}</Text>
-    ) : null}
-  </View>
-  <View style={styles.textInputContainer}>
-    <TextInput
-      style={styles.textInput}
-      placeholder="Model"
-      onChangeText={(text) => setvehicleModel(text)}
-      value={vehicleModel}
-    />
-    {vehicleModelError ? (
-      <Text style={styles.errorText}>{error}</Text>
-    ) : null}
-  </View>
-</View>
-
-
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Make"
+                onChangeText={(text) => setMake(text)}
+                value={make}
+              />
+              {makeError ? <Text style={styles.errorText}>{error}</Text> : null}
+            </View>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Model"
+                onChangeText={(text) => setvehicleModel(text)}
+                value={vehicleModel}
+              />
+              {vehicleModelError ? (
+                <Text style={styles.errorText}>{error}</Text>
+              ) : null}
+            </View>
+          </View>
 
           {/* Row 3 */}
           <View style={styles.formRow}>
-  <View style={styles.textInputContainer}>
-    <TextInput
-      style={styles.textInput}
-      placeholder="Registration Number"
-      onChangeText={(text) => setRegistration(text)}
-      value={Registration}
-    />
-    {RegistrationError && <Text style={styles.errorText}>{error}</Text>}
-  </View>
-  <View style={styles.textInputContainer}>
-    <TextInput
-      style={styles.textInput}
-      placeholder="Vehicle Colour"
-      onChangeText={(text) => setvehiclecolor(text)}
-      value={Vehiclecolor}
-    />
-    {VehiclecolorError && <Text style={styles.errorText}>{error}</Text>}
-  </View>
-</View>
-
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Registration Number"
+                onChangeText={(text) => setRegistration(text)}
+                value={Registration}
+              />
+              {RegistrationError && (
+                <Text style={styles.errorText}>{error}</Text>
+              )}
+            </View>
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Vehicle Colour"
+                onChangeText={(text) => setvehiclecolor(text)}
+                value={Vehiclecolor}
+              />
+              {VehiclecolorError && (
+                <Text style={styles.errorText}>{error}</Text>
+              )}
+            </View>
+          </View>
 
           {/* Single Text Inputs */}
 
           <View style={styles.singleTextInputContainer1}>
             <View style={styles.inputWithIcon1}>
               <TouchableOpacity onPress={handleClick}>
-                <Text style={styles.customerText} >
+                <Text style={styles.customerText}>
                   {selectedCountry == "" ? "Select Customer" : selectedCountry}
                 </Text>
               </TouchableOpacity>
-              
+
               {profileImageLink ? (
                 <Image
                   source={{ uri: profileImageLink }}
@@ -751,50 +802,66 @@ const AddVehicle = () => {
                     flex: 1,
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
                   }}
                 >
                   <View
                     style={{
                       elevation: 5,
-                      marginTop: 20,
-                      height: 600,
+                      marginTop: hp("2%"),
+                      height: hp("70%"),
                       alignSelf: "center",
-                      width: "90%",
+                      width: wp("90%"),
                       backgroundColor: "#fff",
-                      borderRadius: 10,
+                      borderRadius: wp("4%"),
                     }}
                   >
+                    {/* Place AntDesign icon inside this white area */}
+                    <TouchableOpacity
+                      style={{
+                        position: "absolute",
+                        top: hp("0.5%"),
+                        right: wp("2%"),
+                        zIndex: 999,
+                      }}
+                      onPress={handleClick}
+                    >
+                      <AntDesign
+                        name="closecircle"
+                        size={wp("6%")}
+                        color="rgba(3, 29, 68, 1)"
+                      />
+                    </TouchableOpacity>
+
                     <TextInput
                       placeholder="Search.."
                       value={search}
-                      ref={searchRef}
                       onChangeText={(txt) => {
                         onSearch(txt);
                         setSearch(txt);
                       }}
                       style={{
                         width: "90%",
-                        height: 50,
+                        height: hp("7%"),
                         alignSelf: "center",
-                        borderWidth: 0.2,
+                        borderWidth: 1,
                         borderColor: "#8e8e8e",
-                        borderRadius: 7,
-                        marginTop: 20,
-                        paddingLeft: 20,
+                        borderRadius: wp("2%"),
+                        marginTop: hp("6%"),
+                        paddingLeft: wp("4%"),
                       }}
                     />
                     <ScrollView>
                       <FlatList
                         data={data}
-                        style={styles.FlatList}
+                        style={{ width: "85%", alignSelf: "center" }}
                         renderItem={({ item, index }) => {
                           return (
                             <TouchableOpacity
                               style={{
-                                width: "85%",
+                                width: "100%",
                                 alignSelf: "center",
-                                height: 50,
+                                height: hp("7%"),
                                 justifyContent: "center",
                                 borderBottomWidth: 0.5,
                                 borderColor: "#8e8e8e",
@@ -818,22 +885,22 @@ const AddVehicle = () => {
                     <TouchableOpacity
                       style={{
                         backgroundColor: "rgba(3, 29, 68, 1)",
-                        paddingVertical: 10,
+                        paddingVertical: hp("2%"),
                         alignSelf: "center",
-                        borderRadius: 5,
-                        paddingLeft: 10,
+                        borderRadius: wp("2%"),
+                        paddingLeft: wp("5%"),
                         width: "50%",
-                        marginTop: 10,
-                        position: "fixed",
+                        marginTop: hp("2%"),
+                        position: "absolute",
                         zIndex: 999,
-                        bottom: 5,
+                        bottom: hp("2%"),
                       }}
                       onPress={handleAddCustomer}
                     >
                       <Text
                         style={{
-                          fontSize: FontSize.size_sm,
-                          fontFamily: FontFamily.poppinsMedium,
+                          fontSize: wp("3%"),
+                          fontFamily: "Poppin-Medium",
                           color: "white",
                           textAlign: "center",
                         }}
@@ -842,21 +909,6 @@ const AddVehicle = () => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      top: 10,
-                      right: 10,
-                      zIndex: 999,
-                    }}
-                    onPress={handleClick}
-                  >
-                    <AntDesign
-                      name="closecircle"
-                      size={24}
-                      color="rgba(3, 29, 68, 1)"
-                    />
-                  </TouchableOpacity>
                 </View>
               </Modal>
             ) : null}
@@ -1055,30 +1107,78 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: wp("4%"), // Adjust the font size as needed
   },
-  customerText:{
-    fontFamily:FontFamily.poppinsMedium,
-    fontSize:wp("4%"),
-    
+  customerText: {
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: wp("4%"),
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the alpha value (last number) for transparency
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageModalContainer: {
+    position: 'relative',
+    width: wp('80%'), // Adjust the width percentage as needed
+    height: hp('80%'), // Adjust the height percentage as needed
+  },
+  imageModalContainer1: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
     paddingHorizontal: wp("5%"), // Adjust horizontal padding using wp
     paddingVertical: hp("5%"), // Adjust vertical padding using hp
+    position: "relative",
   },
-  fullImage: {
-    width: "100%", // Display the image at its original width
-    height: "100%", // Display the image at its original height
+
+  mediaContainer: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
   },
-  closeButton: {
+    
+  
+  videoContainer: {
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
+    width: wp("70%"), // Set the width to your desired value
+    height: wp("40%"),
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  video: {
+    width: "100%",
+    height: "100%",
+  },
+  playButtonContainer: {
+    ...StyleSheet.absoluteFillObject, // Position the play button absolutely
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  videoCloseButton: {
+    position: 'absolute',
+    top: hp('7%'), // Adjust the top percentage as needed
+    right: wp('0%'), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  imageCloseButton: {
+    position: 'absolute',
+    top: hp('15%'), // Adjust the top percentage as needed
+    right: wp('0%'), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  closeButton1: {
     position: "absolute",
-    top: hp("2%"), // Adjust top position using hp
-    right: wp("2%"), // Adjust right position using wp
+    top: hp("0%"), // Adjust top position using hp
+    right: wp("0%"), // Adjust right position using wp
     zIndex: 999,
   },
   
+
   imageModalContent: {
     backgroundColor: "white",
     padding: wp("4%"), // Adjust the percentage as needed
@@ -1125,13 +1225,18 @@ const styles = StyleSheet.create({
     maxHeight: "100%",
     width: "100%", // Adjust this value as needed
   },
-  fullImage: {
+  fullVideo:
+  {
     width: "100%",
     height: "100%",
+    flex:1
+    
   },
-  mediaContainer: {
+  fullImage:
+  {
     width: "100%",
     height: "100%",
+    flex:1
   },
   image: {
     width: "100%",
@@ -1146,25 +1251,23 @@ const styles = StyleSheet.create({
     zIndex: 1, // Ensure it's above the image
   },
   imageContainer: {
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
     position: "relative",
     width: "100%",
     height: "100%",
   },
-  playButton: {
+
+  playIconContainer: {
     position: "absolute",
-    top: "20%", // Center vertically
-    left: "50%", // Center horizontally
-    transform: [{ translateX: "-50%" }, { translateY: "-50%" }], // Center the play button
-    width: wp("15%"), // Adjust the width as needed (percentage of screen width)
-    height: wp("15%"), // Adjust the height as needed (percentage of screen width)
-    borderRadius: wp("7.5%"), // Half of the width for a circular button
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1, // Ensure the play button is above the video
-    borderWidth: 2, // Add a border
-    borderColor: "white", // White border color
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
+  
   formContainer: {
     paddingHorizontal: wp("0%"),
     borderBottomLeftRadius: wp("2%"),
@@ -1210,21 +1313,20 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    width: '100%', // Adjust the width as needed
+    width: "100%", // Adjust the width as needed
   },
   inputRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     marginBottom: hp("1%"),
   },
   picker: {
     flex: 1,
     height: hp("5%"),
     width: "100%",
-    
   },
 
   inputContainer1: {
@@ -1233,7 +1335,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: 1,
     borderColor: "gray",
-    
+
     marginBottom: hp("1%"),
     flex: 1,
   },
@@ -1258,7 +1360,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "gray",
     paddingHorizontal: wp("0%"),
-    paddingVertical: wp("1%")
+    paddingVertical: wp("1%"),
   },
   // Style for the Ant Design icons in the input with icon
   inputIcon: {
@@ -1277,14 +1379,13 @@ const styles = StyleSheet.create({
     width: wp("8%"), // Adjust the width using wp for responsiveness
     height: wp("8%"), // Adjust the height using wp for responsiveness
     borderRadius: wp("4%"),
-    marginLeft:wp("50%"),
-    marginBottom:wp("1%")
+    marginLeft: wp("50%"),
+    marginBottom: wp("1%"),
   },
   textInputContainer: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
-  
 
   footer: {
     height: hp("10%"), // Increase the height of the footer as needed
