@@ -6,7 +6,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Pressable,
   Dimensions,
   ActivityIndicator,
   ScrollView,
@@ -26,6 +25,8 @@ import InvoiceDescription from "../components/InvoiceDescription";
 import InvoiceTax from "../components/InvoiceDiscount";
 import InvoiceDiscount from "../components/InvoiceTax";
 
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
 const CreateInvoice = (parans) => {
   const navigation = useNavigation();
   const [APIData, setAPIData] = useState();
@@ -355,13 +356,12 @@ const CreateInvoice = (parans) => {
             setSave={setSave}
           />
         </View>
+
         <View style={styles.scroll}>
-          <View>
             <InvoiceDescription
               onItemsChange={handleItemsChange}
               APIDescription={APIDescription}
             />
-          </View>
           <View style={styles.tableRow}>
             <View style={styles.taxd}>
               <InvoiceDiscount onItemsChange={handleDiscount} APITax={APITax} />
@@ -380,13 +380,14 @@ const CreateInvoice = (parans) => {
       <View style={[styles.createInvoiceChild7, styles.createChildPosition]} />
 
       <View style={styles.group}>
-        <Text style={[styles.text5, styles.text5Clr]}>-</Text>
-        <Text style={[styles.total, styles.totalTypo]}>Total</Text>
-        <Text style={[styles.rs3050, styles.text5Clr]}>Rs {totalAmount}</Text>
+      <Text 
+      style={{fontSize:14,fontWeight:700}}
+      >Total {totalAmount} {currency}</Text>
       </View>
 
       {/* Submit Button  */}
-      <View style={[styles.vectorContainer, styles.groupChild6Layout]}>
+
+      <View style={[styles.vectorContainer, styles.groupChild6Layoutt]}>
         <TouchableOpacity onPress={handleSave}>
           <Image
             style={[styles.groupChild6, styles.groupChild6Layout]}
@@ -435,6 +436,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
   },
+  button:{
+    top:screenHeight*0.7,
+    backgroundColor:'red',
+    width:screenWidth,
+    height:50,
+    flex:1,
+
+  },
+
   form: {
     marginTop: 0,
     position: "relative",
@@ -483,8 +493,7 @@ const styles = StyleSheet.create({
 
   footer: {
     position: "absolute",
-    paddingRight: 10,
-    left: 8,
+
   },
   groupChild6Layoutt: {
     height: 30,
@@ -499,11 +508,6 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    // maxHeight: 300,
-
-    position: "relative",
-    // marginTop:0,
-    // backgroundColor:'red',
   },
   groupChildPosition: {
     width: 430,
@@ -523,10 +527,11 @@ const styles = StyleSheet.create({
   wrap: {
     marginTop: 160,
     height: 480,
-    flexGrow: 1,
-    // flex:1,
-    // overflow:'hidden',
+    marginLeft:'auto',
+    marginRight:'auto',
+    flex:1,
     // backgroundColor:'red',
+    width:screenWidth,
   },
   elementFlexBox: {
     justifyContent: "center",
@@ -715,6 +720,12 @@ const styles = StyleSheet.create({
     height: 45,
     width: 381,
     position: "absolute",
+  },
+  groupChild6Layoutt: {
+    height: 50,
+    width: screenWidth/2-170,
+    position: "absolute",
+    // backgroundColor:'red',
   },
   homeTypo: {
     lineHeight: 18,
@@ -1248,14 +1259,9 @@ const styles = StyleSheet.create({
     top: -25,
   },
   group: {
-    left: 280,
-    alignContent: "flex-end",
-    justifyContent: "flex-end",
-    textAlign: "right",
-    width: 132,
-    height: 0,
-    top: 680,
-    position: "absolute",
+    alignItems:'flex-end',
+    width:screenWidth*0.95,
+    
   },
   ellipseIcon: {
     top: 235,
@@ -1266,8 +1272,7 @@ const styles = StyleSheet.create({
   },
   groupChild6: {
     borderRadius: Border.br_7xs,
-    left: 0,
-    top: 0,
+
   },
   createInvoice3: {
     top: 10,
@@ -1288,8 +1293,8 @@ const styles = StyleSheet.create({
     alignContent: "center",
   },
   vectorContainer: {
-    top: 700,
-    left: 25,
+    top: screenHeight*0.8,
+    alignItems:'center',
   },
   createInvoiceChild9: {
     top: 3,
@@ -1394,7 +1399,7 @@ const styles = StyleSheet.create({
     //   //overflow: "hidden",
     //    height: 1000,
     //    width: "100%",
-    left: -8,
+ 
     position: "absolute",
   },
 });

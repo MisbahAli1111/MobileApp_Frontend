@@ -41,6 +41,7 @@ const CreateInvoiceForm = ({
 }) => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const invoiceStatus = ["Paid", "Due"];
+  const [ msg3 , setMsg3]= useState('');
   const CurrencyArray = [
     "Afghanistan AFN",
     "Albania ALL",
@@ -284,14 +285,14 @@ const CreateInvoiceForm = ({
     const dateObject = new Date(dateString);
     return dateObject.toDateString();
   };
-
+  const [currencyError, setCurrencyError] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDueDate, setSelectedDueDate] = useState(null);
   const [carNumberFocused, setCarNumberFocused] = useState(false);
   const [carNumber, setCarNumber] = useState("");
   const [date, setDate] = useState(new Date());
   const [Duedate, setDueDate] = useState();
-  const [formHeight, setFormHeight] = useState(150);
+  const [formHeight, setFormHeight] = useState(screenHeight*0.18);
   const [msg, setmsg] = useState("");
   const [clicked, setClicked] = useState(false);
   const [user, setUser] = useState("");
@@ -403,8 +404,11 @@ const CreateInvoiceForm = ({
       setDueDateError(false);
       setDataError(false);
       setNameError(false);
+      setCurrencyError(false);
       setregNumberError(false);
       setStatusError(false);
+      setStatusError(false);
+      setMsg3('');
       setmsg("");
       setmsgg("");
 
@@ -425,6 +429,12 @@ const CreateInvoiceForm = ({
         setregNumberError(true);
       }
 
+      if (!status) {
+        setFormHeight(200);
+        setStatusError(true);
+        setmsgg("Provide Status");
+      }
+
       if (!selectedDate) {
         setFormHeight(200);
         setDataError(true);
@@ -432,14 +442,27 @@ const CreateInvoiceForm = ({
       } else {
         if (!status) {
           setFormHeight(200);
-          setDataError(true);
           setStatusError(true);
           setmsgg("Provide Status");
         }
       }
-      if (!status) {
+      if(!currency){
         setFormHeight(200);
-        setStatusError(true);
+        setCurrencyError(true);
+        setMsg3('Please provide currency');
+      }
+
+      if (!selectedDueDate) {
+        setFormHeight(200);
+        setDueDateError(true);
+        setMsg3('Please provide due date');
+      }else{
+        setMsg3('');
+        if(!currency){
+          setFormHeight(200);
+          setCurrencyError(true);
+          setMsg3('Please provide currency');
+        }
       }
 
       if (!selectedDueDate) {
@@ -474,7 +497,7 @@ const CreateInvoiceForm = ({
 
   return (
     <View
-      style={{ flex: 1, marginTop: 0, height: formHeight, overflow: "hidden" }}
+      style={{ flex: 1, height: formHeight, overflow: "hidden" }}
     >
       {/* Name  */}
       <View style={styles.inLine}>
@@ -510,6 +533,7 @@ const CreateInvoiceForm = ({
           source={require("../assets/licenseplatenumbersvgrepocom-12.png")}
         />
       </View>
+      
       {nameError ? <Text style={styles.nameError}>{msg}</Text> : null}
 
       {/* date and status  */}
@@ -564,7 +588,7 @@ const CreateInvoiceForm = ({
           </Picker>
         </View>
       </View>
-      {DateError ? <Text style={styles.nameError}>{msgg}</Text> : null}
+      {DateError || statusError ? <Text style={styles.nameError}>{msgg}</Text> : null}
 
       <View style={styles.parentp}>
         <Pressable
@@ -574,13 +598,13 @@ const CreateInvoiceForm = ({
           onPress={openDueDatePicker}
         >
           <TextInput
-            style={[DateError ? styles.text1R : styles.text1, styles.text1Typo]}
+            style={[DueDateError ? styles.text1R : styles.text1, styles.text1Typo]}
             value={selectedDueDate ? selectedDueDate.toDateString() : APDueDate}
             placeholder="Select Due date"
             editable={false}
           ></TextInput>
           <Image
-            style={styles.date2SvgrepoCom11C}
+            style={styles.date2SvgrepoCom11CC}
             contentFit="cover"
             source={require("../assets/date2svgrepocom-1-11.png")}
           />
@@ -593,14 +617,12 @@ const CreateInvoiceForm = ({
             onChange={handleDueDateChange}
           />
         )}
-        {DueDateError ? (
-          <Text style={styles.nameError}>Provide Due Date for Invoice</Text>
-        ) : null}
+
 
         {/* // here */}
         <TextInput
           style={[
-            statusError ? styles.statusPaiddueR : styles.statusPaiddue,
+            currencyError ? styles.statusPaiddueR : styles.statusPaiddue,
             styles.text1Typo,
           ]}
           value={currency}
@@ -626,6 +648,9 @@ const CreateInvoiceForm = ({
           </Picker>
         </View>
       </View>
+      {DueDateError  || currencyError? (
+          <Text style={styles.nameError}>{msg3}</Text>
+        ) : null}
     </View>
   );
 };
@@ -639,9 +664,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  // container:{
-  //  // marginLeft:0,
-  // },
+
   tableRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -681,7 +704,9 @@ const styles = StyleSheet.create({
   },
   inLine: {
     flexDirection: "row",
-    marginBottom: 8,
+    marginBottom: screenWidth*0.03,
+    paddingStart:screenWidth*0.07,
+    // paddingEnd:1,
   },
 
   pick: {
@@ -692,36 +717,33 @@ const styles = StyleSheet.create({
     position: "absolute",
     overflow: "hidden",
   },
-  pick2: {
-    left: 0,
-    height: 15,
-    width: 15,
-    top: 50,
-    position: "absolute",
-    overflow: "hidden",
-  },
+
   parent: {
     flexDirection: "row",
-    marginTop: 10,
+    marginBottom: screenWidth*0.02,
+    justifyContent: "space-between",
+    width: screenWidth * 0.9,
+    paddingStart:screenWidth*0.07,
   },
   parentp: {
     flexDirection: "row",
-    marginTop: 18,
+    marginBottom: screenWidth*0.02,
     justifyContent: "space-between",
     width: screenWidth * 0.9,
+    paddingStart:screenWidth*0.07,
   },
 
   text5Clr: {
     borderBottomWidth: 2,
-    width: "120%",
+    width: screenWidth/2-35,
     borderBottomColor: "#ccc",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   text5ClrR: {
     borderBottomWidth: 2,
-    width: "120%",
+    width: screenWidth/2-35,
     borderBottomColor: "red",
-    paddingHorizontal: 10,
+    paddingHorizontal:5,
   },
 
   groupChildPosition: {
@@ -769,20 +791,20 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   text5ClrName: {
-    top: 0,
+    
     position: "relative",
     color: Color.dimgray_100,
-    textAlign: "left",
-    left: 30,
+    // textAlign: "left",
+    // left: 30,
   },
   text1Typo: {
     top: 0,
     color: Color.dimgray_100,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_base,
-    textAlign: "left",
+    // textAlign: "left",
     position: "relative",
-    width: 150,
+    width: screenWidth/2-60,
     // left:-15,
   },
   lineViewPosition: {
@@ -799,7 +821,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   nameError: {
-    marginLeft: 30,
+    paddingLeft:screenWidth*0.08,
+    marginBottom:screenWidth*0.02,
     color: "red",
   },
   rectangleViewBg: {
@@ -1085,7 +1108,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
-    left: 35,
+    // left: 35,
     position: "relative",
   },
   groupIcon: {
@@ -1098,18 +1121,17 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   text1: {
-    left: 28,
-    width: "40%",
+
+    // width: "50%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: "#ccc", // Set the color of the underline
-    paddingHorizontal: 10,
+    // paddingHorizontal: 0,
   },
   text1R: {
-    left: 28,
-    width: "40%",
+    // width: "40%",
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: "red", // Set the color of the underline
-    paddingHorizontal: 10,
+    // paddingHorizontal: 0,
   },
   invoiceStatusPicker: {
     top: 232,
@@ -1125,21 +1147,20 @@ const styles = StyleSheet.create({
     top: 34,
   },
   statusPaiddue: {
-    marginLeft: 50,
-    width: "38%",
+    width: screenWidth*0.5,
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: "#ccc", // Set the color of the underline
     paddingHorizontal: 10,
   },
   statusPaiddueR: {
-    marginLeft: 50,
-    width: "38%",
+  
+    width: screenWidth*0.5,
     borderBottomWidth: 2, // Set the width of the underline
     borderBottomColor: "red", // Set the color of the underline
     paddingHorizontal: 10,
   },
   date2SvgrepoCom11: {
-    left: 18,
+    left: -30,
     height: 25,
     width: 25,
     top: 0,
@@ -1147,7 +1168,15 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   date2SvgrepoCom11C: {
-    left: 30,
+    left: -10,
+    height: 25,
+    width: 25,
+    top: 0,
+    position: "relative",
+    overflow: "hidden",
+  },
+  date2SvgrepoCom11CC: {
+    left: 4,
     height: 25,
     width: 25,
     top: 0,
@@ -1453,18 +1482,18 @@ const styles = StyleSheet.create({
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
     borderBottomWidth: 2,
-    width: "39%",
+    width: screenWidth/2-30,
     borderBottomColor: "#ccc",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   loritaR: {
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
     borderBottomWidth: 2,
-    width: "39%",
+    width: screenWidth/2-30,
     borderBottomColor: "red",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   loritaWrapper: {
     position: "relative",

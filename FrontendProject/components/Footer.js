@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: Color.steelblue_300,
     width: screenWidth,
-    height: screenHeight*0.11,
-    top: screenHeight - screenHeight*0.11,
+    height: screenHeight * 0.11,
+    top: screenHeight - screenHeight * 0.11,
     display: 'flex',
-    gap: rem*4.5,
+    gap: rem * 4.5,
   },
 
   imageDiv: {
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingLeft: rem*0.7,
+    paddingLeft: rem * 0.7,
   },
 
   imageDiv2: {
@@ -186,20 +186,20 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingRight: rem*0.7,
+    paddingRight: rem * 0.7,
   },
 
   bottomImg: {
-    height: rem*1.78,
-    width: rem*1.78,
+    height: rem * 1.78,
+    width: rem * 1.78,
   },
   groupPressableLayout: {
-    height: rem*4,
-    width: rem*4,
+    height: rem * 4,
+    width: rem * 4,
     position: 'absolute',
-    top: screenHeight - screenHeight*0.11 - rem*1.8,
+    top: screenHeight - screenHeight * 0.11 - rem * 1.8,
     zIndex: 999,
-    left: screenWidth / 2 - rem*2,
+    left: screenWidth / 2 - rem * 2,
   },
   homeMutedIcon1: {
     width: 25,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   // CHECK :: END
 
 
- 
+
   ellipseLayout: {
     height: 45,
     width: 45,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: 932,
   },
-   elementPosition: {
+  elementPosition: {
     left: 37,
     justifyContent: "center",
     height: 20,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
     left: screenWidth / 2 - 40,
   },
- 
+
 
 
 

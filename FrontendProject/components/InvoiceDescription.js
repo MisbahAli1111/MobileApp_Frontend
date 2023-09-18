@@ -6,15 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  TouchableWithoutFeedback,
-  ScrollView,
+  Dimensions,
   View,
   Text,
-  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
 function InvoiceDescription({ onItemsChange }) {
   const navigation = useNavigation();
 
@@ -52,7 +52,9 @@ function InvoiceDescription({ onItemsChange }) {
         placeholder="0"
         keyboardType="numeric"
       />
-      <Text style={[styles.amountt, styles.rateTypo]}>
+      <Text
+        style={[styles.text33, styles.textTypo]}
+      >
         {calculateAmount(index)}
       </Text>
     </View>
@@ -96,11 +98,11 @@ function InvoiceDescription({ onItemsChange }) {
         contentFit="cover"
         source={require("../assets/rectangle-62.png")}
       />
-      <View style={[styles.rowContainer, styles.groupLayout]}>
-        <Text style={[styles.description, styles.rateTypo]}>DESCRIPTION</Text>
-        <Text style={[styles.rate, styles.rateTypo]}>RATE</Text>
-        <Text style={[styles.qty, styles.rateTypo]}>QTY</Text>
-        <Text style={[styles.amount, styles.rateTypo]}>Amount</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: screenWidth * 0.8, position: 'absolute', marginTop: screenHeight * 0.011 }}>
+        <Text style={[styles.rateTypo]}>DESCRIPTION</Text>
+        <Text style={[styles.rateTypo]}>RATE</Text>
+        <Text style={[styles.rateTypo]}>QTY</Text>
+        <Text style={[styles.rateTypo]}>AMOUNT</Text>
       </View>
 
       <View style={[styles.rectangleView, styles.rectangleViewBg]}>
@@ -126,25 +128,29 @@ function InvoiceDescription({ onItemsChange }) {
 }
 const styles = StyleSheet.create({
   main: {
-    width: 500,
-    left: 20,
-
+    // width: screenWidth,
+    flex:1,
+    // backgroundColor:'red',
+    alignItems: 'center',
     position: "relative",
   },
   buttonBack: {
-    elevation: 20,
-    shadowRadius: 150,
-    shadowColor: "rgba(0, 0, 0, 0.05)",
+    
+    shadowColor: "#5A5A5A",
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.13,
+    shadowRadius: 9.51,
+
+    elevation: 11,
     backgroundColor: Color.steelblue_200,
     height: 27,
     width: 48,
     borderRadius: 10,
-    shadowOpacity: 30,
-    left: 160,
-    shadowOffset: {
-      width: 0,
-      height: 30,
-    },
+    left: screenWidth * 0.8 / 2,
+
   },
   inputField: {
     borderWidth: 5,
@@ -167,14 +173,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 5,
-    paddingVertical: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    width: screenWidth * 0.9
   },
 
   groupLayout: {
     flexDirection: "row",
-    alignItems: "center",
-    left: 10,
+    // alignSelf: "center",
+    // left: 0,
   },
   // container:{
   //  // marginLeft:0,
@@ -250,15 +257,9 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     position: "absolute",
   },
-  // groupLayout: {
-  //   height: 164,
-  //   width: 392,
-  //   position: "absolute",
-  // },
   wrap: {
-    width: 378,
-    height: 40,
-    left: 5,
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.04,
     backgroundColor: Color.steelblue_300,
     borderRadius: 3,
     position: "relative",
@@ -271,9 +272,10 @@ const styles = StyleSheet.create({
   rateTypo: {
     fontSize: FontSize.size_smi,
     color: Color.darkslateblue,
-    fontFamily: FontFamily.poppinsMedium,
-    textAlign: "left",
-    fontWeight: "700",
+    fontFamily: FontFamily.poppinsRegular,
+    textAlign: "center",
+    position: "relative",
+    fontWeight:700,
   },
   taxTypo1: {
     color: Color.dimgray_200,
@@ -282,31 +284,29 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   addTypo1: {
-    left: 110,
-    width: 100,
     color: Color.Black,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
-    position: "absolute",
+    position: "relative",
   },
   textTypo: {
-    width: 100,
-    left: 213,
+
+    // left: 213,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
-    position: "absolute",
+    position: "relative",
   },
   addTypo: {
     width: 88,
-    left: 290,
+    // left: 290,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
-    textAlign: "left",
-    position: "absolute",
+    textAlign: "center",
+    position: "relative",
   },
   groupChildLayout: {
     height: 1,
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     borderColor: "#d9d9d9",
     borderStyle: "solid",
     left: 0,
-    position: "absolute",
+    position: "relative",
   },
   createChildLayout2: {
     top: 463,
@@ -602,37 +602,30 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleIcon: {
-    height: 38,
-    width: 378,
-    left: 5,
-    top: 0,
+    height: screenHeight * 0.042,
+    width: screenWidth * 0.9,
     borderRadius: Border.br_3xs,
-    position: "absolute",
+    position: "relative",
   },
   rectangleView: {
-    marginTop: 17,
-    width: 378,
-    left: 5,
+    marginTop: 0,
+    paddingVertical:5,
+    width: screenWidth * 0.9,
   },
   vectorGroup: {
     left: 0,
     top: 0,
   },
   description: {
-    width: 91,
-    left: 15,
-    position: "absolute",
-    top: 10,
+    position: "relative",
   },
   addItem: {
-    flex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    width:60,
     fontSize: 16,
+    left:24,
     color: "black",
     fontWeight: "700",
-    width: 100,
-    flexDirection: "column",
+    // flexDirection: "column",
   },
   addItem1: {
     width: 64,
@@ -645,15 +638,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rate: {
-    left: 134,
-    width: 35,
-    top: 10,
-    position: "absolute",
+    position: "relative",
   },
   addRate: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    // marginLeft: 40,
+    width:80,
+    left:28,
     fontSize: 16,
     color: "black",
     fontWeight: "700",
@@ -662,37 +652,35 @@ const styles = StyleSheet.create({
     top: 81,
   },
   qty: {
-    left: 220,
-    width: 28,
-    top: 10,
-    position: "absolute",
+    position: "relative",
   },
   text3: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    // right: 24,
+    left:10,
     fontSize: 16,
     color: "black",
     fontWeight: "700",
+    width:40,
+  },
+  text33: {
+    
+    fontSize: 16,
+    color: "black",
+    fontWeight: "700",
+    width:60,
   },
   text4: {
     top: 81,
   },
   amount: {
-    left: 291,
-    width: 57,
-    top: 10,
-
-    position: "absolute",
+    position: "relative",
   },
   amountt: {
-    left: 286,
-    width: 80,
-    top: -4,
-    paddingVertical: 24,
-    paddingHorizontal: 10,
+    // width: 80,
+    flex: 1,
+    textAlign: 'center',
     fontSize: 16,
-    position: "absolute",
+    position: "relative",
   },
 
   addAmount1: {

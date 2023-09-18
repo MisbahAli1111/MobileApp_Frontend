@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  TouchableWithoutFeedback,
+  Dimensions,
   ScrollView,
   View,
   Text,
@@ -15,6 +15,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
 function InvoiceDiscount({ onItemsChange }) {
   const navigation = useNavigation();
   const [items, setItems] = useState([{ discountName: "", discountRate: "" }]);
@@ -66,8 +68,8 @@ function InvoiceDiscount({ onItemsChange }) {
         contentFit="cover"
         source={require("../assets/rectangle-62.png")}
       />
-      <View style={[styles.rowContainer, styles.groupLayout]}>
-        <Text style={[styles.description, styles.rateTypo]}>DISCOUNT</Text>
+     <View style={{ flexDirection: 'row', justifyContent: 'space-between',width:screenWidth*0.35, alignItems:'center',position: 'absolute',marginTop:7}}>
+         <Text style={[styles.description, styles.rateTypo]}>DISCOUNT</Text>
         <Text style={[styles.rate, styles.rateTypo]}>RATE</Text>
       </View>
 
@@ -95,26 +97,29 @@ function InvoiceDiscount({ onItemsChange }) {
 }
 const styles = StyleSheet.create({
   main: {
-    width: 500,
-    left: 20,
+    flex: 1,
+    alignItems: 'center',
+    position: "relative",
     marginTop: 20,
-
     position: "relative",
   },
   buttonBack: {
-    elevation: 20,
-    shadowRadius: 150,
-    shadowColor: "rgba(0, 0, 0, 0.05)",
+    
+    shadowColor: "#5A5A5A",
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.13,
+    shadowRadius: 9.51,
+
+    elevation: 11,
     backgroundColor: Color.steelblue_200,
     height: 27,
     width: 48,
     borderRadius: 10,
-    shadowOpacity: 30,
-    left: 60,
-    shadowOffset: {
-      width: 0,
-      height: 30,
-    },
+    left: screenWidth * 0.3 / 2,
+
   },
   inputField: {
     paddingVertical: 5,
@@ -132,16 +137,17 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "left",
     justifyContent: "space-between",
-    paddingHorizontal: 5,
-    paddingVertical: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    // width: screenWidth * 0.4/2
   },
 
   groupLayout: {
     flexDirection: "row",
-    alignItems: "center",
-    left: 10,
+    // alignSelf: "center",
+    // left: 0,
   },
   // container:{
   //  // marginLeft:0,
@@ -231,7 +237,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_smi,
     color: Color.darkslateblue,
     fontFamily: FontFamily.poppinsMedium,
-    textAlign: "left",
+    textAlign: "center",
     fontWeight: "700",
     flexDirection: "row",
   },
@@ -240,16 +246,14 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
+    left:18,
   },
   addTypo1: {
-    left: 100,
-    width: 164,
     color: Color.dimgray_200,
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_sm,
     textAlign: "left",
-    position: "absolute",
-    flexDirection: "row",
+    left:30
   },
   textTypo: {
     width: 30,
@@ -514,11 +518,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   wrap: {
-    height: 40,
-    width: 185,
-    left: -5,
+    width: screenWidth * 0.4,
+    height: screenHeight * 0.04,
     backgroundColor: Color.steelblue_300,
-    borderRadius: 1,
+    borderRadius: 3,
     position: "relative",
   },
   text1: {
@@ -571,39 +574,29 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleIcon: {
-    height: 38,
-    width: 185,
-    left: -5,
-    top: 0,
+    height: screenHeight * 0.042,
+    width: screenWidth * 0.4,
     borderRadius: Border.br_3xs,
-    position: "absolute",
+    position: "relative",
   },
   rectangleView: {
-    marginTop: 17,
-    width: 185,
-    left: -5,
+    marginTop: 0,
+    paddingVertical:5,
+    width: screenWidth * 0.4,
   },
   vectorGroup: {
     left: 0,
     top: 0,
   },
   description: {
-    width: 150,
-    left: 6,
-    position: "absolute",
-    top: 10,
-    flexDirection: "row",
+   
   },
   addItem: {
     flex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
     fontSize: 16,
+    left: 6,
     color: "black",
     fontWeight: "700",
-    width: 100,
-    flexDirection: "column",
-    left: 6,
   },
   addItem1: {
     width: 64,
@@ -616,11 +609,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rate: {
-    left: 102,
     width: 100,
-    top: 10,
-    position: "absolute",
-    flexDirection: "column",
+    position: "relative",
   },
   addRate: {
     flex: 1,
