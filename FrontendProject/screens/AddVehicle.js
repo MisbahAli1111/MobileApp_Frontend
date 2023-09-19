@@ -992,7 +992,9 @@ const AddVehicle = () => {
       </TouchableOpacity>
 
       {/* Footer */}
-      <View style={styles.footer}>{/* <Footer prop={"Vehicles"} /> */}</View>
+      <View style={styles.footer}>{
+       <Footer prop={"Vehicles"} /> 
+      }</View>
     </ImageBackground>
   );
 };
@@ -1388,10 +1390,13 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    height: hp("10%"), // Increase the height of the footer as needed
-    backgroundColor: "gray",
-    alignItems: "center",
-    justifyContent: "center",
+    // height: hp("10%"), // Increase the height of the footer as needed
+    // backgroundColor: "gray",
+    // alignItems: "center",
+    // justifyContent: "center",
+    flex:1,
+    top:0,
+    position:'absolute',
   },
   footerText: {
     color: "white", // Customize your footer text style

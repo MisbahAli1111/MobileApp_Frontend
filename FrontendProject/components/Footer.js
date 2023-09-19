@@ -26,26 +26,7 @@ function Footer(props) {
     setActiveScreen(props.prop);
   }, [props.prop]);
 
-  function handleInvoicePress() {
-    if (props.data == null) {
 
-      navigation.navigate("Invoices", { data: props.data });
-    }
-    navigation.navigate("Invoices", { data: props.data });
-  }
-  function handleHomePress() {
-    navigation.navigate("Home");
-  }
-
-  function handleRecordPress() {
-    navigation.navigate("MaintenanceRecord");
-  }
-  function handleVehiclePress() {
-    navigation.navigate("Vehicles", { type: "default" });
-  }
-  function handleAddRecord() {
-    navigation.navigate("AddRecord");
-  }
   return (
 
     <View>
