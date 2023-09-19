@@ -573,7 +573,7 @@ const AddVehicle = () => {
       </View>
 
       {/* ScrollView */}
-      <ScrollView style={styles.scrollViewContainer}>
+      <ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ paddingBottom: hp("10%") }}>
         {/* Image Carousel */}
 
         <View style={styles.profileImageContainer}>
@@ -921,7 +921,7 @@ const AddVehicle = () => {
                 onChangeText={(text) => setphoneNumber(text)}
                 placeholder="Phone Number"
                 keyboardType="numeric"
-                maxLength={11}
+                maxLength={15}
                 value={phoneNumber}
               />
               <AntDesign
@@ -983,13 +983,15 @@ const AddVehicle = () => {
             </View>
             {kmError && <Text style={styles.errorText}>{error}</Text>}
           </View>
+          <TouchableOpacity style={styles.saveButton} onPress={saveVehicle}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
         </View>
+        
       </ScrollView>
 
       {/* Save Button */}
-      <TouchableOpacity style={styles.saveButton} onPress={saveVehicle}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
+      
 
       {/* Footer */}
       <View style={styles.footer}>{
@@ -1038,6 +1040,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
+    marginBottom:hp("1%")
     // Add paddingBottom to accommodate the "Km Driven" input
   },
 
@@ -1103,7 +1106,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("1%"), // Add border radius if needed
     paddingHorizontal: wp("2%"), // Add horizontal padding
     marginBottom: hp("1%"),
-    left: wp("0.5%"),
+    // left: wp("0.5%"),
   },
   buttonText: {
     color: "white",
@@ -1397,6 +1400,7 @@ const styles = StyleSheet.create({
     flex:1,
     top:0,
     position:'absolute',
+    bottom:0
   },
   footerText: {
     color: "white", // Customize your footer text style
