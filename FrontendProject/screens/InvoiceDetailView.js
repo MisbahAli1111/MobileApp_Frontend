@@ -77,24 +77,24 @@ function InvoiceDetailView() {
     axios
       .request(config)
       .then((response) => {
-               const dateObj = new Date(response.data[0].date);
+               const dateObj = new Date(response.data.date);
         const year = dateObj.getFullYear();
         const month = dateObj.getMonth() + 1;
         const day = dateObj.getDate();
         setDate(`${month}/${day}/${year}`);
-        setDue(response.data[0].invoiceDue);
-        setInvoiceID(response.data[0].id);
-        setTotal(response.data[0].total);
-        setDescription(response.data[0].descriptions);
-        setTaxr(response.data[0].taxes);
-        setDiscountr(response.data[0].discounts);
-        setName(response.data[0].name);
-        setRegistrationNumber(response.data[0].registrationNumber);
-        setVehicle(response.data[0].vehicleName);
-        setCurrency(response.data[0].currency);
-        let st = response.data[0].status;
+        setDue(response.data.invoiceDue);
+        setInvoiceID(response.data.id);
+        setTotal(response.data.total);
+        setDescription(response.data.descriptions);
+        setTaxr(response.data.taxes);
+        setDiscountr(response.data.discounts);
+        setName(response.data.name);
+        setRegistrationNumber(response.data.registrationNumber);
+        setVehicle(response.data.vehicleName);
+        setCurrency(response.data.currency);
+        let st = response.data.status;
         setStatus(st ? "Paid" : "Due");
-        setBalance(st ? 0 : response.data[0].total);
+        setBalance(st ? 0 : response.data.total);
         calculateTotalAmount();
         setIsLoading(false);
       })

@@ -13,7 +13,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
-// import { TextInput } from "react-native-gesture-handler";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,7 +30,7 @@ function Footer(props) {
     setActiveScreen(props.prop);
   }, [props.prop]);
 
-
+// console.warn(screenHeight);
   return (
 
     <View>
@@ -147,10 +151,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: Color.steelblue_300,
     width: screenWidth,
-    height: screenHeight * 0.11,
-    top: screenHeight - screenHeight * 0.11,
+    height: screenHeight*0.11, // footer height
+    top: screenHeight-screenHeight*0.11,
+    // top:hp('92'),
+    // bottom:0-screenHeight,
     display: 'flex',
-    gap: rem * 4.5,
+    gap: rem * 4.5, 
   },
 
   imageDiv: {
@@ -178,15 +184,15 @@ const styles = StyleSheet.create({
     height: rem * 4,
     width: rem * 4,
     position: 'absolute',
-    top: screenHeight - screenHeight * 0.11 - rem * 1.8,
+    top: screenHeight - 100 - rem * 0.5,
     zIndex: 999,
     left: screenWidth / 2 - rem * 2,
   },
   homeMutedIcon1: {
     width: 25,
     height: 27,
-    left: 9,
-    top: 7,
+    alignSelf:'center',
+    top:7,
     position: 'absolute'
   },
 
@@ -215,7 +221,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.textTxtPrimary,
     position: 'absolute',
-    top: screenHeight - 100 + 45,
+    top: screenHeight - 100 + 74,
     zIndex: 999,
     left: screenWidth / 2 - 40,
   },
