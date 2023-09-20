@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
   TextInput,
-  Button,
+  Dimensions,
   Text,
   Pressable,
   TouchableOpacity,
@@ -24,6 +24,9 @@ import DashboardGraph from "../components/DashboardGraph";
 import axios from "axios";
 import Config from "./Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 const Home = () => {
   const navigation = useNavigation();
   const [totalEmployees, setTotalEmployees] = useState(0);
@@ -377,7 +380,7 @@ const styles = StyleSheet.create({
     top: 0,
 
     position: "absolute",
-    right: 410,
+    
   },
   groupChildPosition2: {
     height: 63,
@@ -956,11 +959,13 @@ const styles = StyleSheet.create({
     height: 27,
   },
   home: {
+
     backgroundColor: Color.white,
+    // backgroundColor:'red',
+    height:screenHeight-450,
     flex: 1,
-    height: 932,
-    overflow: "hidden",
-    width: "100%",
+    // overflow: "hidden",
+    width: screenWidth,
   },
 });
 
