@@ -964,7 +964,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'red',
     height:screenHeight-450,
     flex: 1,
-    // overflow: "hidden",
+    overflow: "hidden",
     width: screenWidth,
   },
 });

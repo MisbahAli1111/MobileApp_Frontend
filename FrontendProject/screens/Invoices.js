@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import {
   StyleSheet,
   TextInput,
-  TouchableWithoutFeedback,
+  Dimensions,
   View,
   Text,
   Pressable,
@@ -14,6 +14,10 @@ import Footer from "../components/Footer";
 import MaintenanceRecordList from "../components/MaintenanceRecordList";
 import FilterSearchVehicle from "../components/FilterSearchVehicle";
 import InvoiceList from "../components/InvoiceList";
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+const rem = screenWidth / 16;
+
 const Invoices = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
@@ -35,20 +39,18 @@ const Invoices = () => {
       />
 
       <View style={styles.breadcrumbsParent}>
-        <View style={[styles.breadcrumbs, styles.housefill1Position]}>
-          <View style={[styles.housefill1, styles.housefill1Position]}>
+        <View style={{flexDirection:'row',gap:rem*0.2,marginLeft:rem*0.88}}>
             <Image
               style={styles.homeMutedIcon1}
               contentFit="cover"
               source={require("../assets/homemuted.png")}
             />
-          </View>
-          <View style={styles.elementPosition} />
-          <View style={styles.elementPosition}>
-            <Text style={[styles.text13, styles.text13Typo]}>\</Text>
-          </View>
-          <Text style={[styles.invoices3, styles.totalTypo]}>Invoices</Text>
+         
+          <Text>/</Text>
+          <Text>Invoices</Text>
+
         </View>
+        <View style={{marginLeft:screenWidth*0.35,top:-rem*0.3}}>
         <Pressable
           style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
           onPress={() =>
@@ -61,13 +63,12 @@ const Invoices = () => {
             Create Invoice
           </Text>
         </Pressable>
+        </View>
+
       </View>
 
       {/* search */}
-      <View style={[styles.rectangleParent18, styles.rectangleLayout]}>
-        <Pressable
-          style={[styles.rectanglePressable, styles.rectangleLayout]}
-        />
+      <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
         <TextInput
           style={[styles.searchInvoice, styles.paidTypo]}
           placeholder="Search Invoice "
@@ -75,25 +76,21 @@ const Invoices = () => {
           value={search}
           onChangeText={(query) => handleQuery(query)}
         />
-        <Pressable
-          style={styles.vector}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
           <Image
             style={[styles.icon, styles.iconLayout1]}
             contentFit="cover"
             source={require("../assets/vector13.png")}
           />
-        </Pressable>
-      </View>
+      </Pressable>
+
 
       <View style={styles.cont}>
         <Footer prop={"Invoices"} />
       </View>
-
       <View style={styles.boxContianer}>
         <InvoiceList dsearch={search} />
       </View>
+
     </View>
   );
 };
@@ -112,15 +109,15 @@ const styles = StyleSheet.create({
     top: 10,
   },
   cont: {
-    marginLeft: 1,
+    // marginLeft: 1,
   },
   boxContianer: {
     flex: 1,
     flexWrap: "wrap",
     marginTop: 250,
-
+    maxHeight:screenWidth*1.24,
     // marginBottom:90,
-    maxHeight: 525,
+    // maxHeight: 525,
     // alignItems: 'flex-end',
   },
   iconLayout1: {
@@ -177,7 +174,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   createInvoice: {
-    lineHeight: 18,
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
     color: Color.white,
@@ -187,20 +183,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   createInvoiceWrapper: {
-    left: 226,
-    shadowColor: "rgba(0, 0, 0, 0.05)",
-    shadowRadius: 20,
-    elevation: 20,
     paddingHorizontal: Padding.p_11xl,
     paddingVertical: Padding.p_6xs,
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: -4,
-    },
     backgroundColor: Color.darkslateblue,
-    top: 0,
-    flexDirection: "row",
+    // alignSelf:'center',
+    // marginLeft:80,
   },
   totalTypo: {
     fontWeight: "600",
@@ -230,24 +217,19 @@ const styles = StyleSheet.create({
     height: 14,
   },
   housefill1: {
-    width: 14,
-    justifyContent: "center",
-    alignItems: "center",
+    //  width: rem*0.5,
+    // justifyContent: "center",
+    // alignItems: "center",
     top: 0,
   },
-  housefill1Position: {
-    height: 20,
-    left: 2,
-    position: "absolute",
-  },
+
 
   breadcrumbsParent: {
     flex: 1,
-    width: "80%",
-    height: 32,
+    width: screenWidth,
     position: "absolute",
-    marginTop: 130,
-    marginLeft: 22,
+    marginTop: screenWidth*0.34,
+    flexDirection:'row',
   },
   paidTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -263,14 +245,12 @@ const styles = StyleSheet.create({
     height: "36.76%",
     position: "absolute",
   },
-  rectangleLayout: {
-    height: 55,
-    width: 385,
-    position: "absolute",
-  },
+
   searchInvoice: {
-    top: 14,
-    left: 21,
+    // top: 14,
+    // left: 21,
+    top:rem*0.5,
+    left:rem*0.5,
     color: "#1e1e1e",
     textAlign: "left",
     fontSize: FontSize.size_base,
@@ -306,20 +286,17 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleLayout: {
-    height: 55,
-    width: 375,
+    height: screenWidth*0.135,
+    width: screenWidth*0.91,
+    borderRadius:6,
     position: "absolute",
   },
   rectangleParent18: {
-    marginTop: 180,
-    marginLeft: 21,
-  },
-  rectanglePressable: {
-    borderRadius: Border.br_5xs,
+    marginTop: screenWidth*0.45,
+    alignSelf:'center',
     backgroundColor: Color.steelblue_300,
-    left: 0,
-    top: 0,
   },
+
   groupChild: {
     backgroundColor: Color.gray_400,
     height: 60,
@@ -436,10 +413,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-  breadcrumbs: {
-    height: 20,
-    top: 5,
-  },
+
   breadcrumbsWrapper: {
     height: 20,
     top: 6,
@@ -497,12 +471,7 @@ const styles = StyleSheet.create({
     left: 19,
     position: "absolute",
   },
-  rectanglePressable: {
-    height: 55,
-    width: 378,
-    position: "absolute",
-    backgroundColor: Color.steelblue_300,
-  },
+
   davidDaniel: {
     top: 14,
     left: 21,
@@ -531,9 +500,13 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   icon: {
-    maxHeight: "100%",
-    maxWidth: "100%",
+    maxHeight: rem,
+    maxWidth: rem,
     overflow: "hidden",
+    // position:'absolute',
+    alignSelf:'flex-end',
+    marginEnd:rem*1,
+    marginTop:rem*0.5,
   },
   rectangleContainer: {
     top: 145,

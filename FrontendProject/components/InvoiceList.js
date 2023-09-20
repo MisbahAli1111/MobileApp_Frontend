@@ -83,7 +83,7 @@ function Invoicelist({ dsearch, searchOrder }) {
     axios
       .request(config)
       .then((response) => {
-       getData();
+        getData();
       })
       .catch((error) => {
         console.log(error);
@@ -168,7 +168,6 @@ function Invoicelist({ dsearch, searchOrder }) {
         <View
           key={index}
           style={[
-            styles.groupView,
             currentPressedIndex === index
               ? styles.groupParentLayoutW
               : styles.groupParentLayout,
@@ -178,63 +177,63 @@ function Invoicelist({ dsearch, searchOrder }) {
             style={styles.press}
             onPress={() => handlePress(index, record.id)}
           >
-            <View style={[styles.groupFrame]}>
-              <View style={styles.rowWrap}>
-                <Text
-                  style={[
-                    styles.muhammadAli4,
-                    currentPressedIndex === index
-                      ? styles.text4Typo
-                      : styles.textTypo,
-                  ]}
-                >
-                  {record.name}
-                </Text>
-                <ErrorPopup
-                  visible={showErrorPopup}
-                  message={"Are you sure you want to remove Invoice?"}
-                  onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
-                  onCancel={() => {
-                    setShowErrorPopup(false);
-                    setTempInvoiceId(null); // Reset vehicleIds when the popup is closed
-                  }}
+            <View style={styles.rowWrap}>
+              <Text
+                style={[
+                  styles.muhammadAli4,
+                  currentPressedIndex === index
+                    ? styles.text4Typo
+                    : styles.textTypo,
+                ]}
+              >
+                {record.name}
+              </Text>
+              <ErrorPopup
+                visible={showErrorPopup}
+                message={"Are you sure you want to remove Invoice?"}
+                onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
+                onCancel={() => {
+                  setShowErrorPopup(false);
+                  setTempInvoiceId(null); // Reset vehicleIds when the popup is closed
+                }}
+              />
+              <TouchableOpacity onPress={() => setPopUp(record.id)}>
+                <FontAwesome
+                  name="trash"
+                  size={25}
+                  color={currentPressedIndex === index ? "white" : "black"}
                 />
-                <TouchableOpacity onPress={() => setPopUp(record.id)}>
-                  <FontAwesome
-                    name="trash"
-                    size={25}
-                    color={currentPressedIndex === index ? "white" : "black"}
-                  />
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
+            </View>
 
-              <View style={[styles.inv0001Parent]}>
-                <Text
-                  style={[
-                    currentPressedIndex === index
-                      ? styles.inv00014
-                      : styles.inv0001,
-                    currentPressedIndex === index
-                      ? styles.text4Typo
-                      : styles.textTypo,
-                  ]}
-                >
-                  INV{record.id}
-                </Text>
+            <View style={[styles.inv0001Parent]}>
+              <Text
+                style={[
+                  currentPressedIndex === index
+                    ? styles.inv00014
+                    : styles.inv0001,
+                  currentPressedIndex === index
+                    ? styles.text4Typo
+                    : styles.textTypo,
+                ]}
+              >
+                INV{record.id}
+              </Text>
 
-                <Text
-                  style={[
-                    styles.muhammadAli44,
-                    currentPressedIndex === index
-                      ? styles.text4Typo
-                      : styles.paidTypo,
-                  ]}
-                >
-                  Rs. {record.total}
-                </Text>
-              </View>
+              <Text
+                style={[
+                  styles.muhammadAli44,
+                  currentPressedIndex === index
+                    ? styles.text4Typo
+                    : styles.paidTypo,
+                ]}
+              >
+                Rs. {record.total}
+              </Text>
+            </View>
 
-              <View style={[styles.inv0001Parent]}>
+            <View style={[styles.inv0001Parent]}>
+              <View>
                 <Text
                   style={[
                     currentPressedIndex === index
@@ -244,27 +243,22 @@ function Invoicelist({ dsearch, searchOrder }) {
                 >
                   {record.invoiceDue}
                 </Text>
-                <View style={[styles.rectangleGroup, styles.groupChildLayout]}>
-                  <View
-                    style={[
-                      styles.groupInner,
-                      styles.groupChildLayout,
-                      record.status ? styles.groupChild1 : null,
-                    ]}
-                  />
+              </View>
 
-                  <Text
-                    style={[
-                      styles.due,
-                      styles.paidTypo,
-                      record.status ? styles.paid1 : null,
-                    ]}
-                  >
-                    {record.status ? "Paid" : "Due"}
-                  </Text>
-                </View>
+              <View>
+                <Text
+                  style={[
+                    styles.paidTypo,
+                    record.status ? styles.paidn : styles.duen,
+                  ]}
+                >
+                  {record.status ? "Paid" : "Due"}
+                </Text>
               </View>
             </View>
+
+
+
           </Pressable>
         </View>
       ))}
@@ -277,7 +271,7 @@ const styles = StyleSheet.create({
     marginVertical: 0.2 * rem,
     alignSelf: "center",
     width: screenWidth * 0.91,
-    height: screenHeight * 0.108,
+    height: screenWidth * 0.24,
     borderRadius: 8,
   },
   groupParentLayoutW: {
@@ -285,16 +279,35 @@ const styles = StyleSheet.create({
     marginVertical: 0.2 * rem,
     alignSelf: "center",
     width: screenWidth * 0.91,
-    height: screenHeight * 0.108,
+    height: screenWidth * 0.24,
     borderRadius: 8,
   },
   rowWrap: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 2,
-    margin: 10,
-    marginTop: 10,
+    marginBottom: rem * 0.21,
+    margin: rem * 0.4,
   },
+  duen: {
+    flex:1,
+    color: 'white',
+    backgroundColor: 'yellow',
+    borderRadius: 15,
+    width: rem * 1.8,
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  paidn: {
+    flex:1,
+    color: 'white',
+    backgroundColor: 'green',
+    borderRadius: 15,
+    width: rem * 1.8,
+    alignItems:'center',
+    justifyContent:'center'
+  },
+
+
   cont: {
     width: 385,
     marginLeft: 1,
@@ -303,6 +316,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'red',
     width: screenWidth * 0.91,
     height: screenHeight * 0.105,
+    flex: 1,
   },
   invPosition: {
     left: 0,
@@ -359,8 +373,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   groupChildLayout: {
-    width: 53,
-    height: 23,
+    // width: 53,
+    // height: 23,
   },
   groupChild4Bg: {
     backgroundColor: Color.darkslateblue,
@@ -471,18 +485,15 @@ const styles = StyleSheet.create({
   },
   inv0001: {
     fontSize: FontSize.size_mini,
-    marginLeft: 0.5 * rem,
+    // marginLeft: 0.5 * rem,
     top: 0,
   },
   jan2023: {
     fontSize: FontSize.size_sm,
     color: Color.dimgray_100,
-    textAlign: "left",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
-    marginLeft: 0.5 * rem,
-    width: "100%",
-    position: "absolute",
+    // textAlign:'center'
   },
   text: {
     color: Color.dimgray_100,
@@ -492,7 +503,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   inv0001Parent: {
+    flex: 1,
     flexDirection: "row",
+    justifyContent: 'space-between',
+    paddingLeft: rem * 0.4,
+    paddingRight: rem * 0.4,
   },
   rs3000: {
     color: Color.textTxtPrimary,
@@ -528,19 +543,17 @@ const styles = StyleSheet.create({
     top: 0,
   },
   due: {
-    left: -7.5,
     color: Color.white,
     fontSize: FontSize.size_mini,
     textAlign: "center",
-    // alignContent:"center",
-    top: -1,
     position: "absolute",
+    alignSelf: 'center'
   },
   rectangleGroup: {
     // marginLeft:10*rem,
-    textAlign: "right",
+    // textAlign: "right",
     position: "absolute",
-    marginLeft: 12.8 * rem,
+    // marginLeft: 12.8 * rem,
 
     marginTop: 0.1 * rem,
   },
@@ -552,13 +565,10 @@ const styles = StyleSheet.create({
     top: -2,
   },
   paid1: {
-    left: -7.5,
-
     color: Color.white,
     fontSize: FontSize.size_mini,
     textAlign: "center",
-
-    position: "absolute",
+    position: "relative",
   },
   rectangleContainer: {
     top: 420,
@@ -578,21 +588,18 @@ const styles = StyleSheet.create({
   },
   muhammadAli44: {
     fontSize: FontSize.size_base,
-    marginLeft: 10 * rem,
+    // marginLeft: 10 * rem,
   },
   inv00014: {
     fontSize: FontSize.size_mini,
-    marginLeft: 0.5 * rem,
-    top: 0,
+    // marginLeft: 0.5 * rem,
+    // top: 0,
   },
   jan20234: {
     fontSize: FontSize.size_sm,
     color: Color.white,
-    marginLeft: 0.5 * rem,
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
-    width: "100%",
-    position: "absolute",
   },
   text4: {
     left: 75,
@@ -955,7 +962,8 @@ const styles = StyleSheet.create({
   },
   wrap: {
     width: screenWidth,
-    height: screenHeight * 0.64,
+    // backgroundColor:'red',
+    flex:1,
   },
   text2Typo: {
     color: Color.gray_300,

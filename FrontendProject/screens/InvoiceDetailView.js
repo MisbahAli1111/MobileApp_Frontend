@@ -23,6 +23,9 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import Config from "./Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
+const rem = screenWidth / 16;
 function InvoiceDetailView() {
   const route = useRoute();
 
@@ -47,8 +50,7 @@ function InvoiceDetailView() {
   const [discountr, setDiscountr] = useState([]);
   const [vehicle, setVehicle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const screenHeight = Dimensions.get("window").height;
-  const screenWidth = Dimensions.get("window").width;
+
   const [businessProfile, setBusinessProfile] = useState("");
   const [currency, setCurrency] = useState("");
   useEffect(() => {
@@ -58,7 +60,7 @@ function InvoiceDetailView() {
   useEffect(() => {
     calculateTotalAmount();
   });
-  const rem = screenWidth / 16;
+
 
   const getData = async () => {
     setIsLoading(true);
@@ -77,7 +79,7 @@ function InvoiceDetailView() {
     axios
       .request(config)
       .then((response) => {
-               const dateObj = new Date(response.data.date);
+        const dateObj = new Date(response.data.date);
         const year = dateObj.getFullYear();
         const month = dateObj.getMonth() + 1;
         const day = dateObj.getDate();
@@ -110,7 +112,7 @@ function InvoiceDetailView() {
       const Business_id = await AsyncStorage.getItem("Business_id");
 
       if (Business_id) {
-    
+
         const config = {
           method: "get",
           maxBodyLength: Infinity,
@@ -126,7 +128,7 @@ function InvoiceDetailView() {
           const responseData = response.data;
 
           setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
-            } else {
+        } else {
           console.log("Error: " + response.statusText);
         }
       }
@@ -338,7 +340,7 @@ function InvoiceDetailView() {
         FileSystem.documentDirectory + "invoice.pdf"
       );
       if (downloadObject.status === 200) {
-           } else {
+      } else {
         console.error("Error downloading the PDF.");
       }
     } catch (error) {
@@ -359,6 +361,19 @@ function InvoiceDetailView() {
           source={require("../assets/light-texture2234-1.png")}
         />
 
+        <View style={styles.breadcrumbsParent}>
+              <Image
+                style={styles.homeMutedIcon}
+                contentFit="cover"
+                source={require("../assets/homemuted.png")}
+              />
+              <Text>/</Text>           
+              <Text>Invoices</Text>
+              <Text>/</Text>           
+              <Text>Invoice Detail View</Text>
+        </View>
+
+
         <View style={styles.containerView}>
           <LinearGradient
             style={styles.rectangleLineargradient}
@@ -367,7 +382,7 @@ function InvoiceDetailView() {
           >
             <View
               style={{
-                alignSelf: "flex-start",
+                alignSelf: "center",
               }}
             >
               <View style={{ flexDirection: "row" }}>
@@ -410,7 +425,7 @@ function InvoiceDetailView() {
                     fontSize: rem * 0.6,
                     fontWeight: 600,
                     width: screenWidth * 0.34,
-                    textAlign: "right", // Align text to the right
+                    textAlign: "right",
                   }}
                 >
                   Invoice To
@@ -427,6 +442,7 @@ function InvoiceDetailView() {
                   style={{
                     fontSize: rem * 0.55,
                     fontWeight: 500,
+
                     width: screenWidth * 0.4,
                   }}
                 >
@@ -506,48 +522,14 @@ function InvoiceDetailView() {
           </LinearGradient>
         </View>
 
-        <Text style={styles.total}>Total</Text>
-        <View style={styles.invoiceDetailViewChild} />
-        <View style={styles.invoiceDetailViewItem} />
-
-        <View style={styles.breadcrumbsParent}>
-          <View style={styles.breadcrumbs}>
-            <View style={[styles.housefill, styles.housefillFlexBox]}>
-              <Image
-                style={styles.homeMutedIcon}
-                contentFit="cover"
-                source={require("../assets/homemuted.png")}
-              />
-            </View>
-
-            <View style={styles.elementPosition}>
-              <Text style={styles.text}>\</Text>
-            </View>
-            <Text style={[styles.invoice, styles.dueTypo]}>Invoice</Text>
-          </View>
-        </View>
-
         <View style={styles.head}>
-          <Image
+          {/* <Image
             style={[styles.groupChild, styles.groupLayout2]}
             contentFit="cover"
             source={require("../assets/rectangle-62.png")}
-          />
-          <Text style={[styles.description, styles.changePosition]}>
-            DESCRIPTION
-          </Text>
-          <Text style={[styles.oilChange, styles.textTypo4]}></Text>
+          /> */}
 
-          <Text style={[styles.rate, styles.qtyTypo]}>RATE</Text>
-          <Text style={[styles.text1, styles.textTypo2]}></Text>
-
-          <Text style={[styles.qty, styles.qtyTypo]}>QTY</Text>
-          <Text style={[styles.text5, styles.textTypo1]}></Text>
-
-          <Text style={[styles.amount, styles.textPosition1]}>Amount</Text>
-          <Text style={[styles.text9, styles.textPosition1]}></Text>
         </View>
-        <View style={[styles.groupItem, styles.groupItemPosition]} />
 
         <ScrollView style={styles.wrap}>
           {description.map((desc, index) => (
@@ -577,12 +559,7 @@ function InvoiceDetailView() {
           )}
         </View>
 
-        <View style={[styles.element2, styles.housefillFlexBox]}>
-          <Text style={styles.text}>\</Text>
-        </View>
-        <Text style={[styles.inv0001, styles.inv0001Position]}>
-          {invoiceID}
-        </Text>
+
 
         <View style={[styles.groupContainer, styles.groupLayout]}>
           <View style={styles.parent}>
@@ -651,8 +628,7 @@ const styles = StyleSheet.create({
   containerView: {
     justifyContent: "center",
     alignItems: "center",
-
-    marginTop: 160,
+    marginTop: screenHeight * 0.02,
   },
   dataRow: {
     flexDirection: "row",
@@ -687,12 +663,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-  head: {
-    marginTop: 25,
-    alignContent: "center",
-    justifyContent: "center",
-    marginLeft: 12,
-  },
+  // head: {
+  //   marginTop: screenHeight*0.034,
+  //   backgroundColor:'#98baed'
+  //   // alignContent: "center",
+  //   // justifyContent: "center",
+  // },
   // Blue:{
   //   flex:1,
   //   backgroundColor:'red',
@@ -729,10 +705,7 @@ const styles = StyleSheet.create({
     height: 0,
     position: "absolute",
   },
-  housefillFlexBox: {
-    justifyContent: "center",
-    position: "absolute",
-  },
+
   dueTypo: {
     fontFamily: FontFamily.poppinsSemibold,
     fontWeight: "600",
@@ -938,11 +911,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   lightTexture22341Icon: {
-    width: 430,
-    left: 0,
-    top: 0,
-    position: "absolute",
-    height: 932,
+    width: screenWidth,
+    height: screenHeight,
+    position:'absolute',
   },
   total: {
     top: 1032,
@@ -980,16 +951,15 @@ const styles = StyleSheet.create({
     width: 19,
   },
   homeMutedIcon: {
-    width: 14,
-    height: 14,
+    width: 15,
+    top:2,
+    height: 15,
   },
   housefill: {
     width: 14,
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     height: 20,
-    left: 0,
-    top: 0,
   },
   elementPosition: {
     left: 18,
@@ -1014,13 +984,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     position: "relative",
   },
-  breadcrumbs: {
-    top: 0,
-    width: 79,
-    height: 20,
-    left: 0,
-    position: "absolute",
-  },
+
   editInvoice: {
     color: Color.white,
     lineHeight: 18,
@@ -1041,11 +1005,10 @@ const styles = StyleSheet.create({
     top: 0,
   },
   breadcrumbsParent: {
-    top: 128,
-    height: 32,
-    width: 392,
-    left: 19,
-    position: "absolute",
+    marginTop: screenHeight*0.14,
+    flexDirection:'row',
+    gap:screenWidth*0.01,
+    marginLeft:screenWidth*0.05
   },
   rectangleView: {
     top: 180,
@@ -1238,13 +1201,10 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   rectangleLineargradient: {
-    top: 0,
     borderRadius: Border.br_5xs,
-    width: 391,
-    height: 97,
+    width: screenWidth * 0.93,
+    height: screenHeight * 0.12,
     backgroundColor: "transparent",
-    left: 0,
-    paddingLeft: 30,
     position: "relative",
   },
   corollaGli2016: {
@@ -1662,11 +1622,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   invoiceDetailView: {
-    backgroundColor: Color.white,
+    // backgroundColor: Color.aliceblue_100,
     flex: 1,
     overflow: "hidden",
-    height: 932,
-    width: "100%",
+    height: screenHeight,
+    width: screenWidth,
   },
 });
 
