@@ -50,7 +50,7 @@ const Invoices = () => {
           <Text>Invoices</Text>
 
         </View>
-        <View style={{marginLeft:screenWidth*0.35,top:-rem*0.3}}>
+        <View style={{marginLeft:rem*4.8,top:-rem*0.3}}>
         <Pressable
           style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
           onPress={() =>
@@ -186,8 +186,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.p_11xl,
     paddingVertical: Padding.p_6xs,
     backgroundColor: Color.darkslateblue,
-    // alignSelf:'center',
-    // marginLeft:80,
   },
   totalTypo: {
     fontWeight: "600",

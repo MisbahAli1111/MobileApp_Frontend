@@ -245,7 +245,9 @@ function Invoicelist({ dsearch, searchOrder }) {
                 </Text>
               </View>
 
-              <View>
+              <View style={[
+                record.status? styles.paid : styles.due
+              ]}>
                 <Text
                   style={[
                     styles.paidTypo,
@@ -291,20 +293,10 @@ const styles = StyleSheet.create({
   duen: {
     flex:1,
     color: 'white',
-    backgroundColor: 'yellow',
-    borderRadius: 15,
-    width: rem * 1.8,
-    alignItems:'center',
-    justifyContent:'center'
   },
   paidn: {
     flex:1,
     color: 'white',
-    backgroundColor: 'green',
-    borderRadius: 15,
-    width: rem * 1.8,
-    alignItems:'center',
-    justifyContent:'center'
   },
 
 
@@ -513,9 +505,7 @@ const styles = StyleSheet.create({
     color: Color.textTxtPrimary,
   },
   paid: {
-    color: Color.white,
-    fontSize: FontSize.size_mini,
-    textAlign: "left",
+
   },
   paidWrapper: {
     paddingHorizontal: 9,
@@ -543,11 +533,19 @@ const styles = StyleSheet.create({
     top: 0,
   },
   due: {
-    color: Color.white,
-    fontSize: FontSize.size_mini,
-    textAlign: "center",
-    position: "absolute",
-    alignSelf: 'center'
+    backgroundColor:'yellow',
+    height:rem*0.9,
+    width:rem*1.8,
+    alignItems:'center',
+    borderRadius:12
+  },
+  paid:{
+    backgroundColor:'green',
+    height:rem*0.9,
+    width:rem*1.8,
+    alignItems:'center',
+    borderRadius:12
+ 
   },
   rectangleGroup: {
     // marginLeft:10*rem,
