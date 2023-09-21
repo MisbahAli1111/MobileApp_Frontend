@@ -40,6 +40,7 @@ const EditProfile = () => {
   const [userId, setUserId] = useState("");
   const [profileImageLink, setProfileImageLink] = useState(null);
 
+
   const [loading, setLoading] = useState(true);
   const countryCodes = [
     "AF",
@@ -403,6 +404,7 @@ const EditProfile = () => {
 
   const getProfileImage = async (userId) => {
     try {
+      if(userId){
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
 
@@ -419,17 +421,22 @@ const EditProfile = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
+        
         if (responseData.url !== null) {
-          setProfileImageLink(`${Config.baseUrl}` + responseData.url);
+          setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+          console.log(profileImageLink);
+          
         }
       } else {
         console.log("Error: " + response.statusText);
       }
+    }
     } catch (error) {
       console.log("Error fetching profile image:", error);
     } finally {
       setLoading(false); // Set loading to false when the request completes
     }
+  
   };
 
   useEffect(() => {
@@ -438,7 +445,7 @@ const EditProfile = () => {
         const storedUserId = await AsyncStorage.getItem("userId");
         setUserId(storedUserId);
         if (userId) {
-          console.log("userID found");
+          console.log("userID found: ", userId);
         }
       } catch (error) {
         console.error("Error fetching user ID from AsyncStorage:", error);
@@ -450,7 +457,8 @@ const EditProfile = () => {
         getProfileImage(userId);
       }
     });
-  }, [userId]);
+  },[userId]);
+  
   return (
     <ImageBackground
       style={styles.backgroundImage}
@@ -559,76 +567,41 @@ const EditProfile = () => {
             <Text style={styles.errorText}>{phoneNumberError}</Text>
           ) : null}
 
-          {/* <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isImageModalVisible}
-          onRequestClose={() => setImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromCamera}>
-              <Text style={styles.imageModalButtonText}>Take a Photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imageModalButton} onPress={handleImageFromGallery}>
-              <Text style={styles.imageModalButtonText}>Choose from Gallery</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.imageModalButton}
-              onPress={() => setImageModalVisible(false)}
-            >
-              <Text style={styles.imageModalButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isFullImageModalVisible}
-          onRequestClose={() => setFullImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-          <View style={styles.fullImageContainer}>
-            {profileImageLink && (
-              <Image
-                source={{ uri: profileImageLink }}
-                style={styles.fullImage}
-                resizeMode="contain"
-              />
-            )}
-            </View>
-            <TouchableOpacity
-              style={styles.imageModalButton}
-              onPress={() => setFullImageModalVisible(false)}
-            >
-              <Text style={styles.imageModalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal> */}
-
+          {console.log(profileImageLink)}
           <Modal
-            animationType="slide"
-            transparent={true}
-            visible={isFullImageModalVisible}
-            onRequestClose={() => setFullImageModalVisible(false)}
-          >
-            <View style={styles.imageModalContainer}>
-              <View style={styles.fullImageContainer}>
-                {profileImageLink && (
-                  <Image
-                    source={{ uri: profileImageLink }}
-                    style={styles.fullImage}
-                  />
-                )}
+              animationType="slide"
+              transparent={true}
+              visible={isFullImageModalVisible}
+              onRequestClose={() => setFullImageModalVisible(false)}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.imageModalContainer1}>
+                
+                  {profileImageLink ? (
+                    
+                      <Image
+                        source={{ uri: profileImageLink }}
+                        style={styles.fullImage}
+                        resizeMode="contain"
+                      />
+                    )
+                  : null}
+
+                  <TouchableOpacity
+                    style={
+                     styles.imageCloseButton
+                    }
+                    onPress={() => setFullImageModalVisible(false)}
+                  >
+                    <AntDesign
+                      name="closecircle"
+                      size={heightPercentageToDP("4%")}
+                      color="rgba(3, 29, 68, 1)"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-              <TouchableOpacity
-                style={styles.imageModalButton2}
-                onPress={() => setFullImageModalVisible(false)}
-              >
-                <Text style={styles.imageModalButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </Modal>
+            </Modal>
 
           <Modal
             animationType="slide"
@@ -709,9 +682,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  imageCloseButton: {
+    position: "absolute",
+    top: heightPercentageToDP("15%"), // Adjust the top percentage as needed
+    right: widthPercentageToDP("0%"), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value (last number) for transparency
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageModalContainer1: {
+    position: "relative",
+    width: widthPercentageToDP("80%"), // Adjust the width percentage as needed
+    height: heightPercentageToDP("80%"), // Adjust the height percentage as needed
+  },
   countryCodeInput: {
     top: 4,
     fontWeight: "500",
+    color:"black"
   },
   input: {
     borderBottomWidth: 1.5,
@@ -745,8 +736,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 0,
-    marginTop: 10,
+    
   },
   button: {
     backgroundColor: "rgba(3, 29, 68, 1)",
@@ -756,7 +746,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: widthPercentageToDP("3.5%"),
   },
   pickerContainer: {
     width: 30,

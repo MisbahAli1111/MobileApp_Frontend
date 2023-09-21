@@ -343,7 +343,7 @@ const EditProfile = () => {
         .request(config)
         .then((response) => {
           if (ownerid) {
-            console.log("image");
+            
             uploadImage(ownerid);
           }
         })
@@ -428,7 +428,6 @@ const EditProfile = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
-        console.log(responseData.url);
         setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
       } else {
         console.log("Error: " + response.statusText);
@@ -577,30 +576,6 @@ const EditProfile = () => {
           <Modal
             animationType="slide"
             transparent={true}
-            visible={isFullImageModalVisible}
-            onRequestClose={() => setFullImageModalVisible(false)}
-          >
-            <View style={styles.imageModalContainer}>
-              <View style={styles.fullImageContainer}>
-                {profileImageLink && (
-                  <Image
-                    source={{ uri: profileImageLink }}
-                    style={styles.fullImage}
-                  />
-                )}
-              </View>
-              <TouchableOpacity
-                style={styles.imageModalButton2}
-                onPress={() => setFullImageModalVisible(false)}
-              >
-                <Text style={styles.imageModalButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </Modal>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
             visible={isImageModalVisible}
             onRequestClose={() => setImageModalVisible(false)}
           >
@@ -638,6 +613,40 @@ const EditProfile = () => {
             </View>
           </Modal>
 
+          <Modal
+              animationType="slide"
+              transparent={true}
+              visible={isFullImageModalVisible}
+              onRequestClose={() => setFullImageModalVisible(false)}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.imageModalContainer1}>
+                {console.log(profileImageLink)}
+                  {profileImageLink ? (
+                    
+                      <Image
+                        source={{ uri: profileImageLink }}
+                        style={styles.fullImage}
+                        resizeMode="contain"
+                      />
+                    )
+                  : null}
+
+                  <TouchableOpacity
+                    style={
+                     styles.imageCloseButton
+                    }
+                    onPress={() => setFullImageModalVisible(false)}
+                  >
+                    <AntDesign
+                      name="closecircle"
+                      size={heightPercentageToDP("4%")}
+                      color="rgba(3, 29, 68, 1)"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={handleSave}>
               <Text style={styles.buttonText}>Save</Text>
@@ -680,6 +689,13 @@ const styles = StyleSheet.create({
   countryCodeInput: {
     top: 4,
     fontWeight: "500",
+    color:"black"
+  },
+  formContainer:{
+    flex:1
+  },
+  pickerItem:{
+    color:"black"
   },
   input: {
     borderBottomWidth: 1.5,
@@ -714,7 +730,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 0,
-    marginTop: 10,
+    // marginTop: 10,
   },
   button: {
     backgroundColor: "rgba(3, 29, 68, 1)",
@@ -724,7 +740,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: widthPercentageToDP("3.5%"),
   },
   pickerContainer: {
     width: 30,
@@ -740,6 +756,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  imageCloseButton: {
+    position: "absolute",
+    top: heightPercentageToDP("15%"), // Adjust the top percentage as needed
+    right: widthPercentageToDP("0%"), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value (last number) for transparency
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageModalContainer1: {
+    position: "relative",
+    width: widthPercentageToDP("80%"), // Adjust the width percentage as needed
+    height: heightPercentageToDP("80%"), // Adjust the height percentage as needed
   },
   closeButton: {
     // position: 'absolute',

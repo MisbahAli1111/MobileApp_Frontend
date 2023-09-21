@@ -900,7 +900,7 @@ const AddVehicle = () => {
                       <Text
                         style={{
                           fontSize: wp("3%"),
-                          fontFamily: "Poppin-Medium",
+                          fontFamily: FontFamily.poppinsMedium,
                           color: "white",
                           textAlign: "center",
                         }}
