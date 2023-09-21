@@ -362,15 +362,15 @@ function InvoiceDetailView() {
         />
 
         <View style={styles.breadcrumbsParent}>
-              <Image
-                style={styles.homeMutedIcon}
-                contentFit="cover"
-                source={require("../assets/homemuted.png")}
-              />
-              <Text>/</Text>           
-              <Text>Invoices</Text>
-              <Text>/</Text>           
-              <Text>Invoice Detail View</Text>
+          <Image
+            style={styles.homeMutedIcon}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+          <Text>/</Text>
+          <Text>Invoices</Text>
+          <Text>/</Text>
+          <Text>Invoice Detail View</Text>
         </View>
 
 
@@ -390,7 +390,7 @@ function InvoiceDetailView() {
                   style={{
                     fontSize: rem * 0.8,
                     fontWeight: 500,
-                    // fontStyle: 'italic',
+                    fontStyle: 'italic',
                   }}
                 >
                   #INV
@@ -522,16 +522,15 @@ function InvoiceDetailView() {
           </LinearGradient>
         </View>
 
-        <View style={styles.head}>
-          {/* <Image
-            style={[styles.groupChild, styles.groupLayout2]}
-            contentFit="cover"
-            source={require("../assets/rectangle-62.png")}
-          /> */}
 
-        </View>
 
         <ScrollView style={styles.wrap}>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerCell}>DESCRIPTION</Text>
+            <Text style={styles.headerCell}>RATE</Text>
+            <Text style={styles.headerCell}>QUANTITY</Text>
+            <Text style={styles.headerCell}>AMOUNT</Text>
+          </View>
           {description.map((desc, index) => (
             <View key={index} style={styles.dataRow}>
               <Text style={styles.dataCell}>{desc.item}</Text>
@@ -542,6 +541,31 @@ function InvoiceDetailView() {
           ))}
         </ScrollView>
 
+
+
+
+        <View style={[styles.groupLayout]}>
+          <View style={styles.parent}>
+            <Text style={[styles.list]}>Subtotal -  {subTotal}</Text>
+            <Text style={[styles.list]}>Tax -  {tax}</Text>
+            <Text style={[styles.list]}>Discount -  {discount}</Text>
+            <Text style={[styles.list]}>Total -  {total}</Text>
+          </View>
+        </View>
+
+        <View style={[styles.groupLayout]}>
+          
+          <Pressable
+            style={[styles.framePosition]} //share button
+            onPress={generatePDF}
+          >
+            <Image
+              style={[styles.iconP]}
+              contentFit="cover"
+              source={require("../assets/icbaselineshare.png")}
+            />
+          </Pressable>
+        </View>
         <View
           style={{
             flex: 1,
@@ -558,53 +582,6 @@ function InvoiceDetailView() {
             <View></View>
           )}
         </View>
-
-
-
-        <View style={[styles.groupContainer, styles.groupLayout]}>
-          <View style={styles.parent}>
-            <Text style={[styles.text17, styles.textTypo]}>-</Text>
-            <Text style={[styles.text18, styles.rs0Position]}>-</Text>
-            <Text style={[styles.subtotal, styles.tax0Typo]}>Subtotal</Text>
-            <Text style={[styles.tax0, styles.tax0Typo]}>Tax (%)</Text>
-            <Text style={[styles.rs3550, styles.rs0Typo]}>{subTotal}</Text>
-            <Text style={[styles.rs0, styles.rs0Typo]}>{tax}</Text>
-            <Text style={[styles.text19, styles.textPosition]}>-</Text>
-            <Text style={[styles.discount, styles.textPosition]}>Discount</Text>
-            <Text style={[styles.text20, styles.textPosition]}>{discount}</Text>
-            <View style={styles.group}>
-              <Text style={[styles.text17, styles.textTypo]}>-</Text>
-
-              <Text style={[styles.total1, styles.total1Typo]}>Total</Text>
-
-              <Text style={[styles.rs3550, styles.rs0Typo]}>{total}</Text>
-            </View>
-          </View>
-          <View style={[styles.groupChild2, styles.groupLayout]} />
-        </View>
-
-        <Pressable
-          style={[styles.container, styles.framePosition]}
-          onPress={printPDf} //printer button
-        >
-          <Image
-            style={styles.iconP}
-            contentFit="cover"
-            source={require("../assets/printer-2.png")}
-          />
-        </Pressable>
-
-        <Pressable
-          style={[styles.frame, styles.framePosition]} //share button
-          onPress={generatePDF}
-        >
-          <Image
-            style={[styles.iconP]}
-            contentFit="cover"
-            source={require("../assets/icbaselineshare.png")}
-          />
-        </Pressable>
-
         <View style={styles.foot}>
           <Footer prop={"Invoices"} />
         </View>
@@ -625,6 +602,9 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption2Regular_size,
     width: 80,
   },
+  list: {
+    fontSize: rem * 0.6, fontWeight: 500, textAlign: 'right',
+  },
   containerView: {
     justifyContent: "center",
     alignItems: "center",
@@ -640,19 +620,19 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
   },
+
   groupChild6: {
     borderRadius: Border.br_7xs,
     left: 0,
     top: 0,
   },
-  // cont: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   position:'absolute',
-  //   width: '80%', // Adjust the width as needed
-  //   height: screenHeight * 0.5,
-  // },
+  headerCell: {
+    flex: 1,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    alignItems: 'center',
+    
+  },
   loader: {
     // borderWidth: 4, // Adjust the line width as needed
     // borderColor: '#0000ff',
@@ -663,21 +643,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 
-  // head: {
-  //   marginTop: screenHeight*0.034,
-  //   backgroundColor:'#98baed'
-  //   // alignContent: "center",
-  //   // justifyContent: "center",
-  // },
-  // Blue:{
-  //   flex:1,
-  //   backgroundColor:'red',
-  //   height:500,
-  // },e:{
-  //   flex:1,
-  //   backgroundColor:'red',
-  //   height:500,
-  // },
   vectorContainer: {
     top: -8,
     left: 250,
@@ -692,14 +657,23 @@ const styles = StyleSheet.create({
     // borderRadius:20,
   },
   wrap: {
-    marginTop: 37,
-    maxHeight: 178,
-    width: "94%",
-    marginLeft: 16,
-    borderRadius: 14,
+    marginTop: screenWidth * 0.1,
+    maxHeight: screenWidth * 0.45,
+    width: screenWidth * 0.93,
+    alignSelf: 'center',
+    borderRadius: 10,
     backgroundColor: Color.steelblue_300,
     flexGrow: 1,
     flex: 1,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    backgroundColor: '#96c6f2',
+    height: rem * 1.2,
+    alignItems: 'center',
+    borderRadius: 10,
   },
   parentLayout1: {
     height: 0,
@@ -826,9 +800,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupLayout: {
-    height: 106,
-    width: 189,
-    position: "absolute",
+    alignSelf: 'center',
+    alignItems:'flex-end',
+    flex: 1,
+    width: screenWidth * 0.93,
   },
   textTypo: {
     color: Color.dimgray_100,
@@ -890,12 +865,12 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   framePosition: {
-    left: 364,
     justifyContent: "center",
     alignItems: "center",
-    position: "absolute",
     borderRadius: 20,
     backgroundColor: "#3894c9",
+    height: rem * 1.5,
+    width: rem * 1.5,
   },
   groupPressableLayout: {
     height: 104,
@@ -913,7 +888,7 @@ const styles = StyleSheet.create({
   lightTexture22341Icon: {
     width: screenWidth,
     height: screenHeight,
-    position:'absolute',
+    position: 'absolute',
   },
   total: {
     top: 1032,
@@ -952,7 +927,7 @@ const styles = StyleSheet.create({
   },
   homeMutedIcon: {
     width: 15,
-    top:2,
+    top: 2,
     height: 15,
   },
   housefill: {
@@ -1005,10 +980,10 @@ const styles = StyleSheet.create({
     top: 0,
   },
   breadcrumbsParent: {
-    marginTop: screenHeight*0.14,
-    flexDirection:'row',
-    gap:screenWidth*0.01,
-    marginLeft:screenWidth*0.05
+    marginTop: screenHeight * 0.14,
+    flexDirection: 'row',
+    gap: screenWidth * 0.01,
+    marginLeft: screenWidth * 0.05
   },
   rectangleView: {
     top: 180,
@@ -1415,19 +1390,16 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   parent: {
-    height: 96,
-    width: 189,
-    top: 5,
-    left: -10,
-    position: "absolute",
+    textAlign: 'right',
+    // flex:1,
   },
   groupChild2: {
     left: 0,
     top: 0,
   },
   groupContainer: {
-    top: 500,
-    left: 210,
+    // top: 500,
+    // left: 210,
   },
   groupIcon: {
     top: 3,
@@ -1508,7 +1480,6 @@ const styles = StyleSheet.create({
     width: 40,
   },
   frame: {
-    top: 680,
     height: 40,
     width: 40,
   },
