@@ -9,6 +9,7 @@ import {
   Pressable,
   TouchableOpacity,
   Linking,
+  ScrollView
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -70,15 +71,16 @@ function VehicleDetails(props) {
   });
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.wrap}
+    contentContainerStyle={{ alignItems:"center",paddingBottom:hp("15%")}}>
     <Text style={styles.heading}>
       {vechileDetails.make} {vechileDetails.model} {vechileDetails.year}
     </Text>
     <View style={styles.box}>
       {/* Row 1 */}
       <View style={styles.row}>
-        <Text style={styles.centeredText}>Vehicle Owner</Text>
-        <Text style={styles.centeredText}>Registration Number</Text>
+        <Text style={styles.centeredText1}>Vehicle Owner</Text>
+        <Text style={styles.centeredText1}>Registration Number</Text>
       </View>
       {/* Row 2 */}
       <View style={styles.rowWithMorePadding}>
@@ -91,12 +93,12 @@ function VehicleDetails(props) {
         >
         <Text style={[styles.centeredText, styles.hyperlinkText]}>{vechileDetails.name}</Text>
         </TouchableOpacity>
-        <Text style={styles.centeredText1}>{vechileDetails.registrationNumber}</Text>
+        <Text style={styles.centeredText}>{vechileDetails.registrationNumber}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.centeredText}>Owners Contact</Text>
-        <Text style={styles.centeredText}>Model</Text>
+        <Text style={styles.centeredText1}>Owners Contact</Text>
+        <Text style={styles.centeredText1}>Model</Text>
       </View>
 
       <View style={styles.rowWithMorePadding}>
@@ -106,46 +108,47 @@ function VehicleDetails(props) {
           {vechileDetails.phoneNumber}
         </Text>
         </TouchableOpacity>
-        <Text style={styles.centeredText1}>{vechileDetails.model}</Text>
+        <Text style={styles.centeredText}>{vechileDetails.model}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.centeredText}>Milage</Text>
-        <Text style={styles.centeredText}>Type</Text>
+        <Text style={styles.centeredText1}>Milage</Text>
+        <Text style={styles.centeredText1}>Type</Text>
       </View>
 
       <View style={styles.rowWithMorePadding}>
-        <Text style={styles.centeredText1}>{vechileDetails.kilometerDriven} KM</Text>
-        <Text style={styles.centeredText1}>{vechileDetails.type}</Text>
+        <Text style={styles.centeredText}>{vechileDetails.kilometerDriven} KM</Text>
+        <Text style={styles.centeredText}>{vechileDetails.type}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.centeredText}>Colour</Text>
-        <Text style={styles.centeredText}>Transmission</Text>
+        <Text style={styles.centeredText1}>Colour</Text>
+        <Text style={styles.centeredText1}>Transmission</Text>
       </View>
 
       <View style={styles.rowWithMorePadding}>
-        <Text style={styles.centeredText1}>{vechileDetails.color}</Text>
-        <Text style={styles.centeredText1}>Manual</Text>
+        <Text style={styles.centeredText}>{vechileDetails.color}</Text>
+        <Text style={styles.centeredText}>Manual</Text>
       </View>
     </View>
-  </View>
+  </ScrollView>
 );
 };
 
 const styles = StyleSheet.create({
-container: {
-  flex: 1,
-  alignItems: 'center',
-  paddingBottom:"15%"
-},
+  wrap: {
+    width: "100%",
+    zIndex: 1,
+    overflow: "hidden",
+    paddingBottom:wp("2%")
+  },
 heading: {
-  fontSize: hp('2%'),
+  fontSize: hp('2.5%'),
   fontWeight: 'bold',
   marginBottom: hp('1%'),
 },
 box: {
-  backgroundColor: '#bce8e8',
+  backgroundColor: Color.steelblue_300,
   padding: wp('1%'), // Adjusted padding
   borderRadius: wp('2%'),
   width: wp('90%'), // Adjusted width

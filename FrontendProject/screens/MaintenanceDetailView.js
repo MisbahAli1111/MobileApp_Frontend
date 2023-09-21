@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect, useMemo } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, ScrollView, Text, Pressable } from "react-native";
+import { ActivityIndicator,StyleSheet, View, ImageBackground,TouchableOpacity,Text,Modal, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -10,12 +10,28 @@ import { useRoute } from "@react-navigation/native";
 import ProfileDropdown from "../components/ProfilePopDown";
 import Config from "./Config";
 import axios from "axios";
+import Carousel, { Pagination } from "react-native-snap-carousel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { Video } from "expo-av";
+import { AntDesign } from "@expo/vector-icons";
+
 const MaintenanceDetailView = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const recordId = route.params?.recordId;
   const [registrationNumber, setRegistrationNumber] = useState("");
+  const [details,setDetail] = useState("");
+  const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
+  const [fetchedImages, setFetchedImages] = React.useState([]);
+  const [originalUri, setOriginalUri] = useState("");
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const isVideo = originalUri && originalUri.endsWith(".mp4");
+  // console.log("recordId:",recordId)
 
   const getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
@@ -33,6 +49,7 @@ const MaintenanceDetailView = () => {
         .request(config)
         .then((response) => {
           setRegistrationNumber(response.data[0].registrationNumber);
+          setDetail(response.data[0].maintanenceDetail);
         })
         .catch((error) => {
           console.log(error);
@@ -41,538 +58,628 @@ const MaintenanceDetailView = () => {
   };
   useEffect(() => {
     getData();
-  });
+    const fetchImages = async () => {
+      try {
+        setLoading(true); // Set loading to true while fetching
+        let token = await AsyncStorage.getItem("accessToken");
+        const accessToken = "Bearer " + token;
+
+        if (recordId) {
+          let config = {
+            method: "get",
+            maxBodyLength: Infinity,
+            url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/images`,
+            headers: {
+              Authorization: accessToken,
+            },
+          };
+
+          const response = await axios.request(config);
+          const imageUrls = response.data.map((item) => `${Config.baseUrl1}` + item.url);
+          setFetchedImages(imageUrls);
+          setLoading(false); 
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false); 
+      }
+    };
+    if(recordId)
+    {
+      fetchImages();
+    }
+  },[recordId]);
+
+  const renderCarouselItem = ({ item }) => {
+    // Check if the item is a video (assuming item has a property 'isVideo')
+    const fileExtension = item.split(".").pop().toLowerCase();
+    return (
+      <View style={styles.carouselItem}>
+        <View style={styles.mediaContainer}>
+          {fileExtension === "jpeg" ? (
+            <TouchableOpacity onPress={() => handleShowImage(item)}>
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: item }} style={styles.fullVideo} />
+              </View>
+            </TouchableOpacity>
+          ) : fileExtension === "mp4" ? (
+            <TouchableOpacity onPress={() => handleShowImage(item)}>
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: item }} style={styles.fullVideo} />
+              </View>
+
+              <View style={styles.playIconContainer}>
+                <AntDesign name="playcircleo" size={wp("10%")} color="white" />
+              </View>
+            </TouchableOpacity>
+          ) : null}
+        </View>
+      </View>
+    );
+  };
+
+  const handleShowImage = (uri) => {
+    if (uri) {
+      setOriginalUri(uri);
+      setFullImageModalVisible(true);
+    }
+  };
 
   return (
     <View style={styles.maintenanceDetailView}>
-      <Image
-        style={[styles.lightTexture22341Icon, styles.childViewPosition]}
-        contentFit="cover"
-        source={require("../assets/light-texture2234-1.png")}
-      />
+    <ImageBackground
+      source={require("../assets/light-texture2234-1.png")}
+      style={styles.container}
+    >
 
-      {/* home  */}
+<View style={styles.breadcrumbContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image
+            style={styles.breadcrumbImage}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("MaintenanceRecord")}>
+          <Text style={styles.breadcrumbText1}>Records</Text>
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <Text style={styles.breadcrumbText}>{registrationNumber}</Text>
+      </View>
 
-      <View style={styles.breadcrumbsParent}>
-        <View style={styles.breadcrumbs}>
-          <View style={[styles.housefill, styles.housefillFlexBox]}>
-            <Image
-              style={styles.homeMutedIcon}
-              contentFit="cover"
-              source={require("../assets/homemuted2.png")}
+
+      <ScrollView>
+      <View style={styles.profileImageContainer}>
+      <View style={styles.imageUploadContainer}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#007aff" />
+      ) : (
+        fetchedImages && fetchedImages.length > 0 ? (
+          <View style={styles.profileImagePlaceholder}>
+            <Carousel
+              data={fetchedImages}
+              renderItem={renderCarouselItem}
+              sliderWidth={wp("100%")}
+              itemWidth={wp("100%")}
+              onSnapToItem={(index) => setActiveSlide(index)}
+            />
+            <Pagination
+              dotsLength={fetchedImages.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotStyle={styles.paginationDot}
+              inactiveDotStyle={styles.paginationInactiveDot}
+              inactiveDotOpacity={0.6}
+              inactiveDotScale={0.8}
             />
           </View>
-          <Text style={[styles.text, styles.textFlexBox]}>\</Text>
-        </View>
-        <Text style={[styles.abc123, styles.abc123Clr]}>
-          {registrationNumber}
-        </Text>
-        <View style={[styles.element, styles.housefillFlexBox]}>
-          <Text style={[styles.text1, styles.textFlexBox]}>\</Text>
-        </View>
-        <Text style={[styles.record, styles.kmTypo]}>Record</Text>
+        ) : (
+          <View style={styles.profileImagePlaceholder1} >
+            <Text style={styles.noImage}>No Images/Videos Were Uploaded</Text>
+          </View>
+        )
+      )}
+    </View>
       </View>
 
-      <View style={[styles.cont]}>
-        <Footer prop={"MaintenanceRecord"} />
-      </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isFullImageModalVisible}
+        onRequestClose={() => setFullImageModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.imageModalContainer}>
+            {originalUri ? (
+              isVideo ? (
+                <Video
+                  source={{ uri: originalUri }}
+                  style={styles.fullVideo}
+                  resizeMode="contain"
+                  shouldPlay
+                  isLooping
+                  useNativeControls
+                />
+              ) : (
+                <Image
+                  source={{ uri: originalUri }}
+                  style={styles.fullImage}
+                  resizeMode="contain"
+                />
+              )
+            ) : null}
+
+            <TouchableOpacity
+              style={
+                isVideo ? styles.videoCloseButton : styles.imageCloseButton
+              }
+              onPress={() => setFullImageModalVisible(false)}
+            >
+              <AntDesign
+                name="closecircle"
+                size={hp("4%")}
+                color="rgba(3, 29, 68, 1)"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <View style={styles.headingContainer}>
+  <Text style={styles.heading}>
+    Details:
+  </Text>
+  <Text style={styles.subHeading}>
+    {details}
+  </Text>
+</View>
+
+
+
       <View style={styles.wrap}>
         <RecordDetails recordId={recordId} />
       </View>
+</ScrollView>
+      <View style={[styles.cont]}>
+        <Footer prop={"MaintenanceRecord"} />
+      </View>
+      
+    </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  childViewPosition: {
-    width: 430,
-    left: -6.5,
-    position: "absolute",
-  },
-  wrap: {
-    height: 600,
-    // marginVertical:190,
-    marginBottom: 110,
-
-    // backgroundColor:'yellow',
-  },
+  
   cont: {
-    padding: 0,
-    top: -30,
-    position: "relative",
-    right: 0,
-    zIndex: 999,
-    flex: 1,
+    position:"absolute"
   },
-  groupInnerLayout: {
-    height: 43,
-    position: "absolute",
-  },
-  housefillFlexBox: {
-    justifyContent: "center",
-    position: "absolute",
-  },
-  textFlexBox: {
-    textAlign: "left",
-    color: Color.textTxtPrimary,
-  },
-  abc123Clr: {
-    color: Color.darkslateblue,
-    textAlign: "left",
-    position: "absolute",
-  },
-  kmTypo: {
-    fontFamily: FontFamily.poppinsRegular,
-    textAlign: "left",
-  },
-  text2Typo: {
-    fontFamily: FontFamily.poppinsSemibold,
-    fontWeight: "700",
-  },
-  vectorGroupLayout: {
-    height: 301,
-    width: 392,
-    position: "absolute",
-  },
-  frameParentPosition: {
-    top: 25,
-    position: "absolute",
-  },
-  jan2023Position: {
-    top: 26,
-    position: "absolute",
-  },
-  waleedAliPosition: {
-    top: 51,
-    left: 25,
-    position: "absolute",
-  },
-  dateTypo: {
-    color: Color.dimgray_100,
-    fontFamily: FontFamily.poppinsRegular,
-    textAlign: "left",
-    fontSize: FontSize.size_base,
-    fontWeight: 700,
-  },
-  parentPosition: {
-    top: 167,
-    height: 50,
-    position: "absolute",
-  },
-  typePosition: {
-    left: 279,
-    position: "absolute",
-  },
-  homeTypo: {
-    lineHeight: 18,
-    fontSize: FontSize.size_sm,
-    textAlign: "center",
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "700",
-    position: "absolute",
-  },
-  iconLayout: {
-    height: 45,
-    width: 45,
-    top: 845,
-    position: "absolute",
-  },
-  svgrepoIconLayout: {
-    height: 26,
-    width: 26,
-    top: 855,
-    position: "absolute",
-    overflow: "hidden",
-  },
-  frameLayout: {
-    height: 104,
-    width: 104,
-    top: 777,
-    position: "absolute",
-  },
-  vectorIconLayout: {
-    bottom: "68.68%",
-    top: "29.17%",
-    width: "2.74%",
-    height: "2.15%",
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "absolute",
-    overflow: "hidden",
-  },
-  lightTexture22341Icon: {
-    top: 0,
-    height: 932,
-    width: 430,
-  },
-  groupChild: {
-    top: -6,
-    height: 80,
-  },
-  groupItem: {
-    top: 13,
-    left: 50,
-    width: 340,
-    height: 50,
-    position: "absolute",
-  },
-  maintenanceRecord: {
-    top: "0%",
-    left: "38.69%",
-    textAlign: "center",
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    color: Color.textTxtPrimary,
-    fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  vectorIcon: {
-    height: "94.85%",
-    width: "28.98%",
-    top: "1.33%",
-    right: "92.02%",
-    bottom: "2.82%",
-    left: "1%",
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "absolute",
-    overflow: "hidden",
-  },
-  maintenanceRecordParent: {
-    height: "38.1%",
-    width: "63.72%",
-    top: "25.16%",
-    right: "31.16%",
-    bottom: "31.75%",
-    left: "5.12%",
-    position: "absolute",
-  },
-  groupInner: {
-    top: 59,
-    width: 49,
-    left: 19,
-  },
-  vectorParent: {
-    top: 40,
-    height: 63,
-  },
-  homeMutedIcon: {
-    height: 14,
-    width: 12,
-  },
-  housefill: {
-    alignItems: "center",
-    width: 12,
-    height: 20,
-    left: 0,
-    top: 0,
-  },
-  text: {
-    top: 2,
-    left: 81,
-    width: 4,
-    fontFamily: FontFamily.caption2Regular,
-    lineHeight: 17,
-    fontSize: FontSize.caption2Regular_size,
-    textAlign: "left",
-    fontWeight: "500",
-    position: "absolute",
-  },
-  breadcrumbs: {
-    width: 85,
-    height: 20,
-    left: 0,
-    top: 0,
-    position: "absolute",
-  },
-  abc123: {
-    left: 92,
-    fontFamily: FontFamily.poppinsSemibold,
-    fontWeight: "600",
-    fontSize: FontSize.size_sm,
-    top: 2,
-  },
-  text1: {
-    fontFamily: FontFamily.caption2Regular,
-    lineHeight: 17,
-    fontSize: FontSize.caption2Regular_size,
-    textAlign: "left",
-    fontWeight: "500",
-  },
-  element: {
-    left: 18,
-    height: 20,
-    top: 0,
-  },
-  record: {
-    left: 27,
-    color: Color.steelblue_100,
-    fontSize: FontSize.size_sm,
-    top: 2,
-    position: "absolute",
-  },
-  breadcrumbsParent: {
-    top: 115,
-    width: 149,
-    height: 20,
-    left: 19,
-    position: "relative",
-  },
-  text2: {
-    fontSize: FontSize.size_lg,
-    textTransform: "uppercase",
-    left: 22,
-    top: 123,
-    textAlign: "left",
-    color: Color.textTxtPrimary,
-    position: "absolute",
-  },
-  rectangleIcon: {
-    borderRadius: Border.br_5xs,
-    left: 0,
-    top: 0,
-  },
-  mileageWrapper: {
-    flexDirection: "row",
-  },
-  frameWrapper: {
-    left: 0,
-    top: 0,
-    position: "absolute",
-  },
-  km: {
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-  },
-  kmWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    left: 0,
-  },
-  frameParent: {
-    width: 86,
-    left: 281,
-    height: 50,
-  },
-  frameContainer: {
-    left: 25,
-  },
-  registrationNumber: {
-    top: 95,
-    left: 25,
-    position: "absolute",
-  },
-  abc1231: {
-    top: 121,
-    left: 25,
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsRegular,
-    fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  maintainedBy: {
-    left: 25,
-    top: 25,
-    position: "absolute",
-  },
-  waleedAli: {
-    left: 25,
-    fontFamily: FontFamily.poppinsRegular,
-    textAlign: "left",
-    color: Color.Black,
-    fontSize: FontSize.size_base,
-  },
-  jan2023: {
-    fontFamily: FontFamily.poppinsRegular,
-    textAlign: "left",
-    color: Color.textTxtPrimary,
-    fontSize: FontSize.size_base,
-    left: 0,
-  },
-  date: {
-    left: 0,
-    top: 0,
-    position: "absolute",
-  },
-  jan2023Parent: {
-    width: 98,
-    left: 25,
-  },
-  carWashParent: {
-    top: 239,
-    width: 79,
-    left: 25,
-    height: 50,
-    position: "absolute",
-  },
-  pmParent: {
-    width: 61,
-    left: 281,
-  },
-  carWrapper: {
-    flexDirection: "row",
-    top: 123,
-    alignItems: "center",
-  },
-  type: {
-    top: 98,
-    color: Color.dimgray_100,
-    fontFamily: FontFamily.poppinsRegular,
-    textAlign: "left",
-    fontSize: FontSize.size_base,
-  },
-  vectorGroup: {
-    top: 480,
-    left: 10,
-  },
-  details: {
-    fontWeight: "700",
-    fontFamily: FontFamily.poppinsBold,
-    width: 72,
-    fontSize: FontSize.size_base,
-    color: Color.Black,
-    left: 0,
-    top: 0,
-  },
-  carWasMaintained: {
-    left: 1,
-    width: 392,
-    top: 26,
-    fontFamily: FontFamily.poppinsRegular,
-    textAlign: "left",
-    color: Color.Black,
-    fontSize: FontSize.size_base,
-    fontWeight: 700,
-  },
-  detailsParent: {
-    top: 385,
-    width: 393,
-    height: 122,
-    left: 20,
-    position: "absolute",
-  },
-  maintenanceDetailViewChild: {
-    top: 3,
-    left: 29,
-    width: 372,
-  },
-  maintenanceDetailViewItem: {
-    top: 830,
-    backgroundColor: Color.steelblue_300,
-    shadowColor: "rgba(0, 0, 0, 0.03)",
-    shadowOffset: {
-      width: 0,
-      height: -4,
-    },
-    shadowRadius: 10,
-    elevation: 10,
-    shadowOpacity: 1,
-    height: 102,
-  },
-  maintenanceDetailViewInner: {
-    top: 917,
-    left: 139,
-    borderRadius: Border.br_11xl,
-    backgroundColor: Color.textTxtPrimary,
-    width: 154,
-    height: 6,
-    position: "absolute",
-  },
-  home: {
-    top: 895,
-    lineHeight: 18,
-    left: 22,
-  },
-  vehicles: {
-    left: 99,
-    top: 895,
-    lineHeight: 18,
-  },
-  addVehicle: {
-    top: 867,
-    left: 172,
-  },
-  records: {
-    left: 271,
-    top: 895,
-    lineHeight: 18,
-  },
-  invoices: {
-    left: 359,
-    top: 895,
-    lineHeight: 18,
-  },
-  ellipseIcon: {
-    left: 20,
-  },
-  homeMutedIcon1: {
-    width: 25,
-    height: 27,
-  },
-  housefill1: {
-    top: 852,
-    left: 31,
-    alignItems: "center",
-  },
-  icon: {
-    height: "100%",
-    width: "100%",
-  },
-  wrapper: {
-    left: 277,
-  },
-  groupIcon: {
-    left: 105,
-  },
-  container: {
-    left: 365,
-  },
-  invoiceWarrantyLineSvgrepoIcon: {
-    left: 375,
-  },
-  frame: {
-    left: 163,
-  },
-  maintenanceDetailViewChild1: {
-    left: 164,
-  },
-  maskGroupIcon: {
-    top: 48,
-    left: 372,
-    width: 31,
-    height: 31,
-    position: "absolute",
-  },
-  microphoneSvgrepoCom1Icon: {
-    left: 287,
-  },
-  maintenanceDetailViewChild2: {
-    top: 150,
-    height: 223,
-  },
-  maintenanceDetailViewChild3: {
-    top: 378,
-    left: 182,
-    width: 55,
-    height: 9,
-    position: "absolute",
-  },
-  vectorIcon1: {
-    right: "6.77%",
-    left: "90.49%",
-  },
-  vectorIcon2: {
-    right: "92.61%",
-    left: "4.65%",
+  wrap:{
+    flex:1,
   },
   maintenanceDetailView: {
-    backgroundColor: Color.white,
     flex: 1,
     overflow: "hidden",
-    height: 932,
+    height:"100%",
     width: "100%",
+   
+  },
+  container:{
+    flex:1,
+    paddingHorizontal:wp("2%")
+  },
+  breadcrumbContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("11%"), // Adjust this value as needed to move the breadcrumbs down // Set the background color to match the container's background
+    paddingLeft: wp("5%"), // Add padding to align with the content
+    paddingRight: wp("5%"), // Add padding to align with the content
+  },
+  // Move the breadcrumb below the header
+
+  breadcrumbImage: {
+    width: wp("4%"), // Adjust the width as needed
+    height: hp("2%"), // Adjust the height as needed
+    marginRight: wp("1%"), // Add margin to separate the image from text
+    // Adjust the color of the image
+  },
+
+  breadcrumbText: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)",
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+  breadcrumbText1: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: Color.steelblue_100,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+
+  breadcrumbSeparator: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)", // Separator text color
+    // paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+  },
+
+  scrollViewContainer: {
+    flexGrow: 1,
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("2%"),
+    // Add paddingBottom to accommodate the "Km Driven" input
+  },
+
+  profileImageContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp("3%"),
+    // paddingHorizontal:wp("2%"),
+    paddingLeft:wp("2%"),
+    paddingRight:wp("2%")
+  },
+  profileImage: {
+    width: wp("30%"),
+    height: wp("30%"),
+  },
+  profileImagePlaceholder: {
+    width: wp("100%"),
+    height: wp("70%"),
+    
+    
+  },
+  profileImagePlaceholder1: {
+    width: wp("90%"),
+    height: wp("20%"),
+  },
+  uploadButton: {
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
+    borderRadius: wp("2%"),
+    marginTop: hp("0%"),
+  },
+  uploadButtonText: {
+    color: "white",
+    fontSize: wp("4%"),
+  },
+  imageUploadContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  carouselItem: {
+    width: wp("100%"), // Match the width of profileImagePlaceholder
+    height: wp("60%"), // Match the height of profileImagePlaceholder
+  },
+  carouselImage: {
+    width: "100%", // Use 100% width to maintain aspect ratio
+    height: "100%", // Use 100% height to maintain aspect ratio
+    resizeMode: "contain", // Use 'contain' to keep the image's aspect ratio
+  },
+  paginationContainer: {
+    marginTop: hp("0%"), // Adjust spacing as needed
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(3, 29, 68, 1)", // Customize the active dot color
+  },
+  paginationInactiveDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "gray", // Customize the inactive dot color
+  },
+  saveButton: {
+    height: hp("5%"), // Adjust the height as needed
+    width: wp("90.5%"), // Adjust the width as needed
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center", // Center the button horizontally // Add some margin at the top for spacing
+    borderRadius: wp("1%"), // Add border radius if needed
+    paddingHorizontal: wp("2%"), // Add horizontal padding
+    marginBottom: hp("1%"),
+    left: wp("0.5%"),
+  },
+  buttonText: {
+    color: "white",
+    fontSize: wp("4%"), // Adjust the font size as needed
+  },
+  customerText: {
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: wp("4%"),
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value (last number) for transparency
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageModalContainer: {
+    position: "relative",
+    width: wp("80%"), // Adjust the width percentage as needed
+    height: hp("80%"), // Adjust the height percentage as needed
+  },
+  imageModalContainer1: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    paddingHorizontal: wp("5%"), // Adjust horizontal padding using wp
+    paddingVertical: hp("5%"), // Adjust vertical padding using hp
+    position: "relative",
+  },
+
+  mediaContainer: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+  },
+
+  videoContainer: {
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
+    width: wp("70%"), // Set the width to your desired value
+    height: wp("40%"),
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  video: {
+    width: "100%",
+    height: "100%",
+  },
+  playButtonContainer: {
+    ...StyleSheet.absoluteFillObject, // Position the play button absolutely
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  videoCloseButton: {
+    position: "absolute",
+    top: hp("7%"), // Adjust the top percentage as needed
+    right: wp("0%"), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  imageCloseButton: {
+    position: "absolute",
+    top: hp("15%"), // Adjust the top percentage as needed
+    right: wp("0%"), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  closeButton1: {
+    position: "absolute",
+    top: hp("0%"), // Adjust top position using hp
+    right: wp("0%"), // Adjust right position using wp
+    zIndex: 999,
+  },
+
+  imageModalContent: {
+    backgroundColor: "white",
+    padding: wp("4%"), // Adjust the percentage as needed
+    borderRadius: wp("2%"), // Adjust the percentage as needed
+    width: wp("80%"), // Adjust the percentage as needed
+    alignItems: "center",
+    height: hp("30%"),
+  },
+  imageModalButton: {
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    padding: hp("1.5%"), // Adjust the percentage as needed
+    borderRadius: wp("1%"), // Adjust the percentage as needed
+    marginVertical: hp("0%"), // Adjust the percentage as needed
+    width: "100%",
+    alignItems: "center",
+    marginTop: hp("6%"),
+  },
+  imageModalButton1: {
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    padding: hp("1.5%"), // Adjust the percentage as needed
+    borderRadius: wp("1%"), // Adjust the percentage as needed
+    marginVertical: hp("0%"), // Adjust the percentage as needed
+    width: "100%",
+    alignItems: "center",
+    marginTop: hp("2%"),
+  },
+  imageModalButton2: {
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    padding: hp("1.5%"), // Adjust the percentage as needed
+    borderRadius: wp("2%"), // Adjust the percentage as needed
+    marginVertical: hp("1%"), // Adjust the percentage as needed
+    width: "100%",
+    alignItems: "center",
+    marginTop: hp("1%"),
+  },
+  imageModalButtonText: {
+    color: "white",
+    fontSize: wp("4%"), // Adjust the percentage as needed
+  },
+  fullImageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    maxHeight: "100%",
+    width: "100%", // Adjust this value as needed
+  },
+  fullVideo: {
+    width: "100%",
+    height: "100%",
+    flex: 1,
+  },
+  fullImage: {
+    width: "100%",
+    height: "100%",
+    flex: 1,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  closeButtonDelete: {
+    position: "absolute",
+    top: 0, // Place it at the top
+    right: 0, // Place it at the left
+    padding: 5, // Adjust padding as needed
+    zIndex: 1, // Ensure it's above the image
+  },
+  imageContainer: {
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
+    position: "relative",
+    width: "100%",
+    height: "100%",
+  },
+
+  playIconContainer: {
+    position: "absolute",
+    alignItems: "center", // Center horizontally
+    justifyContent: "center", // Center vertically
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
+  formContainer: {
+    paddingHorizontal: wp("0%"),
+    borderBottomLeftRadius: wp("2%"),
+    borderBottomRightRadius: wp("2%"),
+    marginBottom: hp("2%"), // Add marginBottom to create space for the "Save" button
+  },
+
+  formRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: hp("1%"),
+  },
+
+  textInput: {
+    flex: 1, // Allow text inputs to expand to fill available space in the row
+    marginRight: wp("2%"), // Add right margin using responsive screen for spacing between text inputs
+    height: hp("5%"), // Set height using responsive screen
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("0%"),
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: wp("4%"), // Add padding using responsive screen
+  },
+
+  singleTextInputContainer: {
+    marginTop: hp("0%"),
+    marginBottom: hp("1%"), // Add spacing between single text inputs using responsive screen
+  },
+  singleTextInputContainer1: {
+    marginTop: hp("1%"),
+    marginBottom: hp("1%"),
+    // Add spacing between single text inputs using responsive screen
+  },
+
+  singleTextInput: {
+    width: wp("90%"), // Set width using responsive screen
+    height: hp("5%"), // Set height using responsive screen
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("0%"),
+    fontFamily: FontFamily.poppinsMedium,
+    fontSize: wp("4%"), // Add padding using responsive screen
+  },
+
+  inputContainer: {
+    width: "100%", // Adjust the width as needed
+  },
+  inputRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    marginBottom: hp("1%"),
+  },
+  picker: {
+    flex: 1,
+    height: hp("5%"),
+    width: "100%",
+  },
+  noImage:{
+    textAlign:"center",
+    fontSize:hp("2%"),
+    fontFamily:FontFamily.poppinsMedium,
+    fontWeight:"400"
+  },
+
+  inputContainer1: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "gray",
+
+    marginBottom: hp("1%"),
+    flex: 1,
+  },
+
+  errorText: {
+    color: "red",
+    fontSize: wp("3%"),
+    marginTop: hp("1%"),
+    fontFamily: FontFamily.poppinsMedium,
+  },
+  inputWithIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("1%"),
+    marginBottom: hp("1%"),
+  },
+  inputWithIcon1: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("1%"),
+    marginBottom: hp("1%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("0%"),
+    paddingVertical: wp("1%"),
+  },
+  // Style for the Ant Design icons in the input with icon
+  inputIcon: {
+    position: "absolute",
+    right: wp("2%"), // Adjust the right position as needed
+  },
+  selectCustomerButton: {
+    flexDirection: "row", // Make sure the text and icon are in a row
+    alignItems: "center", // Vertically align items in the center
+    height: hp("5%"), // Set a fixed height
+    borderBottomWidth: 1, // Add any other styling you need
+    borderColor: "gray",
+    paddingHorizontal: wp("2%"),
+  },
+  profileImageIcon: {
+    width: wp("8%"), // Adjust the width using wp for responsiveness
+    height: wp("8%"), // Adjust the height using wp for responsiveness
+    borderRadius: wp("4%"),
+    marginLeft: wp("50%"),
+    marginBottom: wp("1%"),
+  },
+  headingContainer: {
+    marginBottom: hp('1%'),
+    marginLeft:wp("5%") // Adjust margin as needed
+  },
+  heading: {
+    fontSize: hp('2%'),
+    textAlign: 'left',
+    fontFamily:FontFamily.poppinsBold, // Align the heading to the left
+  },
+  subHeading: {
+    fontSize: hp('2%'), // Adjust the font size as needed
+    color: 'black', // Customize the color
+    textAlign: 'left',
+    fontFamily:FontFamily.poppinsMedium,
+    fontWeight:"500" // Align the subheading to the left
   },
 });
 

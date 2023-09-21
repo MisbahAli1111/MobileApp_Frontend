@@ -33,7 +33,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Config from "./Config";
-import SaveButton from "../components/SaveButton";
+
 
 const AddRecord = () => {
   const navigation = useNavigation();
@@ -402,6 +402,7 @@ const AddRecord = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
     setServiceDue(newDate.toISOString());
+    console.log(serviceDue);
   };
 
   const getType = async (carNumber) => {
@@ -477,7 +478,13 @@ const AddRecord = () => {
   };
 
   useEffect(() => {
-    setUser("No Customer Found");
+    // setUser("No Customer Found");
+    if(type && service)
+    {
+      console.log("type: ",type );
+      console.log("Service: ",service);
+      console.log("ServiceDue:",serviceDue);
+    }
     getCustomer(carNumber);
     getRegistrationNumber();
     if (carNumber) {
@@ -486,10 +493,10 @@ const AddRecord = () => {
     if (userId) {
       getCustomerImage(userId);
     }
-    if (type && selectedCode) {
-      calculateServiceDue(type, selectedCode);
+    if (type && service) {
+      calculateServiceDue(type, service);
     }
-  }, [carNumber, selectedCode]);
+  }, [carNumber, service]);
 
   const transformedResponse = numberPlates.map((item) => {
     const { registration_number } = item;
@@ -536,7 +543,7 @@ const AddRecord = () => {
         });
 
         const response = await axios.post(
-          `${Config.apiServerUrl}/api/file/upload/vehicle/${recordId}`,
+          `${Config.apiServerUrl}/api/file/upload/record/${recordId}`,
           formData,
           {
             headers: {
@@ -624,7 +631,7 @@ const AddRecord = () => {
         // const axios = require('axios');
         const data = {
           kilometerDriven: driven,
-          service: selectedCode,
+          service: service,
           maintanenceDetail: details,
           registrationNumber: carNumber,
           maintanenceDateTime: selectedDate,
@@ -677,7 +684,7 @@ const AddRecord = () => {
           />
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Vehicles")}>
+        <TouchableOpacity onPress={() => navigation.navigate("MaintenanceRecord")}>
           <Text style={styles.breadcrumbText}>Records</Text>
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
@@ -815,7 +822,7 @@ const AddRecord = () => {
                             textAlign: "center",
                           }}
                         >
-                          Add Customer
+                          Add Vehicle
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -979,7 +986,7 @@ const AddRecord = () => {
               <View style={styles.inputWithIcon}>
                 <TextInput
                   style={styles.singleTextInput}
-                  value={driven}
+                  value={details}
                   onChangeText={(text) => setDetails(text)}
                   placeholder="Enter Details"
                 />
@@ -1112,13 +1119,13 @@ const AddRecord = () => {
               </View>
             </Modal>
           </View>
-          
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave} >
+            <Text style={styles.buttonText}>Save</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
-      <View style={styles.save}>
-        <SaveButton/>
-      </View>
+      
 
       <View style={[styles.footer]}>
         <Footer prop={"MaintenanceRecord"} />
@@ -1524,6 +1531,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     // Add this line to create space between columns
+  },
+  saveButton: {
+    height: hp("5%"), // Adjust the height as needed
+    width: wp("90.5%"), // Adjust the width as needed
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center", // Center the button horizontally // Add some margin at the top for spacing // Add border radius if needed // Add horizontal padding
+},
+  buttonText: {
+    color: "white",
+    fontSize: wp("4%"), // Adjust the font size as needed
   },
 
   footer: {

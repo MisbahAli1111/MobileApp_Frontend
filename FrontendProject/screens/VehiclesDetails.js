@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -60,6 +61,7 @@ const VehicleDetailView = ({ route }) => {
             (item) => `${Config.baseUrl1}` + item.url
           );
           setFetchedImages(imageUrls);
+          console.log(fetchedImages)
           setLoading(false); // Set loading to false when images are fetched
         }
       } catch (error) {
@@ -129,10 +131,10 @@ const VehicleDetailView = ({ route }) => {
   };
 
   return (
+    <View style={styles.maintenanceDetailView}>
     <ImageBackground
       source={require("../assets/light-texture2234-1.png")}
-      style={styles.maintenanceDetailView}
-    >
+      style={styles.container}>
       {/* home  */}
 
       <View style={styles.breadcrumbContainer}>
@@ -145,39 +147,45 @@ const VehicleDetailView = ({ route }) => {
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Vehicles")}>
-          <Text style={styles.breadcrumbText}>Vehicles</Text>
+          <Text style={styles.breadcrumbText1}>Vehicles</Text>
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
         <Text style={styles.breadcrumbText}>{registrationNumber}</Text>
       </View>
 
       {/* Images */}
-
+      <ScrollView>
       <View style={styles.profileImageContainer}>
-        <View style={styles.imageUploadContainer}>
-          {fetchedImages && fetchedImages.length > 0 ? (
-            <View style={styles.profileImagePlaceholder}>
-              <Carousel
-                data={fetchedImages}
-                renderItem={renderCarouselItem}
-                sliderWidth={wp("100%")}
-                itemWidth={wp("80%")}
-                onSnapToItem={(index) => setActiveSlide(index)}
-              />
-              <Pagination
-                dotsLength={fetchedImages.length}
-                activeDotIndex={activeSlide}
-                containerStyle={styles.paginationContainer}
-                dotStyle={styles.paginationDot}
-                inactiveDotStyle={styles.paginationInactiveDot}
-                inactiveDotOpacity={0.6}
-                inactiveDotScale={0.8}
-              />
-            </View>
-          ) : (
-            <View style={styles.profileImageContainer} />
-          )}
-        </View>
+      <View style={styles.imageUploadContainer}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#007aff" />
+      ) : (
+        fetchedImages && fetchedImages.length > 0 ? (
+          <View style={styles.profileImagePlaceholder}>
+            <Carousel
+              data={fetchedImages}
+              renderItem={renderCarouselItem}
+              sliderWidth={wp("100%")}
+              itemWidth={wp("100%")}
+              onSnapToItem={(index) => setActiveSlide(index)}
+            />
+            <Pagination
+              dotsLength={fetchedImages.length}
+              activeDotIndex={activeSlide}
+              containerStyle={styles.paginationContainer}
+              dotStyle={styles.paginationDot}
+              inactiveDotStyle={styles.paginationInactiveDot}
+              inactiveDotOpacity={0.6}
+              inactiveDotScale={0.8}
+            />
+          </View>
+        ) : (
+          <View style={styles.profileImagePlaceholder1} >
+          <Text style={styles.noImage}>No Images/Videos Were Uploaded</Text>
+          </View>
+        )
+      )}
+    </View>
       </View>
 
       <Modal
@@ -224,11 +232,12 @@ const VehicleDetailView = ({ route }) => {
       </Modal>
 
       <VehicleDetails prop={vehicleId} />
-
+      </ScrollView>
       <View style={styles.footer}>
         <Footer prop={"Vehicles"} />
       </View>
     </ImageBackground>
+    </View>
   );
 };
 
@@ -253,10 +262,16 @@ const styles = StyleSheet.create({
   },
 
   breadcrumbText: {
-    fontSize: wp("3%"), // Adjust font size using wp
+    fontSize: wp("3.5%"), // Adjust font size using wp
     color: "rgba(3, 29, 68, 1)",
     fontFamily: FontFamily.poppinsMedium,
-    marginTop: hp("0.5%"), // Breadcrumb text color
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+  breadcrumbText1: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: Color.steelblue_100,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
   },
 
   breadcrumbSeparator: {
@@ -272,19 +287,57 @@ const styles = StyleSheet.create({
     // Add paddingBottom to accommodate the "Km Driven" input
   },
 
-  profileImageContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: hp("3%"),
-  },
+  // ...
+profileImageContainer: {
+  width: "100%", // Use "100%" to ensure it stays within the parent container
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: hp("3%"),
+},
+profileImagePlaceholder: {
+  // maxWidth: "90%", // Limit the maximum width to avoid going out of bounds
+  width: "100%", // Use "100%" to maintain responsiveness
+  height: "auto", 
+  // Automatically adjust the height to maintain aspect rati
+},
+profileImagePlaceholder1: {
+  maxWidth: "90%", // Limit the maximum width to avoid going out of bounds
+  width: "100%", // Use "100%" to maintain responsiveness
+  height: "auto", // Automatically adjust the height to maintain aspect ratio
+},
+// ...
+
+  // profileImageContainer: {
+  //   width: wp("100%"),
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   marginTop: hp("3%"),
+  //   backgroundColor:"red",
+    
+    
+  // },
   profileImage: {
     width: wp("30%"),
     height: wp("30%"),
   },
-  profileImagePlaceholder: {
-    width: wp("90%"),
-    height: wp("70%"),
+  // profileImagePlaceholder: {
+  //   width: wp("90%"),
+  //   height: wp("70%"),
+  //   backgroundColor:"blue",
+  //   marginHorizontal:wp("2%"),
+    
+  // },
+  // profileImagePlaceholder1: {
+  //   width: wp("90%"),
+  //   height: wp("30%"),
+    
+  // },
+  noImage:{
+    textAlign:"center",
+    fontSize:hp("2%"),
+    fontFamily:FontFamily.poppinsMedium,
+    fontWeight:"400",
+    marginBottom:hp("10%")
   },
   uploadButton: {
     backgroundColor: "rgba(3, 29, 68, 1)",
@@ -302,8 +355,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   carouselItem: {
-    width: wp("70%"), // Match the width of profileImagePlaceholder
-    height: wp("60%"), // Match the height of profileImagePlaceholder
+    width: "100%", // Match the width of profileImagePlaceholder
+    height: wp("60%"),
+    paddingHorizontal:wp("2%") // Match the height of profileImagePlaceholder
   },
   carouselImage: {
     width: "100%", // Use 100% width to maintain aspect ratio
@@ -617,24 +671,19 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    // height: hp("10%"), // Increase the height of the footer as needed
-    // backgroundColor: "gray",
-    // alignItems: "center",
-    // justifyContent: "center",
-    flex: 1,
-    top: 0,
     position: "absolute",
   },
-
   maintenanceDetailView: {
     flex: 1,
     overflow: "hidden",
-    height: "100%",
+    height:"100%",
     width: "100%",
   },
-  vehicleComponent: {
-    top: -500,
+  container:{
+    flex:1,
+    paddingHorizontal:"2%"
   },
+  
 });
 
 export default VehicleDetailView;
