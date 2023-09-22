@@ -148,7 +148,7 @@ function RecordDetails({ recordId }) {
       {/* Row 2 */}
       <View style={styles.rowWithMorePadding}>
         <Text style={styles.centeredText}>{name.split(" ")[0]}</Text>
-        <Text style={styles.centeredText}>{Mileage}</Text>
+        <Text style={styles.centeredText}>{Mileage} KM</Text>
       </View>
 
       <View style={styles.row}>

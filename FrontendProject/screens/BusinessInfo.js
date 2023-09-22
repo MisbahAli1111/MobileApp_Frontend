@@ -848,7 +848,7 @@ const BusinessInfo = () => {
       resizeMode="cover"
       source={require("../assets/light-texture2234-1.png")}
     >
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
         <View style={styles.profileImageContainer}>
           <TouchableOpacity onPress={handleShowProfile}>
             {profileImage ? (
@@ -1073,7 +1073,7 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: heightPercentageToDP("23%"),
+    marginTop: heightPercentageToDP("10%"),
   },
   profileImage: {
     width: widthPercentageToDP("30%"),
@@ -1188,7 +1188,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     marginTop: heightPercentageToDP("5%"),
-    marginBottom: widthPercentageToDP("1%"),
+    marginBottom: widthPercentageToDP("0%"),
   },
   registerButton: {
     backgroundColor: "rgba(3, 29, 68, 1)",

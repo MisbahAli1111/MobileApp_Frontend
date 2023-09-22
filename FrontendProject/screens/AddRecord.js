@@ -693,7 +693,7 @@ const AddRecord = () => {
 
       <ScrollView
         style={styles.scrollViewContainer}
-        contentContainerStyle={{ paddingBottom: hp("20%") }}
+        // contentContainerStyle={{ paddingBottom: hp("5%") }}
       >
         <View style={styles.formContainer}>
           {/* Row 1 */}
@@ -834,7 +834,7 @@ const AddRecord = () => {
             {/* Row 2 */}
             <View style={styles.formRow}>
               <View style={styles.textInputContainer}>
-                <View style={styles.inputWithIcon1}>
+                <View style={styles.inputWithIcon2}>
                   <TextInput
                     style={[styles.textInput1]} // Added margin
                     value={selectedDate ? selectedDate.toDateString() : ""}
@@ -866,7 +866,7 @@ const AddRecord = () => {
                 ) : null}
               </View>
               <View style={styles.textInputContainer}>
-                <View style={styles.inputWithIcon1}>
+                <View style={styles.inputWithIcon3}>
                   <TextInput
                     style={[styles.textInput1]} // Added margin
                     placeholder="Select a Time"
@@ -906,7 +906,7 @@ const AddRecord = () => {
                 <View style={styles.inputWithIcon1}>
                   <TouchableOpacity onPress={handleClick}>
                     <Text style={styles.customerText}>
-                      {user == "" ? "No Customer Found" : user}
+                      {user == "" ? "No Customer Found" : user.split(" ")[0]}
                     </Text>
                   </TouchableOpacity>
 
@@ -1178,7 +1178,7 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp("0%"),
+    marginTop: hp("0.5%"),
   },
   profileImage: {
     width: wp("30%"),
@@ -1493,18 +1493,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     // justifyContent:"space-between",
-    marginTop: hp("1%"),
+    marginTop: hp("0%"),
     marginRight: wp("0%"),
-    marginBottom: hp("1%"),
+    marginBottom: hp("0%"),
   },
   inputWithIcon1: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: hp("0%"),
-    marginBottom: hp("1%"),
+    marginBottom: hp("0%"),
     borderBottomWidth: 1,
     borderColor: "gray",
     paddingHorizontal: wp("0%"),
+    paddingVertical: wp("1%"),
+  },
+  inputWithIcon2: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("0%"),
+    marginBottom: hp("0%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("0%"),
+    paddingVertical: wp("1%"),
+  },
+  inputWithIcon3: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("0%"),
+    marginBottom: hp("0%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("2%"),
     paddingVertical: wp("1%"),
   },
   // Style for the Ant Design icons in the input with icon
@@ -1524,7 +1544,7 @@ const styles = StyleSheet.create({
     width: wp("8%"), // Adjust the width using wp for responsiveness
     height: wp("8%"), // Adjust the height using wp for responsiveness
     borderRadius: wp("4%"),
-    marginLeft: wp("50%"),
+    marginLeft: wp("65%"),
     marginBottom: wp("1%"),
   },
   textInputContainer: {
@@ -1542,7 +1562,7 @@ const styles = StyleSheet.create({
 },
   buttonText: {
     color: "white",
-    fontSize: wp("4%"), // Adjust the font size as needed
+    fontSize: wp("4.5%"), // Adjust the font size as needed
   },
 
   footer: {
