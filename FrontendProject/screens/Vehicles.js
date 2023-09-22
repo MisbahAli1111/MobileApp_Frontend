@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     // right: 5,
     // zIndex: 999,
   },
-  contView: {},
+
 
   filterTypo: {
     fontFamily: FontFamily.poppinsMedium,
