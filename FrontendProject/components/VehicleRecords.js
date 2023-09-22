@@ -21,6 +21,9 @@ import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
+const rem = screenWidth / 16;
 function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -33,8 +36,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
   const [data, setData] = useState([]);
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
   const [vehicles, setVehicles] = useState([]);
-  const screenHeight = Dimensions.get("window").height;
-  const screenWidth = Dimensions.get("window").width;
+
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [tempVehicleid, setTempVehicleId] = useState("");
 
@@ -230,7 +232,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
         <ScrollView style={styles.scroll}>
           {displayedVehicles.map((vehicle) => (
             <Pressable
-              style={[styles.groupFrame, styles.groupParentLayout]}
+              style={[styles.groupParentLayout]}
               onPress={() => handlePress(vehicle.id)}
             >
               <View style={[styles.groupParent1, styles.groupParentLayout]}>
@@ -274,7 +276,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
                         name="trash"
                         marginLeft="64%"
                         marginTop="-3%"
-                        size={25}
+                        size={rem}
                         color={
                           currentPressedIndex === vehicle.id ? "white" : "black"
                         }
@@ -456,17 +458,15 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 }
 const styles = StyleSheet.create({
   scroll: {
-    marginTop: 225,
-    height: 538,
-    marginLeft: 13,
-    width: 385,
+    marginTop: screenWidth*0.54,
+    height: screenWidth*1.3,
+    width: screenWidth,
+    paddingStart:screenWidth*0.04,
+    paddingEnd:screenWidth*0.04,
     zIndex: 1,
+    // backgroundColor:'red'
   },
-  image2IconPosition: {
-    width: 430,
-    left: -5,
-    position: "absolute",
-  },
+
 
   filterTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -494,22 +494,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   groupParentLayout: {
-    paddingVertical: 16,
-    left: 6,
-    top: 0,
+    paddingVertical: screenWidth*0.039,
     position: "relative",
     alignItems: "flex-start",
     flexWrap: "wrap",
-    marginTop: 0,
-    marginBottom: 0,
-    // backgroundColor:'grey',
   },
 
   frameParentLayout: {
-    height: 21,
+    height: rem,
     position: "relative",
     top: 0,
-    marginTop: -5,
+    marginTop: -screenWidth*0.01,
   },
   parentFlexBox: {
     flexDirection: "row",
@@ -559,18 +554,18 @@ const styles = StyleSheet.create({
   },
   innerLayout: {
     backgroundColor: Color.steelblue_300,
-    width: 375,
+    width: screenWidth*0.94,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
   innerLayoutW: {
     backgroundColor: Color.darkslateblue,
-    width: 385,
+    width: screenWidth*0.94,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
   groupParentPosition: {
-    left: 165,
+    left: screenWidth*0.4,
     position: "absolute",
   },
   name1Clr: {
@@ -723,13 +718,13 @@ const styles = StyleSheet.create({
   nameParent: {
     marginTop: 0,
     top: 8,
-    marginLeft: 165,
+    marginLeft: screenWidth*0.4,
     position: "relative",
   },
   nameParentt: {
     marginTop: 0,
     top: 10,
-    marginLeft: 165,
+    marginLeft: screenWidth*0.4,
     position: "relative",
   },
   nameParentC: {
@@ -763,7 +758,7 @@ const styles = StyleSheet.create({
   },
   registrationNumberParent: {
     flexDirection: "row",
-    left: 165,
+    left: screenWidth*0.4,
   },
   licensePlateNumberSvgrepoCIcon: {
     width: 20,
@@ -777,7 +772,7 @@ const styles = StyleSheet.create({
   },
   groupParent: {
     top: 291,
-    left: 165,
+    left: screenWidth*0.4,
     position: "absolute",
   },
   vehiclesItem: {
@@ -815,11 +810,11 @@ const styles = StyleSheet.create({
   },
   vehiclesInner: {
     top: 0,
-    height: 155,
+    height: screenWidth*0.38,
   },
   vehiclesInnerJ: {
     top: 0,
-    height: 135,
+    height: screenWidth*0.32,
   },
   landCruiserV8: {
     top: 0,
@@ -828,11 +823,12 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: FontSize.size_base,
     position: "absolute",
-    left: 132,
-    width: 300,
+    left: screenWidth*0.32,
+    width: screenWidth*0.52,
+    // backgroundColor:'red',
   },
   frameParent1: {
-    width: 175,
+    width: screenWidth*0.44,
     left: 0,
     top: 0,
   },
@@ -862,7 +858,7 @@ const styles = StyleSheet.create({
   },
   groupParent2: {
     top: 780,
-    left: 165,
+    left: screenWidth*0.4,
     position: "absolute",
   },
   image1: {

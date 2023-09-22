@@ -446,8 +446,11 @@ const styles = StyleSheet.create({
   },
 
   form: {
-    marginTop: 0,
-    position: "relative",
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center',
+    // width:screenWidth*0.95,
+
     // backgroundColor:'red',
   },
   picker: {
@@ -527,8 +530,8 @@ const styles = StyleSheet.create({
   wrap: {
     marginTop: 160,
     height: 480,
-    marginLeft:'auto',
-    marginRight:'auto',
+    // marginLeft:'auto',
+    // marginRight:'auto',
     flex:1,
     // backgroundColor:'red',
     width:screenWidth,

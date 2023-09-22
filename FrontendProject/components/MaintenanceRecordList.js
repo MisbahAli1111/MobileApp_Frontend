@@ -183,15 +183,13 @@ const RecordList = ({
           <View
             key={index}
             style={[
-              styles.groupView,
               currentPressedIndex === index
                 ? styles.groupParentLayoutW
                 : styles.groupParentLayout,
             ]}
           >
-            <View style={[styles.groupFrame]}>
+            <View>
               <Pressable
-                style={[styles.groupFrame]}
                 onPress={() => handlePress(index, record.id)}
               >
                 <View style={styles.textWrap}>
@@ -385,8 +383,7 @@ const styles = StyleSheet.create({
     padding: 0.5 * rem,
     marginVertical: 0.2 * rem,
     alignSelf: "center",
-    width: screenWidth * 0.9, // Set a maximum width (adjust as needed)
-    height: screenHeight * 0.19,
+    width: screenWidth * 0.9, 
     borderRadius: 8,
   },
   groupParentLayoutW: {
@@ -395,8 +392,8 @@ const styles = StyleSheet.create({
     marginVertical: 0.2 * rem,
     alignSelf: "center",
     width: screenWidth * 0.9, // Set a maximum width (adjust as needed)
-    height: screenHeight * 0.19,
     borderRadius: 8,
+
   },
   textWrap: {
     fontSize: FontSize.size_smi,
@@ -411,7 +408,7 @@ const styles = StyleSheet.create({
   },
   wrap: {
     width: screenWidth,
-    height: screenHeight * 0.64,
+    height: screenWidth * 1.33,
   },
   dated: {
     // marginLeft: 4.4 * rem,

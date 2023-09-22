@@ -143,7 +143,6 @@ function Footer(props) {
 }
 const styles = StyleSheet.create({
 
-  // CHECK :: START
   bottom: {
     flex: 1,
     flexDirection: "row",
@@ -151,10 +150,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: Color.steelblue_300,
     width: screenWidth,
-    height: screenHeight*0.11, // footer height
+    height: screenWidth*0.22,
     top: screenWidth*1.89,
-    // top:hp('92'),
-    // bottom:0-screenHeight,
     display: 'flex',
     gap: rem * 4.5, 
   },

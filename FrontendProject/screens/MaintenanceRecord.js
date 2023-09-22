@@ -193,8 +193,9 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   boxContianer: {
-    marginTop: 220,
+    marginTop: screenWidth*0.54,
     marginLeft: 0,
+    // backgroundColor:'red',
     // alignItems: 'flex-end',
   },
   iconLayout1: {

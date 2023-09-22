@@ -497,7 +497,7 @@ const CreateInvoiceForm = ({
 
   return (
     <View
-      style={{ flex: 1, height: formHeight, overflow: "hidden" }}
+      style={{ flex: 1, height: formHeight, overflow: "hidden" ,width:screenWidth*0.9}}
     >
       {/* Name  */}
       <View style={styles.inLine}>
@@ -560,6 +560,8 @@ const CreateInvoiceForm = ({
             onChange={handleDateChange}
           />
         )}
+
+  
         <TextInput
           style={[
             statusError ? styles.statusPaiddueR : styles.statusPaiddue,
@@ -659,10 +661,7 @@ const styles = StyleSheet.create({
   invoiceStatusPicker: {
     top: 232,
   },
-  picker: {
-    height: heightPercentageToDP("5%"),
-    width: "100%",
-  },
+
 
 
   tableRow: {
@@ -677,12 +676,13 @@ const styles = StyleSheet.create({
     borderColor: "gray",
   },
   picker: {
-    left: 385,
-    height: 15,
-    width: 15,
-    top: 5,
+    left: screenWidth*0.85,
+    height: 90,
+    width: 30,
+    // top: 0,
+    top:-screenWidth*0.04,
     position: "absolute",
-    overflow: "hidden",
+    // overflow: "hidden",
   },
   picker2: {
     left: 220,
@@ -705,15 +705,16 @@ const styles = StyleSheet.create({
   inLine: {
     flexDirection: "row",
     marginBottom: screenWidth*0.03,
-    paddingStart:screenWidth*0.07,
+    justifyContent:'space-between',
+    // paddingStart:screenWidth*0.07,
     // paddingEnd:1,
   },
 
   pick: {
-    left: 385,
-    height: 15,
-    width: 15,
-    top: 5,
+    left: -screenWidth*0.05,
+    height: rem*0.4,
+    width: rem*0.4,
+    top: 0,
     position: "absolute",
     overflow: "hidden",
   },
@@ -722,26 +723,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: screenWidth*0.02,
     justifyContent: "space-between",
-    width: screenWidth * 0.9,
-    paddingStart:screenWidth*0.07,
+    // width: screenWidth * 0.9,
+    // paddingStart:screenWidth*0.07,
   },
   parentp: {
     flexDirection: "row",
     marginBottom: screenWidth*0.02,
     justifyContent: "space-between",
-    width: screenWidth * 0.9,
-    paddingStart:screenWidth*0.07,
+    // width: screenWidth * 0.9,
+    // paddingStart:screenWidth*0.07,
   },
 
   text5Clr: {
     borderBottomWidth: 2,
-    width: screenWidth/2-35,
+    // width: screenWidth/2-35,
     borderBottomColor: "#ccc",
     paddingHorizontal: 5,
   },
   text5ClrR: {
     borderBottomWidth: 2,
-    width: screenWidth/2-35,
+    // width: screenWidth/2-35,
     borderBottomColor: "red",
     paddingHorizontal:5,
   },
@@ -794,6 +795,7 @@ const styles = StyleSheet.create({
     
     position: "relative",
     color: Color.dimgray_100,
+    width:screenWidth*0.4,
     // textAlign: "left",
     // left: 30,
   },
@@ -804,7 +806,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_base,
     // textAlign: "left",
     position: "relative",
-    width: screenWidth/2-60,
+    width: screenWidth*0.4,
     // left:-15,
   },
   lineViewPosition: {
@@ -1103,13 +1105,13 @@ const styles = StyleSheet.create({
     left: 224,
   },
   regNumber: {
-    top: 0,
-    marginTop: 0,
     fontFamily: FontFamily.poppinsRegular,
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
+    width:screenWidth*0.4,
+    marginHorizontal:6,
     // left: 35,
-    position: "relative",
+    // position: "relative",
   },
   groupIcon: {
     height: "2.25%",
@@ -1160,17 +1162,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   date2SvgrepoCom11: {
-    left: -30,
-    height: 25,
-    width: 25,
+    left: -screenWidth*0.00,
+    height: rem,
+    marginHorizontal:5,
+    width: rem,
     top: 0,
     position: "relative",
     overflow: "hidden",
   },
   date2SvgrepoCom11C: {
-    left: -10,
-    height: 25,
-    width: 25,
+    // left: screenWidth,
+    height: rem,
+    width: rem,
     top: 0,
     position: "relative",
     overflow: "hidden",
@@ -1184,12 +1187,11 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   date2SvgrepoCom11R: {
-    // left: 50,
-    height: 25,
-    width: 25,
+    left: -screenWidth*0.09,
+    height: rem,
+    width: rem,
     top: 0,
-    left: 380,
-    position: "absolute",
+    position: "relative",
     overflow: "hidden",
   },
 
@@ -1482,7 +1484,7 @@ const styles = StyleSheet.create({
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
     borderBottomWidth: 2,
-    width: screenWidth/2-30,
+    // width: screenWidth/2-30,
     borderBottomColor: "#ccc",
     paddingHorizontal: 5,
   },
@@ -1491,7 +1493,7 @@ const styles = StyleSheet.create({
     color: Color.dimgray_100,
     fontSize: FontSize.size_base,
     borderBottomWidth: 2,
-    width: screenWidth/2-30,
+    // width: screenWidth/2-30,
     borderBottomColor: "red",
     paddingHorizontal: 5,
   },
