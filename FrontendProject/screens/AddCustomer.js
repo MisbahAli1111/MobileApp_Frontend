@@ -543,10 +543,11 @@ const AddCustomer = () => {
               value={name}
               onChangeText={setName}
             />
-            {NameEror && (
+           
+          </View>
+          {NameEror && (
               <Text style={styles.errorText}>Name is required.</Text>
             )}
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="idcard" style={styles.icon} />
             <TextInput
@@ -557,10 +558,11 @@ const AddCustomer = () => {
               keyboardType="numeric"
               maxLength={15}
             />
-            {cnicErorr && (
+            
+          </View>
+          {cnicErorr && (
               <Text style={styles.errorText}>Enter CNIC / Invalid CNIC.</Text>
             )}
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="mail" style={styles.icon} />
             <TextInput
@@ -569,10 +571,11 @@ const AddCustomer = () => {
               value={email}
               onChangeText={setEmail}
             />
-            {EmailErorr && (
+            
+          </View>
+          {EmailErorr && (
               <Text style={styles.errorText}>Invalid email format.</Text>
             )}
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="key" style={styles.icon} />
             <TextInput
@@ -582,7 +585,12 @@ const AddCustomer = () => {
               secureTextEntry={!showPassword}
               onChangeText={setPassword}
             />
-            {PasswordError && (
+           
+            <TouchableOpacity onPress={togglePasswordVisibility}>
+              <AntDesign name="eyeo" style={styles.passwordIcon} />
+            </TouchableOpacity>
+          </View>
+          {PasswordError && (
               <Text style={styles.errorText}>Password is required.</Text>
             )}
             {LPasswordError && (
@@ -593,10 +601,6 @@ const AddCustomer = () => {
             {passwordValidError && (
               <Text style={styles.errorText}>Password must meet all criteria: include at least one lowercase letter, one uppercase letter, one digit (number), one special character (@, $, !, %, ?, or &), and be 8 to 15 characters long.</Text>
             )}
-            <TouchableOpacity onPress={togglePasswordVisibility}>
-              <AntDesign name="eyeo" style={styles.passwordIcon} />
-            </TouchableOpacity>
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="key" style={styles.icon} />
             <TextInput
@@ -606,7 +610,12 @@ const AddCustomer = () => {
               onChangeText={setConfirmPassword}
               secureTextEntry={!showConfirmPassword}
             />
-            {CPasswordError && (
+            
+            <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
+              <AntDesign name="eyeo" style={styles.passwordIcon} />
+            </TouchableOpacity>
+          </View>
+          {CPasswordError && (
               <Text style={styles.errorText}>
                 Confirm Password is required.
               </Text>
@@ -619,10 +628,6 @@ const AddCustomer = () => {
             {passwordValidError && (
               <Text style={styles.errorText}>Enter Correct Password</Text>
             )}
-            <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
-              <AntDesign name="eyeo" style={styles.passwordIcon} />
-            </TouchableOpacity>
-          </View>
 
           {/* Country Code and Phone Number */}
           <View style={styles.phoneContainer}>

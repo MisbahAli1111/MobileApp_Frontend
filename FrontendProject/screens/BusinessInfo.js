@@ -33,7 +33,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 const BusinessInfo = () => {
   const navigation = useNavigation();
-
+  const [error,setErrorText] = useState("Enter this field");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [location, setlocation] = useState("");
@@ -60,25 +60,27 @@ const BusinessInfo = () => {
     let isValid = true;
 
     if (!name) {
+      console.log("hello");
       setNameError(true);
       isValid = false;
     } else {
       setNameError(false);
     }
+    {console.log("Valid: ",isValid)}
 
     if (!countryCode) {
-      setPLError("Please select Country Code");
-      setNumberError(true);
+      setCodeError(true);
       isValid = false;
     } else {
-      setPLError("");
+      setCodeError(false);
+    }
       if (!phoneNumber) {
-        setPLError("Please provide Contact Number");
+        setPhoneError(true);
         isValid = false;
       } else {
-        setNumberError(false);
+        setPhoneError(false);
       }
-    }
+    
 
     if (!email) {
       setEMessage("Please provide an Email");
@@ -97,18 +99,19 @@ const BusinessInfo = () => {
 
     if (!city) {
       setCMessage("Please select City");
-      setCountryError(true);
+      setCityError(true);
       isValid = false;
     } else {
       setCMessage("");
+      setCityError(false);
+    }
       if (!country) {
-        setCMessage("Please select Country");
         setCountryError(true);
         isValid = false;
       } else {
         setCountryError(false);
       }
-    }
+    
 
     if (!location) {
       setLocationError(true);
@@ -116,8 +119,12 @@ const BusinessInfo = () => {
     } else {
       setLocationError(false);
     }
+    setTimeout(() => {
+      clearErrors();
+    }, 10000);
 
     if (isValid) {
+      {console.log("Valid: ",isValid)}
       let data = JSON.stringify({
         businessName: name,
         businessAddress: location,
@@ -149,6 +156,7 @@ const BusinessInfo = () => {
             if (createdUserId) {
               uploadImage(createdUserId);
             }
+            {console.log("Valid2: ",isValid)}
             navigation.navigate(SwitchBusiness);
           }
         })
@@ -156,7 +164,17 @@ const BusinessInfo = () => {
           console.log(error);
         });
     }
-    navigation.navigate("SwitchBusiness");
+    
+  };
+
+  const clearErrors = () => {
+    setNameError("");
+    setCityError("");
+    setCodeError("");
+    setCountryError("");
+    setEmailError("");
+    setLocationError("");
+    setPhoneError("");
   };
 
   const handleImageUpload = () => {
@@ -225,8 +243,10 @@ const BusinessInfo = () => {
   const [NameEror, setNameError] = useState(false);
   const [EmailEror, setEmailError] = useState(false);
   const [LocationEror, setLocationError] = useState(false);
+  const [cityError, setCityError] = useState(false);
   const [CountryError, setCountryError] = useState(false);
-  const [PLEror, setPLError] = useState("");
+  const [codeErorr, setCodeError] = useState("");
+  const [phoneErorr, setPhoneError] = useState("");
   const [NumberEror, setNumberError] = useState(false);
 
   const countries = [
@@ -858,6 +878,7 @@ const BusinessInfo = () => {
               onChangeText={setName}
             />
           </View>
+          {NameEror ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.inputContainer}>
             <AntDesign name="mail" style={styles.icon} />
             <TextInput
@@ -867,6 +888,7 @@ const BusinessInfo = () => {
               onChangeText={setEmail}
             />
           </View>
+          {EmailEror ? <Text style={styles.errorText}>{EMessage}</Text> : null}
           <View style={styles.inputContainer}>
             <AntDesign name="home" style={styles.icon} />
             <TextInput
@@ -876,7 +898,7 @@ const BusinessInfo = () => {
               onChangeText={setlocation}
             />
           </View>
-
+          {LocationEror ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.pickerRowContainer}>
             <View style={styles.pickerContainer}>
               <Picker
@@ -890,6 +912,7 @@ const BusinessInfo = () => {
                 ))}
               </Picker>
             </View>
+            
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={country}
@@ -902,7 +925,9 @@ const BusinessInfo = () => {
                 ))}
               </Picker>
             </View>
+            
           </View>
+          {CountryError || cityError ? <Text style={styles.errorText}>{error}</Text> : null}
 
           {/* Country Code and Phone Number */}
           <View style={styles.phoneContainer}>
@@ -928,7 +953,6 @@ const BusinessInfo = () => {
                 ))}
               </Picker>
             </View>
-
             <TextInput
               style={[styles.phoneNumberInput, { flex: 0.7 }]}
               placeholder="Phone Number"
@@ -937,8 +961,9 @@ const BusinessInfo = () => {
               maxLength={15}
               onChangeText={setPhonenumber}
             />
+            
           </View>
-
+          {phoneErorr || codeErorr ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.registerButtonContainer}>
             <TouchableOpacity
               onPress={handleSignUp}
@@ -1237,6 +1262,12 @@ const styles = StyleSheet.create({
   fullImage: {
     width: "100%",
     height: "100%",
+  },
+  errorText: {
+    color: "red",
+    fontSize: widthPercentageToDP("3%"),
+    marginTop: heightPercentageToDP("1%"),
+    fontFamily: FontFamily.poppinsMedium,
   },
 });
 
