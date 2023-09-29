@@ -6,7 +6,7 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  Dimensions,
   Text,
   TextInput,
   Pressable,
@@ -17,20 +17,27 @@ import VehicleRecords from "../components/VehicleRecords";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
 import FilterSearchVehicle from "../components/FilterSearchVehicle";
-
+import { height } from "deprecated-react-native-prop-types/DeprecatedImagePropType";
+const screenWidth = Dimensions.get("window").width;
+import Icon from 'react-native-vector-icons/FontAwesome';
+const screenHeight = Dimensions.get("window").height;
+const rem = screenWidth / 16;
 const Vehicles = () => {
   const route = useRoute();
   const type = route.params?.type;
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [searchType, setSearchType] = useState([]);
   const [searchOrder, setSearchOrder] = useState("");
   const handleQuery = (query) => {
     setSearch(query);
+    setIsSearch(true);
   };
   const functionFilterSearch = () => {
     setFilterSearchClicked(true);
+
   };
 
   const addFilterInState = (attribute = ["default"], sort = "default") => {
@@ -47,15 +54,77 @@ const Vehicles = () => {
         contentFit="cover"
         source={require("../assets/light-texture2234-1.png")}
       />
-      <Image
-        style={[styles.image2Icon, styles.image2IconPosition]}
-        contentFit="cover"
-        source={require("../assets/image-2.png")}
-      />
+
+
+      <View style={{ top: screenWidth * 0.35, width: screenWidth * 0.9, alignSelf: 'center' }}>
+        <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
+
+          <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
+            <Icon name="home" size={rem * 0.6} color="black" />
+            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }} >/</Text>
+            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }}>Vehicles</Text>
+            {isSearch && search ? (
+              <Text style={{ fontSize: rem * 0.5, fontWeight: 700, maxWidth: screenWidth * 0.27 }} numberOfLines={1}>/ {search}</Text>
+            ) : null}
+          </View>
+
+          <View style={{ flex: 1, top: -20, alignItems: 'flex-end' }}>
+            <Pressable onPress={functionFilterSearch}>
+              <Text style={styles.filterText}>Filter</Text>
+            </Pressable>
+            {filterSearchClicked && (
+              <FilterSearchVehicle
+                onFilterSelect={(attribute, sort) =>
+                  addFilterInState(attribute, sort)
+                }
+              />
+            )}
+            <TouchableOpacity
+              style={[styles.groupLayoutt]}
+              onPress={() => navigation.navigate("AddVehicle")}
+            >
+              <View style={styles.rectangleGroupp}>
+                <Text style={[styles.addTypo]}>
+                  Add Vehicle
+                </Text>
+                <Image
+                  style={styles.vectorIcon1}
+                  contentFit="cover"
+                  source={require("../assets/vector14.png")}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+
+      </View>
+
+
+      <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View>
+            <TextInput
+              style={{ fontSize: 15, fontWeight: '700', width: screenWidth * 0.74 }}
+              placeholder="Search Vehicle"
+              clearButtonMode="always"
+              value={search}
+              onChangeText={(query) => handleQuery(query)}
+            />
+          </View>
+          <View>
+            <Image
+              style={{ height: screenHeight * 0.03, width: screenWidth * 0.07 }}
+              contentFit="cover"
+              source={require("../assets/vector13.png")}
+            />
+          </View>
+        </View>
+      </Pressable>
 
       {/* Footer */}
-          <Footer prop={"Vehicles"} />
-     
+      <Footer prop={"Vehicles"} />
+
       <View contentContainerStyle={styles.contView}>
         <VehicleRecords
           dsearch={search}
@@ -66,82 +135,16 @@ const Vehicles = () => {
       </View>
 
       {/* filter  */}
-      <View style={[styles.breadcrumbsParent, styles.frameParentLayout]}>
-        <View style={[styles.breadcrumbs, styles.frameIconPosition]}>
-          <View style={styles.housefill}>
-            <Image
-              style={styles.homeMutedIcon}
-              contentFit="cover"
-              source={require("../assets/homemuted.png")}
-            />
-          </View>
-          <View style={styles.elementPosition} />
-          <View style={styles.elementPosition}>
-            <Text style={[styles.text5, styles.text5Typo]}>\</Text>
-          </View>
-          <Text style={styles.vehicles2}>Vehicles</Text>
-        </View>
-        <View
-          style={[
-            styles.materialSymbolsarrowRightAParent,
-            styles.frameParentLayout,
-          ]}
-        >
-          <View style={styles.filt}>
-            <Pressable onPress={functionFilterSearch}>
-              <Text style={styles.filterText}>Filter</Text>
-            </Pressable>
-          </View>
-          {filterSearchClicked && (
-            <FilterSearchVehicle
-              onFilterSelect={(attribute, sort) =>
-                addFilterInState(attribute, sort)
-              }
-            />
-          )}
-        </View>
-      </View>
+
+
+
+
 
       {/* search gli  */}
-      <View style={[styles.rectangleGroup, styles.vehiclesChildPosition]}>
-        <View
-          style={[styles.groupInner, styles.innerLayout]}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        />
-        <TextInput
-          style={[styles.corollaGli2015, styles.corollaTypo]}
-          placeholder="Civic 2022"
-          clearButtonMode="always"
-          value={search}
-          onChangeText={(query) => handleQuery(query)}
-        />
 
-        <Image
-          style={[styles.icon1, styles.iconLayout2]}
-          contentFit="cover"
-          source={require("../assets/vector15.png")}
-        />
-      </View>
-      <View>
-        <Pressable
-          style={[styles.groupWrapper, styles.groupLayoutt]}
-          onPress={() => navigation.navigate("AddVehicle")}
-        >
-          <View style={styles.rectangleGroupp}>
-            <View style={[styles.groupInnerr, styles.groupInnerLayout]} />
-            <View style={styles.addRecordParent}>
-              <Text style={[styles.addRecord, styles.addTypo]}>
-                Add Vehicle
-              </Text>
-              <Image
-                style={styles.vectorIcon1}
-                contentFit="cover"
-                source={require("../assets/vector14.png")}
-              />
-            </View>
-          </View>
-        </Pressable>
-      </View>
+
+
+
     </View>
   );
 };
@@ -180,18 +183,34 @@ const styles = StyleSheet.create({
     left: 20,
     position: "absolute",
   },
+  contView: {
+
+  },
+  rectangleParent18: {
+    marginTop: screenWidth * 0.41,
+    alignSelf: 'center',
+    backgroundColor: Color.steelblue_300,
+  },
+  rectangleLayout: {
+    borderRadius: 6,
+    paddingVertical: screenHeight * 0.016,
+    paddingLeft: screenWidth * 0.07,
+    paddingEnd: screenWidth * 0.03,
+    position: "absolute",
+
+  },
   textClr: {
     color: Color.white,
     textAlign: "left",
   },
   filterText: {
-    top: -5,
-    height: 20,
-    left: 1,
+    left: -132,
+
+    top: 15,
+    fontWeight: 700,
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.size_sm,
     color: "#000",
-    marginBottom: 10,
     fontWeight: "500",
   },
 
@@ -208,10 +227,9 @@ const styles = StyleSheet.create({
     left: 28,
   },
   groupLayoutt: {
-    height: 30,
-    width: 120,
-    left: 280,
-    top: -672,
+    alignItems: 'flex-end',
+    flex: 1,
+    position: 'absolute',
   },
   groupInnerLayout: {},
 
@@ -238,13 +256,14 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   addTypo: {
-    left: 20,
-    top: -25,
+    flex: 1,
+    color: 'white',
   },
   filterPosition: {
     top: 2,
     position: "absolute",
   },
+
   frameGroupPosition: {
     height: 25,
     left: 0,
@@ -309,8 +328,8 @@ const styles = StyleSheet.create({
     width: 500,
   },
   iconLayout2: {
-    height: "19%",
-    width: "6%",
+    height: screenHeight * 0.04,
+    width: screenWidth * 0.08,
   },
   iconLayout: {
     height: 153,
@@ -587,7 +606,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   materialSymbolsarrowRightAIcon1: {
-    top: 6,
+    top: 0,
     left: 33,
   },
   filter: {
@@ -600,7 +619,7 @@ const styles = StyleSheet.create({
   materialSymbolsarrowRightAParent: {
     left: 310,
     width: 48,
-    top: 0,
+    top: 100,
   },
   breadcrumbsParent: {
     top: 110,
@@ -617,13 +636,10 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 20,
     backgroundColor: Color.steelblue_300,
-    width: 119,
-    height: 33,
-    top: 0,
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 10,
     },
     left: 0,
     borderRadius: Border.br_11xl,
@@ -634,13 +650,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.darkslateblue,
   },
-  icon1: {
-    maxHeight: "80%",
-    maxWidth: "100%",
-    overflow: "hidden",
-    top: 15,
-    left: 340,
-  },
+
   vector: {
     left: "86.39%",
     top: "14.57%",
@@ -661,13 +671,16 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   rectangleGroup: {
-    top: 152,
+    marginTop: screenWidth * 0.36,
     height: 111,
   },
   rectangleGroupp: {
-    top: 10,
-    height: 35,
-    left: 0,
+    backgroundColor: Color.darkslateblue,
+    paddingEnd: screenWidth * 0.06,
+    paddingLeft: screenWidth * 0.06,
+    paddingVertical: screenWidth * 0.02,
+    borderRadius: 20,
+    flex: 1,
   },
   groupIcon: {
     width: 372,

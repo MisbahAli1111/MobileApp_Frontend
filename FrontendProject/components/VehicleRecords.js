@@ -230,226 +230,215 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     <View>
       <View>
         <ScrollView style={styles.scroll}>
-          {displayedVehicles.map((vehicle) => (
-            <Pressable
-              style={[styles.groupParentLayout]}
-              onPress={() => handlePress(vehicle.id)}
-            >
-              <View style={[styles.groupParent1, styles.groupParentLayout]}>
-                {/* blue  */}
-                <View
-                  style={[
-                    vehicle.parentCompany
-                      ? styles.vehiclesInner
-                      : styles.vehiclesInnerJ,
-                    currentPressedIndex === vehicle.id
-                      ? styles.innerLayoutW
-                      : styles.innerLayout,
-                  ]}
-                ></View>
+          {displayedVehicles.map((vehicle, index) => (
 
-                <View style={[styles.trashRow]}>
-                  <View style={[styles.frameParent1, styles.frameParentLayout]}>
-                    <Text
-                      style={[
-                        styles.landCruiserV8,
-                        currentPressedIndex === vehicle.id
-                          ? styles.name
-                          : styles.name1Clr,
-                      ]}
-                    >
-                      {vehicle.make} {vehicle.model} {vehicle.year}
-                    </Text>
-                  </View>
+            <View
+              key={index}
+              style={[
+                currentPressedIndex === vehicle.id
+                  ? styles.groupParentLayoutW
+                  : styles.groupParentLayout,
+              ]}
+            >
+              <Pressable
+                onPress={() => handlePress(vehicle.id)}
+              >
+                <View style={{ flexDirection: 'row', gap: 15 }}>
                   <View>
-                    <ErrorPopup
-                      visible={showErrorPopup}
-                      message={"Are you sure you want to remove Vehicle?"}
-                      onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
-                      onCancel={() => {
-                        setShowErrorPopup(false);
-                        setTempVehicleId(null); // Reset vehicleIds when the popup is closed
-                      }}
-                    />
-                    <TouchableOpacity onPress={() => setPopUp(vehicle.id)}>
-                      <FontAwesome
-                        name="trash"
-                        marginLeft="64%"
-                        marginTop="-3%"
-                        size={rem}
-                        color={
-                          currentPressedIndex === vehicle.id ? "white" : "black"
+                    {/* car image */}
+                    {vehicle.vehicleMediaList &&
+                      vehicle.vehicleMediaList.length > 0 ? (
+                      <Image
+                        style={[styles.rectangleIcon]}
+                        contentFit="cover"
+                        source={{ uri: `${Config.baseUrl1}` + vehicle.vehicleMediaList[0] }}
+                      />
+                    ) : (
+                      <Image
+                        style={[styles.rectangleIcon]}
+                        contentFit="cover"
+                        source={require("../assets/carcitroentopvehiclesvgrepocom-1.png")}
+                      />
+                    )}
+                  </View>
+                 
+                  <View style={{}}>
+                    
+                    {/* first line  */}
+                    <View style={[styles.parentFlexBox]}>
+                      <View style={[styles.frameParentLayout]}>
+                        <Text
+                          style={[
+                            styles.landCruiserV8,
+                            currentPressedIndex === vehicle.id
+                              ? styles.name
+                              : styles.name1Clr,
+                          ]}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          {vehicle.make} {vehicle.model} {vehicle.year}
+                        </Text>
+                      </View>
+                      <View>
+                        <ErrorPopup
+                          visible={showErrorPopup}
+                          message={"Are you sure you want to remove Vehicle?"}
+                          onConfirm={() => handleDeleteVehicle()} // Use an arrow function here
+                          onCancel={() => {
+                            setShowErrorPopup(false);
+                            setTempVehicleId(null); // Reset vehicleIds when the popup is closed
+                          }}
+                        />
+                        <TouchableOpacity onPress={() => setPopUp(vehicle.id)}>
+                          <FontAwesome
+                            name="trash"
+                            size={rem}
+                            color={
+                              currentPressedIndex === vehicle.id ? "white" : "black"
+                            }
+                          />
+                        </TouchableOpacity>
+                      </View>
+
+
+                    </View>
+                    {/* For Company Name  */}
+                    {vehicle.parentCompany && (
+                      <View style={[styles.parentFlexBox]}>
+                        <Image
+                          style={[styles.frameIconPositionn]}
+                          contentFit="cover"
+                          source={
+                            currentPressedIndex === vehicle.id
+                              ? require("../assets/frame.png")
+                              : require("../assets/frame2.png")
+                          }
+                        />
+                        <Text
+                          style={[
+                            styles.name,
+                            currentPressedIndex === vehicle.id
+                              ? styles.name
+                              : styles.name1Clr,
+                          ]}
+                        >
+                          Company Name
+                        </Text>
+                        <Text
+                          style={
+                            currentPressedIndex === vehicle.id
+                              ? styles.text1Typo
+                              : styles.text2Typo
+                          }
+                        >
+                          {vehicle.parentCompany}
+                        </Text>
+
+                      </View>
+                    )}
+                    {/* Customer Name */}
+                    <View style={[styles.parentFlexBox]}>
+                      <Image
+                        style={[styles.frameIconPositionn]}
+                        contentFit="cover"
+                        source={
+                          currentPressedIndex === vehicle.id
+                            ? require("../assets/frame.png")
+                            : require("../assets/frame2.png")
                         }
                       />
-                    </TouchableOpacity>
+                      <Text
+                        style={[
+                          styles.name,
+                          currentPressedIndex === vehicle.id
+                            ? styles.name
+                            : styles.name1Clr,
+                        ]}
+                      >
+                        Name
+                      </Text>
+                      <Text
+                        style={
+                          currentPressedIndex === vehicle.id
+                            ? styles.text1Typo
+                            : styles.text2Typo
+                        }
+                      >
+                        {vehicle.name}
+                      </Text>
+
+                    </View>
+                    {/* contact number  */}
+                    <View style={[styles.parentFlexBox]}>
+                      <Image
+                        style={[styles.frameIconPosition]}
+                        contentFit="cover"
+                        source={
+                          currentPressedIndex === vehicle.id
+                            ? require("../assets/materialsymbolspermcontactcalendaroutline.png")
+                            : require("../assets/materialsymbolspermcontactcalendaroutline1.png")
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.name1,
+                          currentPressedIndex === vehicle.id
+                            ? styles.name
+                            : styles.name1Clr,
+                        ]}
+                      >
+                        Contact
+                      </Text>
+                      <Text
+                        style={
+                          currentPressedIndex === vehicle.id
+                            ? styles.text1Typo
+                            : styles.text2Typo
+                        }
+                      >
+                        {vehicle.phoneNumber}
+                      </Text>
+                    </View>
+                    {/* registrationNumber */}
+                    <View style={[styles.parentFlexBox]}>
+                      <Image
+                        style={[
+                          styles.frameIconPosition,
+                        ]}
+                        contentFit="cover"
+                        source={
+                          currentPressedIndex === vehicle.id
+                            ? require("../assets/licenseplatenumbersvgrepocom-11.png")
+                            : require("../assets/licenseplatenumbersvgrepocom-12.png")
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.name1,
+                          currentPressedIndex === vehicle.id
+                            ? styles.name
+                            : styles.name1Clr,
+                        ]}
+                      >
+                        Registration Number
+                      </Text>
+                      <Text
+                        style={[
+                          styles.sa20021,
+                          currentPressedIndex === vehicle.id
+                            ? styles.text1Typo
+                            : styles.text2Typo,
+                        ]}
+                      >
+                        {vehicle.registrationNumber}
+                      </Text>
+                    </View>
+
                   </View>
                 </View>
-
-                {/* For Company Name  */}
-                {vehicle.parentCompany && (
-                  <View style={[styles.nameParent, styles.parentFlexBox]}>
-                    <Text
-                      style={[
-                        styles.name,
-                        currentPressedIndex === vehicle.id
-                          ? styles.name
-                          : styles.name1Clr,
-                      ]}
-                    >
-                      Company Name
-                    </Text>
-                    <Text
-                      style={
-                        currentPressedIndex === vehicle.id
-                          ? styles.text1Typo
-                          : styles.text2Typo
-                      }
-                    >
-                      {vehicle.parentCompany}
-                    </Text>
-                    <Image
-                      style={[styles.frameIconn, styles.frameIconPositionn]}
-                      contentFit="cover"
-                      source={
-                        currentPressedIndex === vehicle.id
-                          ? require("../assets/frame.png")
-                          : require("../assets/frame2.png")
-                      }
-                    />
-                  </View>
-                )}
-
-                {/* Customer Name */}
-
-                <View style={[styles.nameParentt, styles.parentFlexBox]}>
-                  <Text
-                    style={[
-                      styles.name,
-                      currentPressedIndex === vehicle.id
-                        ? styles.name
-                        : styles.name1Clr,
-                    ]}
-                  >
-                    Name
-                  </Text>
-                  <Text
-                    style={
-                      currentPressedIndex === vehicle.id
-                        ? styles.text1Typo
-                        : styles.text2Typo
-                    }
-                  >
-                    {vehicle.name}
-                  </Text>
-                  <Image
-                    style={[styles.frameIconn, styles.frameIconPositionn]}
-                    contentFit="cover"
-                    source={
-                      currentPressedIndex === vehicle.id
-                        ? require("../assets/frame.png")
-                        : require("../assets/frame2.png")
-                    }
-                  />
-                </View>
-
-                {/* car image  */}
-
-                {/* car image */}
-                {vehicle.vehicleMediaList &&
-                  vehicle.vehicleMediaList.length > 0 ? (
-                  <Image
-                    style={[styles.rectangleIcon, styles.iconPosition]}
-                    contentFit="cover"
-                    source={{ uri: `${Config.baseUrl1}` + vehicle.vehicleMediaList[0] }}
-                  />
-                ) : (
-                  <Image
-                    style={[styles.rectangleIcon, styles.iconPosition]}
-                    contentFit="cover"
-                    source={require("../assets/carcitroentopvehiclesvgrepocom-1.png")}
-                  />
-                )}
-
-                <View
-                  style={[
-                    styles.materialSymbolspermContactParent,
-                    styles.groupContainerPosition,
-                  ]}
-                >
-                  <Image
-                    style={[styles.frameIcon, styles.frameIconPosition]}
-                    contentFit="cover"
-                    source={
-                      currentPressedIndex === vehicle.id
-                        ? require("../assets/materialsymbolspermcontactcalendaroutline.png")
-                        : require("../assets/materialsymbolspermcontactcalendaroutline1.png")
-                    }
-                  />
-                  <View style={[styles.contactParent, styles.filterPosition]}>
-                    <Text
-                      style={[
-                        styles.name1,
-                        currentPressedIndex === vehicle.id
-                          ? styles.name
-                          : styles.name1Clr,
-                      ]}
-                    >
-                      Contact
-                    </Text>
-                    <Text
-                      style={
-                        currentPressedIndex === vehicle.id
-                          ? styles.text1Typo
-                          : styles.text2Typo
-                      }
-                    >
-                      {vehicle.phoneNumber}
-                    </Text>
-                  </View>
-                </View>
-                <View style={[styles.frameGroup, styles.frameGroupPosition]}>
-                  <View
-                    style={[
-                      styles.registrationNumberParent,
-                      styles.groupIconPosition,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.name1,
-                        currentPressedIndex === vehicle.id
-                          ? styles.name
-                          : styles.name1Clr,
-                      ]}
-                    >
-                      Registration Number
-                    </Text>
-                    <Text
-                      style={[
-                        styles.sa20021,
-                        currentPressedIndex === vehicle.id
-                          ? styles.text1Typo
-                          : styles.text2Typo,
-                      ]}
-                    >
-                      {vehicle.registrationNumber}
-                    </Text>
-                  </View>
-                  <Image
-                    style={[
-                      styles.licensePlateNumberSvgrepoCIcon,
-                      styles.frameGroupPosition,
-                    ]}
-                    contentFit="cover"
-                    source={
-                      currentPressedIndex === vehicle.id
-                        ? require("../assets/licenseplatenumbersvgrepocom-11.png")
-                        : require("../assets/licenseplatenumbersvgrepocom-12.png")
-                    }
-                  />
-                </View>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
           ))}
         </ScrollView>
       </View>
@@ -458,15 +447,28 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 }
 const styles = StyleSheet.create({
   scroll: {
-    marginTop: screenWidth*0.54,
-    height: screenWidth*1.3,
+    height: screenWidth * 1.3,
     width: screenWidth,
-    paddingStart:screenWidth*0.04,
-    paddingEnd:screenWidth*0.04,
-    zIndex: 1,
+    marginTop: screenWidth * 0.57,
     // backgroundColor:'red'
   },
+  groupParentLayout: {
+    backgroundColor: Color.steelblue_300,
+    padding: 0.5 * rem,
+    marginVertical: 0.2 * rem,
+    alignSelf: "center",
+    width: screenWidth * 0.9,
+    borderRadius: 8,
+  },
+  groupParentLayoutW: {
+    backgroundColor: Color.darkslateblue,
+    padding: 0.5 * rem,
+    marginVertical: 0.2 * rem,
+    alignSelf: "center",
+    width: screenWidth * 0.9, // Set a maximum width (adjust as needed)
+    borderRadius: 8,
 
+  },
 
   filterTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -493,44 +495,35 @@ const styles = StyleSheet.create({
   trashRow: {
     flexDirection: "row",
   },
-  groupParentLayout: {
-    paddingVertical: screenWidth*0.039,
-    position: "relative",
-    alignItems: "flex-start",
-    flexWrap: "wrap",
-  },
+
 
   frameParentLayout: {
-    height: rem,
-    position: "relative",
-    top: 0,
-    marginTop: -screenWidth*0.01,
+    // backgroundColor:'red',
+    // height: rem,
+    // width: screenWidth * 0.44,
+    // backgroundColor:'red',
   },
   parentFlexBox: {
     flexDirection: "row",
-    left: 164,
+    gap: 4,
   },
   nameTypo: {
     fontFamily: FontFamily.poppinsRegular,
     fontSize: FontSize.size_smi,
   },
   text1Typo: {
-    marginLeft: 5,
     color: Color.gray_200,
     fontSize: FontSize.size_smi,
-    textAlign: "left",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
   },
   frameIconPosition: {
-    height: 20,
-    left: -10,
-    position: "absolute",
+    height: rem * 0.7,
+    width: rem * 0.7,
   },
   frameIconPositionn: {
     height: 20,
-    left: -33,
-    position: "absolute",
+    width: 20,
   },
   groupContainerPosition: {
     top: -6,
@@ -544,9 +537,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   frameGroupPosition: {
-    height: 25,
-    left: 132,
-    position: "relative",
+    flexDirection: 'row',
+    gap: 4,
   },
   groupIconPosition: {
     top: 3,
@@ -554,18 +546,18 @@ const styles = StyleSheet.create({
   },
   innerLayout: {
     backgroundColor: Color.steelblue_300,
-    width: screenWidth*0.94,
+    width: screenWidth * 0.94,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
   innerLayoutW: {
     backgroundColor: Color.darkslateblue,
-    width: screenWidth*0.94,
+    width: screenWidth * 0.94,
     borderRadius: Border.br_5xs,
     position: "absolute",
   },
   groupParentPosition: {
-    left: screenWidth*0.4,
+    left: screenWidth * 0.4,
     position: "absolute",
   },
   name1Clr: {
@@ -580,10 +572,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
   },
-  iconPosition: {
-    left: 10,
-    position: "absolute",
-  },
+
   imageTypo: {
     color: Color.dimgray_100,
     left: 73,
@@ -715,18 +704,8 @@ const styles = StyleSheet.create({
   shahzoreAsif: {
     width: 100,
   },
-  nameParent: {
-    marginTop: 0,
-    top: 8,
-    marginLeft: screenWidth*0.4,
-    position: "relative",
-  },
-  nameParentt: {
-    marginTop: 0,
-    top: 10,
-    marginLeft: screenWidth*0.4,
-    position: "relative",
-  },
+
+
   nameParentC: {
     top: 37,
     position: "absolute",
@@ -736,11 +715,7 @@ const styles = StyleSheet.create({
     top: 18,
     overflow: "hidden",
   },
-  frameIconn: {
-    width: 20,
-    top: 0,
-    overflow: "hidden",
-  },
+
   frameParent: {
     width: 173,
     left: 0,
@@ -748,6 +723,7 @@ const styles = StyleSheet.create({
   },
   contactParent: {
     flexDirection: "row",
+    gap: 4,
   },
   materialSymbolspermContactParent: {
     width: 214,
@@ -758,13 +734,9 @@ const styles = StyleSheet.create({
   },
   registrationNumberParent: {
     flexDirection: "row",
-    left: screenWidth*0.4,
+    left: screenWidth * 0.4,
   },
-  licensePlateNumberSvgrepoCIcon: {
-    width: 20,
-    top: 0,
-    overflow: "hidden",
-  },
+
   frameGroup: {
     width: 229,
     top: 0,
@@ -772,7 +744,7 @@ const styles = StyleSheet.create({
   },
   groupParent: {
     top: 291,
-    left: screenWidth*0.4,
+    left: screenWidth * 0.4,
     position: "absolute",
   },
   vehiclesItem: {
@@ -810,34 +782,25 @@ const styles = StyleSheet.create({
   },
   vehiclesInner: {
     top: 0,
-    height: screenWidth*0.38,
+    height: screenWidth * 0.38,
   },
   vehiclesInnerJ: {
     top: 0,
-    height: screenWidth*0.32,
+    height: screenWidth * 0.32,
   },
   landCruiserV8: {
-    top: 0,
     textTransform: "uppercase",
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
     fontSize: FontSize.size_base,
-    position: "absolute",
-    left: screenWidth*0.32,
-    width: screenWidth*0.52,
+    width: screenWidth * 0.52,
     // backgroundColor:'red',
-  },
-  frameParent1: {
-    width: screenWidth*0.44,
-    left: 0,
-    top: 0,
   },
 
   rectangleIcon: {
     borderRadius: 79,
-    width: 100,
-    top: 18,
-    height: 100,
+    width: screenWidth*0.22,
+    height: screenWidth*0.22,
   },
   image: {
     bottom: 279,
@@ -858,7 +821,7 @@ const styles = StyleSheet.create({
   },
   groupParent2: {
     top: 780,
-    left: screenWidth*0.4,
+    left: screenWidth * 0.4,
     position: "absolute",
   },
   image1: {

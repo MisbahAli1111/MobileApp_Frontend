@@ -29,7 +29,7 @@ const MaintenanceRecord = ({ route }) => {
   const [search, setSearch] = useState("");
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [create, setCreate] = useState(false);
-
+  const [isSearch, setIsSearch]= useState(false);
   const functionFilterSearch = () => {
     setFilterSearchClicked(true);
   };
@@ -41,11 +41,12 @@ const MaintenanceRecord = ({ route }) => {
   };
   const handleSavePress = () => {
     setCreate(true);
-    
+
   };
 
   const handleQuery = (query) => {
     setSearch(query);
+    setIsSearch(true);
   };
 
   return (
@@ -61,101 +62,70 @@ const MaintenanceRecord = ({ route }) => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={styles.groupParent}>
-        <View style={[styles.housefill]}>
-          <Image
-            style={styles.homeMutedIcon}
-            contentFit="cover"
-            source={require("../assets/homemuted.png")}
-          />
-          <Text style={[styles.text, styles.davidTypo1]}>\</Text>
-          <Text style={styles.search}>Search</Text>
-        </View>
+      <View style={{ top: screenWidth * 0.35, width: screenWidth * 0.9, alignSelf: 'center' }}>
+        <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
 
-        <View style={[styles.surface1, styles.surfaceParentFlexBox]}>
-          <Pressable onPress={functionFilterSearch}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={[styles.abc123, styles.abc123Clr]}>Filter</Text>
-              <Icon
-                name="exchange"
-                size={0.5 * rem}
-                // marginLeft={0.2 * rem}
-                color={"black"}
-                style={{ transform: "rotate(90deg)" }}
-              />
-            </View>
-          </Pressable>
-          {filterSearchClicked && (
-            <FilterSearchRecord
-              onFilterSelect={(attribute, sort) =>
-                addFilterInState(attribute, sort)
-              }
-            />
-          )}
-        </View>
-
-        {/* <Pressable
-          style={[styles.groupWrapper, styles.groupLayout]}
-          onPress={() => navigation.navigate("AddRecord")}
-        >
-          <View style={[styles.rectangleGroup, styles.groupLayout]}>
-
-            <View style={[styles.groupInner, styles.groupInnerLayout]} />
-            <View style={styles.addRecordParent}>
-              <Text style={[styles.addRecord, styles.addTypo]}>Add Record</Text>
-              <Image
-                style={[styles.vectorIcon1, styles.iconLayout1]}
-                contentFit="cover"
-                source={require("../assets/vector14.png")}
-              />
-            </View>
+          <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
+            <Icon name="home" size={rem * 0.6} color="black" />
+            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }} >/</Text>
+            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }}>Records</Text>
+            {isSearch && search ? (
+              <Text style={{ fontSize: rem * 0.5, fontWeight: 700, maxWidth: screenWidth * 0.27 }} numberOfLines={1}>/ {search}</Text>
+            ) : null}
           </View>
-        </Pressable> */}
-      </View>
-
-      {/* search */}
-      <View style={styles.rectangleContainer}>
-        {fromPreviousScreen ? (
-          <View style={styles.wrap}>
-            <View style={styles.blueContainer}>
-              <Text style={styles.blueText}>
-                Select Record to Create Invoice
-              </Text>
-            </View>
-            
-            <TouchableOpacity onPress={handleSavePress}>
-              <View style={styles.saveContainer}>
-                <Text style={styles.blueTextB}>Create</Text>
+          <View style={{ flex: 1, top: -20, alignItems: 'flex-end' }}>
+           <Pressable onPress={functionFilterSearch}>
+              <Text style={styles.filterText}>Filter</Text>
+            </Pressable>
+            {filterSearchClicked && (
+              <FilterSearchRecord
+                onFilterSelect={(attribute, sort) =>
+                  addFilterInState(attribute, sort)
+                }
+              />
+            )}
+            <TouchableOpacity
+              style={[styles.groupLayoutt]}
+              onPress={() => navigation.navigate("AddRecord")}
+            >
+              <View style={styles.rectangleGroupp}>
+                <Text style={[styles.addTypo]}>
+                  Add Record
+                </Text>
+                <Image
+                  contentFit="cover"
+                  source={require("../assets/vector14.png")}
+                />
               </View>
             </TouchableOpacity>
           </View>
-        ) : (
+        </View>
+
+
+      </View>
+
+
+      <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
-            <Pressable
-              style={[styles.rectanglePressable, styles.rectanglePosition]}
-              onPress={() => navigation.navigate("MaintenanceRecord")}
-            />
             <TextInput
-              style={styles.davidDaniel}
-              placeholder="David"
+              style={{ fontSize: 15, fontWeight: '700', width: screenWidth * 0.74 }}
+              placeholder="Search Record"
               clearButtonMode="always"
               value={search}
               onChangeText={(query) => handleQuery(query)}
             />
           </View>
-        )}
+          <View>
+            <Image
+              style={{ height: screenHeight * 0.03, width: screenWidth * 0.07 }}
+              contentFit="cover"
+              source={require("../assets/vector13.png")}
+            />
+          </View>
+        </View>
+      </Pressable>
 
-        <Pressable
-          style={styles.vector}
-          onPress={() => navigation.navigate("MaintenanceRecord")}
-        >
-          <Image
-            style={[styles.icon1, styles.iconLayout]}
-            contentFit="cover"
-            source={require("../assets/vector8.png")}
-          />
-        </Pressable>
-      </View>
 
       <View style={styles.cont}>
         <Footer prop={"MaintenanceRecord"} />
@@ -192,9 +162,43 @@ const styles = StyleSheet.create({
     marginLeft: 1,
     zIndex: 999,
   },
+  groupLayoutt: {
+    alignItems: 'flex-end',
+    flex: 1,
+    position: 'absolute',
+  },
+  rectangleParent18: {
+    marginTop: screenWidth * 0.41,
+    alignSelf: 'center',
+    backgroundColor: Color.steelblue_300,
+  },
+  rectangleLayout: {
+    borderRadius: 6,
+    paddingVertical: screenHeight * 0.016,
+    paddingLeft: screenWidth * 0.07,
+    paddingEnd: screenWidth * 0.03,
+    position: "absolute",
+
+  },
+  rectangleGroupp: {
+    backgroundColor: Color.darkslateblue,
+    paddingEnd: screenWidth * 0.06,
+    paddingLeft: screenWidth * 0.06,
+    paddingVertical: screenWidth * 0.016,
+    borderRadius: 20,
+    flex: 1,
+  },
+  filterText: {
+    left: -132,
+    top: 15,
+    fontWeight: 700,
+    fontFamily: FontFamily.poppinsSemibold,
+    fontSize: FontSize.size_sm,
+    color: "#000",
+    fontWeight: "500",
+  },
   boxContianer: {
-    marginTop: screenWidth*0.54,
-    marginLeft: 0,
+    marginTop: screenWidth * 0.58,
     // backgroundColor:'red',
     // alignItems: 'flex-end',
   },
@@ -237,12 +241,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   addTypo: {
-    lineHeight: 18,
-    textAlign: "center",
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
+    flex: 1,
+    color: 'white',
   },
   rectangleContainer: {
     flexDirection: "row",
@@ -297,11 +297,7 @@ const styles = StyleSheet.create({
   iconLayout: {
     // Your icon layout styles
   },
-  rectangleLayout: {
-    height: 55,
-    width: 385,
-    position: "absolute",
-  },
+
   rectanglePosition: {
     borderRadius: Border.br_5xs,
     left: 0,

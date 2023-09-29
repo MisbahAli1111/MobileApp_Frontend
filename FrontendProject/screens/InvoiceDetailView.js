@@ -496,8 +496,10 @@ function InvoiceDetailView() {
                   style={{
                     fontSize: rem * 0.55,
                     fontWeight: 500,
-                    width: screenWidth * 0.4,
+                    width: screenWidth * 0.5,
                   }}
+                  numberOfLines={1} 
+                  ellipsizeMode="tail"
                 >
                   Currency: {currency}
                 </Text>
@@ -549,7 +551,9 @@ function InvoiceDetailView() {
             <Text style={[styles.list]}>Subtotal -  {subTotal}</Text>
             <Text style={[styles.list]}>Tax -  {tax}</Text>
             <Text style={[styles.list]}>Discount -  {discount}</Text>
-            <Text style={[styles.list]}>Total -  {total}</Text>
+            <Text style={[styles.list]}
+             
+            >Total -  {total}</Text>
           </View>
         </View>
 
@@ -631,7 +635,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     alignItems: 'center',
-    
+    flexWrap: 'nowrap',
   },
   loader: {
     // borderWidth: 4, // Adjust the line width as needed

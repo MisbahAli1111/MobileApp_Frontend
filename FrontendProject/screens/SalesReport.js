@@ -540,8 +540,8 @@ const SalesReport = () => {
 
 const styles = StyleSheet.create({
   container: {
-    
-    // backgroundColor: "#dcebf5",
+    flex:1,
+    backgroundColor: "#dcebf5",
   },
   text5: {
     top: 42,
@@ -700,9 +700,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   Formcontainer: {
-    // backgroundColor:'red',
     alignItems: "center",
-    // justifyContent: 'center',
     marginTop: heightPercentageToDP("1%"),
   },
   buttonContainer: {
@@ -737,7 +735,7 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: heightPercentageToDP("1%"),
   },
-  heading: {
+    heading: {
     marginTop: heightPercentageToDP("15%"),
     marginLeft: widthPercentageToDP("5%"),
     fontSize: 18,

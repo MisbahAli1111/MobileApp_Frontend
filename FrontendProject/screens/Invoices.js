@@ -7,8 +7,10 @@ import {
   View,
   Text,
   Pressable,
+  TouchableOpacity
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { FontFamily, Color, Border, FontSize, Padding } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from "../components/MaintenanceRecordList";
@@ -21,10 +23,24 @@ const rem = screenWidth / 16;
 const Invoices = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
+  const [filterSearchClicked, setFilterSearchClicked] = useState(false);
+  const [searchType, setSearchType] = useState([]);
+  const [isSearch , setIsSearch] = useState(false);
+  const [searchOrder, setSearchOrder] = useState("");
   const handleQuery = (query) => {
     setSearch(query);
+    setIsSearch(true);
   };
 
+  const functionFilterSearch = () => {
+    setFilterSearchClicked(true);
+  };
+  const addFilterInState = (attribute = ["default"], sort = "default") => {
+    setFilterSearchClicked(false);
+    setSearchType(attribute);
+    setSearchOrder(sort);
+
+  };
   return (
     <View style={styles.maintenanceRecord}>
       <Image
@@ -38,7 +54,71 @@ const Invoices = () => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={styles.breadcrumbsParent}>
+      <View style={{ top: screenWidth * 0.37, width: screenWidth * 0.9, alignSelf: 'center' }}>
+        <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
+
+          <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
+            <Icon name="home" size={rem * 0.6} color="black" />
+            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }} >/</Text>
+            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }}>Vehicles</Text>
+            {isSearch && search ? (
+              <Text style={{ fontSize: rem * 0.5, fontWeight: 700, maxWidth: screenWidth * 0.27 }} numberOfLines={1}>/ {search}</Text>
+            ) : null}
+          </View>
+          <View style={{ flex: 1, top: -10, alignItems: 'flex-end' }}>
+          <Pressable onPress={functionFilterSearch}>
+              <Text style={styles.filterText}>Filter</Text>
+            </Pressable>
+            {filterSearchClicked && (
+              <FilterSearchVehicle
+                onFilterSelect={(attribute, sort) =>
+                  addFilterInState(attribute, sort)
+                }
+              />
+            )}
+            <TouchableOpacity
+              style={[styles.groupLayoutt]}
+              onPress={() => navigation.navigate("AddVehicle")}
+            >
+              <View style={styles.rectangleGroupp}>
+                <Text style={[styles.addTypo]}>
+                  Add Invoice
+                </Text>
+                <Image
+                  contentFit="cover"
+                  source={require("../assets/vector14.png")}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+
+      </View>
+
+
+      <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+          <View>
+            <TextInput
+              style={{ fontSize: 15, fontWeight: '700', width: screenWidth * 0.74 }}
+              placeholder="Search Invoice"
+              clearButtonMode="always"
+              value={search}
+              onChangeText={(query) => handleQuery(query)}
+            />
+          </View>
+          <View>
+            <Image
+              style={{ height: screenHeight * 0.03, width: screenWidth * 0.07 }}
+              contentFit="cover"
+              source={require("../assets/vector13.png")}
+            />
+          </View>
+        </View>
+      </Pressable>
+
+      {/* <View style={styles.breadcrumbsParent}>
         <View style={{flexDirection:'row',gap:rem*0.2,marginLeft:rem*0.88}}>
             <Image
               style={styles.homeMutedIcon1}
@@ -67,7 +147,6 @@ const Invoices = () => {
 
       </View>
 
-      {/* search */}
       <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
         <TextInput
           style={[styles.searchInvoice, styles.paidTypo]}
@@ -81,7 +160,7 @@ const Invoices = () => {
             contentFit="cover"
             source={require("../assets/vector13.png")}
           />
-      </Pressable>
+      </Pressable> */}
 
 
       <View style={styles.cont}>
@@ -108,6 +187,42 @@ const styles = StyleSheet.create({
     left: 228,
     top: 10,
   },
+  rectangleLayout: {
+    borderRadius: 6,
+    paddingVertical: screenHeight * 0.016,
+    paddingLeft: screenWidth * 0.07,
+    paddingEnd: screenWidth * 0.03,
+    position: "absolute",
+
+  },
+
+
+  addTypo: {
+    flex: 1,
+    color: 'white',
+  },
+  rectangleGroupp: {
+    backgroundColor: Color.darkslateblue,
+    paddingEnd: screenWidth * 0.06,
+    paddingLeft: screenWidth * 0.06,
+    paddingVertical: screenWidth * 0.015,
+    borderRadius: 20,
+    flex: 1,
+  },
+  groupLayoutt: {
+    alignItems: 'flex-end',
+    flex: 1,
+    position: 'absolute',
+  },
+  filterText: {
+    left: -132,
+    top: 8,
+    fontWeight: 700,
+    fontFamily: FontFamily.poppinsSemibold,
+    fontSize: FontSize.size_sm,
+    color: "#000",
+    fontWeight: "500",
+  },
   cont: {
     // marginLeft: 1,
   },
@@ -115,7 +230,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: "wrap",
     marginTop: 250,
-    maxHeight:screenWidth*1.24,
+    maxHeight: screenWidth * 1.24,
     // marginBottom:90,
     // maxHeight: 525,
     // alignItems: 'flex-end',
@@ -165,14 +280,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption2Regular_size,
     fontWeight: "500",
   },
-  addTypo: {
-    lineHeight: 18,
-    textAlign: "center",
-    color: Color.textTxtPrimary,
-    fontFamily: FontFamily.poppinsMedium,
-    fontWeight: "500",
-    position: "absolute",
-  },
+
   createInvoice: {
     textAlign: "center",
     fontFamily: FontFamily.poppinsMedium,
@@ -226,8 +334,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: screenWidth,
     position: "absolute",
-    marginTop: screenWidth*0.34,
-    flexDirection:'row',
+    marginTop: screenWidth * 0.34,
+    flexDirection: 'row',
   },
   paidTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -245,10 +353,8 @@ const styles = StyleSheet.create({
   },
 
   searchInvoice: {
-    // top: 14,
-    // left: 21,
-    top:rem*0.5,
-    left:rem*0.5,
+    top: rem * 0.5,
+    left: rem * 0.5,
     color: "#1e1e1e",
     textAlign: "left",
     fontSize: FontSize.size_base,
@@ -283,15 +389,10 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
   },
-  rectangleLayout: {
-    height: screenWidth*0.135,
-    width: screenWidth*0.91,
-    borderRadius:6,
-    position: "absolute",
-  },
+
   rectangleParent18: {
-    marginTop: screenWidth*0.45,
-    alignSelf:'center',
+    marginTop: screenWidth * 0.45,
+    alignSelf: 'center',
     backgroundColor: Color.steelblue_300,
   },
 
@@ -502,9 +603,9 @@ const styles = StyleSheet.create({
     maxWidth: rem,
     overflow: "hidden",
     // position:'absolute',
-    alignSelf:'flex-end',
-    marginEnd:rem*1,
-    marginTop:rem*0.5,
+    alignSelf: 'flex-end',
+    marginEnd: rem * 1,
+    marginTop: rem * 0.5,
   },
   rectangleContainer: {
     top: 145,

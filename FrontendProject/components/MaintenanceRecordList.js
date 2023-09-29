@@ -310,7 +310,6 @@ const RecordList = ({
                       {record.kilometerDriven}
                     </Text>
                   </View>
-
                   <View style={styles.rowWrap}>
                     <Icon
                       name="user"
@@ -408,7 +407,8 @@ const styles = StyleSheet.create({
   },
   wrap: {
     width: screenWidth,
-    height: screenWidth * 1.33,
+    height: screenWidth * 1.30,
+    
   },
   dated: {
     // marginLeft: 4.4 * rem,
