@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
     height: 111,
   },
   rectangleGroupp: {
-    top: 10,
+    top: 17,
     height: 35,
     left: 0,
   },
