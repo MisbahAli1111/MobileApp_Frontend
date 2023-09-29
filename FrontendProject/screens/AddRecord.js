@@ -33,7 +33,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Config from "./Config";
-import SaveButton from "../components/SaveButton";
+
 
 const AddRecord = () => {
   const navigation = useNavigation();
@@ -402,6 +402,7 @@ const AddRecord = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
     setServiceDue(newDate.toISOString());
+    console.log(serviceDue);
   };
 
   const getType = async (carNumber) => {
@@ -477,7 +478,13 @@ const AddRecord = () => {
   };
 
   useEffect(() => {
-    setUser("No Customer Found");
+    // setUser("No Customer Found");
+    if(type && service)
+    {
+      console.log("type: ",type );
+      console.log("Service: ",service);
+      console.log("ServiceDue:",serviceDue);
+    }
     getCustomer(carNumber);
     getRegistrationNumber();
     if (carNumber) {
@@ -486,10 +493,10 @@ const AddRecord = () => {
     if (userId) {
       getCustomerImage(userId);
     }
-    if (type && selectedCode) {
-      calculateServiceDue(type, selectedCode);
+    if (type && service) {
+      calculateServiceDue(type, service);
     }
-  }, [carNumber, selectedCode]);
+  }, [carNumber, service]);
 
   const transformedResponse = numberPlates.map((item) => {
     const { registration_number } = item;
@@ -536,7 +543,7 @@ const AddRecord = () => {
         });
 
         const response = await axios.post(
-          `${Config.apiServerUrl}/api/file/upload/vehicle/${recordId}`,
+          `${Config.apiServerUrl}/api/file/upload/record/${recordId}`,
           formData,
           {
             headers: {
@@ -624,7 +631,7 @@ const AddRecord = () => {
         // const axios = require('axios');
         const data = {
           kilometerDriven: driven,
-          service: selectedCode,
+          service: service,
           maintanenceDetail: details,
           registrationNumber: carNumber,
           maintanenceDateTime: selectedDate,
@@ -677,7 +684,7 @@ const AddRecord = () => {
           />
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Vehicles")}>
+        <TouchableOpacity onPress={() => navigation.navigate("MaintenanceRecord")}>
           <Text style={styles.breadcrumbText}>Records</Text>
         </TouchableOpacity>
         <Text style={styles.breadcrumbSeparator}> / </Text>
@@ -686,7 +693,7 @@ const AddRecord = () => {
 
       <ScrollView
         style={styles.scrollViewContainer}
-        contentContainerStyle={{ paddingBottom: hp("20%") }}
+        // contentContainerStyle={{ paddingBottom: hp("5%") }}
       >
         <View style={styles.formContainer}>
           {/* Row 1 */}
@@ -815,7 +822,7 @@ const AddRecord = () => {
                             textAlign: "center",
                           }}
                         >
-                          Add Customer
+                          Add Vehicle
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -827,7 +834,7 @@ const AddRecord = () => {
             {/* Row 2 */}
             <View style={styles.formRow}>
               <View style={styles.textInputContainer}>
-                <View style={styles.inputWithIcon1}>
+                <View style={styles.inputWithIcon2}>
                   <TextInput
                     style={[styles.textInput1]} // Added margin
                     value={selectedDate ? selectedDate.toDateString() : ""}
@@ -859,7 +866,7 @@ const AddRecord = () => {
                 ) : null}
               </View>
               <View style={styles.textInputContainer}>
-                <View style={styles.inputWithIcon1}>
+                <View style={styles.inputWithIcon3}>
                   <TextInput
                     style={[styles.textInput1]} // Added margin
                     placeholder="Select a Time"
@@ -899,7 +906,7 @@ const AddRecord = () => {
                 <View style={styles.inputWithIcon1}>
                   <TouchableOpacity onPress={handleClick}>
                     <Text style={styles.customerText}>
-                      {user == "" ? "No Customer Found" : user}
+                      {user == "" ? "No Customer Found" : user.split(" ")[0]}
                     </Text>
                   </TouchableOpacity>
 
@@ -979,7 +986,7 @@ const AddRecord = () => {
               <View style={styles.inputWithIcon}>
                 <TextInput
                   style={styles.singleTextInput}
-                  value={driven}
+                  value={details}
                   onChangeText={(text) => setDetails(text)}
                   placeholder="Enter Details"
                 />
@@ -1112,13 +1119,13 @@ const AddRecord = () => {
               </View>
             </Modal>
           </View>
-          
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave} >
+            <Text style={styles.buttonText}>Save</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
-      <View style={styles.save}>
-        <SaveButton/>
-      </View>
+      
 
       <View style={[styles.footer]}>
         <Footer prop={"MaintenanceRecord"} />
@@ -1171,7 +1178,7 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp("0%"),
+    marginTop: hp("0.5%"),
   },
   profileImage: {
     width: wp("30%"),
@@ -1486,18 +1493,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     // justifyContent:"space-between",
-    marginTop: hp("1%"),
+    marginTop: hp("0%"),
     marginRight: wp("0%"),
-    marginBottom: hp("1%"),
+    marginBottom: hp("0%"),
   },
   inputWithIcon1: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: hp("0%"),
-    marginBottom: hp("1%"),
+    marginBottom: hp("0%"),
     borderBottomWidth: 1,
     borderColor: "gray",
     paddingHorizontal: wp("0%"),
+    paddingVertical: wp("1%"),
+  },
+  inputWithIcon2: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("0%"),
+    marginBottom: hp("0%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("0%"),
+    paddingVertical: wp("1%"),
+  },
+  inputWithIcon3: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp("0%"),
+    marginBottom: hp("0%"),
+    borderBottomWidth: 1,
+    borderColor: "gray",
+    paddingHorizontal: wp("2%"),
     paddingVertical: wp("1%"),
   },
   // Style for the Ant Design icons in the input with icon
@@ -1517,13 +1544,25 @@ const styles = StyleSheet.create({
     width: wp("8%"), // Adjust the width using wp for responsiveness
     height: wp("8%"), // Adjust the height using wp for responsiveness
     borderRadius: wp("4%"),
-    marginLeft: wp("50%"),
+    marginLeft: wp("65%"),
     marginBottom: wp("1%"),
   },
   textInputContainer: {
     flex: 1,
     flexDirection: "column",
     // Add this line to create space between columns
+  },
+  saveButton: {
+    height: hp("5%"), // Adjust the height as needed
+    width: wp("90.5%"), // Adjust the width as needed
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center", // Center the button horizontally // Add some margin at the top for spacing // Add border radius if needed // Add horizontal padding
+},
+  buttonText: {
+    color: "white",
+    fontSize: wp("4.5%"), // Adjust the font size as needed
   },
 
   footer: {

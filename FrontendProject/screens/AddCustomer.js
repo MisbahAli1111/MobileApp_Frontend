@@ -543,10 +543,11 @@ const AddCustomer = () => {
               value={name}
               onChangeText={setName}
             />
-            {NameEror && (
+           
+          </View>
+          {NameEror && (
               <Text style={styles.errorText}>Name is required.</Text>
             )}
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="idcard" style={styles.icon} />
             <TextInput
@@ -557,10 +558,11 @@ const AddCustomer = () => {
               keyboardType="numeric"
               maxLength={15}
             />
-            {cnicErorr && (
+            
+          </View>
+          {cnicErorr && (
               <Text style={styles.errorText}>Enter CNIC / Invalid CNIC.</Text>
             )}
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="mail" style={styles.icon} />
             <TextInput
@@ -569,10 +571,11 @@ const AddCustomer = () => {
               value={email}
               onChangeText={setEmail}
             />
-            {EmailErorr && (
+            
+          </View>
+          {EmailErorr && (
               <Text style={styles.errorText}>Invalid email format.</Text>
             )}
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="key" style={styles.icon} />
             <TextInput
@@ -582,7 +585,12 @@ const AddCustomer = () => {
               secureTextEntry={!showPassword}
               onChangeText={setPassword}
             />
-            {PasswordError && (
+           
+            <TouchableOpacity onPress={togglePasswordVisibility}>
+              <AntDesign name="eyeo" style={styles.passwordIcon} />
+            </TouchableOpacity>
+          </View>
+          {PasswordError && (
               <Text style={styles.errorText}>Password is required.</Text>
             )}
             {LPasswordError && (
@@ -593,10 +601,6 @@ const AddCustomer = () => {
             {passwordValidError && (
               <Text style={styles.errorText}>Password must meet all criteria: include at least one lowercase letter, one uppercase letter, one digit (number), one special character (@, $, !, %, ?, or &), and be 8 to 15 characters long.</Text>
             )}
-            <TouchableOpacity onPress={togglePasswordVisibility}>
-              <AntDesign name="eyeo" style={styles.passwordIcon} />
-            </TouchableOpacity>
-          </View>
           <View style={styles.inputContainer}>
             <AntDesign name="key" style={styles.icon} />
             <TextInput
@@ -606,7 +610,12 @@ const AddCustomer = () => {
               onChangeText={setConfirmPassword}
               secureTextEntry={!showConfirmPassword}
             />
-            {CPasswordError && (
+            
+            <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
+              <AntDesign name="eyeo" style={styles.passwordIcon} />
+            </TouchableOpacity>
+          </View>
+          {CPasswordError && (
               <Text style={styles.errorText}>
                 Confirm Password is required.
               </Text>
@@ -619,10 +628,6 @@ const AddCustomer = () => {
             {passwordValidError && (
               <Text style={styles.errorText}>Enter Correct Password</Text>
             )}
-            <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
-              <AntDesign name="eyeo" style={styles.passwordIcon} />
-            </TouchableOpacity>
-          </View>
 
           {/* Country Code and Phone Number */}
           <View style={styles.phoneContainer}>
@@ -678,25 +683,39 @@ const AddCustomer = () => {
       </ScrollView>
 
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isFullImageModalVisible}
-        onRequestClose={() => setFullImageModalVisible(false)}
-      >
-        <View style={styles.imageModalContainer}>
-          <View style={styles.fullImageContainer}>
-            {profileImage && (
-              <Image source={{ uri: profileImage }} style={styles.fullImage} />
-            )}
-          </View>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setFullImageModalVisible(false)}
-          >
-            <AntDesign name="close" size={30} color="rgba(3, 29, 68, 1)" />
-          </TouchableOpacity>
-        </View>
-      </Modal>
+              animationType="slide"
+              transparent={true}
+              visible={isFullImageModalVisible}
+              onRequestClose={() => setFullImageModalVisible(false)}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.imageModalContainer1}>
+                {/* {console.log(profileImageLink)} */}
+                  {profileImage ? (
+                    
+                      <Image
+                        source={{ uri: profileImage }}
+                        style={styles.fullImage}
+                        resizeMode="contain"
+                      />
+                    )
+                  : null}
+
+                  <TouchableOpacity
+                    style={
+                     styles.imageCloseButton
+                    }
+                    onPress={() => setFullImageModalVisible(false)}
+                  >
+                    <AntDesign
+                      name="closecircle"
+                      size={heightPercentageToDP("4%")}
+                      color="rgba(3, 29, 68, 1)"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
 
       <Modal
         animationType="slide"
@@ -880,12 +899,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   closeButton: {
-    position: "absolute",
-    top: heightPercentageToDP("2%"),
-    right: widthPercentageToDP("2%"),
+    top: heightPercentageToDP("4%"), // Adjust the percentage as needed
+    left: widthPercentageToDP("35%"), // Adjust the percentage as needed
     zIndex: 999,
-    paddingHorizontal: widthPercentageToDP("2%"),
-    paddingVertical: heightPercentageToDP("1%"),
   },
 
   imageModalContent: {
@@ -922,6 +938,23 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginTop: heightPercentageToDP("1%"),
+  },
+  imageCloseButton: {
+    position: "absolute",
+    top: heightPercentageToDP("15%"), // Adjust the top percentage as needed
+    right: widthPercentageToDP("0%"), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value (last number) for transparency
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageModalContainer1: {
+    position: "relative",
+    width: widthPercentageToDP("80%"), // Adjust the width percentage as needed
+    height: heightPercentageToDP("80%"), // Adjust the height percentage as needed
   },
   imageModalButtonText: {
     color: "white",

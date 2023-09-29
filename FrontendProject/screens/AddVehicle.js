@@ -573,7 +573,7 @@ const AddVehicle = () => {
       </View>
 
       {/* ScrollView */}
-      <ScrollView style={styles.scrollViewContainer}>
+      <ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ paddingBottom: hp("10%") }}>
         {/* Image Carousel */}
 
         <View style={styles.profileImageContainer}>
@@ -776,7 +776,7 @@ const AddVehicle = () => {
             <View style={styles.inputWithIcon1}>
               <TouchableOpacity onPress={handleClick}>
                 <Text style={styles.customerText}>
-                  {selectedCountry == "" ? "Select Customer" : selectedCountry}
+                  {selectedCountry == "" ? "Select Customer" : selectedCountry.split(" ")[0]}
                 </Text>
               </TouchableOpacity>
 
@@ -888,7 +888,6 @@ const AddVehicle = () => {
                         paddingVertical: hp("2%"),
                         alignSelf: "center",
                         borderRadius: wp("2%"),
-                        paddingLeft: wp("5%"),
                         width: "50%",
                         marginTop: hp("2%"),
                         position: "absolute",
@@ -899,8 +898,8 @@ const AddVehicle = () => {
                     >
                       <Text
                         style={{
-                          fontSize: wp("3%"),
-                          fontFamily: "Poppin-Medium",
+                          fontSize: wp("4%"),
+                          fontFamily: FontFamily.poppinsMedium,
                           color: "white",
                           textAlign: "center",
                         }}
@@ -921,7 +920,7 @@ const AddVehicle = () => {
                 onChangeText={(text) => setphoneNumber(text)}
                 placeholder="Phone Number"
                 keyboardType="numeric"
-                maxLength={11}
+                maxLength={15}
                 value={phoneNumber}
               />
               <AntDesign
@@ -983,13 +982,15 @@ const AddVehicle = () => {
             </View>
             {kmError && <Text style={styles.errorText}>{error}</Text>}
           </View>
+          <TouchableOpacity style={styles.saveButton} onPress={saveVehicle}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
         </View>
+        
       </ScrollView>
 
       {/* Save Button */}
-      <TouchableOpacity style={styles.saveButton} onPress={saveVehicle}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
+      
 
       {/* Footer */}
       <View style={styles.footer}>{
@@ -1017,27 +1018,28 @@ const styles = StyleSheet.create({
   breadcrumbImage: {
     width: wp("4%"), // Adjust the width as needed
     height: hp("2%"), // Adjust the height as needed
-    marginRight: wp("1%"), // Add margin to separate the image from text
+    marginRight: wp("0%"), // Add margin to separate the image from text
     // Adjust the color of the image
   },
 
   breadcrumbText: {
-    fontSize: wp("4%"), // Adjust font size using wp
+    fontSize: wp("3.5%"), // Adjust font size using wp
     color: "rgba(3, 29, 68, 1)",
     fontFamily: FontFamily.poppinsMedium,
     marginTop: hp("0.5%"), // Breadcrumb text color
   },
 
   breadcrumbSeparator: {
-    fontSize: wp("4%"), // Adjust font size using wp
+    fontSize: wp("3.5%"), // Adjust font size using wp
     color: "rgba(3, 29, 68, 1)", // Separator text color
-    paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+    paddingHorizontal: wp("0%"), // Add horizontal padding using wp to separate items
   },
 
   scrollViewContainer: {
     flexGrow: 1,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
+    marginBottom:hp("1%")
     // Add paddingBottom to accommodate the "Km Driven" input
   },
 
@@ -1060,6 +1062,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("5%"),
     borderRadius: wp("2%"),
     marginTop: hp("0%"),
+    marginBottom: hp("1%"),
   },
   uploadButtonText: {
     color: "white",
@@ -1103,7 +1106,7 @@ const styles = StyleSheet.create({
     borderRadius: wp("1%"), // Add border radius if needed
     paddingHorizontal: wp("2%"), // Add horizontal padding
     marginBottom: hp("1%"),
-    left: wp("0.5%"),
+    // left: wp("0.5%"),
   },
   buttonText: {
     color: "white",
@@ -1175,8 +1178,8 @@ const styles = StyleSheet.create({
   },
   closeButton1: {
     position: "absolute",
-    top: hp("0%"), // Adjust top position using hp
-    right: wp("0%"), // Adjust right position using wp
+    top: hp("0.5%"), // Adjust top position using hp
+    right: wp("0.5%"), // Adjust right position using wp
     zIndex: 999,
   },
   
@@ -1299,7 +1302,7 @@ const styles = StyleSheet.create({
     marginBottom: hp("1%"), // Add spacing between single text inputs using responsive screen
   },
   singleTextInputContainer1: {
-    marginTop: hp("1%"),
+    marginTop: hp("0.5%"),
     marginBottom: hp("1%"),
     // Add spacing between single text inputs using responsive screen
   },
@@ -1327,7 +1330,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    height: hp("5%"),
+    height: hp("2%"),
     width: "100%",
   },
 
@@ -1337,8 +1340,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: 1,
     borderColor: "gray",
-
-    marginBottom: hp("1%"),
+    marginBottom: hp("0%"),
     flex: 1,
   },
 
@@ -1351,8 +1353,8 @@ const styles = StyleSheet.create({
   inputWithIcon: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: hp("1%"),
-    marginBottom: hp("1%"),
+    marginTop: hp("0%"),
+    marginBottom: hp("0%"),
   },
   inputWithIcon1: {
     flexDirection: "row",
@@ -1381,7 +1383,7 @@ const styles = StyleSheet.create({
     width: wp("8%"), // Adjust the width using wp for responsiveness
     height: wp("8%"), // Adjust the height using wp for responsiveness
     borderRadius: wp("4%"),
-    marginLeft: wp("50%"),
+    marginLeft: wp("64%"),
     marginBottom: wp("1%"),
   },
   textInputContainer: {
@@ -1397,6 +1399,7 @@ const styles = StyleSheet.create({
     flex:1,
     top:0,
     position:'absolute',
+    bottom:0
   },
   footerText: {
     color: "white", // Customize your footer text style

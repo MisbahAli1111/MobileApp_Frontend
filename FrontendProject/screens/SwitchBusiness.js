@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(3, 29, 68, 1)",
     borderRadius: 10,
     paddingVertical: heightPercentageToDP("2%"),
-    paddingHorizontal: widthPercentageToDP("30%"),
+    width:"90%",
     marginTop: heightPercentageToDP("1%"),
-    marginBottom: heightPercentageToDP("1%"), // Adjusted marginTop
+    marginBottom: heightPercentageToDP("2%"), // Adjusted marginTop
   },
   createNewBusinessText: {
-    fontSize: 16,
+    fontSize: widthPercentageToDP("3.5%"),
     color: "white",
   },
 });

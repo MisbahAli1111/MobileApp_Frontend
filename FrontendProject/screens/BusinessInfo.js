@@ -33,7 +33,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 const BusinessInfo = () => {
   const navigation = useNavigation();
-
+  const [error,setErrorText] = useState("Enter this field");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [location, setlocation] = useState("");
@@ -60,25 +60,27 @@ const BusinessInfo = () => {
     let isValid = true;
 
     if (!name) {
+      console.log("hello");
       setNameError(true);
       isValid = false;
     } else {
       setNameError(false);
     }
+    {console.log("Valid: ",isValid)}
 
     if (!countryCode) {
-      setPLError("Please select Country Code");
-      setNumberError(true);
+      setCodeError(true);
       isValid = false;
     } else {
-      setPLError("");
+      setCodeError(false);
+    }
       if (!phoneNumber) {
-        setPLError("Please provide Contact Number");
+        setPhoneError(true);
         isValid = false;
       } else {
-        setNumberError(false);
+        setPhoneError(false);
       }
-    }
+    
 
     if (!email) {
       setEMessage("Please provide an Email");
@@ -97,18 +99,19 @@ const BusinessInfo = () => {
 
     if (!city) {
       setCMessage("Please select City");
-      setCountryError(true);
+      setCityError(true);
       isValid = false;
     } else {
       setCMessage("");
+      setCityError(false);
+    }
       if (!country) {
-        setCMessage("Please select Country");
         setCountryError(true);
         isValid = false;
       } else {
         setCountryError(false);
       }
-    }
+    
 
     if (!location) {
       setLocationError(true);
@@ -116,8 +119,12 @@ const BusinessInfo = () => {
     } else {
       setLocationError(false);
     }
+    setTimeout(() => {
+      clearErrors();
+    }, 10000);
 
     if (isValid) {
+      {console.log("Valid: ",isValid)}
       let data = JSON.stringify({
         businessName: name,
         businessAddress: location,
@@ -149,6 +156,7 @@ const BusinessInfo = () => {
             if (createdUserId) {
               uploadImage(createdUserId);
             }
+            {console.log("Valid2: ",isValid)}
             navigation.navigate(SwitchBusiness);
           }
         })
@@ -156,7 +164,17 @@ const BusinessInfo = () => {
           console.log(error);
         });
     }
-    navigation.navigate("SwitchBusiness");
+    
+  };
+
+  const clearErrors = () => {
+    setNameError("");
+    setCityError("");
+    setCodeError("");
+    setCountryError("");
+    setEmailError("");
+    setLocationError("");
+    setPhoneError("");
   };
 
   const handleImageUpload = () => {
@@ -225,8 +243,10 @@ const BusinessInfo = () => {
   const [NameEror, setNameError] = useState(false);
   const [EmailEror, setEmailError] = useState(false);
   const [LocationEror, setLocationError] = useState(false);
+  const [cityError, setCityError] = useState(false);
   const [CountryError, setCountryError] = useState(false);
-  const [PLEror, setPLError] = useState("");
+  const [codeErorr, setCodeError] = useState("");
+  const [phoneErorr, setPhoneError] = useState("");
   const [NumberEror, setNumberError] = useState(false);
 
   const countries = [
@@ -828,7 +848,7 @@ const BusinessInfo = () => {
       resizeMode="cover"
       source={require("../assets/light-texture2234-1.png")}
     >
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
         <View style={styles.profileImageContainer}>
           <TouchableOpacity onPress={handleShowProfile}>
             {profileImage ? (
@@ -858,6 +878,7 @@ const BusinessInfo = () => {
               onChangeText={setName}
             />
           </View>
+          {NameEror ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.inputContainer}>
             <AntDesign name="mail" style={styles.icon} />
             <TextInput
@@ -867,6 +888,7 @@ const BusinessInfo = () => {
               onChangeText={setEmail}
             />
           </View>
+          {EmailEror ? <Text style={styles.errorText}>{EMessage}</Text> : null}
           <View style={styles.inputContainer}>
             <AntDesign name="home" style={styles.icon} />
             <TextInput
@@ -876,7 +898,7 @@ const BusinessInfo = () => {
               onChangeText={setlocation}
             />
           </View>
-
+          {LocationEror ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.pickerRowContainer}>
             <View style={styles.pickerContainer}>
               <Picker
@@ -890,6 +912,7 @@ const BusinessInfo = () => {
                 ))}
               </Picker>
             </View>
+            
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={country}
@@ -902,7 +925,9 @@ const BusinessInfo = () => {
                 ))}
               </Picker>
             </View>
+            
           </View>
+          {CountryError || cityError ? <Text style={styles.errorText}>{error}</Text> : null}
 
           {/* Country Code and Phone Number */}
           <View style={styles.phoneContainer}>
@@ -928,7 +953,6 @@ const BusinessInfo = () => {
                 ))}
               </Picker>
             </View>
-
             <TextInput
               style={[styles.phoneNumberInput, { flex: 0.7 }]}
               placeholder="Phone Number"
@@ -937,8 +961,9 @@ const BusinessInfo = () => {
               maxLength={15}
               onChangeText={setPhonenumber}
             />
+            
           </View>
-
+          {phoneErorr || codeErorr ? <Text style={styles.errorText}>{error}</Text> : null}
           <View style={styles.registerButtonContainer}>
             <TouchableOpacity
               onPress={handleSignUp}
@@ -950,28 +975,40 @@ const BusinessInfo = () => {
         </View>
 
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isFullImageModalVisible}
-          onRequestClose={() => setFullImageModalVisible(false)}
-        >
-          <View style={styles.imageModalContainer}>
-            <View style={styles.fullImageContainer}>
-              {profileImage && (
-                <Image
-                  source={{ uri: profileImage }}
-                  style={styles.fullImage}
-                />
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.imageModalButton2}
-              onPress={() => setFullImageModalVisible(false)}
+              animationType="slide"
+              transparent={true}
+              visible={isFullImageModalVisible}
+              onRequestClose={() => setFullImageModalVisible(false)}
             >
-              <Text style={styles.imageModalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+              <View style={styles.modalContainer}>
+                <View style={styles.imageModalContainer1}>
+                
+                  {profileImage ? (
+                    
+                      <Image
+                        source={{ uri: profileImage }}
+                        style={styles.fullImage}
+                        resizeMode="contain"
+                      />
+                    )
+                  : null}
+
+                  <TouchableOpacity
+                    style={
+                     styles.imageCloseButton
+                    }
+                    onPress={() => setFullImageModalVisible(false)}
+                  >
+                    <AntDesign
+                      name="closecircle"
+                      size={heightPercentageToDP("4%")}
+                      color="rgba(3, 29, 68, 1)"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+        
 
         <Modal
           animationType="slide"
@@ -1036,7 +1073,7 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: heightPercentageToDP("23%"),
+    marginTop: heightPercentageToDP("10%"),
   },
   profileImage: {
     width: widthPercentageToDP("30%"),
@@ -1059,6 +1096,23 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     color: "white",
     fontSize: widthPercentageToDP("4%"),
+  },
+  imageCloseButton: {
+    position: "absolute",
+    top: heightPercentageToDP("15%"), // Adjust the top percentage as needed
+    right: widthPercentageToDP("0%"), // Adjust the right percentage as needed
+    zIndex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value (last number) for transparency
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageModalContainer1: {
+    position: "relative",
+    width: widthPercentageToDP("80%"), // Adjust the width percentage as needed
+    height: heightPercentageToDP("80%"), // Adjust the height percentage as needed
   },
   formContainer: {
     width: widthPercentageToDP("90%"),
@@ -1134,7 +1188,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     marginTop: heightPercentageToDP("5%"),
-    marginBottom: widthPercentageToDP("1%"),
+    marginBottom: widthPercentageToDP("0%"),
   },
   registerButton: {
     backgroundColor: "rgba(3, 29, 68, 1)",
@@ -1208,6 +1262,12 @@ const styles = StyleSheet.create({
   fullImage: {
     width: "100%",
     height: "100%",
+  },
+  errorText: {
+    color: "red",
+    fontSize: widthPercentageToDP("3%"),
+    marginTop: heightPercentageToDP("1%"),
+    fontFamily: FontFamily.poppinsMedium,
   },
 });
 
