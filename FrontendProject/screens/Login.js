@@ -248,13 +248,8 @@ const styles = StyleSheet.create({
     height: heightPercentageToDP("6%"),
     paddingHorizontal: widthPercentageToDP("40%"),
   },
-  // buttonImage: {
-  //   width: widthPercentageToDP("10%"),
-  //   height: widthPercentageToDP("10%"),
-  //   // marginRight: widthPercentageToDP("2%"),
-  // },
   buttonText: {
-    fontSize: 16,
+    fontSize: widthPercentageToDP("4%"),
     color: "white",
     position: "absolute", // Added position absolute
     textAlign: "center",
@@ -282,6 +277,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     paddingHorizontal: widthPercentageToDP("3%"),
+    marginTop:widthPercentageToDP("1%"),
     fontSize: heightPercentageToDP("2%"),
     fontFamily: FontFamily.poppinsMedium,
   },
@@ -291,7 +287,6 @@ const styles = StyleSheet.create({
     marginVertical: heightPercentageToDP("3%"),
     width: "100%",
   },
-  // Google Sign-in Button Styles
   googleButtonContainer: {
     marginTop: heightPercentageToDP("1%"),
     alignItems: "center",

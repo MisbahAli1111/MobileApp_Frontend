@@ -1192,7 +1192,7 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     backgroundColor: "rgba(3, 29, 68, 1)",
-    paddingVertical: heightPercentageToDP("2%"),
+    paddingVertical: heightPercentageToDP("1.5%"),
     alignItems: "center",
     width: "100%",
     borderRadius: widthPercentageToDP("2%"),

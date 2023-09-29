@@ -860,13 +860,12 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     backgroundColor: "rgba(3, 29, 68, 1)",
-    paddingVertical: heightPercentageToDP("2%"),
+    paddingVertical: heightPercentageToDP("1.5%"),
     alignItems: "center",
     width: widthPercentageToDP("93%"),
     borderRadius: widthPercentageToDP("2%"),
     marginBottom: widthPercentageToDP("3%"),
-    alignSelf: "flex-start", // Align the button to the start (top) of the container
-    marginTop: -heightPercentageToDP("0%"),
+    alignSelf: "flex-start", 
   },
   registerButtonText: {
     color: "white",

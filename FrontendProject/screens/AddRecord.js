@@ -768,7 +768,7 @@ const AddRecord = () => {
                           paddingLeft: wp("4%"),
                         }}
                       />
-                      <ScrollView>
+                      <ScrollView style={styles.scrollViewContainer1}>
                         <FlatList
                           data={data}
                           style={{ width: "85%", alignSelf: "center" }}
@@ -820,6 +820,7 @@ const AddRecord = () => {
                             fontFamily: FontFamily.poppinsMedium,
                             color: "white",
                             textAlign: "center",
+                            marginRight:wp("3.5%")
                           }}
                         >
                           Add Vehicle
@@ -910,19 +911,19 @@ const AddRecord = () => {
                     </Text>
                   </TouchableOpacity>
 
-                  {profileImageLink ? (
+                  {/* {profileImageLink ? (
                     <Image
                       source={{ uri: profileImageLink }}
                       style={styles.profileImageIcon} // Assuming you have a style for the profile image
                     />
-                  ) : (
+                  ) : ( */}
                     <AntDesign
                       name="user"
                       size={24}
                       color="rgba(3, 29, 68, 1)"
                       style={styles.inputIcon}
                     />
-                  )}
+                  {/* )} */}
                 </View>
               </View>
               {NameError ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -1173,6 +1174,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
+  },
+  scrollViewContainer1: {
+    flex: 1,
+    marginBottom:hp("10%")
   },
 
   profileImageContainer: {
@@ -1558,7 +1563,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(3, 29, 68, 1)",
     alignItems: "center",
     justifyContent: "center",
-    alignSelf: "center", // Center the button horizontally // Add some margin at the top for spacing // Add border radius if needed // Add horizontal padding
+    alignSelf: "center", 
+    marginBottom:wp("5%")// Center the button horizontally // Add some margin at the top for spacing // Add border radius if needed // Add horizontal padding
 },
   buttonText: {
     color: "white",

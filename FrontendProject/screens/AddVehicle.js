@@ -573,7 +573,7 @@ const AddVehicle = () => {
       </View>
 
       {/* ScrollView */}
-      <ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ paddingBottom: hp("10%") }}>
+      <ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ paddingBottom: hp("7%") }}>
         {/* Image Carousel */}
 
         <View style={styles.profileImageContainer}>
@@ -780,19 +780,19 @@ const AddVehicle = () => {
                 </Text>
               </TouchableOpacity>
 
-              {profileImageLink ? (
+              {/* {profileImageLink ? (
                 <Image
                   source={{ uri: profileImageLink }}
                   style={styles.profileImageIcon} // Assuming you have a style for the profile image
                 />
-              ) : (
+              ) : ( */}
                 <AntDesign
                   name="user"
                   size={24}
                   color="rgba(3, 29, 68, 1)"
                   style={styles.inputIcon}
                 />
-              )}
+              {/* )} */}
             </View>
 
             {clicked ? (
@@ -851,7 +851,7 @@ const AddVehicle = () => {
                         paddingLeft: wp("4%"),
                       }}
                     />
-                    <ScrollView>
+                    <ScrollView style={styles.scrollViewContainer1}>
                       <FlatList
                         data={data}
                         style={{ width: "85%", alignSelf: "center" }}
@@ -885,14 +885,15 @@ const AddVehicle = () => {
                     <TouchableOpacity
                       style={{
                         backgroundColor: "rgba(3, 29, 68, 1)",
-                        paddingVertical: hp("2%"),
-                        alignSelf: "center",
-                        borderRadius: wp("2%"),
-                        width: "50%",
-                        marginTop: hp("2%"),
-                        position: "absolute",
-                        zIndex: 999,
-                        bottom: hp("2%"),
+                          paddingVertical: hp("2%"),
+                          alignSelf: "center",
+                          borderRadius: wp("2%"),
+                          paddingLeft: wp("5%"),
+                          width: "50%",
+                          marginTop: hp("2%"),
+                          position: "absolute",
+                          zIndex: 999,
+                          bottom: hp("2%"),
                       }}
                       onPress={handleAddCustomer}
                     >
@@ -1039,14 +1040,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
-    marginBottom:hp("1%")
-    // Add paddingBottom to accommodate the "Km Driven" input
+    marginBottom:hp("10%"),
+  },
+  scrollViewContainer1: {
+    flex: 1,
+    marginBottom:hp("10%")
   },
 
   profileImageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp("3%"),
+    marginTop: hp("0%"),
   },
   profileImage: {
     width: wp("30%"),
@@ -1103,10 +1107,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center", // Center the button horizontally // Add some margin at the top for spacing
-    borderRadius: wp("1%"), // Add border radius if needed
+    borderRadius: wp("2%"), // Add border radius if needed
     paddingHorizontal: wp("2%"), // Add horizontal padding
-    marginBottom: hp("1%"),
-    // left: wp("0.5%"),
+    marginTop:wp("1%")
   },
   buttonText: {
     color: "white",

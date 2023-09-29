@@ -9,7 +9,7 @@ const chartConfig = {
   decimalPlaces: 0,
   color: (opacity = 1) => `rgba(0, 0, 40, ${opacity})`,
   propsForBackgroundLines: {
-    translateX: 30,
+    translateX: 40,
   },
 };
 
@@ -25,7 +25,6 @@ const DashboardGraph = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.vehiclesText}>Vehicles Maintained</Text>
 
       <BarChart
         data={{
@@ -51,22 +50,17 @@ const DashboardGraph = () => {
 
 const styles = StyleSheet.create({
   container: {
-    top: -6,
     flex: 1,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    left: -16,
-    // height:"20%",
     width: "100%",
   },
   vehiclesText: {
     fontSize: 20,
     fontFamily: FontFamily.poppinsMedium,
     fontWeight: "500",
-    top: 10,
-    marginBottom: 10,
-    left: 10,
+    marginBottom: "10%",
   },
 });
 export default DashboardGraph;

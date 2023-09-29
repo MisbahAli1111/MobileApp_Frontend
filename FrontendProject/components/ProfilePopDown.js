@@ -1,16 +1,47 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
+import Config from "../screens/Config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 
 const ProfileDropdown = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  getData = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${Config.apiServerUrl}/api/users/${userId}`, // Use backticks
+      headers: {},
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        setName(response.data.firstName);
+        setEmail(response.data.email);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.dropdown}>
         <View style={styles.item}>
-          <Text style={styles.text}>Shayan Hassan Shayan@example.com</Text>
+          <Text style={styles.text}>{name} {email}</Text>
         </View>
         <TouchableOpacity
           style={styles.item1}
@@ -53,32 +84,33 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    width: 180,
+    width: widthPercentageToDP("45%"),
     position: "absolute",
-    top: 15,
-    right: 45,
+    top: 0,
+    right: widthPercentageToDP("10%"),
     backgroundColor: "#fff",
     borderRadius: 10,
     borderWidth: 0.5,
     borderColor: "black",
-    padding: 10,
+    padding: widthPercentageToDP("2%"),
   },
   item: {
-    paddingVertical: 10,
+    paddingVertical: heightPercentageToDP("1%"),
     borderBottomWidth: 1,
     borderBottomColor: "black",
   },
   item1: {
-    paddingVertical: 10,
+    paddingVertical: heightPercentageToDP("1%"),
     borderBottomWidth: 0.5,
     borderBottomColor: "black",
   },
   item2: {
-    paddingVertical: 10,
+    paddingVertical: heightPercentageToDP("1%"),
     paddingBottom: 1,
   },
   text: {
-    fontSize: 16,
+    fontSize: widthPercentageToDP("3.5%"),
+    fontFamily:FontFamily.poppinsMedium,
     width: 180,
     color: "#000",
     marginBottom: 2,
