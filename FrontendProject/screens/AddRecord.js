@@ -171,17 +171,6 @@ const AddRecord = () => {
     setDetailError("");
     setServiceError("");
     setNumberError("");
-    // setCompanyNameError("");
-    // setCusomterTypeError("");
-    // setKmError("");
-    // setYearError("");
-    // setvehicleColorError("");
-    // const [NameError, setNameError] = useState(false);
-    // const [DateError, setDateError] = useState(false);
-    // const [TimeError, setTimeError] = useState(false);
-    // const [drivenError, setDrivenError] = useState(false);
-    // const [DetailError, setDetailError] = useState("");
-    // const [serviceError, setServiceError] = useState("");
   };
 
   const handleImageUpload = () => {
@@ -424,6 +413,9 @@ const AddRecord = () => {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 401) {
+          navigation.navigate("Login");
+        }
       });
   };
 
@@ -449,6 +441,9 @@ const AddRecord = () => {
       })
       .catch((error) => {
         console.log(error);
+         if (error.response.status === 401) {
+          navigation.navigate("Login");
+        }
       });
   };
 
@@ -474,6 +469,9 @@ const AddRecord = () => {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 401) {
+        
+        }
       });
   };
 
@@ -653,7 +651,8 @@ const AddRecord = () => {
         if (response.data.status == "EXPECTATION_FAILED") {
           setRegMsg(JSON.stringify(response.data.message));
           setNumberError(true);
-        } else {
+        } 
+        else {
           if (response.data.status === "OK") {
             const createdUserId = response.data.data;
             setUserId(createdUserId);
@@ -666,6 +665,10 @@ const AddRecord = () => {
         }
       } catch (error) {
         console.error(error);
+        if (error.response.status === 401) {
+          
+          navigation.navigate("Login");
+        }
       }
     }
   };

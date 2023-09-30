@@ -84,6 +84,10 @@ const SalesReport = () => {
         }
       }
     } catch (error) {
+      if (error.response.status === 401) {
+            
+        navigation.navigate("Login");
+      }
       console.log("Error fetching profile image:", error);
     }
   };
@@ -356,6 +360,10 @@ const SalesReport = () => {
         })
         .catch((error) => {
           console.log(error);
+          if (error.response.status === 401) {
+            
+            navigation.navigate("Login");
+          }
           setError("No invoices were found within the specified date range.");
         });
     }

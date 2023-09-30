@@ -161,6 +161,10 @@ const BusinessInfo = () => {
           }
         })
         .catch((error) => {
+          if (error.response.status === 401) {
+            
+            navigation.navigate("Login");
+          }
           console.log(error);
         });
     }

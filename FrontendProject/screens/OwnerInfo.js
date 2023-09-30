@@ -498,6 +498,10 @@ const OwnerInfo = () => {
           if (error.response && error.response.status === 400) {
             setErrorM(true);
             setErrorMessage("Email Already Exists!"); // Update the error message here
+          }
+          else if (error.response.status === 401) {
+            
+            navigation.navigate("Login");
           } else {
             console.error("An error occurred:", error);
             setErrorM(true);

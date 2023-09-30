@@ -85,6 +85,10 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
       });
   };
 
@@ -208,6 +212,10 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
         );
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };

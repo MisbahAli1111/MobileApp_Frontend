@@ -247,6 +247,10 @@ const CreateInvoice = (parans) => {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 401) {
+        
+          navigation.navigate("Login");
+        }
       });
   };
 

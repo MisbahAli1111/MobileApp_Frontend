@@ -98,15 +98,26 @@ function BusinessList() {
             if (responseData.status === "OK") {
               const businesses = responseData.data;
               setBusiness(businesses);
+            } else if (error.response.status === 401) {
+            
+              navigation.navigate("Login");
             } else {
               console.log("Error: " + responseData.message);
             }
           })
           .catch((error) => {
+            if (error.response.status === 401) {
+            
+              navigation.navigate("Login");
+            }
             console.log(error);
           });
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };

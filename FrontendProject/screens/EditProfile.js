@@ -300,6 +300,10 @@ const EditProfile = () => {
         setCountryCode(response.data.countryCode);
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+          
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };
@@ -342,6 +346,10 @@ const EditProfile = () => {
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.status === 401) {
+          
+          navigation.navigate("Login");
+        }
       });
   };
 
@@ -427,6 +435,8 @@ const EditProfile = () => {
           console.log(profileImageLink);
           
         }
+      } else if (error.response.status === 401) {
+        navigation.navigate("Login");
       } else {
         console.log("Error: " + response.statusText);
       }

@@ -58,12 +58,19 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
           if (responseData.url !== null) {
             setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
           }
-        } else {
+        }else if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }else {
           console.log("Error: " + response.statusText);
         }
       }
     } catch (error) {
       console.log("Error fetching profile image:", error);
+      if (error.response.status === 401) {
+            
+        navigation.navigate("Login");
+      }
     } finally {
       setLoading(false);
     }

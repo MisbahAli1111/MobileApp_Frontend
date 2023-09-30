@@ -351,6 +351,10 @@ const CreateInvoiceForm = ({
         setName(Name);
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };
@@ -380,6 +384,10 @@ const CreateInvoiceForm = ({
         setregNumber(response.data);
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };

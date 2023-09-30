@@ -348,6 +348,9 @@ const EditProfile = () => {
           }
         })
         .catch((error) => {
+          if (error.response.status === 401) {
+            navigation.navigate("Login");
+          }
           console.log(error);
         });
     }
@@ -429,6 +432,9 @@ const EditProfile = () => {
       if (response.status === 200) {
         const responseData = response.data;
         setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+      } else if (error.response.status === 401) {
+        
+        navigation.navigate("Login");
       } else {
         console.log("Error: " + response.statusText);
       }

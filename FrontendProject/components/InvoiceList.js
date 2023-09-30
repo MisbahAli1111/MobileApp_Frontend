@@ -86,6 +86,10 @@ function Invoicelist({ dsearch, searchOrder }) {
         getData();
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };
@@ -122,6 +126,10 @@ function Invoicelist({ dsearch, searchOrder }) {
         }
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };

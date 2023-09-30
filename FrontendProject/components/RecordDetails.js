@@ -70,6 +70,10 @@ function RecordDetails({ recordId }) {
         }
       } catch (error) {
         console.log(error);
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         setLoading(false); 
       }
     };
@@ -93,6 +97,10 @@ function RecordDetails({ recordId }) {
           setOwnerId(response.data);
         }
       } catch (error) {
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         console.log(error);
          
       }
@@ -130,6 +138,10 @@ function RecordDetails({ recordId }) {
           setOwnerName(response.data[0].vehicleOwner);
         })
         .catch((error) => {
+          if (error.response.status === 401) {
+            
+            navigation.navigate("Login");
+          }
           console.log(error);
         });
     }

@@ -65,6 +65,10 @@ const MaintenanceRecord = ({ route }) => {
           })
           .catch((error) => {
             console.log(error);
+             if (error.response.status === 401) {
+             
+              navigation.navigate("Login");
+            }
           });
       };
       const handlePress = (index, recordId) => {

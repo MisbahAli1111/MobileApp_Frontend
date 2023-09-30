@@ -101,6 +101,10 @@ function InvoiceDetailView() {
         setIsLoading(false);
       })
       .catch((error) => {
+         if (error.response.status === 401) {
+        
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };
@@ -128,6 +132,9 @@ function InvoiceDetailView() {
           const responseData = response.data;
 
           setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
+        }
+        else if (error.response.status === 401) {
+          navigation.navigate("Login");
         } else {
           console.log("Error: " + response.statusText);
         }

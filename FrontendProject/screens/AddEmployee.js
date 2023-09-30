@@ -502,6 +502,12 @@ const AddEmployee = () => {
           if (error.response && error.response.status === 400) {
             setErrorM(true);
             setErrorMessage("Email Already Exists!"); // Update the error message here
+          }
+          else if (error.response.status === 401) {
+            setErrorM(true);
+            setErrorMessage("Token has expired. Please log in."); // Token expired error message
+            // Navigate to the login screen here
+            navigation.navigate("Login");
           } else {
             console.error("An error occurred:", error);
             setErrorM(true);

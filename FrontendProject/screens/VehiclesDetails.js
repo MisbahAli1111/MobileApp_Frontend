@@ -66,6 +66,10 @@ const VehicleDetailView = ({ route }) => {
         }
       } catch (error) {
         console.log(error);
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         setLoading(false); // Make sure to set loading to false in case of an error
       }
 
@@ -87,6 +91,10 @@ const VehicleDetailView = ({ route }) => {
             setRegistrationNumber(response.data.registrationNumber);
           })
           .catch((error) => {
+            if (error.response.status === 401) {
+            
+              navigation.navigate("Login");
+            }
             console.log(error);
           });
       }

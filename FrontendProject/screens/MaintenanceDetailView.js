@@ -53,6 +53,10 @@ const MaintenanceDetailView = () => {
         })
         .catch((error) => {
           console.log(error);
+           if (error.response.status === 401) {
+            
+            navigation.navigate("Login");
+          }
         });
     }
   };
@@ -81,6 +85,10 @@ const MaintenanceDetailView = () => {
         }
       } catch (error) {
         console.log(error);
+        if (error.response.status === 401) {
+            
+          navigation.navigate("Login");
+        }
         setLoading(false); 
       }
     };

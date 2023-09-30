@@ -214,6 +214,10 @@ const AddVehicle = () => {
         setCustomers(response.data);
       })
       .catch((error) => {
+        if (error.response.status === 401) {
+        
+          navigation.navigate("Login");
+        }
         console.log(error);
       });
   };
@@ -539,9 +543,13 @@ const AddVehicle = () => {
             }
             navigation.navigate("Vehicles", { type: "default" });
           }
+          
         })
         .catch((error) => {
           console.log(error);
+           if (error.response.status === 401) {
+            navigation.navigate("Login");
+          }
         });
     }
   };
