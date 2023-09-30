@@ -45,14 +45,14 @@ const RecordList = ({
   // const displayedRecords = search ? data : records;
 
   const handlePress = (index, recordId) => {
-    if (InvoiceScreen) {
-      setCurrentPressedIndex(index);
-      setInvoiceIndex(index);
-      setInvoiceRecord(recordId);
-    } else {
+    // if (InvoiceScreen) {
+    //   setCurrentPressedIndex(index);
+    //   setInvoiceIndex(index);
+    //   setInvoiceRecord(recordId);
+    // } 
       setCurrentPressedIndex(index);
       navigation.navigate("MaintenanceDetailView", { recordId: recordId });
-    }
+    
   };
 
   getData = async () => {
@@ -90,20 +90,7 @@ const RecordList = ({
     }
   }, [isFocused]);
 
-  useEffect(() => {
-    setInvoiceScreen(false);
-    setCreateInvoice(false);
-    if (fromPreviousScreen) {
-      setInvoiceScreen(true);
-    }
-    if (create) {
-      setCreate(false);
-      if (InvoiceRecord) {
-        navigation.navigate("CreateInvoice", { InvoiceRecord: InvoiceRecord });
-      }
-      // setCreateInvoice(true);
-    }
-  }, [create]);
+
 
   const displayedRecords = useMemo(() => {
     let filteredVehicles;
@@ -402,6 +389,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 0.02 * rem,
   },
+  
   serviceWrapper: {
     top: 84,
   },

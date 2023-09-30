@@ -48,7 +48,7 @@ function Invoicelist({ dsearch, searchOrder }) {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
 
-      if (searchOrder === "ascending") {
+      if (searchOrder === "descending") {
         return dateA - dateB;
       } else {
         return dateB - dateA;
@@ -113,11 +113,11 @@ function Invoicelist({ dsearch, searchOrder }) {
     axios
       .request(config)
       .then((response) => {
+        console.log(response.data);
         const newData = response.data;
         const hasDataChanged = !isEqual(newData, Invoices);
 
         if (hasDataChanged) {
-          // console.log(JSON.stringify(newData));
           setInvoices(newData);
         }
       })
@@ -133,6 +133,9 @@ function Invoicelist({ dsearch, searchOrder }) {
     const maintained = Invoices.filter((invoice) => {
       const nameMatches =
         invoice.name && invoice.name.toUpperCase().includes(formattedQuery);
+        const statusMatches = invoice.status === true && formattedQuery.toLowerCase() === 'paid';
+        const DuestatusMatches = invoice.status === false && formattedQuery.toLowerCase() === 'due';
+        
       const ownerMatches =
         invoice.vehicleOwner &&
         invoice.vehicleOwner.toUpperCase().includes(formattedQuery);
@@ -143,9 +146,9 @@ function Invoicelist({ dsearch, searchOrder }) {
         invoice.parentCompany &&
         invoice.parentCompany.toUpperCase().includes(formattedQuery);
       const totalMatches = invoice.total.toString().includes(formattedQuery);
-
+      
       const dateMatches = (query) => {
-        const formattedDate = query.split("/").reverse().join("-"); // Convert to 'YYYY-MM-DD' format
+        const formattedDate = query.split("/").reverse().join("-"); 
         const maintanenceDate = invoice.date.split("T")[0];
         return maintanenceDate.includes(formattedDate);
       };
@@ -154,6 +157,8 @@ function Invoicelist({ dsearch, searchOrder }) {
         nameMatches ||
         parentCompanyMatches ||
         totalMatches ||
+        statusMatches ||
+        DuestatusMatches ||
         numberMatches ||
         ownerMatches ||
         dateMatches(formattedQuery)

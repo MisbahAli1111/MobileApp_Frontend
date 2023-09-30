@@ -58,7 +58,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       const dateA = new Date(a.dateCreated);
       const dateB = new Date(b.dateCreated);
 
-      if (searchOrder === "ascending") {
+      if (searchOrder === "descending") {
         return dateA - dateB;
       } else {
         return dateB - dateA;

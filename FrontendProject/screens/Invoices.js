@@ -78,7 +78,7 @@ const Invoices = () => {
             )}
             <TouchableOpacity
               style={[styles.groupLayoutt]}
-              onPress={() => navigation.navigate("AddVehicle")}
+              onPress={() => navigation.navigate("ListRecords")}
             >
               <View style={styles.rectangleGroupp}>
                 <Text style={[styles.addTypo]}>
@@ -118,56 +118,12 @@ const Invoices = () => {
         </View>
       </Pressable>
 
-      {/* <View style={styles.breadcrumbsParent}>
-        <View style={{flexDirection:'row',gap:rem*0.2,marginLeft:rem*0.88}}>
-            <Image
-              style={styles.homeMutedIcon1}
-              contentFit="cover"
-              source={require("../assets/homemuted.png")}
-            />
-         
-          <Text>/</Text>
-          <Text>Invoices</Text>
-
-        </View>
-        <View style={{marginLeft:rem*4.8,top:-rem*0.3}}>
-        <Pressable
-          style={[styles.createInvoiceWrapper, styles.invoicesChild3Layout]}
-          onPress={() =>
-            navigation.navigate("MaintenanceRecord", {
-              fromPreviousScreen: true,
-            })
-          }
-        >
-          <Text style={[styles.createInvoice, styles.text13Typo]}>
-            Create Invoice
-          </Text>
-        </Pressable>
-        </View>
-
-      </View>
-
-      <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
-        <TextInput
-          style={[styles.searchInvoice, styles.paidTypo]}
-          placeholder="Search Invoice "
-          clearButtonMode="always"
-          value={search}
-          onChangeText={(query) => handleQuery(query)}
-        />
-          <Image
-            style={[styles.icon, styles.iconLayout1]}
-            contentFit="cover"
-            source={require("../assets/vector13.png")}
-          />
-      </Pressable> */}
-
 
       <View style={styles.cont}>
         <Footer prop={"Invoices"} />
       </View>
       <View style={styles.boxContianer}>
-        <InvoiceList dsearch={search} />
+        <InvoiceList dsearch={search} searchOrder={searchOrder} />
       </View>
 
     </View>

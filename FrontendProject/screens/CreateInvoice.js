@@ -35,7 +35,7 @@ const CreateInvoice = (parans) => {
   const [APIDiscount, setAPIDiscount] = useState();
   const [APITax, setAPITax] = useState();
   const [APIDescription, setAPIDescription] = useState();
-  const recordId = route.params?.InvoiceRecord;
+  const recordId = route.params?.recordId;
   const invoiceId = route.params?.InvoiceId;
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
