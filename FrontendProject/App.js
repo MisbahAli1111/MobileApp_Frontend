@@ -18,6 +18,7 @@ import Vehicles from "./screens/Vehicles";
 import AddVehicle from "./screens/AddVehicle";
 import Login from "./screens/Login";
 import VehicleDetails from "./screens/VehiclesDetails";
+import ListRecords from "./screens/ListRecords";
 import AddCustomer from "./screens/AddCustomer";
 import CustomerDetails from "./screens/CustomerDetails";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -246,6 +247,16 @@ const App = () => {
               component={MaintenanceRecord}
               initialParams={{
                 title: "Records",
+                showBackArrow: true,
+                onBackPress: "Home",
+                profileImage: "Yes",
+              }}
+            />
+            <Stack.Screen
+              name="ListRecords"
+              component={ListRecords}
+              initialParams={{
+                title: "Records List",
                 showBackArrow: true,
                 onBackPress: "Home",
                 profileImage: "Yes",

@@ -2,6 +2,8 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
+import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
+
 import {
   StyleSheet,
   View,
@@ -145,14 +147,15 @@ const styles = StyleSheet.create({
 
   bottom: {
     flex: 1,
+    
+    // bottom:0-heightPercentageToDP('100%'),
     flexDirection: "row",
     justifyContent: "space-between",
     position: 'absolute',
     backgroundColor: Color.steelblue_300,
     width: screenWidth,
     height: screenWidth*0.22,
-    top: screenWidth*1.89,
-    display: 'flex',
+    bottom:0-screenHeight-25,
     gap: rem * 4.5, 
   },
 
@@ -181,7 +184,7 @@ const styles = StyleSheet.create({
     height: rem * 4,
     width: rem * 4,
     position: 'absolute',
-    top: screenWidth*1.77,
+    bottom:0-screenHeight+10,
     zIndex: 999,
     left: screenWidth / 2 - rem * 2,
   },
@@ -205,7 +208,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: Color.textTxtPrimary,
     position: 'absolute',
-    top: screenWidth*1.99,
+    bottom:0-screenHeight+5,
     zIndex: 999,
     left: screenWidth / 2 - 40,
   },

@@ -375,9 +375,10 @@ function InvoiceDetailView() {
             source={require("../assets/homemuted.png")}
           />
           <Text>/</Text>
-          <Text>Invoices</Text>
-          <Text>/</Text>
-          <Text>Invoice Detail View</Text>
+          <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Invoices</Text>
+          <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>/</Text>
+          <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Invoice Detail View</Text>
+          <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"black" }}>/ {invoiceId}</Text>
         </View>
 
 
@@ -449,8 +450,8 @@ function InvoiceDetailView() {
                   style={{
                     fontSize: rem * 0.55,
                     fontWeight: 500,
-
-                    width: screenWidth * 0.4,
+                    
+                    width: screenWidth * 0.55,
                   }}
                 >
                   Invoice Due: {due}
@@ -477,7 +478,7 @@ function InvoiceDetailView() {
                   style={{
                     fontSize: rem * 0.55,
                     fontWeight: 500,
-                    width: screenWidth * 0.4,
+                    width: screenWidth * 0.55,
                   }}
                 >
                   Balance: {total}
@@ -503,7 +504,7 @@ function InvoiceDetailView() {
                   style={{
                     fontSize: rem * 0.55,
                     fontWeight: 500,
-                    width: screenWidth * 0.5,
+                    width: screenWidth * 0.55,
                   }}
                   numberOfLines={1} 
                   ellipsizeMode="tail"
@@ -535,10 +536,10 @@ function InvoiceDetailView() {
 
         <ScrollView style={styles.wrap}>
           <View style={styles.headerRow}>
-            <Text style={styles.headerCell}>DESCRIPTION</Text>
-            <Text style={styles.headerCell}>RATE</Text>
-            <Text style={styles.headerCell}>QUANTITY</Text>
-            <Text style={styles.headerCell}>AMOUNT</Text>
+            <Text style={styles.headerCell} numberOfLines={1} ellipsizeMode="tail">DESCRIPTION</Text>
+            <Text style={styles.headerCell} numberOfLines={1} ellipsizeMode="tail">RATE</Text>
+            <Text style={styles.headerCell} numberOfLines={1} ellipsizeMode="tail">QUANTITY</Text>
+            <Text style={styles.headerCell} numberOfLines={1} ellipsizeMode="tail">AMOUNT</Text>
           </View>
           {description.map((desc, index) => (
             <View key={index} style={styles.dataRow}>
@@ -549,9 +550,6 @@ function InvoiceDetailView() {
             </View>
           ))}
         </ScrollView>
-
-
-
 
         <View style={[styles.groupLayout]}>
           <View style={styles.parent}>
@@ -638,7 +636,6 @@ const styles = StyleSheet.create({
     top: 0,
   },
   headerCell: {
-    flex: 1,
     fontWeight: 'bold',
     textAlign: 'center',
     alignItems: 'center',

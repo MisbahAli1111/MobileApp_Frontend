@@ -62,18 +62,18 @@ const MaintenanceRecord = ({ route }) => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={{ top: screenWidth * 0.35, width: screenWidth * 0.9, alignSelf: 'center' }}>
+      <View style={{ top: screenWidth * 0.33, width: screenWidth * 0.9, alignSelf: 'center' }}>
         <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
 
           <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
-            <Icon name="home" size={rem * 0.6} color="black" />
-            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }} >/</Text>
-            <Text style={{ fontSize: rem * 0.5, fontWeight: 700 }}>Records</Text>
+            <Icon name="home" size={rem * 0.7} color="#6ba2f2" />
+            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }} >/</Text>
+            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Records</Text>
             {isSearch && search ? (
-              <Text style={{ fontSize: rem * 0.5, fontWeight: 700, maxWidth: screenWidth * 0.27 }} numberOfLines={1}>/ {search}</Text>
+              <Text style={{ fontSize: rem * 0.58, fontWeight: 500, maxWidth: screenWidth * 0.27,color:"black" }} numberOfLines={1}>/ {search}</Text>
             ) : null}
           </View>
-          <View style={{ flex: 1, top: -20, alignItems: 'flex-end' }}>
+          <View style={{ flex: 1, top: -15, alignItems: 'flex-end' }}>
            <Pressable onPress={functionFilterSearch}>
               <Text style={styles.filterText}>Filter</Text>
             </Pressable>
