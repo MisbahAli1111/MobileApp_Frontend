@@ -26,6 +26,7 @@ import { useIsFocused } from '@react-navigation/native';
 function BusinessList() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [apiServerUrl,setApiServerUrl] = useState("");
   const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
   const [Business, setBusiness] = useState([]);
   const [loginTime, setLoginTime] = useState(null);
@@ -84,7 +85,7 @@ function BusinessList() {
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/business/get-my-businesses`,
+          url: `${apiServerUrl}/api/business/get-my-businesses`,
           headers: {
             Authorization: token,
           },
@@ -121,8 +122,29 @@ function BusinessList() {
         console.log(error);
       });
   };
+  const getApiServerUrl = async () => {
+    try {
+      setApiServerUrl( await AsyncStorage.getItem("apiServerUrl"));
+      return apiServerUrl; // This will return the stored apiServerUrl or null if it doesn't exist
+    } catch (error) {
+      console.error("Error retrieving apiServerUrl:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {}, [currentPressedIndex]);
+  useEffect(() => {
+    const checkApiServerUrl = async () => {
+      setApiServerUrl(await getApiServerUrl());
+      if (apiServerUrl) {
+        console.log("apiServerUrl:", apiServerUrl);
+      } else {
+        console.log("apiServerUrl is not set in AsyncStorage.");
+      }
+    };
+    
+    checkApiServerUrl();
+  }, []);
 
   const handlePress = (index) => {
     const loginTime = new Date().getTime();

@@ -90,7 +90,7 @@ const Login = () => {
       
       useEffect(() => {
         const checkApiServerUrl = async () => {
-          apiServerUrl = await getApiServerUrl();
+          setApiServerUrl(await getApiServerUrl());
           if (apiServerUrl) {
             console.log("apiServerUrl:", apiServerUrl);
           } else {
