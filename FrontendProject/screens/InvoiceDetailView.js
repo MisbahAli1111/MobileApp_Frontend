@@ -369,14 +369,22 @@ function InvoiceDetailView() {
         />
 
         <View style={styles.breadcrumbsParent}>
+          <TouchableOpacity
+         onPress={() => navigation.navigate('Home')}
+          >
           <Image
             style={styles.homeMutedIcon}
             contentFit="cover"
             source={require("../assets/homemuted.png")}
           />
+          </TouchableOpacity>
           <Text>/</Text>
+          <TouchableOpacity 
+         onPress={() => navigation.navigate('Invoices')}          
+          >
           <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Invoices</Text>
-          <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>/</Text>
+          </TouchableOpacity>
+          <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"black" }}>/</Text>
           <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Invoice Detail View</Text>
           <Text style={{fontSize: rem * 0.58, fontWeight: 500,color:"black" }}>/ {invoiceId}</Text>
         </View>

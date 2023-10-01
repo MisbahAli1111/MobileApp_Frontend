@@ -9,6 +9,10 @@ import {
   Pressable,
   TouchableOpacity
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FontFamily, Color, Border, FontSize, Padding } from "../GlobalStyles";
@@ -54,18 +58,29 @@ const Invoices = () => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={{ top: screenWidth * 0.35, width: screenWidth * 0.9, alignSelf: 'center' }}>
+      <View style={{ top: screenWidth * 0.34, width: screenWidth * 0.9, alignSelf: 'center' }}>
         <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
 
-          <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
-            <Icon name="home" size={rem * 0.7} color="#6ba2f2" />
-            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }} >/</Text>
-            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Invoices</Text>
-            {isSearch && search ? (
-              <Text style={{ fontSize: rem * 0.58, fontWeight: 500, maxWidth: screenWidth * 0.27,color:"black" }} numberOfLines={1}>/ {search}</Text>
-            ) : null}
-          </View>
-          <View style={{ flex: 1, top: -10, alignItems: 'flex-end' }}>
+        <View style={styles.breadcrumbContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image
+            style={styles.breadcrumbImage}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Invoices")}>
+          <Text style={styles.breadcrumbText1}>Invoices</Text>
+        </TouchableOpacity>
+        {isSearch && search ? (
+        <Text style={styles.breadcrumbSeparator}  numberOfLines={1}> / </Text>
+        ) : null}
+        {isSearch && search ? (
+        <Text style={styles.breadcrumbText} numberOfLines={1}>{search}</Text>
+        ) : null}
+      </View>
+          <View style={{ flex: 1, top: 4, alignItems: 'flex-end' }}>
           <Pressable onPress={functionFilterSearch}>
               <Text style={styles.filterText}>Filter</Text>
             </Pressable>
@@ -161,23 +176,118 @@ const styles = StyleSheet.create({
     backgroundColor: Color.darkslateblue,
     paddingEnd: screenWidth * 0.06,
     paddingLeft: screenWidth * 0.06,
-    paddingVertical: screenWidth * 0.015,
+    paddingVertical: screenWidth * 0.02,
     borderRadius: 20,
     flex: 1,
   },
   groupLayoutt: {
     alignItems: 'flex-end',
     flex: 1,
+    top:-7,
     position: 'absolute',
   },
   filterText: {
     left: -135,
-    top: 8,
+    // top: 8,
     fontWeight: 700,
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.size_sm,
     color: "#000",
     fontWeight: "500",
+  },
+  breadcrumbContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // marginTop: hp("11%"), // Adjust this value as needed to move the breadcrumbs down // Set the background color to match the container's background
+    // paddingLeft: wp("5%"), // Add padding to align with the content
+    paddingRight: wp("5%"), // Add padding to align with the content
+  },
+  // Move the breadcrumb below the header
+
+  breadcrumbImage: {
+    width: wp("4%"), // Adjust the width as needed
+    height: hp("2%"), // Adjust the height as needed
+    marginRight: wp("1%"), // Add margin to separate the image from text
+    // Adjust the color of the image
+  },
+
+  breadcrumbText: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)",
+    width:rem*2.4,
+    // backgroundColor:'red',
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+  breadcrumbText1: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: Color.steelblue_100,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+
+  breadcrumbSeparator: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)", // Separator text color
+    // paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+  },
+
+  scrollViewContainer: {
+    flexGrow: 1,
+    paddingHorizontal: wp("5%"),
+    paddingTop: hp("2%"),
+    // Add paddingBottom to accommodate the "Km Driven" input
+  },
+
+  profileImageContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp("3%"),
+    // paddingHorizontal:wp("2%"),
+    paddingLeft:wp("2%"),
+    paddingRight:wp("2%")
+  },
+  profileImage: {
+    width: wp("30%"),
+    height: wp("30%"),
+  },
+  profileImagePlaceholder: {
+    width: wp("100%"),
+    height: wp("70%"),
+    
+    
+  },
+  profileImagePlaceholder1: {
+    width: wp("90%"),
+    height: wp("20%"),
+  },
+  uploadButton: {
+    backgroundColor: "rgba(3, 29, 68, 1)",
+    paddingVertical: hp("1.5%"),
+    paddingHorizontal: wp("5%"),
+    borderRadius: wp("2%"),
+    marginTop: hp("0%"),
+  },
+  uploadButtonText: {
+    color: "white",
+    fontSize: wp("4%"),
+  },
+  imageUploadContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  carouselItem: {
+    width: wp("100%"), // Match the width of profileImagePlaceholder
+    height: wp("60%"), // Match the height of profileImagePlaceholder
+  },
+  carouselImage: {
+    width: "100%", // Use 100% width to maintain aspect ratio
+    height: "100%", // Use 100% height to maintain aspect ratio
+    resizeMode: "contain", // Use 'contain' to keep the image's aspect ratio
+  },
+  paginationContainer: {
+    marginTop: hp("0%"), // Adjust spacing as needed
   },
   cont: {
     // marginLeft: 1,

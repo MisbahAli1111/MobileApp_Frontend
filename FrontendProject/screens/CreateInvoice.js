@@ -325,17 +325,25 @@ const CreateInvoice = (parans) => {
 
       <View style={[styles.breadcrumbs, styles.element2Position]}>
         <View style={[styles.housefill, styles.elementFlexBox]}>
+        <TouchableOpacity
+        onPress={() => navigation.navigate("Home")}
+        >
           <Image
             style={styles.homeMutedIcon}
             contentFit="cover"
             source={require("../assets/homemuted.png")}
           />
+        </TouchableOpacity>
         </View>
         <View style={[styles.element, styles.elementFlexBox]} />
         <View style={[styles.element1, styles.elementFlexBox]}>
           <Text style={styles.text}>\</Text>
         </View>
+        <TouchableOpacity
+        onPress={() => navigation.navigate("Invoices")}
+        >
         <Text style={[styles.invoices, styles.text5Typo]}>Invoices</Text>
+        </TouchableOpacity>
       </View>
 
       {/* reg number  */}
@@ -805,7 +813,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     fontFamily: FontFamily.caption2Regular,
     textAlign: "left",
-    color: Color.textTxtPrimary,
+    color: 'black',
     fontWeight: "500",
     left: 0,
   },
