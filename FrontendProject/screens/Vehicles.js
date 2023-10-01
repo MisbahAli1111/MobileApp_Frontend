@@ -11,6 +11,10 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, FontSize, Border } from "../GlobalStyles";
 import VehicleRecords from "../components/VehicleRecords";
@@ -56,19 +60,30 @@ const Vehicles = () => {
       />
 
 
-      <View style={{ top: screenWidth * 0.32, width: screenWidth * 0.9, alignSelf: 'center' }}>
+      <View style={{ top: screenWidth * 0.30, width: screenWidth * 0.9, alignSelf: 'center' }}>
         <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
 
-          <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
-            <Icon name="home" size={rem * 0.7} color="#6ba2f2" />
-            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }} >/</Text>
-            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2"  }}>Vehicles</Text>
-            {isSearch && search ? (
-              <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"black", maxWidth: screenWidth * 0.27 }} numberOfLines={1}>/ {search}</Text>
-            ) : null}
-          </View>
+          <View style={styles.breadcrumbContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image
+            style={styles.breadcrumbImage}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Vehicles", { type: "default" })}>
+          <Text style={styles.breadcrumbText1}>Vehicles</Text>
+        </TouchableOpacity>
+        {isSearch && search ? (
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        ) : null}
+        {isSearch && search ? (
+        <Text style={styles.breadcrumbText} numberOfLines={1}>{search}</Text>
+        ) : null}
+      </View>
 
-          <View style={{ flex: 1, top: -15, alignItems: 'flex-end' }}>
+          <View style={{ flex: 1, alignItems: 'flex-end',top:5 }}>
             <Pressable onPress={functionFilterSearch}>
               <Text style={styles.filterText}>Filter</Text>
             </Pressable>
@@ -172,7 +187,38 @@ const styles = StyleSheet.create({
     right: 95,
     width: 70,
   },
-
+  breadcrumbImage: {
+    width: wp("4%"), // Adjust the width as needed
+    height: hp("2%"), // Adjust the height as needed
+    marginRight: wp("1%"), // Add margin to separate the image from text
+    // Adjust the color of the image
+  },
+  
+  breadcrumbSeparator: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)", // Separator text color
+    // paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+  },
+  breadcrumbContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // marginTop: hp("11%"), // Adjust this value as needed to move the breadcrumbs down // Set the background color to match the container's background
+    // paddingLeft: wp("5%"), // Add padding to align with the content
+    // paddingRight: wp("5%"), // Add padding to align with the content
+  },
+  breadcrumbText1: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: Color.steelblue_100,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+  breadcrumbText: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)",
+    width:rem*3,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
   iconLayout3: {
     maxHeight: "100%",
     maxWidth: "100%",
@@ -206,7 +252,7 @@ const styles = StyleSheet.create({
   filterText: {
     left: -135,
 
-    top: 15,
+    // top: 10,
     fontWeight: 700,
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.size_sm,
@@ -229,6 +275,7 @@ const styles = StyleSheet.create({
   groupLayoutt: {
     alignItems: 'flex-end',
     flex: 1,
+    top:-10,
     position: 'absolute',
   },
   groupInnerLayout: {},
@@ -563,8 +610,8 @@ const styles = StyleSheet.create({
     bottom: 116,
   },
   homeMutedIcon: {
-    width: 12,
-    height: 14,
+    width: rem*0.6,
+    height: rem*0.6,
   },
   housefill: {
     width: 14,

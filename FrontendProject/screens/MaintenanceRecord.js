@@ -9,6 +9,10 @@ import {
   Text,
   Pressable,
 } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
 import { FontFamily, Color, Border, FontSize } from "../GlobalStyles";
 import Footer from "../components/Footer";
@@ -62,18 +66,29 @@ const MaintenanceRecord = ({ route }) => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={{ top: screenWidth * 0.33, width: screenWidth * 0.9, alignSelf: 'center' }}>
+      <View style={{ top: screenWidth * 0.30, width: screenWidth * 0.9, alignSelf: 'center' }}>
         <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
 
-          <View style={{ gap: screenWidth * 0.01, flexDirection: 'row' }}>
-            <Icon name="home" size={rem * 0.7} color="#6ba2f2" />
-            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }} >/</Text>
-            <Text style={{ fontSize: rem * 0.58, fontWeight: 500,color:"#6ba2f2" }}>Records</Text>
-            {isSearch && search ? (
-              <Text style={{ fontSize: rem * 0.58, fontWeight: 500, maxWidth: screenWidth * 0.27,color:"black" }} numberOfLines={1}>/ {search}</Text>
-            ) : null}
-          </View>
-          <View style={{ flex: 1, top: -15, alignItems: 'flex-end' }}>
+        <View style={styles.breadcrumbContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Image
+            style={styles.breadcrumbImage}
+            contentFit="cover"
+            source={require("../assets/homemuted.png")}
+          />
+        </TouchableOpacity>
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("MaintenanceRecord")}>
+          <Text style={styles.breadcrumbText1}>Records</Text>
+        </TouchableOpacity>
+        {isSearch && search ? (
+        <Text style={styles.breadcrumbSeparator}> / </Text>
+        ) : null}
+        {isSearch && search ? (
+        <Text style={styles.breadcrumbText} numberOfLines={1}>{search}</Text>
+        ) : null}
+      </View>
+          <View style={{ flex: 1, top: 3, alignItems: 'flex-end' }}>
            <Pressable onPress={functionFilterSearch}>
               <Text style={styles.filterText}>Filter</Text>
             </Pressable>
@@ -165,6 +180,7 @@ const styles = StyleSheet.create({
   groupLayoutt: {
     alignItems: 'flex-end',
     flex: 1,
+    top:-10,
     position: 'absolute',
   },
   rectangleParent18: {
@@ -188,9 +204,51 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flex: 1,
   },
+  breadcrumbContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // marginTop: hp("11%"), // Adjust this value as needed to move the breadcrumbs down // Set the background color to match the container's background
+    // paddingLeft: wp("5%"), // Add padding to align with the content
+    // paddingRight: wp("5%"), // Add padding to align with the content
+  },
+  breadcrumbImage: {
+    width: wp("4%"), // Adjust the width as needed
+    height: hp("2%"), // Adjust the height as needed
+    marginRight: wp("1%"), // Add margin to separate the image from text
+    // Adjust the color of the image
+  },
+  breadcrumbSeparator: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)", // Separator text color
+    // paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+  },
+  breadcrumbImage: {
+    width: wp("4%"), // Adjust the width as needed
+    height: hp("2%"), // Adjust the height as needed
+    marginRight: wp("1%"), // Add margin to separate the image from text
+    // Adjust the color of the image
+  },
+  breadcrumbText1: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: Color.steelblue_100,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+  breadcrumbText: {
+    fontSize: wp("3.5%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)",
+    width:rem*3,
+    fontFamily: FontFamily.poppinsMedium,
+    marginTop: hp("0.7%"), // Breadcrumb text color
+  },
+  breadcrumbSeparator: {
+    fontSize: wp("4%"), // Adjust font size using wp
+    color: "rgba(3, 29, 68, 1)", // Separator text color
+    // paddingHorizontal: wp("1%"), // Add horizontal padding using wp to separate items
+  },
   filterText: {
     left: -132,
-    top: 15,
+    top: 0,
     fontWeight: 700,
     fontFamily: FontFamily.poppinsSemibold,
     fontSize: FontSize.size_sm,
