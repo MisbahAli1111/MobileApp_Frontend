@@ -23,10 +23,9 @@ import {
 } from "react-native-responsive-screen";
 import Config from "../screens/Config";
 import { useIsFocused } from '@react-navigation/native';
-function BusinessList() {
+function BusinessList({ apiServerUrl }) {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [apiServerUrl,setApiServerUrl] = useState("");
   const [currentPressedIndex, setCurrentPressedIndex] = useState(0);
   const [Business, setBusiness] = useState([]);
   const [loginTime, setLoginTime] = useState(null);
@@ -75,13 +74,25 @@ function BusinessList() {
       fetchData();
       getData();
     }
-  }, [isFocused]);
+    console.log("apiServerUrl:", apiServerUrl);
+   
+  }, [isFocused,apiServerUrl]);
 
   getData = () => {
-    AsyncStorage.getItem("accessToken")
-      .then((accessTokens) => {
-        const token = "Bearer " + accessTokens;
-
+    // Retrieve both accessToken and apiServerUrl in parallel
+    Promise.all([
+      AsyncStorage.getItem("accessToken"),
+      AsyncStorage.getItem("apiServerUrl"),
+    ])
+      .then(([accessToken, apiServerUrl]) => {
+        if (!accessToken || !apiServerUrl) {
+          // Handle missing accessToken or apiServerUrl
+          console.log("Access token or API server URL is missing.");
+          return;
+        }
+  
+        const token = "Bearer " + accessToken;
+  
         let config = {
           method: "get",
           maxBodyLength: Infinity,
@@ -90,17 +101,16 @@ function BusinessList() {
             Authorization: token,
           },
         };
-
+  
         axios
           .request(config)
           .then((response) => {
             const responseData = response.data;
-
+  
             if (responseData.status === "OK") {
               const businesses = responseData.data;
               setBusiness(businesses);
-            } else if (error.response.status === 401) {
-            
+            } else if (response.status === 401) {
               navigation.navigate("Login");
             } else {
               console.log("Error: " + responseData.message);
@@ -108,43 +118,20 @@ function BusinessList() {
           })
           .catch((error) => {
             if (error.response.status === 401) {
-            
               navigation.navigate("Login");
             }
             console.log(error);
           });
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-            
-          navigation.navigate("Login");
-        }
         console.log(error);
       });
   };
-  const getApiServerUrl = async () => {
-    try {
-      setApiServerUrl( await AsyncStorage.getItem("apiServerUrl"));
-      return apiServerUrl; // This will return the stored apiServerUrl or null if it doesn't exist
-    } catch (error) {
-      console.error("Error retrieving apiServerUrl:", error);
-      return null;
-    }
-  };
+  
+ 
 
   useEffect(() => {}, [currentPressedIndex]);
-  useEffect(() => {
-    const checkApiServerUrl = async () => {
-      setApiServerUrl(await getApiServerUrl());
-      if (apiServerUrl) {
-        console.log("apiServerUrl:", apiServerUrl);
-      } else {
-        console.log("apiServerUrl is not set in AsyncStorage.");
-      }
-    };
-    
-    checkApiServerUrl();
-  }, []);
+
 
   const handlePress = (index) => {
     const loginTime = new Date().getTime();

@@ -31,6 +31,7 @@ function VehicleDetails(props) {
   getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     setVehicleId(props.prop);
 
     if (vehicleId) {
@@ -38,7 +39,7 @@ function VehicleDetails(props) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/vehicle/${vehicleId}`,
+        url: `${apiServerUrl}/api/vehicle/${vehicleId}`,
         headers: {
           Authorization: accessToken,
         },

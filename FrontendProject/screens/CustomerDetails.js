@@ -287,10 +287,11 @@ const EditProfile = () => {
 
   const getData = async (ownerid) => {
     if (ownerid) {
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/users/${ownerid}`, // Use backticks
+        url: `${apiServerUrl}/api/users/${ownerid}`, // Use backticks
         headers: {},
       };
 
@@ -319,6 +320,7 @@ const EditProfile = () => {
   }, [ownerid]);
 
   const handleSave = async () => {
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     if (ownerid) {
       let data = JSON.stringify({
         firstName: name,
@@ -332,7 +334,7 @@ const EditProfile = () => {
       let config = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/users/update-user/${ownerid}`,
+        url: `${apiServerUrl}/api/users/update-user/${ownerid}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -392,6 +394,7 @@ const EditProfile = () => {
   };
 
   const uploadImage = async (ownerid) => {
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     if (ownerid) {
       const imageData = new FormData();
       imageData.append("files", {
@@ -402,7 +405,7 @@ const EditProfile = () => {
       
 
       const response = await axios.post(
-        `${Config.apiServerUrl}/api/file/upload/profile/${ownerid}`, // Change the endpoint as needed
+        `${apiServerUrl}/api/file/upload/profile/${ownerid}`, // Change the endpoint as needed
         imageData,
         {
           headers: {
@@ -417,11 +420,12 @@ const EditProfile = () => {
     try {
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/users/${ownerid}/profile-image`,
+        url: `${apiServerUrl}/api/users/${ownerid}/profile-image`,
         headers: {
           Authorization: token,
         },
@@ -431,7 +435,7 @@ const EditProfile = () => {
 
       if (response.status === 200) {
         const responseData = response.data;
-        setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+        setProfileImageLink(`${apiServerUrl}` + responseData.url);
       } else if (error.response.status === 401) {
         
         navigation.navigate("Login");

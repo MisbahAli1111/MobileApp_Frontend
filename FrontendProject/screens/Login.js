@@ -30,7 +30,6 @@ import * as Google from 'expo-auth-session/providers/google';
 
 const Login = () => {
   const navigation = useNavigation();
-  const [apiServerUrl,setApiServerUrl] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -77,29 +76,6 @@ const Login = () => {
           console.log("Error: ",error);
         }
       }
-  
-      const getApiServerUrl = async () => {
-        try {
-          setApiServerUrl( await AsyncStorage.getItem("apiServerUrl"));
-          return apiServerUrl; // This will return the stored apiServerUrl or null if it doesn't exist
-        } catch (error) {
-          console.error("Error retrieving apiServerUrl:", error);
-          return null;
-        }
-      };
-      
-      useEffect(() => {
-        const checkApiServerUrl = async () => {
-          setApiServerUrl(await getApiServerUrl());
-          if (apiServerUrl) {
-            console.log("apiServerUrl:", apiServerUrl);
-          } else {
-            console.log("apiServerUrl is not set in AsyncStorage.");
-          }
-        };
-        
-        checkApiServerUrl();
-      }, []);
 
   const handleLogin = async () => {
     setMError(false);
@@ -114,41 +90,60 @@ const Login = () => {
     }
 
     if (email && password) {
-      const data = new FormData();
-      data.append("email", email);
-      data.append("password", password);
-
-      let config = {
-        method: "post",
-        maxBodyLength: Infinity,
-
-        url: `${apiServerUrl}/login`,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        data: data,
-      };
-
-      axios
-        .request(config)
-        .then((response) => {
-          if (response.data === "Invalid Credentials!") {
-            setError(response.data);
-            setMError(true);
+      // Retrieve apiServerUrl from AsyncStorage
+      AsyncStorage.getItem("apiServerUrl")
+        .then((apiServerUrl) => {
+          if (apiServerUrl) {
+            console.log("Login: ",apiServerUrl);
+            const data = new FormData();
+            data.append("email", email);
+            data.append("password", password);
+    
+            let config = {
+              method: "post",
+              maxBodyLength: Infinity,
+              url: `${apiServerUrl}/login`,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              data: data,
+            };
+    
+            // Make the login API request
+            axios
+              .request(config)
+              .then((response) => {
+                if (response.data === "Invalid Credentials!") {
+                  setError(response.data);
+                  setMError(true);
+                } else {
+                  const accessToken = response.data.accessToken;
+                  const userId = response.data.userId;
+    
+                  AsyncStorage.setItem("accessToken", accessToken);
+                  AsyncStorage.setItem("userId", userId);
+                  navigation.navigate("SwitchBusiness");
+                }
+              })
+              .catch((error) => {
+                // Handle API request errors here
+                console.log(error);
+                // You can also set an error state here if needed
+              });
           } else {
-            const accessToken = response.data.accessToken;
-            const userId = response.data.userId;
-
-            AsyncStorage.setItem("accessToken", accessToken);
-            AsyncStorage.setItem("userId", userId);
-            navigation.navigate("SwitchBusiness");
+            // Handle the case where apiServerUrl is not found in AsyncStorage
+            console.error("apiServerUrl not found in AsyncStorage");
+            // You can also set an error state here if needed
           }
         })
         .catch((error) => {
-          console.log(error);
+          // Handle AsyncStorage errors here
+          console.error("Error retrieving apiServerUrl from AsyncStorage: ", error);
+          // You can also set an error state here if needed
         });
     }
   };
+    
 
   return (
     <ImageBackground

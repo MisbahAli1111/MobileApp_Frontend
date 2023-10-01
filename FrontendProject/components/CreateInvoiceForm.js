@@ -335,10 +335,11 @@ const CreateInvoiceForm = ({
   getCustomer = async (carNumber) => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
+      url: `${apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
       headers: {
         Authorization: accessToken,
       },
@@ -371,10 +372,11 @@ const CreateInvoiceForm = ({
   );
 
   const getRegistrationNumber = async () => {
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/registration-number`,
+      url: `${apiServerUrl}/api/maintenance-record/${recordId}/registration-number`,
       headers: {},
     };
 

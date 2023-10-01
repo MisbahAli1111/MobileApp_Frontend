@@ -197,11 +197,12 @@ const AddVehicle = () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
     const Business_id = await AsyncStorage.getItem("Business_id");
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/users/get-customer/${Business_id}`,
+      url: `${apiServerUrl}/api/users/get-customer/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },
@@ -318,12 +319,13 @@ const AddVehicle = () => {
     try {
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       if (keyCustomer) {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/users/${keyCustomer}/profile-image`,
+          url: `${apiServerUrl}/api/users/${keyCustomer}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -334,7 +336,7 @@ const AddVehicle = () => {
         if (response.status === 200) {
           const responseData = response.data;
           if (responseData.url !== null) {
-            setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+            setProfileImageLink(`${apiServerUrl}` + responseData.url);
             console.log(profileImageLink);
           }
         } else {
@@ -346,42 +348,10 @@ const AddVehicle = () => {
     }
   };
 
-  // const uploadImage = async (vehicleId) => {
-  //   if (selectedImage) {
-  //     let token = await AsyncStorage.getItem("accessToken");
-  //     const accessToken = "Bearer " + token;
-  //     const imageData = new FormData();
-  //     if (selectedImage) {
-  //       // Iterate through the image array and append images to the FormData
-  //       try {
-  //         selectedImage.forEach((entry, index) => {
-  //           const image_uri = entry.uri;
-  //           imageData.append("files", {
-  //             uri: image_uri,
-  //             name: new Date() + ".jpeg",
-  //             type: "image/jpeg",
-  //           });
-  //         });
-
-  //         const response = await axios.post(
-  //           `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
-  //           imageData,
-  //           {
-  //             headers: {
-  //               "Content-Type": "multipart/form-data",
-  //             },
-  //           }
-  //         );
-  //       } catch (error) {
-  //         console.error("Error:", error.message);
-  //       }
-  //     }
-  //   }
-  // };
-
   const uploadImage = async (vehicleId) => {
     try {
       if (selectedImage) {
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
         const formData = new FormData();
@@ -398,7 +368,7 @@ const AddVehicle = () => {
         });
   
         const response = await axios.post(
-          `${Config.apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
+          `${apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
           formData,
           {
             headers: {
@@ -496,6 +466,7 @@ const AddVehicle = () => {
       let token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
       const Business_id = await AsyncStorage.getItem("Business_id");
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       let data = JSON.stringify({
         type: vehicleType,
@@ -523,7 +494,7 @@ const AddVehicle = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/vehicle/${Business_id}/add-vehicle`,
+        url: `${apiServerUrl}/api/vehicle/${Business_id}/add-vehicle`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,

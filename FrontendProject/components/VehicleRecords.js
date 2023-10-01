@@ -39,6 +39,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [tempVehicleid, setTempVehicleId] = useState("");
+  const [imageApi,SetImageApi] = useState("");
 
   const displayedVehicles = useMemo(() => {
     let filteredVehicles;
@@ -70,11 +71,12 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 
   deleteVehicle = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
+    
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
+      url: `${apiServerUrl}/api/vehicle/${Business_id}/${tempVehicleid}/delete-vehicle`,
       headers: {},
     };
 
@@ -188,11 +190,16 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
     const Business_id = await AsyncStorage.getItem("Business_id");
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
-
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
+    if(apiServerUrl)
+    {
+    SetImageApi(apiServerUrl);
+    console.log(imageApi);
+    }
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/vehicle/${Business_id}/get-all-vehicles`,
+      url: `${apiServerUrl}/api/vehicle/${Business_id}/get-all-vehicles`,
       headers: {
         Authorization: accessToken,
       },
@@ -259,7 +266,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
                       <Image
                         style={[styles.rectangleIcon]}
                         contentFit="cover"
-                        source={{ uri: `${Config.baseUrl1}` + vehicle.vehicleMediaList[0] }}
+                        source={{ uri: `${imageApi}` + vehicle.vehicleMediaList[0] }}
                       />
                     ) : (
                       <Image

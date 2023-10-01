@@ -207,6 +207,7 @@ const CreateInvoice = (parans) => {
 
     const token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let st;
 
@@ -232,7 +233,7 @@ const CreateInvoice = (parans) => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
+      url: `${apiServerUrl}/api/invoice/businessId/${Business_id}/create-invoice/${recordId}`,
       headers: {
         "Content-Type": "application/json",
         Authorization: accessToken,

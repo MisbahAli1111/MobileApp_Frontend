@@ -125,6 +125,7 @@ const AddEmployee = () => {
 
   const uploadImage = async (userId) => {
     if (profileImage) {
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       const imageData = new FormData();
       imageData.append("files", {
         uri: profileImage,
@@ -135,7 +136,7 @@ const AddEmployee = () => {
       console.log("formData: ", imageData);
 
       const response = await axios.post(
-        `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+        `${apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
         imageData,
         {
           headers: {
@@ -455,6 +456,7 @@ const AddEmployee = () => {
       const Business_id = await AsyncStorage.getItem("Business_id");
       let token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       let data = JSON.stringify({
         firstName: name,
         lastName: name,
@@ -467,7 +469,7 @@ const AddEmployee = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `http://192.168.0.236:8080/api/users/register/employee/${Business_id}`,
+        url: `${apiServerUrl}/api/users/register/employee/${Business_id}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,

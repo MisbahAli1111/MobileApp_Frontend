@@ -45,12 +45,13 @@ const VehicleDetailView = ({ route }) => {
         setLoading(true); // Set loading to true while fetching
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
         if (vehicleId) {
           let config = {
             method: "get",
             maxBodyLength: Infinity,
-            url: `${Config.apiServerUrl}/api/vehicle/${vehicleId}/images`,
+            url: `${apiServerUrl}/api/vehicle/${vehicleId}/images`,
             headers: {
               Authorization: accessToken,
             },
@@ -58,7 +59,7 @@ const VehicleDetailView = ({ route }) => {
 
           const response = await axios.request(config);
           const imageUrls = response.data.map(
-            (item) => `${Config.baseUrl1}` + item.url
+            (item) => `${apiServerUrl}` + item.url
           );
           setFetchedImages(imageUrls);
           console.log(fetchedImages)
@@ -76,10 +77,11 @@ const VehicleDetailView = ({ route }) => {
       if (vehicleId) {
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/vehicle/${vehicleId}`,
+          url: `${apiServerUrl}/api/vehicle/${vehicleId}`,
           headers: {
             Authorization: accessToken,
           },

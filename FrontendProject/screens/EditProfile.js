@@ -282,11 +282,12 @@ const EditProfile = () => {
 
   getData = async () => {
     const userId = await AsyncStorage.getItem("userId");
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/users/${userId}`, // Use backticks
+      url: `${apiServerUrl}/api/users/${userId}`, // Use backticks
       headers: {},
     };
 
@@ -313,10 +314,8 @@ const EditProfile = () => {
   }, []);
 
   const handleSave = async () => {
-    // if(profileImage){
-    //   saveImageToDirectory(profileImage);
-    // }
     const userId = await AsyncStorage.getItem("userId");
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let data = JSON.stringify({
       firstName: name,
@@ -330,7 +329,7 @@ const EditProfile = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/users/update-user/${userId}`,
+      url: `${apiServerUrl}/api/users/update-user/${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -389,6 +388,7 @@ const EditProfile = () => {
   };
 
   const uploadImage = async (userId) => {
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     const imageData = new FormData();
     imageData.append("files", {
       uri: profileImageLink,
@@ -398,7 +398,7 @@ const EditProfile = () => {
 
 
     const response = await axios.post(
-      `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+      `${apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {
@@ -413,13 +413,14 @@ const EditProfile = () => {
   const getProfileImage = async (userId) => {
     try {
       if(userId){
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
 
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/users/${userId}/profile-image`,
+        url: `${apiServerUrl}/api/users/${userId}/profile-image`,
         headers: {
           Authorization: token,
         },
@@ -431,7 +432,7 @@ const EditProfile = () => {
         const responseData = response.data;
         
         if (responseData.url !== null) {
-          setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+          setProfileImageLink(`${apiServerUrl}` + responseData.url);
           console.log(profileImageLink);
           
         }

@@ -37,6 +37,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
       const token = "Bearer " + accessTokens;
       const storedUserId = await AsyncStorage.getItem("userId");
       setUserId(storedUserId);
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       if (profileImageLink == null) {
         setLoading(true);
       }
@@ -45,7 +46,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/users/${userId}/profile-image`,
+          url: `${apiServerUrl}/api/users/${userId}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -56,7 +57,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         if (response.status === 200) {
           const responseData = response.data;
           if (responseData.url !== null) {
-            setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+            setProfileImageLink(`${apiServerUrl}` + responseData.url);
           }
         }else if (error.response.status === 401) {
             

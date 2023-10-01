@@ -36,11 +36,12 @@ const MaintenanceDetailView = () => {
   const getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     if (recordId) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/maintenance-record/get-records/${recordId}`,
+        url: `${apiServerUrl}/api/maintenance-record/get-records/${recordId}`,
         headers: {
           Authorization: accessToken,
         },
@@ -67,19 +68,20 @@ const MaintenanceDetailView = () => {
         setLoading(true); // Set loading to true while fetching
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
         if (recordId) {
           let config = {
             method: "get",
             maxBodyLength: Infinity,
-            url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/images`,
+            url: `${apiServerUrl}/api/maintenance-record/${recordId}/images`,
             headers: {
               Authorization: accessToken,
             },
           };
 
           const response = await axios.request(config);
-          const imageUrls = response.data.map((item) => `${Config.baseUrl1}` + item.url);
+          const imageUrls = response.data.map((item) => `${apiServerUrl}` + item.url);
           setFetchedImages(imageUrls);
           setLoading(false); 
         }

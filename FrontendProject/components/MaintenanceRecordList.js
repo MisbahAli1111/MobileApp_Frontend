@@ -60,12 +60,13 @@ const RecordList = ({
 
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     // 192.168.100.71
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/get-all-records/${Business_id}`,
+      url: `${apiServerUrl}/api/maintenance-record/get-all-records/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },

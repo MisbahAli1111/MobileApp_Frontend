@@ -134,12 +134,13 @@ const AddRecord = () => {
     try {
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       if (userId) {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/users/${userId}/profile-image`,
+          url: `${apiServerUrl}/api/users/${userId}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -151,7 +152,7 @@ const AddRecord = () => {
           const responseData = response.data;
           console.log(responseData);
           if (responseData.url !== null) {
-            setProfileImageLink(`${Config.baseUrl1}` + responseData.url);
+            setProfileImageLink(`${apiServerUrl}` + responseData.url);
             console.log(profileImageLink);
           }
         } else {
@@ -397,10 +398,11 @@ const AddRecord = () => {
   const getType = async (carNumber) => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/${carNumber}/type`,
+      url: `${apiServerUrl}/api/maintenance-record/${carNumber}/type`,
       headers: {
         Authorization: accessToken,
       },
@@ -423,11 +425,12 @@ const AddRecord = () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
     const Business_id = await AsyncStorage.getItem("Business_id");
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/get-registration-number/${Business_id}`,
+      url: `${apiServerUrl}/api/maintenance-record/get-registration-number/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },
@@ -450,10 +453,11 @@ const AddRecord = () => {
   getCustomer = async (carNumber) => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
+      url: `${apiServerUrl}/api/maintenance-record/get-customer/${carNumber}`,
       headers: {
         Authorization: accessToken,
       },
@@ -523,6 +527,7 @@ const AddRecord = () => {
       if (selectedImage) {
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
         const formData = new FormData();
 
         selectedImage.forEach((entry, index) => {
@@ -541,7 +546,7 @@ const AddRecord = () => {
         });
 
         const response = await axios.post(
-          `${Config.apiServerUrl}/api/file/upload/record/${recordId}`,
+          `${apiServerUrl}/api/file/upload/record/${recordId}`,
           formData,
           {
             headers: {
@@ -626,6 +631,7 @@ const AddRecord = () => {
 
         const token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
         // const axios = require('axios');
         const data = {
           kilometerDriven: driven,
@@ -639,7 +645,7 @@ const AddRecord = () => {
         const config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/maintenance-record/add-record/${Business_id}`,
+          url: `${apiServerUrl}/api/maintenance-record/add-record/${Business_id}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: accessToken,

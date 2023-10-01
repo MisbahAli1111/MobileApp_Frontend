@@ -124,7 +124,7 @@ const BusinessInfo = () => {
     }, 10000);
 
     if (isValid) {
-      {console.log("Valid: ",isValid)}
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       let data = JSON.stringify({
         businessName: name,
         businessAddress: location,
@@ -137,7 +137,7 @@ const BusinessInfo = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/business/add-business/`,
+        url: `${apiServerUrl}/api/business/add-business/`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,
@@ -221,7 +221,7 @@ const BusinessInfo = () => {
   };
 
   const uploadImage = async (BusinessId) => {
-
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     const imageData = new FormData();
     imageData.append("files", {
       uri: profileImage,
@@ -232,7 +232,7 @@ const BusinessInfo = () => {
 
 
     const response = await axios.post(
-      `${Config.apiServerUrl}/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
+      `${apiServerUrl}/api/file/upload/business/${BusinessId}`, // Change the endpoint as needed
       imageData,
       {
         headers: {

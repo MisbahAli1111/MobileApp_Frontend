@@ -66,11 +66,12 @@ function InvoiceDetailView() {
     setIsLoading(true);
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/invoice/get-invoice/${invoiceId}`,
+      url: `${apiServerUrl}/api/invoice/get-invoice/${invoiceId}`,
       headers: {
         Authorization: accessToken,
       },
@@ -114,13 +115,14 @@ function InvoiceDetailView() {
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
       const Business_id = await AsyncStorage.getItem("Business_id");
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       if (Business_id) {
 
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/business/${Business_id}/profile-image`,
+          url: `${apiServerUrl}/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -131,7 +133,7 @@ function InvoiceDetailView() {
         if (response.status === 200) {
           const responseData = response.data;
 
-          setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
+          setBusinessProfile(`${apiServerUrl}` + responseData.url);
         }
         else if (error.response.status === 401) {
           navigation.navigate("Login");

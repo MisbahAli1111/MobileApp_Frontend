@@ -52,12 +52,12 @@ function RecordDetails({ recordId }) {
         setLoading(true); // Set loading to true while fetching
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
-
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
         if (recordId) {
           let config = {
             method: "get",
             maxBodyLength: Infinity,
-            url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/images`,
+            url: `${apiServerUrl}/api/maintenance-record/${recordId}/images`,
             headers: {
               Authorization: accessToken,
             },
@@ -82,12 +82,13 @@ function RecordDetails({ recordId }) {
       try {
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
+        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
         if (recordId) {
           let config = {
             method: "get",
             maxBodyLength: Infinity,
-            url: `${Config.apiServerUrl}/api/maintenance-record/${recordId}/get-owner-id`,
+            url: `${apiServerUrl}/api/maintenance-record/${recordId}/get-owner-id`,
             headers: {
               Authorization: accessToken,
             },
@@ -114,11 +115,12 @@ function RecordDetails({ recordId }) {
   getData = async () => {
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     if (recordId) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/maintenance-record/get-records/${recordId}`,
+        url: `${apiServerUrl}/api/maintenance-record/get-records/${recordId}`,
         headers: {
           Authorization: accessToken,
         },

@@ -62,13 +62,14 @@ const SalesReport = () => {
       const accessTokens = await AsyncStorage.getItem("accessToken");
       const token = "Bearer " + accessTokens;
       const Business_id = await AsyncStorage.getItem("Business_id");
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       if (Business_id) {
 
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `${Config.apiServerUrl}/api/business/${Business_id}/profile-image`,
+          url: `${apiServerUrl}/api/business/${Business_id}/profile-image`,
           headers: {
             Authorization: token,
           },
@@ -78,7 +79,7 @@ const SalesReport = () => {
 
         if (response.status === 200) {
           const responseData = response.data;
-          setBusinessProfile(`${Config.baseUrl1}` + responseData.url);
+          setBusinessProfile(`${apiServerUrl}` + responseData.url);
         } else {
           console.log("Error: " + response.statusText);
         }
@@ -294,6 +295,7 @@ const SalesReport = () => {
       const Business_id = await AsyncStorage.getItem("Business_id");
       const token = await AsyncStorage.getItem("accessToken");
       const accessToken = "Bearer " + token;
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       let data = JSON.stringify({
         date: selectedDate,
@@ -303,7 +305,7 @@ const SalesReport = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/invoice/get-invoice-salesReport/${Business_id}`,
+        url: `${apiServerUrl}/api/invoice/get-invoice-salesReport/${Business_id}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: accessToken,

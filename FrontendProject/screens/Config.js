@@ -21,7 +21,7 @@ const Config = () => {
   const [ipError, setIpError] = useState("");
   const navigation = useNavigation();
 
-  const validateIpAddress = () => {
+  const validateIpAddress = async () => {
     const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
     if (!ipAddress) {
@@ -31,18 +31,20 @@ const Config = () => {
     } else {
       setIpError(""); // Clear the error message
       setApiServerUrl(`http://${ipAddress}:8080`);
-      AsyncStorage.setItem("apiServerUrl", `http://${ipAddress}:8080`);
-      navigation.navigate('Login');
-      
+      if(apiServerUrl){
+      try {
+        console.log("API: ",apiServerUrl)
+        await AsyncStorage.setItem("apiServerUrl", apiServerUrl);
+        console.log("Saved");
+      } catch (error) {
+        console.error("Error storing apiServerUrl in AsyncStorage: ", error);
+      }
+      console.log(apiServerUrl);
+      navigation.navigate("Login");
     }
+}
   };
 
-  useEffect(() => {
-        if (apiServerUrl) {
-          console.log(apiServerUrl);
-        }
-      }, [apiServerUrl]);
-      
 
   return (
     <ImageBackground

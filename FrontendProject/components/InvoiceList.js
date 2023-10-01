@@ -73,10 +73,11 @@ function Invoicelist({ dsearch, searchOrder }) {
   };
 
   deleteVehicle = async () => {
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/invoice/${tempInvoiceid}/delete-invoice`,
+      url: `${apiServerUrl}/api/invoice/${tempInvoiceid}/delete-invoice`,
       headers: {},
     };
 
@@ -104,11 +105,12 @@ function Invoicelist({ dsearch, searchOrder }) {
     const Business_id = await AsyncStorage.getItem("Business_id");
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/invoice/get-invoices/${Business_id}`,
+      url: `${apiServerUrl}/api/invoice/get-invoices/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },

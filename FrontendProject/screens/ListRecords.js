@@ -43,7 +43,7 @@ const MaintenanceRecord = ({ route }) => {
 
   getData = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
     // 192.168.100.71
@@ -51,7 +51,7 @@ const MaintenanceRecord = ({ route }) => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/maintenance-record/get-all-records/${Business_id}`,
+      url: `${apiServerUrl}/api/maintenance-record/get-all-records/${Business_id}`,
       headers: {
         Authorization: accessToken,
       },

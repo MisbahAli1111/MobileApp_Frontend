@@ -14,11 +14,12 @@ const ProfileDropdown = () => {
 
   getData = async () => {
     const userId = await AsyncStorage.getItem("userId");
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/users/${userId}`, // Use backticks
+      url: `${apiServerUrl}/api/users/${userId}`, // Use backticks
       headers: {},
     };
 

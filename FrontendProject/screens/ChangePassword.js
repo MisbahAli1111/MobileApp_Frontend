@@ -108,6 +108,7 @@ const ChangePassword = () => {
 
     if (!hasErrors) {
       const userId = await AsyncStorage.getItem("userId");
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
       let data = JSON.stringify({
         oldPassword: currentPassword,
@@ -117,7 +118,7 @@ const ChangePassword = () => {
       let config = {
         method: "put",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/users/update-password/${userId}`,
+        url: `${apiServerUrl}/api/users/update-password/${userId}`,
         headers: {
           "Content-Type": "application/json",
         },

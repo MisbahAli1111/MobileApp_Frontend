@@ -40,14 +40,21 @@ const Home = () => {
 
   const getEmployee = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
+  
+    if (!apiServerUrl) {
+      // Handle missing apiServerUrl
+      console.log("API server URL is missing.");
+      return;
+    }
+  
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${Config.apiServerUrl}/api/users/get-employees/${Business_id}`,
+      url: `${apiServerUrl}/api/users/get-employees/${Business_id}`,
       headers: {},
     };
-
+  
     axios
       .request(config)
       .then((response) => {
@@ -55,24 +62,25 @@ const Home = () => {
         setTotalEmployees(response.data.data);
       })
       .catch((error) => {
-       if (error.response.status === 401) {
-         
+        if (error.response.status === 401) {
           navigation.navigate("Login");
         }
         console.log(error);
       });
   };
+  
 
   const getInvoiceDue = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
 
     if (Business_id) {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/invoice/${Business_id}/invoiceDue`,
+        url: `${apiServerUrl}/api/invoice/${Business_id}/invoiceDue`,
         headers: {
           Authorization: accessToken,
         },

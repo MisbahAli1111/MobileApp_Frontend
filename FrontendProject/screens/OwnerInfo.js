@@ -124,6 +124,7 @@ const OwnerInfo = () => {
   };
 
   const uploadImage = async (userId) => {
+    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
     if (profileImage) {
       const imageData = new FormData();
       imageData.append("files", {
@@ -134,7 +135,7 @@ const OwnerInfo = () => {
 
    
       const response = await axios.post(
-        `${Config.apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
+        `${apiServerUrl}/api/file/upload/profile/${userId}`, // Change the endpoint as needed
         imageData,
         {
           headers: {
@@ -452,6 +453,7 @@ const OwnerInfo = () => {
 
     if (!hasErrors) {
       const Business_id = await AsyncStorage.getItem("Business_id");
+      const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       let data = JSON.stringify({
         firstName: name,
         lastName: name,
@@ -464,7 +466,7 @@ const OwnerInfo = () => {
       let config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${Config.apiServerUrl}/api/users/register/owner`,
+        url: `${apiServerUrl}/api/users/register/owner`,
         headers: {
           "Content-Type": "application/json",
         },
