@@ -30,6 +30,7 @@ import * as Google from 'expo-auth-session/providers/google';
 
 const Login = () => {
   const navigation = useNavigation();
+  const [apiServerUrl,setApiServerUrl] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -76,6 +77,29 @@ const Login = () => {
           console.log("Error: ",error);
         }
       }
+  
+      const getApiServerUrl = async () => {
+        try {
+          setApiServerUrl( await AsyncStorage.getItem("apiServerUrl"));
+          return apiServerUrl; // This will return the stored apiServerUrl or null if it doesn't exist
+        } catch (error) {
+          console.error("Error retrieving apiServerUrl:", error);
+          return null;
+        }
+      };
+      
+      useEffect(() => {
+        const checkApiServerUrl = async () => {
+          apiServerUrl = await getApiServerUrl();
+          if (apiServerUrl) {
+            console.log("apiServerUrl:", apiServerUrl);
+          } else {
+            console.log("apiServerUrl is not set in AsyncStorage.");
+          }
+        };
+        
+        checkApiServerUrl();
+      }, []);
 
   const handleLogin = async () => {
     setMError(false);
@@ -98,7 +122,7 @@ const Login = () => {
         method: "post",
         maxBodyLength: Infinity,
 
-        url: `${Config.apiServerUrl}/login`,
+        url: `${apiServerUrl}/login`,
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -131,7 +155,13 @@ const Login = () => {
       style={styles.container}
       source={require("../assets/light-texture2234-1.png")}
     >
-      <Text style={styles.title}>Login</Text>
+      <Pressable
+  onLongPress={() => navigation.navigate("Config")}
+  style={styles.titleContainer}
+>
+  <Text style={styles.title}>Login</Text>
+</Pressable>
+
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -202,6 +232,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: widthPercentageToDP("10%"), // Responsive padding
     backgroundColor: "#fff",
+  },
+  titleContainer: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 24,

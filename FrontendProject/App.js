@@ -26,6 +26,7 @@ import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import Header from "./components/Header";
 import ChangePassword from "./screens/ChangePassword";
 import EditProfile from "./screens/EditProfile";
+import Config from "./screens/Config";
 import { AppRegistry, LogBox } from "react-native";
 
 // Ignore the specific warning
@@ -85,6 +86,14 @@ const App = () => {
             <Stack.Screen
               name="Login"
               component={Login}
+              initialParams={{
+                title: "",
+                profileImage: "No",
+              }}
+            />
+            <Stack.Screen
+              name="Config"
+              component={Config}
               initialParams={{
                 title: "",
                 profileImage: "No",
