@@ -27,6 +27,7 @@ import Config from "./Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -108,6 +109,7 @@ const Home = () => {
   });
 
   return (
+    <SafeAreaView>
     <ImageBackground style={styles.home}
     source={require("../assets/light-texture2234-1.png")}
     >
@@ -184,6 +186,7 @@ const Home = () => {
         <Footer prop={"Home"} data={invoices} />
       </View>
     </ImageBackground>
+    </SafeAreaView>
   );
 };
 
@@ -192,6 +195,8 @@ const styles = StyleSheet.create({
   container: {
     marginTop:heightPercentageToDP("12"),
     flex:1,
+    // backgroundColor:'red',
+    // maxHeight:heightPercentageToDP("100%"),
   },
   container1: {
     flex:1,

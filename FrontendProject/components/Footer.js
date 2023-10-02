@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.steelblue_300,
     width: screenWidth,
     height: screenWidth*0.22,
-    bottom:0-screenHeight,
+    top:screenWidth*1.89,
     gap: rem * 4.5, 
   },
 
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     height: rem * 4,
     width: rem * 4,
     position: 'absolute',
-    bottom:0-screenHeight+35,
+    top:screenWidth*1.77,
     zIndex: 999,
     left: screenWidth / 2 - rem * 2,
   },
@@ -208,14 +208,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: Color.textTxtPrimary,
     position: 'absolute',
-    bottom:0-screenHeight+24,
+    top:screenWidth*1.99,
     zIndex: 999,
-    left: screenWidth / 2 - 40,
+    left: screenWidth / 1.99 - 40,
   },
-
-
-
-
 
   invoiceWarrantyLineSvgrepoIcon: {
     width: 26,
