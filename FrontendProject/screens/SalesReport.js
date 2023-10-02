@@ -461,8 +461,8 @@ const SalesReport = () => {
       >
         <Text>{Error}</Text>
       </View>
-      {visible && ( // Check if visible is true
-  <ScrollView style={{height:screenHeight*0.48}}>
+      {visible && ( 
+  <ScrollView style={{maxHeight:screenHeight*0.45}}>
     <View style={styles.wrap}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={{ flex: 1, marginLeft: rem * 0.8 }}>Date: {OnDate}</Text>
@@ -482,7 +482,7 @@ const SalesReport = () => {
     />
 
     <View style={{ 
-      flexDirection: 'row', marginTop: 10, paddingHorizontal: 40, width: screenWidth, alignItems: 'flex-start', justifyContent: 'space-between'}}>
+      flexDirection: 'row', marginTop: screenHeight*0.013, paddingHorizontal: screenWidth*0.10, width: screenWidth, alignItems: 'flex-start', justifyContent: 'space-between'}}>
       <Text>Id</Text>
       <Text>Maintained by</Text>
       <Text>Vehicle</Text>
@@ -490,7 +490,7 @@ const SalesReport = () => {
       <Text>Total</Text>
     </View>
 
-    <View style={[styles.groupItem, styles.groupItemPosition]} />
+    {/* <View style={[styles.groupItem, styles.groupItemPosition]} /> */}
 
     <View style={styles.wrapS}>
       {Data.map((desc, index) => (
@@ -503,9 +503,17 @@ const SalesReport = () => {
         </View>
       ))}
     </View>
-    <Text style={{ textAlign: 'right', marginRight: '5%' }}>Total Amount {Total}</Text>
-    <Pressable
-          style={[styles.frame, styles.framePosition]} //share button
+
+  </ScrollView>
+)}
+{visible && ( 
+<Text style={{ textAlign: 'right', marginRight: '5%' ,fontWeight:'500',fontSize:rem*0.6}}>Total Amount {Total}</Text>
+        )}
+        {visible && (
+        <View style={[styles.groupLayout]}>
+          
+        <Pressable
+          style={[styles.framePosition]} //share button
           onPress={generatePDF}
         >
           <Image
@@ -514,9 +522,8 @@ const SalesReport = () => {
             source={require("../assets/icbaselineshare.png")}
           />
         </Pressable>
-  </ScrollView>
-)}
-
+      </View>
+)}    
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleDate} style={styles.button}>
           <Image
@@ -561,13 +568,29 @@ const styles = StyleSheet.create({
     width: 25,
   },
   framePosition: {
-    left: 360,
     justifyContent: "center",
     alignItems: "center",
-    marginTop:screenWidth*0.1,
     borderRadius: 20,
     backgroundColor: "#3894c9",
+    height: rem * 1.5,
+    width: rem * 1.5,
   },
+  groupLayout: {
+    alignSelf: 'center',
+    alignItems:'flex-end',
+    flex: 1,
+    width: screenWidth * 0.93,
+    marginTop:screenHeight*0.01,
+  },
+  // framePosition: {
+  //   flex:1,
+  //   left: screenWidth-50,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   marginTop:screenWidth*0.1,
+  //   borderRadius: 20,
+  //   backgroundColor: "#3894c9",
+  // },
   frame: {
     height: 40,
     width: 40,
@@ -606,15 +629,16 @@ const styles = StyleSheet.create({
   },
   wrapS: {
     marginTop: 12,
-    maxHeight: 178,
-    width: "94%",
-    marginLeft: 14,
+    // maxHeight: screenHeight*0.5,
+    width: screenWidth*0.94,
+    alignSelf:'center',
     borderRadius: 14,
 
     flexGrow: 1,
     flex: 1,
   },
   wrap: {
+    
     // justifyContent:'center',
     // alignItems: "center",
   },
@@ -623,9 +647,9 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_sm,
   },
   groupChild: {
-    height: 38,
-    left: 10,
-    top: 105,
+    height: screenHeight*0.044,
+    alignSelf:'center',
+    top: screenHeight*0.125,
     position: "absolute",
   },
   textTypo2: {
@@ -637,7 +661,7 @@ const styles = StyleSheet.create({
   },
   groupLayout2: {
     borderRadius: Border.br_3xs,
-    width: 392,
+    width: screenWidth*0.94,
   },
   textTypo1: {
     width: 30,
@@ -714,7 +738,7 @@ const styles = StyleSheet.create({
     marginTop: heightPercentageToDP("1%"),
   },
   buttonContainer: {
-    marginTop: heightPercentageToDP("85%"),
+    marginTop: heightPercentageToDP("90%"),
     width: screenWidth * 0.8,
     position: "absolute",
     left: "10%", 
