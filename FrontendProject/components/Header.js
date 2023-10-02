@@ -93,7 +93,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
         {showBackArrow ? (
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.navigate(onBackPress)}
+            onPress={() => navigation.navigate(onBackPress, { type: "default" })}
           >
             <Image
               source={require("../assets/vector2.png")}
