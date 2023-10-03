@@ -1,14 +1,16 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { useState, useEffect } from "react";
+
 import {
   StyleSheet,
   View,
-  ScrollView,
+  KeyboardAvoidingView,
   TouchableOpacity,
   Dimensions,
   Text,
   TextInput,
+  Keyboard,
   Pressable,
 } from "react-native";
 import {
@@ -35,7 +37,32 @@ const Vehicles = () => {
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [searchType, setSearchType] = useState([]);
   const [searchOrder, setSearchOrder] = useState("");
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const handleQuery = (query) => {
+    
     setSearch(query);
     setIsSearch(true);
   };
@@ -43,7 +70,6 @@ const Vehicles = () => {
     setFilterSearchClicked(true);
 
   };
-
   const addFilterInState = (attribute = ["default"], sort = "default") => {
     setFilterSearchClicked(false);
     setSearchType(attribute);
@@ -136,9 +162,13 @@ const Vehicles = () => {
           </View>
         </View>
       </Pressable>
-
+      
+      {isKeyboardVisible ? null : (
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <Footer prop={"Vehicles"} />
+        </View>
+      )}
       {/* Footer */}
-      <Footer prop={"Vehicles"} />
 
       <View contentContainerStyle={styles.contView}>
         <VehicleRecords
@@ -148,6 +178,7 @@ const Vehicles = () => {
           searchOrder={searchOrder}
         />
       </View>
+
 
       {/* filter  */}
 
@@ -230,7 +261,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   contView: {
-
+    flex:1,
   },
   rectangleParent18: {
     marginTop: screenWidth * 0.41,
@@ -776,11 +807,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   vehicles: {
-    backgroundColor: Color.white,
-    flex: 1,
-    overflow: "hidden",
-    width: "100%",
-    height: 932,
+    // backgroundColor: red,
+    flex: 0.9,
+    // overflow: "hidden",
+    // width: "100%",
+    // height: 932,
   },
 });
 

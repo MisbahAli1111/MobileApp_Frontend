@@ -2,12 +2,14 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
+import { KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   Button,
   Modal,
   StyleSheet,
   View,
+  Keyboard,
   Text,
   ScrollView,
   TextInput,
@@ -68,6 +70,29 @@ const AddVehicle = () => {
   const isVideo = profileImage && profileImage.endsWith('.mp4');
   const vehicleCategories = ["Bike", "Car", "Truck", "Auto", "Other"];
   const CusomterCategories = ["Walk-in", "Company"];
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   const modelCategories = [
     "1980",
     "1981",
@@ -973,16 +998,18 @@ const AddVehicle = () => {
       
 
       {/* Footer */}
-      <View style={styles.footer}>{
-       <Footer prop={"Vehicles"} /> 
-      }</View>
+      {isKeyboardVisible ? null : (
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <Footer prop={"Vehicles"} />
+        </View>
+      )}
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.901,
     contentFit: "cover",
     justifyContent: "center",
   },

@@ -243,8 +243,8 @@ const VehicleDetailView = ({ route }) => {
 
       <VehicleDetails prop={vehicleId} />
       </ScrollView>
-      <View style={styles.footer}>
-        <Footer prop={"Vehicles"} />
+      <View style={{position:'absolute',left:0,right:0,bottom:0}}>
+      <Footer prop={"Vehicles"} />
       </View>
     </ImageBackground>
     </View>
@@ -684,8 +684,8 @@ profileImagePlaceholder1: {
     position: "absolute",
   },
   maintenanceDetailView: {
-    flex: 1,
-    overflow: "hidden",
+    flex: 0.901,
+    // overflow: "hidden",
     height:"100%",
     width: "100%",
   },

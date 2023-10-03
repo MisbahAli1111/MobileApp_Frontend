@@ -109,10 +109,10 @@ const Home = () => {
   });
 
   return (
-    <SafeAreaView>
-    <ImageBackground style={styles.home}
-    source={require("../assets/light-texture2234-1.png")}
-    >
+    
+     
+
+  
     <View style={styles.container}>
     <TouchableOpacity
     onPress={()=> navigation.navigate('MaintenanceRecord')}>
@@ -168,25 +168,17 @@ const Home = () => {
         <VehicleCarousel />
       </View>
 
+      <View style={{position:'absolute',left:0,right:0,bottom:0}}>
+      <Footer prop={"Home"} />
+      </View>
 
     </View>
 
-      
-      
-        
-      
-
-      
-
-      
-      
 
 
-      <View style={[styles.cont]}>
-        <Footer prop={"Home"} data={invoices} />
-      </View>
-    </ImageBackground>
-    </SafeAreaView>
+     
+    
+ 
   );
 };
 
@@ -194,7 +186,7 @@ const styles = StyleSheet.create({
 
   container: {
     marginTop:heightPercentageToDP("12"),
-    flex:1,
+    flex:0.89,
     // backgroundColor:'red',
     // maxHeight:heightPercentageToDP("100%"),
   },
@@ -202,7 +194,7 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom:heightPercentageToDP("12%")
+    top:-10,
   },
   cont: {
     padding: 0,
@@ -269,10 +261,10 @@ const styles = StyleSheet.create({
     fontFamily:FontFamily.poppinsMedium
   },
   home: {
-    flex: 1,
-    overflow: "hidden",
-    height: "100%",
-    width: "100%",
+    flex: .9,
+    // overflow: "hidden",
+    // height: screenHeight,
+    // width: screenWidth,
   },
 });
 

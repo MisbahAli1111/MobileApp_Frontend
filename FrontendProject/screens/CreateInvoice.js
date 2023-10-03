@@ -5,6 +5,7 @@ import { useRoute } from "@react-navigation/native";
 import {
   StyleSheet,
   View,
+  Keyboard,
   Text,
   Dimensions,
   ActivityIndicator,
@@ -73,6 +74,29 @@ const CreateInvoice = (parans) => {
   const [descriptionArray, setDescriptionArray] = useState([]);
   const [DiscountArray, setDiscountArray] = useState([]);
   const [TaxArray, setTaxArray] = useState([]);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   const handleItemsChange = (items) => {
     setDescription(items);
     setEmptyFeildsDesc(false);
@@ -417,9 +441,7 @@ const CreateInvoice = (parans) => {
       </View>
 
       {/* footer  */}
-      <View style={[styles.footer]}>
-        <Footer prop={"Invoices"} />
-      </View>
+
 
       <ErrorPopup
         visible={showErrorPopup}
@@ -437,6 +459,11 @@ const CreateInvoice = (parans) => {
         onConfirm={() => setShowErrorPopups(false)}
         onCancel={() => setShowErrorPopups(false)}
       />
+           {isKeyboardVisible ? null : (
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <Footer prop={"Invoices"} />
+        </View>
+      )}
     </View>
   );
 };
@@ -1410,13 +1437,10 @@ const styles = StyleSheet.create({
     left: 287,
   },
   createInvoice: {
-    //   backgroundColor: Color.white,
-    //    //flex: 6,
-    //   //overflow: "hidden",
-    //    height: 1000,
-    //    width: "100%",
- 
-    position: "absolute",
+       height: screenHeight,
+       width: screenWidth,
+    flex:0.901,
+
   },
 });
 

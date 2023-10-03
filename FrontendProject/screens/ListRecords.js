@@ -176,8 +176,8 @@ const MaintenanceRecord = ({ route }) => {
       </View>
 
 
-      <View style={styles.cont}>
-        <Footer prop={"MaintenanceRecord"} />
+      <View style={{position:'absolute',left:0,right:0,bottom:0}}>
+      <Footer prop={"Invoices"} />
       </View>
 
       <View style={styles.boxContianer}>
@@ -853,10 +853,10 @@ const styles = StyleSheet.create({
 
   maintenanceRecord: {
     backgroundColor: Color.white,
-    flex: 1,
-    overflow: "hidden",
-    height: 932,
-    width: "100%",
+    flex: 0.901,
+    // overflow: "hidden",
+    height: screenHeight,
+    width: screenWidth,
     zIndex: 1,
   },
 });

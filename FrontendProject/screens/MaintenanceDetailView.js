@@ -251,8 +251,8 @@ const MaintenanceDetailView = () => {
         <RecordDetails recordId={recordId} />
       </View>
 </ScrollView>
-      <View style={[styles.cont]}>
-        <Footer prop={"MaintenanceRecord"} />
+<View style={{position:'absolute',left:0,right:0,bottom:0}}>
+      <Footer prop={"Vehicles"} />
       </View>
       
     </ImageBackground>
@@ -269,8 +269,8 @@ const styles = StyleSheet.create({
     flex:1,
   },
   maintenanceDetailView: {
-    flex: 1,
-    overflow: "hidden",
+    flex: 0.901,
+    // overflow: "hidden",
     height:"100%",
     width: "100%",
    

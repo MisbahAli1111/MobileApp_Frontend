@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Image } from "expo-image";
 import {
   StyleSheet,
   TextInput,
   Dimensions,
+  Keyboard,
   View,
   Text,
   Pressable,
@@ -31,6 +32,29 @@ const Invoices = () => {
   const [searchType, setSearchType] = useState([]);
   const [isSearch , setIsSearch] = useState(false);
   const [searchOrder, setSearchOrder] = useState("");
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   const handleQuery = (query) => {
     setSearch(query);
     setIsSearch(true);
@@ -134,9 +158,11 @@ const Invoices = () => {
       </Pressable>
 
 
-      <View style={styles.cont}>
-        <Footer prop={"Invoices"} />
-      </View>
+      {isKeyboardVisible ? null : (
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <Footer prop={"Invoices"} />
+        </View>
+      )}
       <View style={styles.boxContianer}>
         <InvoiceList dsearch={search} searchOrder={searchOrder} />
       </View>
@@ -680,10 +706,9 @@ const styles = StyleSheet.create({
 
   maintenanceRecord: {
     backgroundColor: Color.white,
-    flex: 1,
-    overflow: "hidden",
-    height: 932,
-    width: "100%",
+    flex: 0.9,
+    height: screenHeight,
+    width: screenWidth,
   },
 });
 

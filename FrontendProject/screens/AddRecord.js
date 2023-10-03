@@ -10,7 +10,7 @@ import {
   StyleSheet,
   View,
   Text,
-  Pressable,
+  Keyboard,
   TextInput,
   FlatList,
 } from "react-native";
@@ -89,6 +89,29 @@ const AddRecord = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const searchRef = useRef();
   const [profileImageLink, setProfileImageLink] = useState("");
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const renderCarouselItem = ({ item, index }) => {
     const fileExtension = item.uri.split(".").pop().toLowerCase();
@@ -1137,19 +1160,21 @@ const AddRecord = () => {
 
       
 
-      <View style={[styles.footer]}>
-        <Footer prop={"MaintenanceRecord"} />
-      </View>
+      {isKeyboardVisible ? null : (
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <Footer prop={"MaintenanceRecord"} />
+        </View>
+      )}
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   addRecord: {
-    flex: 1,
-    overflow: "hidden",
-    height: "100%",
-    width: "100%",
+    flex: 0.901,
+    // overflow: "hidden",
+    // height: ,
+    // width: "100%",
   },
   breadcrumbContainer: {
     flexDirection: "row",

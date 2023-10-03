@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Image } from "expo-image";
 import {
   StyleSheet,
+  Keyboard,
   TextInput,
   TouchableOpacity,
   Dimensions,
@@ -34,6 +35,29 @@ const MaintenanceRecord = ({ route }) => {
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [create, setCreate] = useState(false);
   const [isSearch, setIsSearch]= useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   const functionFilterSearch = () => {
     setFilterSearchClicked(true);
   };
@@ -142,9 +166,11 @@ const MaintenanceRecord = ({ route }) => {
       </Pressable>
 
 
-      <View style={styles.cont}>
-        <Footer prop={"MaintenanceRecord"} />
-      </View>
+      {isKeyboardVisible ? null : (
+        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+          <Footer prop={"MaintenanceRecord"} />
+        </View>
+      )}
 
       <View style={styles.boxContianer}>
         <MaintenanceRecordList
@@ -598,11 +624,11 @@ const styles = StyleSheet.create({
 
   maintenanceRecord: {
     backgroundColor: Color.white,
-    flex: 1,
-    overflow: "hidden",
-    height: 932,
-    width: "100%",
-    zIndex: 1,
+    flex: 0.9,
+    // overflow: "hidden",
+    // height: 932,
+    // width: "100%",
+    // zIndex: 1,
   },
 });
 
