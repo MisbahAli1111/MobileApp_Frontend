@@ -133,7 +133,7 @@ const Home = () => {
           flex: 1,fontFamily:FontFamily.poppinsMedium,
         }}
         placeholder="Search Record"
-        placeholderTextColor="Black"
+        placeholderTextColor="#000000"
         editable={false}
       />
       <AntDesign name="search1"  color="black"  size={widthPercentageToDP("5%")}/>

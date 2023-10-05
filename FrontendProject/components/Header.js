@@ -38,8 +38,9 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
       const token = "Bearer " + accessTokens;
       const storedUserId = await AsyncStorage.getItem("userId");
       setUserId(storedUserId);
-  
+      console.log("userId header",storedUserId)
       const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
+      console.log("Api HEader:" , apiServerUrl);
       if (profileImageLink == null) {
         setLoading(true);
       }
@@ -60,6 +61,7 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
           const responseData = response.data;
           if (responseData.url !== null) {
             setProfileImageLink(`${apiServerUrl}` + responseData.url);
+            console.log("Profile: ",profileImageLink);
           }
         }else if (error.response.status === 401) {
             

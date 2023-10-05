@@ -45,8 +45,7 @@ const Login = () => {
   });
 const onGoogleButtonPress = async () => {
   await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-  await GoogleSignin.revokeAccess();
-  // await GoogleSignin.signOut();
+ 
   const { idToken } = await GoogleSignin.signIn();
   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
   const user_SignIn = auth().signInWithCredential(googleCredential);
@@ -72,10 +71,11 @@ const onGoogleButtonPress = async () => {
 
             axios.post(apiEndpoint, requestData)
               .then((response) => {
-                console.log('API Response: ', response.data);
                 const accessToken = response.data.data;
+                console.log(accessToken);
                 const decodedToken = jwt_decode(accessToken);
                 const userId = decodedToken.sub;
+                console.log("GoogleUSer",userId)
                 AsyncStorage.setItem("userId", userId);
                 AsyncStorage.setItem("accessToken", accessToken);
                 

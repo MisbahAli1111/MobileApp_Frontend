@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const ProfileDropdown = () => {
   const navigation = useNavigation();
@@ -21,6 +22,8 @@ const ProfileDropdown = () => {
       console.log(currentUser);
       // If Firebase user is signed in, log them out using Firebase
       try {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
         await auth().signOut();
         console.log("User Logged Out");
         navigation.navigate("Login");

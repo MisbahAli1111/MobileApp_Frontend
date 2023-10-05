@@ -577,7 +577,7 @@ const AddVehicle = () => {
       </View>
 
       {/* ScrollView */}
-      <ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ paddingBottom: hp("7%") }}>
+      <ScrollView style={styles.scrollViewContainer} >
         {/* Image Carousel */}
 
         <View style={styles.profileImageContainer}>
@@ -1046,7 +1046,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
-    marginBottom:hp("10%"),
+    marginBottom:hp("0%"),
   },
   scrollViewContainer1: {
     flex: 1,
