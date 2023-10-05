@@ -2,6 +2,7 @@
   "expo": {
     "name": "myproject",
     "slug": "myproject",
+    "plugins": ["@react-native-google-signin/google-signin"],
     "version": "1.0.0",
     "scheme": "myproject",
     "orientation": "portrait",
@@ -13,21 +14,26 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/1fb18d87-79ef-440e-bed4-7bd57f06952b"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "package": "com.oilChange.myproject",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
-      
+      },
+      "googleServicesFile": "./google-services.json",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"

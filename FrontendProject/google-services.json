@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "263042024802",
+    "project_id": "carmaintenance-58ef8",
+    "storage_bucket": "carmaintenance-58ef8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263042024802:android:391df7dfc7bf110455183b",
+        "android_client_info": {
+          "package_name": "com.oilChange.myproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263042024802-eeu09q7tns1dpq7od4mbktqtbgtpn99q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oilChange.myproject",
+            "certificate_hash": "931004c349869b776dc78e84f582aa73c5d221ab"
+          }
+        },
+        {
+          "client_id": "263042024802-n208757gar3p1vif33cltmeoimarph9n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oilChange.myproject",
+            "certificate_hash": "5faa85589ebd108db63d91ef1b997898b29f13c9"
+          }
+        },
+        {
+          "client_id": "263042024802-mt8ii02e1cpd2nnkbs0v1qm6s2r2j17i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEj9OKoXI-bRSa-gchDSAElw7TgLnhtpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263042024802-mt8ii02e1cpd2nnkbs0v1qm6s2r2j17i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

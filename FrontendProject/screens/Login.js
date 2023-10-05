@@ -21,9 +21,10 @@ import {
   heightPercentageToDP,
 } from "react-native-responsive-screen";
 import { AntDesign } from "@expo/vector-icons";
-import Config from "./Config";
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
+import "expo-dev-client";
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
 
 
 
@@ -41,41 +42,55 @@ const Login = () => {
   const [accessToken,setAccessToken]=useState();
   const [userInfo,setUserInfo]=useState();
   const [userData,setUserData]=useState('');
-  WebBrowser.maybeCompleteAuthSession();
-  const [request, response, promptAsync] = Google.useAuthRequest({
-      androidClientId: '159538002521-199497apkh3id1o8uilp14nflhbgbff6.apps.googleusercontent.com',
-      expoClientId:'159538002521-6qlfa8iieuccon89qdnt6elouc1fctej.apps.googleusercontent.com',
-      redirectUri: 'https://auth.expo.io/@shayanpirani/myproject',
-     
-    });
+  GoogleSignin.configure({
+    webClientId: '263042024802-mt8ii02e1cpd2nnkbs0v1qm6s2r2j17i.apps.googleusercontent.com',
+  });
 
-    useEffect(()=>{
-      if(response?.type=='success')
-      {
-          setAccessToken(response.authentication.accessToken);
-          console.log("AccessToken: ",accessToken);
-          getUserData();
-      }
-    },[response]);
+  const onGoogleButtonPress = async  () => {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+  
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  
+    // Sign-in the user with the credential
+    // return auth().signInWithCredential(googleCredential);
+    const user_SignIn =  auth().signInWithCredential(googleCredential);
+    user_SignIn.then((user) => {
+      console.log("User: ",user.user);
+    })
+    .catch((error)=>
+    {
+      console.log(error);
+    })
+  };
 
-    const getUserData=async()=>{
-      try {
-          const resp = await fetch(
-            "https://www.googleapis.com/userinfo/v2/me",
-            {
-              headers: { Authorization: `Bearer ${response.authentication.accessToken}` },
-            }
-          );
-    
-          const user = await resp.json();
-          console.log("user Details",user) 
-          // setUserInfo(user); 
-          // setUserData(user);
-          // await Services.setUserAuth(user);
-        } catch (error) {
-          console.log("Error: ",error);
-        }
-      }
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if(user)
+    {
+      console.log("User Logged In");
+      navigation.navigate("SwitchBusiness");
+    }
+    else{
+      console.log("No User Logged In")
+    }
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null; 
+ 
 
   const handleLogin = async () => {
     setMError(false);
@@ -210,7 +225,7 @@ const Login = () => {
       {/* Sign in with Google Button */}
       <View style={styles.googleButtonContainer}>
         <Pressable 
-        onPress={() => promptAsync()}
+        onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
         style={styles.googleButton}>
         <AntDesign name="google" size={24} color="white" />
           <Text style={styles.googleButtonText}>Sign in with Google</Text>
