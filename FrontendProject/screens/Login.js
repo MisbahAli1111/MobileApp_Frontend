@@ -24,6 +24,7 @@ import { AntDesign } from "@expo/vector-icons";
 import "expo-dev-client";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import jwt_decode from "jwt-decode";
 
 
 
@@ -39,33 +40,68 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
  
-  const [accessToken,setAccessToken]=useState();
-  const [userInfo,setUserInfo]=useState();
-  const [userData,setUserData]=useState('');
   GoogleSignin.configure({
     webClientId: '263042024802-mt8ii02e1cpd2nnkbs0v1qm6s2r2j17i.apps.googleusercontent.com',
   });
+const onGoogleButtonPress = async () => {
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+  await GoogleSignin.revokeAccess();
+  // await GoogleSignin.signOut();
+  const { idToken } = await GoogleSignin.signIn();
+  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  const user_SignIn = auth().signInWithCredential(googleCredential);
 
-  const onGoogleButtonPress = async  () => {
-    // Check if your device supports Google Play
-    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-    // Get the users ID token
-    const { idToken } = await GoogleSignin.signIn();
-  
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-  
-    // Sign-in the user with the credential
-    // return auth().signInWithCredential(googleCredential);
-    const user_SignIn =  auth().signInWithCredential(googleCredential);
-    user_SignIn.then((user) => {
-      console.log("User: ",user.user);
+  user_SignIn
+    .then((user) => {
+      const displayName = user.user.displayName;
+      const [firstName, lastName] = displayName.split(' ');
+
+      const email = user.user.email;
+
+      // Retrieve the API server URL from AsyncStorage
+      AsyncStorage.getItem("apiServerUrl")
+        .then((apiServerUrl) => {
+          if (apiServerUrl) {
+            // Make an Axios API call with the retrieved URL
+            const apiEndpoint = `${apiServerUrl}/api/users/signIn/`;
+            const requestData = {
+              email: email,
+              firstName: firstName,
+              lastName: lastName
+            };
+
+            axios.post(apiEndpoint, requestData)
+              .then((response) => {
+                console.log('API Response: ', response.data);
+                const accessToken = response.data.data;
+                const decodedToken = jwt_decode(accessToken);
+                const userId = decodedToken.sub;
+                AsyncStorage.setItem("userId", userId);
+                AsyncStorage.setItem("accessToken", accessToken);
+                
+                navigation.navigate("SwitchBusiness");
+              })
+              .catch((error) => {
+                console.error('API Error: ', error);
+              });
+          } else {
+            console.error('API server URL not found in AsyncStorage');
+          }
+        })
+        .catch((error) => {
+          console.error('AsyncStorage Error: ', error);
+          
+        });
     })
-    .catch((error)=>
-    {
+    .catch((error) => {
       console.log(error);
-    })
-  };
+      if (error.code === "SIGN_IN_REQUIRED") {
+        console.log("Hello World")
+      }
+    });
+};
+
+  
 
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
@@ -76,7 +112,7 @@ const Login = () => {
     if(user)
     {
       console.log("User Logged In");
-      navigation.navigate("SwitchBusiness");
+      // navigation.navigate("SwitchBusiness");
     }
     else{
       console.log("No User Logged In")

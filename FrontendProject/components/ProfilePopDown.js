@@ -6,11 +6,32 @@ import Config from "../screens/Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
+import auth from "@react-native-firebase/auth";
 
 const ProfileDropdown = () => {
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+
+  const handleLogout = async () => {
+    // Check if the user has signed in with Firebase
+    const currentUser = auth().currentUser;
+
+    if (currentUser) {
+      console.log(currentUser);
+      // If Firebase user is signed in, log them out using Firebase
+      try {
+        await auth().signOut();
+        console.log("User Logged Out");
+        navigation.navigate("Login");
+      } catch (error) {
+        console.error("Error logging out with Firebase: ", error);
+      }
+    } else {
+      // If the user is not signed in with Firebase, navigate to the login screen
+      navigation.navigate("Login");
+    }
+  };
 
   getData = async () => {
     const userId = await AsyncStorage.getItem("userId");
@@ -74,7 +95,7 @@ const ProfileDropdown = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.item2}
-          onPress={() => navigation.navigate("Login")}
+          onPress={handleLogout}
         >
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>

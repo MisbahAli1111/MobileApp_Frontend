@@ -38,12 +38,13 @@ const Header = ({ title, showBackArrow, profileImage, onBackPress }) => {
       const token = "Bearer " + accessTokens;
       const storedUserId = await AsyncStorage.getItem("userId");
       setUserId(storedUserId);
+  
       const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
       if (profileImageLink == null) {
         setLoading(true);
       }
 
-      if (userId) {
+      if (userId && apiServerUrl) {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
