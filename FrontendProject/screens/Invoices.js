@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Image } from "expo-image";
 import {
   StyleSheet,
@@ -8,14 +8,14 @@ import {
   View,
   Text,
   Pressable,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 import { FontFamily, Color, Border, FontSize, Padding } from "../GlobalStyles";
 import Footer from "../components/Footer";
 import MaintenanceRecordList from "../components/MaintenanceRecordList";
@@ -30,21 +30,20 @@ const Invoices = () => {
   const [search, setSearch] = useState("");
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [searchType, setSearchType] = useState([]);
-  const [isSearch , setIsSearch] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
   const [searchOrder, setSearchOrder] = useState("");
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => {
         setKeyboardVisible(true);
       }
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
       }
@@ -67,7 +66,6 @@ const Invoices = () => {
     setFilterSearchClicked(false);
     setSearchType(attribute);
     setSearchOrder(sort);
-
   };
   return (
     <View style={styles.maintenanceRecord}>
@@ -82,30 +80,35 @@ const Invoices = () => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={{ top: screenWidth * 0.34, width: screenWidth * 0.9, alignSelf: 'center' }}>
-        <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
-
-        <View style={styles.breadcrumbContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Image
-            style={styles.breadcrumbImage}
-            contentFit="cover"
-            source={require("../assets/homemuted.png")}
-          />
-        </TouchableOpacity>
-        <Text style={styles.breadcrumbSeparator}> / </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Invoices")}>
-          <Text style={styles.breadcrumbText1}>Invoices</Text>
-        </TouchableOpacity>
-        {isSearch && search ? (
-        <Text style={styles.breadcrumbSeparator}  numberOfLines={1}> / </Text>
-        ) : null}
-        {isSearch && search ? (
-        <Text style={styles.breadcrumbText} numberOfLines={1}>{search}</Text>
-        ) : null}
-      </View>
-          <View style={{ flex: 1, top: 4, alignItems: 'flex-end' }}>
-          <Pressable onPress={functionFilterSearch}>
+      <View
+        style={{
+          top: screenWidth * 0.34,
+          width: screenWidth * 0.9,
+          alignSelf: "center",
+        }}
+      >
+        <View
+          style={{
+            position: "absolute",
+            flexDirection: "row",
+            gap: screenWidth * 0.13,
+          }}
+        >
+          <View style={styles.breadcrumbContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <Image
+                style={styles.breadcrumbImage}
+                contentFit="cover"
+                source={require("../assets/homemuted.png")}
+              />
+            </TouchableOpacity>
+            <Text style={styles.breadcrumbSeparator}> / </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Invoices")}>
+              <Text style={styles.breadcrumbText1}>Invoices</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1, top: 4, alignItems: "flex-end" }}>
+            <Pressable onPress={functionFilterSearch}>
               <Text style={styles.filterText}>Filter</Text>
             </Pressable>
             {filterSearchClicked && (
@@ -120,9 +123,7 @@ const Invoices = () => {
               onPress={() => navigation.navigate("ListRecords")}
             >
               <View style={styles.rectangleGroupp}>
-                <Text style={[styles.addTypo]}>
-                  Add Invoice
-                </Text>
+                <Text style={[styles.addTypo]}>Add Invoice</Text>
                 <Image
                   contentFit="cover"
                   source={require("../assets/vector14.png")}
@@ -131,16 +132,17 @@ const Invoices = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-
       </View>
 
-
       <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
             <TextInput
-              style={{ fontSize: 15, fontWeight: '700', width: screenWidth * 0.74 }}
+              style={{
+                fontSize: 15,
+                fontWeight: "700",
+                width: screenWidth * 0.74,
+              }}
               placeholder="Search Invoice"
               clearButtonMode="always"
               value={search}
@@ -157,16 +159,14 @@ const Invoices = () => {
         </View>
       </Pressable>
 
-
       {isKeyboardVisible ? null : (
-        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+        <View style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}>
           <Footer prop={"Invoices"} />
         </View>
       )}
       <View style={styles.boxContianer}>
         <InvoiceList dsearch={search} searchOrder={searchOrder} />
       </View>
-
     </View>
   );
 };
@@ -190,13 +190,11 @@ const styles = StyleSheet.create({
     paddingLeft: screenWidth * 0.07,
     paddingEnd: screenWidth * 0.03,
     position: "absolute",
-
   },
-
 
   addTypo: {
     flex: 1,
-    color: 'white',
+    color: "white",
   },
   rectangleGroupp: {
     backgroundColor: Color.darkslateblue,
@@ -207,10 +205,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   groupLayoutt: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     flex: 1,
-    top:-7,
-    position: 'absolute',
+    top: -7,
+    position: "absolute",
   },
   filterText: {
     left: -135,
@@ -240,7 +238,7 @@ const styles = StyleSheet.create({
   breadcrumbText: {
     fontSize: wp("3.5%"), // Adjust font size using wp
     color: "rgba(3, 29, 68, 1)",
-    width:rem*2.4,
+    width: rem * 2.4,
     // backgroundColor:'red',
     fontFamily: FontFamily.poppinsMedium,
     marginTop: hp("0.7%"), // Breadcrumb text color
@@ -271,8 +269,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: hp("3%"),
     // paddingHorizontal:wp("2%"),
-    paddingLeft:wp("2%"),
-    paddingRight:wp("2%")
+    paddingLeft: wp("2%"),
+    paddingRight: wp("2%"),
   },
   profileImage: {
     width: wp("30%"),
@@ -281,8 +279,6 @@ const styles = StyleSheet.create({
   profileImagePlaceholder: {
     width: wp("100%"),
     height: wp("70%"),
-    
-    
   },
   profileImagePlaceholder1: {
     width: wp("90%"),
@@ -421,13 +417,12 @@ const styles = StyleSheet.create({
     top: 0,
   },
 
-
   breadcrumbsParent: {
     flex: 1,
     width: screenWidth,
     position: "absolute",
     marginTop: screenWidth * 0.34,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   paidTypo: {
     fontFamily: FontFamily.poppinsMedium,
@@ -484,7 +479,7 @@ const styles = StyleSheet.create({
 
   rectangleParent18: {
     marginTop: screenWidth * 0.45,
-    alignSelf: 'center',
+    alignSelf: "center",
     backgroundColor: Color.steelblue_300,
   },
 
@@ -695,7 +690,7 @@ const styles = StyleSheet.create({
     maxWidth: rem,
     overflow: "hidden",
     // position:'absolute',
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginEnd: rem * 1,
     marginTop: rem * 0.5,
   },

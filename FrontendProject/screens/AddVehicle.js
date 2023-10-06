@@ -2,8 +2,8 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
-import { KeyboardAvoidingView } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { KeyboardAvoidingView } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import {
   Button,
   Modal,
@@ -67,22 +67,21 @@ const AddVehicle = () => {
   const [isImageModalVisible, setImageModalVisible] = useState("false");
   const [isFullImageModalVisible, setFullImageModalVisible] = useState(false);
   const [makeError, setMakeError] = useState(false);
-  const isVideo = profileImage && profileImage.endsWith('.mp4');
+  const isVideo = profileImage && profileImage.endsWith(".mp4");
   const vehicleCategories = ["Bike", "Car", "Truck", "Auto", "Other"];
   const CusomterCategories = ["Walk-in", "Company"];
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => {
         setKeyboardVisible(true);
       }
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
       }
@@ -241,7 +240,6 @@ const AddVehicle = () => {
       })
       .catch((error) => {
         if (error.response.status === 401) {
-        
           navigation.navigate("Login");
         }
         console.log(error);
@@ -262,8 +260,8 @@ const AddVehicle = () => {
   });
 
   const renderCarouselItem = ({ item, index }) => {
-    const fileExtension = item.uri.split('.').pop().toLowerCase();
-  
+    const fileExtension = item.uri.split(".").pop().toLowerCase();
+
     return (
       <View key={index} style={styles.carouselItem}>
         <View style={styles.mediaContainer}>
@@ -278,29 +276,22 @@ const AddVehicle = () => {
               <View style={styles.imageContainer}>
                 <Image source={{ uri: item.uri }} style={styles.fullVideo} />
               </View>
-            
-                <View style={styles.playIconContainer}>
-                  <AntDesign name="playcircleo" size={wp("10%")} color="white" />
-                </View>
-              
+
+              <View style={styles.playIconContainer}>
+                <AntDesign name="playcircleo" size={wp("10%")} color="white" />
+              </View>
             </TouchableOpacity>
           ) : null}
           <TouchableOpacity
             onPress={() => handleImageDelete(index)}
             style={styles.closeButtonDelete}
           >
-          <Icon name="trash" size={30} color="red" />
+            <Icon name="trash" size={30} color="red" />
           </TouchableOpacity>
         </View>
       </View>
     );
   };
-  
-  
-  
-  
-
-  
 
   const onSearch = (search) => {
     if (search != "") {
@@ -380,18 +371,22 @@ const AddVehicle = () => {
         let token = await AsyncStorage.getItem("accessToken");
         const accessToken = "Bearer " + token;
         const formData = new FormData();
-  
+
         selectedImage.forEach((entry, index) => {
           const fileUri = entry.uri;
-          const fileType = fileUri.endsWith(".mp4") ? "video/mp4" : "image/jpeg";
-  
+          const fileType = fileUri.endsWith(".mp4")
+            ? "video/mp4"
+            : "image/jpeg";
+
           formData.append("files", {
             uri: fileUri,
-            name: new Date().getTime() + (fileType === "video/mp4" ? ".mp4" : ".jpeg"),
+            name:
+              new Date().getTime() +
+              (fileType === "video/mp4" ? ".mp4" : ".jpeg"),
             type: fileType,
           });
         });
-  
+
         const response = await axios.post(
           `${apiServerUrl}/api/file/upload/vehicle/${vehicleId}`,
           formData,
@@ -402,7 +397,7 @@ const AddVehicle = () => {
             },
           }
         );
-  
+
         // Handle the response from the server if needed
         console.log("Upload success:", response.data);
       }
@@ -413,7 +408,7 @@ const AddVehicle = () => {
       // or perform some error handling logic.
     }
   };
-  
+
   const saveVehicle = async () => {
     let isValid = true;
 
@@ -539,11 +534,10 @@ const AddVehicle = () => {
             }
             navigation.navigate("Vehicles", { type: "default" });
           }
-          
         })
         .catch((error) => {
           console.log(error);
-           if (error.response.status === 401) {
+          if (error.response.status === 401) {
             navigation.navigate("Login");
           }
         });
@@ -558,8 +552,12 @@ const AddVehicle = () => {
   return (
     <ImageBackground
       source={require("../assets/light-texture2234-1.png")}
-      style={styles.container}
+      style={{ flex: 1 }} // Add styling for the ImageBackground itself
     >
+      <View style={isKeyboardVisible ? styles.containerN : styles.containerN}>
+        {/* Content of the View */}
+      </View>
+
       <View style={styles.breadcrumbContainer}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Image
@@ -577,7 +575,7 @@ const AddVehicle = () => {
       </View>
 
       {/* ScrollView */}
-      <ScrollView style={styles.scrollViewContainer} >
+      <ScrollView style={styles.scrollViewContainer}>
         {/* Image Carousel */}
 
         <View style={styles.profileImageContainer}>
@@ -614,44 +612,47 @@ const AddVehicle = () => {
         </View>
 
         <Modal
-      animationType="slide"
-      transparent={true}
-      visible={isFullImageModalVisible}
-      onRequestClose={() => setFullImageModalVisible(false)}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.imageModalContainer}>
-          {profileImage ? (
-            isVideo ? (
-              <Video
-                source={{ uri: profileImage }}
-                style={styles.fullVideo}
-                resizeMode="contain"
-                shouldPlay
-                isLooping
-                useNativeControls
-              />
-            ) : (
-              <Image
-                source={{ uri: profileImage }}
-                style={styles.fullImage}
-                resizeMode="contain"
-              />
-            )
-          ) : null}
-          
-          <TouchableOpacity
-            style={isVideo ? styles.videoCloseButton : styles.imageCloseButton}
-            onPress={() => setFullImageModalVisible(false)}
-          >
-            <AntDesign name="closecircle" size={hp("4%")} color="rgba(3, 29, 68, 1)" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
+          animationType="slide"
+          transparent={true}
+          visible={isFullImageModalVisible}
+          onRequestClose={() => setFullImageModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.imageModalContainer}>
+              {profileImage ? (
+                isVideo ? (
+                  <Video
+                    source={{ uri: profileImage }}
+                    style={styles.fullVideo}
+                    resizeMode="contain"
+                    shouldPlay
+                    isLooping
+                    useNativeControls
+                  />
+                ) : (
+                  <Image
+                    source={{ uri: profileImage }}
+                    style={styles.fullImage}
+                    resizeMode="contain"
+                  />
+                )
+              ) : null}
 
-
-
+              <TouchableOpacity
+                style={
+                  isVideo ? styles.videoCloseButton : styles.imageCloseButton
+                }
+                onPress={() => setFullImageModalVisible(false)}
+              >
+                <AntDesign
+                  name="closecircle"
+                  size={hp("4%")}
+                  color="rgba(3, 29, 68, 1)"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
         <Modal
           animationType="slide"
@@ -661,20 +662,19 @@ const AddVehicle = () => {
         >
           <View style={styles.imageModalContainer1}>
             {/* Background Close Button */}
-           
 
             {/* Image Source Options */}
             <View style={styles.imageModalContent}>
-            <TouchableOpacity
-              onPress={() => setImageModalVisible(false)}
-              style={styles.closeButton1}
-            >
-              <AntDesign
-                name="closecircle"
-                size={30}
-                color="rgba(3, 29, 68, 1)"
-              />
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setImageModalVisible(false)}
+                style={styles.closeButton1}
+              >
+                <AntDesign
+                  name="closecircle"
+                  size={30}
+                  color="rgba(3, 29, 68, 1)"
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.imageModalButton}
                 onPress={handleImageFromCamera}
@@ -780,7 +780,9 @@ const AddVehicle = () => {
             <View style={styles.inputWithIcon1}>
               <TouchableOpacity onPress={handleClick}>
                 <Text style={styles.customerText}>
-                  {selectedCountry == "" ? "Select Customer" : selectedCountry.split(" ")[0]}
+                  {selectedCountry == ""
+                    ? "Select Customer"
+                    : selectedCountry.split(" ")[0]}
                 </Text>
               </TouchableOpacity>
 
@@ -790,12 +792,12 @@ const AddVehicle = () => {
                   style={styles.profileImageIcon} // Assuming you have a style for the profile image
                 />
               ) : ( */}
-                <AntDesign
-                  name="user"
-                  size={24}
-                  color="rgba(3, 29, 68, 1)"
-                  style={styles.inputIcon}
-                />
+              <AntDesign
+                name="user"
+                size={24}
+                color="rgba(3, 29, 68, 1)"
+                style={styles.inputIcon}
+              />
               {/* )} */}
             </View>
 
@@ -889,15 +891,15 @@ const AddVehicle = () => {
                     <TouchableOpacity
                       style={{
                         backgroundColor: "rgba(3, 29, 68, 1)",
-                          paddingVertical: hp("2%"),
-                          alignSelf: "center",
-                          borderRadius: wp("2%"),
-                          paddingLeft: wp("5%"),
-                          width: "50%",
-                          marginTop: hp("2%"),
-                          position: "absolute",
-                          zIndex: 999,
-                          bottom: hp("2%"),
+                        paddingVertical: hp("2%"),
+                        alignSelf: "center",
+                        borderRadius: wp("2%"),
+                        paddingLeft: wp("5%"),
+                        width: "50%",
+                        marginTop: hp("2%"),
+                        position: "absolute",
+                        zIndex: 999,
+                        bottom: hp("2%"),
                       }}
                       onPress={handleAddCustomer}
                     >
@@ -988,18 +990,16 @@ const AddVehicle = () => {
             {kmError && <Text style={styles.errorText}>{error}</Text>}
           </View>
           <TouchableOpacity style={styles.saveButton} onPress={saveVehicle}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
         </View>
-        
       </ScrollView>
 
       {/* Save Button */}
-      
 
       {/* Footer */}
       {isKeyboardVisible ? null : (
-        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+        <View style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}>
           <Footer prop={"Vehicles"} />
         </View>
       )}
@@ -1010,6 +1010,11 @@ const AddVehicle = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 0.901,
+    contentFit: "cover",
+    justifyContent: "center",
+  },
+  containerN: {
+    flex: 1,
     contentFit: "cover",
     justifyContent: "center",
   },
@@ -1046,11 +1051,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: wp("5%"),
     paddingTop: hp("2%"),
-    marginBottom:hp("0%"),
+    marginBottom: hp("0%"),
   },
   scrollViewContainer1: {
     flex: 1,
-    marginBottom:hp("10%")
+    marginBottom: hp("10%"),
   },
 
   profileImageContainer: {
@@ -1115,7 +1120,8 @@ const styles = StyleSheet.create({
     alignSelf: "center", // Center the button horizontally // Add some margin at the top for spacing
     borderRadius: wp("2%"), // Add border radius if needed
     paddingHorizontal: wp("2%"), // Add horizontal padding
-    marginTop:wp("1%")
+    marginTop: wp("1%"),
+    marginBottom: hp("5%"),
   },
   buttonText: {
     color: "white",
@@ -1127,14 +1133,14 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the alpha value (last number) for transparency
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value (last number) for transparency
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageModalContainer: {
-    position: 'relative',
-    width: wp('80%'), // Adjust the width percentage as needed
-    height: hp('80%'), // Adjust the height percentage as needed
+    position: "relative",
+    width: wp("80%"), // Adjust the width percentage as needed
+    height: hp("80%"), // Adjust the height percentage as needed
   },
   imageModalContainer1: {
     flex: 1,
@@ -1151,8 +1157,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-    
-  
+
   videoContainer: {
     alignItems: "center", // Center horizontally
     justifyContent: "center", // Center vertically
@@ -1174,15 +1179,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   videoCloseButton: {
-    position: 'absolute',
-    top: hp('7%'), // Adjust the top percentage as needed
-    right: wp('0%'), // Adjust the right percentage as needed
+    position: "absolute",
+    top: hp("7%"), // Adjust the top percentage as needed
+    right: wp("0%"), // Adjust the right percentage as needed
     zIndex: 1,
   },
   imageCloseButton: {
-    position: 'absolute',
-    top: hp('15%'), // Adjust the top percentage as needed
-    right: wp('0%'), // Adjust the right percentage as needed
+    position: "absolute",
+    top: hp("15%"), // Adjust the top percentage as needed
+    right: wp("0%"), // Adjust the right percentage as needed
     zIndex: 1,
   },
   closeButton1: {
@@ -1191,7 +1196,6 @@ const styles = StyleSheet.create({
     right: wp("0.5%"), // Adjust right position using wp
     zIndex: 999,
   },
-  
 
   imageModalContent: {
     backgroundColor: "white",
@@ -1239,18 +1243,15 @@ const styles = StyleSheet.create({
     maxHeight: "100%",
     width: "100%", // Adjust this value as needed
   },
-  fullVideo:
-  {
+  fullVideo: {
     width: "100%",
     height: "100%",
-    flex:1
-    
+    flex: 1,
   },
-  fullImage:
-  {
+  fullImage: {
     width: "100%",
     height: "100%",
-    flex:1
+    flex: 1,
   },
   image: {
     width: "100%",
@@ -1281,7 +1282,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  
+
   formContainer: {
     paddingHorizontal: wp("0%"),
     borderBottomLeftRadius: wp("2%"),
@@ -1405,10 +1406,10 @@ const styles = StyleSheet.create({
     // backgroundColor: "gray",
     // alignItems: "center",
     // justifyContent: "center",
-    flex:1,
-    top:0,
-    position:'absolute',
-    bottom:0
+    flex: 1,
+    top: 0,
+    position: "absolute",
+    bottom: 0,
   },
   footerText: {
     color: "white", // Customize your footer text style

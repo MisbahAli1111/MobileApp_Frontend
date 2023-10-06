@@ -2,7 +2,11 @@ import * as React from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import { useState, useEffect } from "react";
 import { Image } from "expo-image";
-import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
+import Icon from "react-native-vector-icons/FontAwesome";
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from "react-native-responsive-screen";
 
 import {
   StyleSheet,
@@ -20,7 +24,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 const rem = screenWidth / 16;
@@ -32,30 +35,25 @@ function Footer(props) {
     setActiveScreen(props.prop);
   }, [props.prop]);
 
-// console.warn(screenHeight);
+  // console.warn(screenHeight);
   return (
-
     <View>
-
       <TouchableOpacity
         style={{ zIndex: 999 }}
-        onPress={() => navigation.navigate('AddRecord')}>
+        onPress={() => navigation.navigate("AddRecord")}
+      >
         <Image
           style={[styles.groupPressableLayout]}
           contentFit="cover"
           source={require("../assets/group-174.png")}
         />
-        <Text style={[styles.text]} >Add Record</Text>
+        <Text style={[styles.text]}>Add Record</Text>
       </TouchableOpacity>
 
       {/* footer here */}
       <View style={styles.bottom}>
-
         <View style={styles.imageDiv}>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Home')}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Image
               style={[styles.bottomImg]}
               contentFit="cover"
@@ -74,7 +72,7 @@ function Footer(props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('Vehicles', { type: "default" })}
+            onPress={() => navigation.navigate("Vehicles", { type: "default" })}
           >
             <Image
               style={[styles.bottomImg]}
@@ -90,15 +88,13 @@ function Footer(props) {
               contentFit="cover"
               source={require("../assets/carcitroentopvehiclesvgrepocom-13.png")}
             />
-            <Text style={{ alignItems: 'center' }}>Vehicles</Text>
+            <Text style={{ alignItems: "center" }}>Vehicles</Text>
           </TouchableOpacity>
-
         </View>
 
         <View style={styles.imageDiv2}>
-
           <TouchableOpacity
-            onPress={() => navigation.navigate('MaintenanceRecord')}
+            onPress={() => navigation.navigate("MaintenanceRecord")}
           >
             <Image
               style={[styles.bottomImg]}
@@ -109,17 +105,23 @@ function Footer(props) {
                   : require("../assets/ellipse-8.png")
               }
             />
-            <Image
-              style={styles.record641Icon}
-              source={require("../assets/record64-1.png")}
+
+            <Icon
+              name="book"
+              size={30}
+              color="white"
+              style={{
+                position: "absolute",
+                left: "15%",
+                top: "8%",
+                // transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+              }}
             />
             <Text>Records</Text>
             {/* checking  */}
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Invoices')}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Invoices")}>
             <Image
               style={[styles.bottomImg]}
               contentFit="cover"
@@ -129,34 +131,44 @@ function Footer(props) {
                   : require("../assets/ellipse-8.png")
               }
             />
-            <Image
+            {/* <Image
               style={styles.invoiceWarrantyLineSvgrepoIcon}
               contentFit="cover"
               source={require("../assets/invoicewarrantylinesvgrepocom-1.png")}
+            /> */}
+
+            <Icon
+              name="file-text"
+              size={25}
+              color="white"
+              style={{
+                position: "absolute",
+                left: "24%",
+                top: "10%",
+                // transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+              }}
             />
+
             <Text>Invoices</Text>
           </TouchableOpacity>
         </View>
       </View>
-
     </View>
-
   );
 }
 const styles = StyleSheet.create({
-
   bottom: {
     flex: 1,
     // zIndex:999,
     // bottom:0-heightPercentageToDP('100%'),
     flexDirection: "row",
     justifyContent: "space-between",
-    position: 'absolute',
+    position: "absolute",
     backgroundColor: Color.steelblue_300,
     width: screenWidth,
-    height: screenHeight*0.10,
+    height: screenHeight * 0.1,
     // top:screenHeight-screenHeight*0.10,
-    gap: rem * 4.5, 
+    gap: rem * 4.5,
   },
 
   imageDiv: {
@@ -183,8 +195,8 @@ const styles = StyleSheet.create({
   groupPressableLayout: {
     height: rem * 4,
     width: rem * 4,
-    position: 'absolute',
-    top:-50,
+    position: "absolute",
+    top: -50,
     // top:screenHeight-screenHeight*0.18,
     zIndex: 999,
     left: screenWidth / 2 - rem * 2,
@@ -192,14 +204,12 @@ const styles = StyleSheet.create({
   homeMutedIcon1: {
     width: 25,
     height: 27,
-    alignSelf:'center',
-    top:7,
-    position: 'absolute'
+    alignSelf: "center",
+    top: 7,
+    position: "absolute",
   },
 
   // CHECK :: END
-
-
 
   ellipseLayout: {
     height: 45,
@@ -208,22 +218,23 @@ const styles = StyleSheet.create({
   text: {
     alignSelf: "center",
     color: Color.textTxtPrimary,
-    position: 'absolute',
+    position: "absolute",
     // top:screenHeight-screenHeight*0.07,
-    top:40,
+    top: 40,
     zIndex: 999,
     left: screenWidth / 1.99 - 40,
   },
 
   invoiceWarrantyLineSvgrepoIcon: {
-    width: 26,
-    height: 26,
-    // left: 11,
-    alignSelf:'center',
+    flex: 1,
+    width: screenWidth * 0.05,
+    height: screenHeight * 0.03,
+    alignSelf: "center",
     top: 9,
     position: "absolute",
     overflow: "hidden",
   },
+
   groupPressable: {
     left: 155,
   },
@@ -233,8 +244,8 @@ const styles = StyleSheet.create({
   },
   carCitroenTopVehicleSvgrepIcon: {
     left: 6,
-    flex:1,
-    alignSelf:'center',
+    flex: 1,
+    alignSelf: "center",
     top: 5,
     width: 36,
     height: 36,
@@ -242,12 +253,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   record641Icon: {
-    // left: 11,
-    // top: 7,
-    alignSelf:'center',
-    flex:1,
-    // paddingTop:10,
-    top:8,
+    alignSelf: "center",
+    flex: 1,
+    top: 8,
     width: 27,
     height: 27,
     position: "absolute",
@@ -272,7 +280,6 @@ const styles = StyleSheet.create({
     elevation: 4,
     shadowOpacity: 1,
   },
-
 });
 
 export default Footer;

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Image } from "expo-image";
 import {
   StyleSheet,
@@ -34,20 +34,19 @@ const MaintenanceRecord = ({ route }) => {
   const [search, setSearch] = useState("");
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const [create, setCreate] = useState(false);
-  const [isSearch, setIsSearch]= useState(false);
+  const [isSearch, setIsSearch] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => {
         setKeyboardVisible(true);
       }
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
       }
@@ -69,7 +68,6 @@ const MaintenanceRecord = ({ route }) => {
   };
   const handleSavePress = () => {
     setCreate(true);
-
   };
 
   const handleQuery = (query) => {
@@ -90,30 +88,37 @@ const MaintenanceRecord = ({ route }) => {
         source={require("../assets/image-2.png")}
       />
 
-      <View style={{ top: screenWidth * 0.30, width: screenWidth * 0.9, alignSelf: 'center' }}>
-        <View style={{ position: 'absolute', flexDirection: 'row', gap: screenWidth * 0.13 }}>
-
-        <View style={styles.breadcrumbContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Image
-            style={styles.breadcrumbImage}
-            contentFit="cover"
-            source={require("../assets/homemuted.png")}
-          />
-        </TouchableOpacity>
-        <Text style={styles.breadcrumbSeparator}> / </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("MaintenanceRecord")}>
-          <Text style={styles.breadcrumbText1}>Records</Text>
-        </TouchableOpacity>
-        {isSearch && search ? (
-        <Text style={styles.breadcrumbSeparator}> / </Text>
-        ) : null}
-        {isSearch && search ? (
-        <Text style={styles.breadcrumbText} numberOfLines={1}>{search}</Text>
-        ) : null}
-      </View>
-          <View style={{ flex: 1, top: 3, alignItems: 'flex-end' }}>
-           <Pressable onPress={functionFilterSearch}>
+      <View
+        style={{
+          top: screenWidth * 0.3,
+          width: screenWidth * 0.9,
+          alignSelf: "center",
+        }}
+      >
+        <View
+          style={{
+            position: "absolute",
+            flexDirection: "row",
+            gap: screenWidth * 0.13,
+          }}
+        >
+          <View style={styles.breadcrumbContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <Image
+                style={styles.breadcrumbImage}
+                contentFit="cover"
+                source={require("../assets/homemuted.png")}
+              />
+            </TouchableOpacity>
+            <Text style={styles.breadcrumbSeparator}> / </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("MaintenanceRecord")}
+            >
+              <Text style={styles.breadcrumbText1}>Records</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1, top: 3, alignItems: "flex-end" }}>
+            <Pressable onPress={functionFilterSearch}>
               <Text style={styles.filterText}>Filter</Text>
             </Pressable>
             {filterSearchClicked && (
@@ -128,9 +133,7 @@ const MaintenanceRecord = ({ route }) => {
               onPress={() => navigation.navigate("AddRecord")}
             >
               <View style={styles.rectangleGroupp}>
-                <Text style={[styles.addTypo]}>
-                  Add Record
-                </Text>
+                <Text style={[styles.addTypo]}>Add Record</Text>
                 <Image
                   contentFit="cover"
                   source={require("../assets/vector14.png")}
@@ -139,16 +142,17 @@ const MaintenanceRecord = ({ route }) => {
             </TouchableOpacity>
           </View>
         </View>
-
-
       </View>
 
-
       <Pressable style={[styles.rectangleParent18, styles.rectangleLayout]}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
             <TextInput
-              style={{ fontSize: 15, fontWeight: '700', width: screenWidth * 0.74 }}
+              style={{
+                fontSize: 15,
+                fontWeight: "700",
+                width: screenWidth * 0.74,
+              }}
               placeholder="Search Record"
               clearButtonMode="always"
               value={search}
@@ -165,9 +169,8 @@ const MaintenanceRecord = ({ route }) => {
         </View>
       </Pressable>
 
-
       {isKeyboardVisible ? null : (
-        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+        <View style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}>
           <Footer prop={"MaintenanceRecord"} />
         </View>
       )}
@@ -204,14 +207,14 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   groupLayoutt: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     flex: 1,
-    top:-10,
-    position: 'absolute',
+    top: -10,
+    position: "absolute",
   },
   rectangleParent18: {
     marginTop: screenWidth * 0.41,
-    alignSelf: 'center',
+    alignSelf: "center",
     backgroundColor: Color.steelblue_300,
   },
   rectangleLayout: {
@@ -220,7 +223,6 @@ const styles = StyleSheet.create({
     paddingLeft: screenWidth * 0.07,
     paddingEnd: screenWidth * 0.03,
     position: "absolute",
-
   },
   rectangleGroupp: {
     backgroundColor: Color.darkslateblue,
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
   breadcrumbText: {
     fontSize: wp("3.5%"), // Adjust font size using wp
     color: "rgba(3, 29, 68, 1)",
-    width:rem*3,
+    width: rem * 3,
     fontFamily: FontFamily.poppinsMedium,
     marginTop: hp("0.7%"), // Breadcrumb text color
   },
@@ -326,7 +328,7 @@ const styles = StyleSheet.create({
   },
   addTypo: {
     flex: 1,
-    color: 'white',
+    color: "white",
   },
   rectangleContainer: {
     flexDirection: "row",
