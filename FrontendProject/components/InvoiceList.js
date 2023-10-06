@@ -975,6 +975,7 @@ const styles = StyleSheet.create({
   },
   wrap: {
     width: screenWidth,
+    
     // backgroundColor:'red',
     flex:1,
   },

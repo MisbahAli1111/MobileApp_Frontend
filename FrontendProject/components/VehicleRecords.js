@@ -462,7 +462,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 }
 const styles = StyleSheet.create({
   scroll: {
-    height: screenWidth * 1.3,
+    // height: screenWidth * 1.3,
     width: screenWidth,
     marginTop: screenWidth * 0.57,
     // backgroundColor:'red'

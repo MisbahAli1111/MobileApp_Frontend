@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   },
   wrap: {
     width: screenWidth,
-    height: screenWidth * 1.30,
+    // height: screenWidth * 1.30,
     
   },
   dated: {

@@ -705,7 +705,7 @@ const AddRecord = () => {
   return (
     <ImageBackground
       source={require("../assets/light-texture2234-1.png")}
-      style={styles.addRecord}
+      style={{ flex: isKeyboardVisible ? 1 : 0.901 }}
     >
       <View style={styles.breadcrumbContainer}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>

@@ -760,8 +760,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   groupChild6Layout: {
-    height: 45,
-    width: 381,
+    height: screenHeight*0.06,
+    width: screenWidth*0.92,
     position: "absolute",
   },
   groupChild6Layoutt: {
@@ -1318,8 +1318,14 @@ const styles = StyleSheet.create({
 
   },
   createInvoice3: {
-    top: 10,
-    left: 132,
+    // top: 10,
+    // left: 132,
+    flex:1,
+    // alignSelf:'center',
+    // position:'absolute',
+    alignItems:'center',
+    left:screenWidth*0.3,
+    top:screenHeight*0.012,
     color: Color.snow,
     fontSize: FontSize.size_base,
     fontFamily: FontFamily.poppinsMedium,

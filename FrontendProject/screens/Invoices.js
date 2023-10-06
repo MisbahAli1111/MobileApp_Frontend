@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
   boxContianer: {
     flex: 1,
     flexWrap: "wrap",
-    marginTop: 250,
-    maxHeight: screenWidth * 1.24,
+    marginTop: screenHeight*0.3,
+    // maxHeight: screenHeight * 8.24,
     // marginBottom:90,
     // maxHeight: 525,
     // alignItems: 'flex-end',

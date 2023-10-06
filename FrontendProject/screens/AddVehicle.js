@@ -551,12 +551,9 @@ const AddVehicle = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/light-texture2234-1.png")}
-      style={{ flex: 1 }} // Add styling for the ImageBackground itself
-    >
-      <View style={isKeyboardVisible ? styles.containerN : styles.containerN}>
-        {/* Content of the View */}
-      </View>
+    source={require("../assets/light-texture2234-1.png")}
+    style={{ flex: isKeyboardVisible ? 1 : 0.901 }}
+  >
 
       <View style={styles.breadcrumbContainer}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -1014,7 +1011,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerN: {
-    flex: 1,
+    flex: 0.901,
     contentFit: "cover",
     justifyContent: "center",
   },
