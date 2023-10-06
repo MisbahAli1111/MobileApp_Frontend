@@ -1,6 +1,7 @@
 import { React } from "react";
 import { Image } from "expo-image";
 import { AntDesign } from "@expo/vector-icons";
+import { useIsFocused } from '@react-navigation/native';
 import {
   ImageBackground,
   Dimensions,
@@ -37,7 +38,7 @@ import Config from "./Config";
 
 const AddRecord = () => {
   const navigation = useNavigation();
-
+  const isFocused = useIsFocused();
   const [Msg, setMsg] = useState("");
   const [userId, setUserId] = useState("");
   const [NumberError, setNumberError] = useState("");
@@ -522,6 +523,13 @@ const AddRecord = () => {
       calculateServiceDue(type, service);
     }
   }, [carNumber, service]);
+
+  useEffect(() => {
+    if (isFocused) {
+      // Call the getCustomer API function
+      getRegistrationNumber();
+    }
+  }, [isFocused]);
 
   const transformedResponse = numberPlates.map((item) => {
     const { registration_number } = item;

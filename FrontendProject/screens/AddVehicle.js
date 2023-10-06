@@ -4,6 +4,7 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAvoidingView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useIsFocused } from '@react-navigation/native';
 import {
   Button,
   Modal,
@@ -38,6 +39,7 @@ import {
 
 const AddVehicle = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [vehicleType, setvehicleType] = React.useState("Type");
   const [vehicleModel, setvehicleModel] = React.useState("");
   const [Registration, setRegistration] = React.useState("");
@@ -236,6 +238,7 @@ const AddVehicle = () => {
       .request(config)
       .then((response) => {
         JSON.stringify(response.data);
+        console.log(response.data);
         setCustomers(response.data);
       })
       .catch((error) => {
@@ -248,8 +251,20 @@ const AddVehicle = () => {
 
   useEffect(() => {
     getCustomer();
+    setData(transformedResponse);
+    console.log("Data",data);
     getCustomerImage(keyCustomer);
   }, []);
+  
+
+  useEffect(() => {
+    if (isFocused) {
+      // Call the getCustomer API function
+      getCustomer();
+      setData(transformedResponse);
+      console.log("Data2: ",data)
+    }
+  }, [isFocused]);
 
   const transformedResponse = customers.map((item) => {
     const { id, name } = item;
@@ -411,6 +426,7 @@ const AddVehicle = () => {
 
   const saveVehicle = async () => {
     let isValid = true;
+    console.log("saveVehicle");
 
     if (vehicleType === "Type") {
       setvehicleTypeError(true);
@@ -530,8 +546,11 @@ const AddVehicle = () => {
             setUserId(createdUserId);
 
             if (createdUserId) {
+              if(profileImage || profileImageLink)
+              {
               uploadImage(createdUserId);
             }
+          }
             navigation.navigate("Vehicles", { type: "default" });
           }
         })
