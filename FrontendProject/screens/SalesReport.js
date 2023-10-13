@@ -475,19 +475,15 @@ const SalesReport = () => {
       </View>
     </View>
 
-    <Image
-      style={[styles.groupChild, styles.groupLayout2]}
-      contentFit="cover"
-      source={require("../assets/rectangle-62.png")}
-    />
+
 
     <View style={{ 
-      flexDirection: 'row', marginTop: screenHeight*0.013, paddingHorizontal: screenWidth*0.10, width: screenWidth, alignItems: 'flex-start', justifyContent: 'space-between'}}>
-      <Text>Id</Text>
-      <Text>Maintained by</Text>
-      <Text>Vehicle</Text>
-      <Text>Currency</Text>
-      <Text>Total</Text>
+      flexDirection: 'row',backgroundColor:Color.steelblue_100, marginTop: screenHeight*0.013, paddingHorizontal: screenWidth*0.04, width: screenWidth*0.95,alignSelf:'center', justifyContent: 'space-between',height:30,borderRadius:8}}>
+      <Text style={{fontWeight:700,top:4}}>Id</Text>
+      <Text style={{fontWeight:700,top:4}}>Maintained by</Text>
+      <Text style={{fontWeight:700,top:4}}>Vehicle</Text>
+      <Text style={{fontWeight:700,top:4}}>Currency</Text>
+      <Text style={{fontWeight:700,top:4}}>Total</Text>
     </View>
 
     {/* <View style={[styles.groupItem, styles.groupItemPosition]} /> */}
@@ -628,7 +624,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
   },
   wrapS: {
-    marginTop: 12,
+    // marginTop: 12,
     // maxHeight: screenHeight*0.5,
     width: screenWidth*0.94,
     alignSelf:'center',
