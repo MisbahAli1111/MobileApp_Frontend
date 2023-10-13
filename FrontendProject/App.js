@@ -116,7 +116,7 @@ const App = () => {
               initialParams={{
                 title: "Edit Profile",
                 showBackArrow: true,
-                onBackPress: "Home",
+                onBackPress: "SwitchBusiness",
                 profileImage: "No",
               }}
             />
@@ -127,7 +127,7 @@ const App = () => {
               initialParams={{
                 title: "Change Password",
                 showBackArrow: true,
-                onBackPress: "Home",
+                onBackPress: "SwitchBusiness",
                 profileImage: "No",
               }}
             />
@@ -191,7 +191,7 @@ const App = () => {
               initialParams={{
                 title: "Add Employee",
                 showBackArrow: true,
-                onBackPress: "Home",
+                onBackPress: "SwitchBusiness",
                 profileImage: "No",
               }}
             />

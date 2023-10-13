@@ -1,49 +1,49 @@
 {
   "project_info": {
-    "project_number": "263042024802",
-    "project_id": "carmaintenance-58ef8",
-    "storage_bucket": "carmaintenance-58ef8.appspot.com"
+    "project_number": "449355483632",
+    "project_id": "oilchangeapplication",
+    "storage_bucket": "oilchangeapplication.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:263042024802:android:391df7dfc7bf110455183b",
+        "mobilesdk_app_id": "1:449355483632:android:e3b29931730a7582917535",
         "android_client_info": {
           "package_name": "com.oilChange.myproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "263042024802-eeu09q7tns1dpq7od4mbktqtbgtpn99q.apps.googleusercontent.com",
+          "client_id": "449355483632-f005traum6qnnj6p2l4pgijk745jjmsv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.oilChange.myproject",
-            "certificate_hash": "931004c349869b776dc78e84f582aa73c5d221ab"
+            "certificate_hash": "7840902f12455bbec02fa9db3148485dabfd3f99"
           }
         },
         {
-          "client_id": "263042024802-n208757gar3p1vif33cltmeoimarph9n.apps.googleusercontent.com",
+          "client_id": "449355483632-nnplpqqjp9tlet1p4qvi3bfede9ucrt0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.oilChange.myproject",
-            "certificate_hash": "5faa85589ebd108db63d91ef1b997898b29f13c9"
+            "certificate_hash": "4874c238c76d504eeac565c2d036e43b57fe9409"
           }
         },
         {
-          "client_id": "263042024802-mt8ii02e1cpd2nnkbs0v1qm6s2r2j17i.apps.googleusercontent.com",
+          "client_id": "449355483632-r955r30ejopemhmean1et0leb8dcjh1r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCEj9OKoXI-bRSa-gchDSAElw7TgLnhtpg"
+          "current_key": "AIzaSyBHtU85fywJJxtuMViC0BtLLWN7PmhusQA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "263042024802-mt8ii02e1cpd2nnkbs0v1qm6s2r2j17i.apps.googleusercontent.com",
+              "client_id": "449355483632-r955r30ejopemhmean1et0leb8dcjh1r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
