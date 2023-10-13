@@ -6,8 +6,8 @@ import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Color, Border, FontFamily, FontSize, Padding } from "../GlobalStyles";
 const chartConfig = {
-  backgroundGradientFrom: "#c5e9f7", // Use the steelblue_300 color for background
-  backgroundGradientTo: "#c5e9f7", // Use the steelblue_300 color for background
+  backgroundGradientFrom: "#c5e9f7",
+  backgroundGradientTo: "#c5e9f7", 
   decimalPlaces: 0,
   color: (opacity = 1) => `rgba(0, 0, 40, ${opacity})`,
   propsForBackgroundLines: {
@@ -18,63 +18,40 @@ const chartConfig = {
 
 
 const DashboardGraph = (props) => {
-  const [data,setData] = useState(['']);
-  const isFocused = useIsFocused();
-  // console.warn(data);
-  // console.warn(props.RecordData);
-    // setData(props.RecordData);
-  // const data = [
-  //   { timestamp: "M", value: 10 },
-  //   { timestamp: "T", value: 20 },
-  //   { timestamp: "W", value: 5 },
-  //   { timestamp: "T", value: 25 },
-  //   { timestamp: "F", value: 15 },
-  //   { timestamp: "S", value: 30 },
-  // ];
-  useEffect(()=>{
+  const [data, setData] = useState(['']);
+
+  useEffect(() => {
     getData();
-  },[isFocused]);
-  
-    getData = async () =>{
-        const Business_id = await AsyncStorage.getItem("Business_id");
-        let token = await AsyncStorage.getItem("accessToken");
-        const accessToken = "Bearer " + token;
-        const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
-    
-    
-        let config = {
-          method: 'get',
-          maxBodyLength: Infinity,
-          
-          url: `${apiServerUrl}/api/maintenance-record/get-month-record/${Business_id}`,
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-    
-        axios.request(config)
-          .then((response) => {
-            // console.warn(JSON.stringify(response.data));
-            // setRecordData(response.data);
-            // console.warn(RecordData);
-            
-            const monthLabels = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  }, [props.searchOrder]); 
+  const getData = async () => {
 
-            const graphData = response.data.map(([dayIndex, value]) => ({
-              timestamp: dayLabels[dayIndex - 1], // Subtract 1 because the index starts from 1
-              value: value,
-            }));
-            console.warn(graphData);
-            setData(graphData);
-            
+    const Business_id = await AsyncStorage.getItem('Business_id');
+    const token = await AsyncStorage.getItem('accessToken');
+    const apiServerUrl = await AsyncStorage.getItem('apiServerUrl');
+    const accessToken = 'Bearer ' + token;
 
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    
-      
+    const apiUrl = `${apiServerUrl}/api/maintenance-record/get-${props.searchOrder}-record/${Business_id}`;
+
+    try {
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: accessToken,
+        },
+      });
+
+      const monthLabels = Array.from({ length: 12 }, (_, i) => new Date(0, i).toLocaleString('en-US', { month: 'short' }));
+
+
+      const graphData = response.data.map(([dayIndex, value]) => ({
+        timestamp: monthLabels[dayIndex - 1],
+        value: value,
+      }));
+
+      setData(graphData);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
   return (
     <View style={styles.container}>

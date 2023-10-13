@@ -41,7 +41,7 @@ const Home = () => {
   const [invoiceDues, setInvoiceDues] = useState(0);
   const [searchType, setSearchType] = useState([]);
   const [ RecordData,setRecordData] = useState([]);
-  const [searchOrder, setSearchOrder] = useState("");
+  const [searchOrder, setSearchOrder] = useState('');
   // console.warn(searchOrder);
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
   const invoices = null;
@@ -126,38 +126,8 @@ const Home = () => {
   });
 
 
-  useEffect(() => {
- getRecords();
-  }, [searchOrder]);
 
-  getRecords = async () =>{
-    const Business_id = await AsyncStorage.getItem("Business_id");
-    let token = await AsyncStorage.getItem("accessToken");
-    const accessToken = "Bearer " + token;
-    const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
-
-
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      
-      url: `${apiServerUrl}/api/maintenance-record/get-${searchOrder}-record/${Business_id}`,
-      headers: {
-        'Authorization': accessToken
-      }
-    };
-
-    axios.request(config)
-      .then((response) => {
-        // console.warn(JSON.stringify(response.data));
-        setRecordData(response.data);
-        // console.warn(RecordData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-  }
+ 
 
   return (
 
@@ -220,7 +190,7 @@ const Home = () => {
             />
           )}
         </View>
-        <DashboardGraph  RecordData={RecordData}/>
+        <DashboardGraph  searchOrder={searchOrder}/>
 
 
         <TouchableOpacity

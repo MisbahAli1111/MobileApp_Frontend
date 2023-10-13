@@ -83,7 +83,7 @@ const App = () => {
               },
             })}
           >
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Login"
               component={Login}
               initialParams={{
@@ -98,7 +98,7 @@ const App = () => {
                 title: "",
                 profileImage: "No",
               }}
-            />
+            /> */}
 
             <Stack.Screen
               name="Home"
