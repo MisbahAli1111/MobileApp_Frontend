@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: widthPercentageToDP("3.5%"),
+    fontSize: widthPercentageToDP("3%"),
   },
   pickerContainer: {
     width: 30,
