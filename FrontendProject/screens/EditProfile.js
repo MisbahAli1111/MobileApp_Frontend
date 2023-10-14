@@ -341,6 +341,7 @@ const EditProfile = () => {
       .then((response) => {
         if (userId) {
           uploadImage(userId);
+          navigation.navigate("Home");
         }
       })
       .catch((error) => {
