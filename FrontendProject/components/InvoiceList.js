@@ -6,7 +6,7 @@ import ErrorPopup from "../components/ErrorPopup";
 import Config from "../screens/Config";
 import {
   StyleSheet,
-  TextInput,
+  ActivityIndicator,
   Dimensions,
   TouchableOpacity,
   ScrollView,
@@ -30,10 +30,10 @@ function Invoicelist({ dsearch, searchOrder }) {
   const [search, setSearch] = useState("");
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [Invoices, setInvoices] = useState([]);
   const [tempInvoiceid, setTempInvoiceId] = useState("");
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-  const [reload, setReload] = useState(0);
 
   const displayedRecords = useMemo(() => {
     let filteredVehicles;
@@ -119,17 +119,13 @@ function Invoicelist({ dsearch, searchOrder }) {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data);
         const newData = response.data;
-        const hasDataChanged = !isEqual(newData, Invoices);
-
-        if (hasDataChanged) {
-          setInvoices(newData);
-        }
+        setIsLoading(false);  
+        setInvoices(newData);
       })
       .catch((error) => {
         if (error.response.status === 401) {
-            
+          setIsLoading(false);
           navigation.navigate("Login");
         }
         console.log(error);
@@ -179,6 +175,22 @@ function Invoicelist({ dsearch, searchOrder }) {
 
   return (
     <ScrollView style={styles.wrap}>
+          <View
+    style={{
+      flex: 1,
+      justifyContent: "center",
+      position: "absolute",
+      width: screenWidth,
+      height: screenHeight/2,
+      alignItems: "center",
+    }}
+  >
+    {isLoading ? (
+      <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+    ) : (
+      <View></View>
+    )}
+  </View>
       {displayedRecords.map((record, index) => (
         <View
           key={index}
@@ -280,6 +292,7 @@ function Invoicelist({ dsearch, searchOrder }) {
         </View>
       ))}
     </ScrollView>
+ 
   );
 }
 const styles = StyleSheet.create({

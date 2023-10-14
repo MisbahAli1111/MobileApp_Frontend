@@ -79,14 +79,12 @@ function BusinessList({ apiServerUrl }) {
   }, [isFocused,apiServerUrl]);
 
   getData = () => {
-    // Retrieve both accessToken and apiServerUrl in parallel
     Promise.all([
       AsyncStorage.getItem("accessToken"),
       AsyncStorage.getItem("apiServerUrl"),
     ])
       .then(([accessToken, apiServerUrl]) => {
         if (!accessToken || !apiServerUrl) {
-          // Handle missing accessToken or apiServerUrl
           console.log("Access token or API server URL is missing.");
           return;
         }
@@ -176,7 +174,7 @@ function BusinessList({ apiServerUrl }) {
             style={[styles.groupParent, styles.groupParentLayout]}
           >
             <View>
-              <Pressable
+              <TouchableOpacity
                 onPress={() => handlePress(BusinessB.id)}
                 style={[styles.vectorParent, styles.groupParentLayout]}
               >
@@ -220,7 +218,7 @@ function BusinessList({ apiServerUrl }) {
                     source={require("../assets/checkcirclesvgrepocom-1.png")}
                   />
                 )}
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
         );

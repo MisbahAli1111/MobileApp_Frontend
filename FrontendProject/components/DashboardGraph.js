@@ -17,12 +17,12 @@ const chartConfig = {
 
 
 
-const DashboardGraph = (props) => {
+const DashboardGraph = () => {
   const [data, setData] = useState(['']);
-
+  const isFocused = useIsFocused();
   useEffect(() => {
     getData();
-  }, [props.searchOrder]); 
+  }, [isFocused]); 
   const getData = async () => {
 
     const Business_id = await AsyncStorage.getItem('Business_id');
@@ -30,7 +30,7 @@ const DashboardGraph = (props) => {
     const apiServerUrl = await AsyncStorage.getItem('apiServerUrl');
     const accessToken = 'Bearer ' + token;
 
-    const apiUrl = `${apiServerUrl}/api/maintenance-record/get-${props.searchOrder}-record/${Business_id}`;
+    const apiUrl = `${apiServerUrl}/api/maintenance-record/get-week-record/${Business_id}`;
 
     try {
       const response = await axios.get(apiUrl, {
@@ -39,11 +39,14 @@ const DashboardGraph = (props) => {
         },
       });
 
-      const monthLabels = Array.from({ length: 12 }, (_, i) => new Date(0, i).toLocaleString('en-US', { month: 'short' }));
-
+      const weekLabels = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date(0, 0, i + 1);
+        return date.toLocaleString('en-US', { weekday: 'short' }).slice(0, 3);
+      });
+      
 
       const graphData = response.data.map(([dayIndex, value]) => ({
-        timestamp: monthLabels[dayIndex - 1],
+        timestamp: weekLabels[dayIndex],
         value: value,
       }));
 
@@ -70,7 +73,7 @@ const DashboardGraph = (props) => {
         chartConfig={chartConfig}
         style={{
           borderRadius: 10,
-          alignSelf: "center",
+          alignSelf: "left",
         }}
         fromZero
       />

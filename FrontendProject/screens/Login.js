@@ -3,8 +3,9 @@ import React from "react";
 import { Image } from "expo-image";
 import {
   ImageBackground,
-  ScrollView,
+  ActivityIndicator,
   TouchableOpacity,
+  Dimensions,
   StyleSheet,
   View,
   Text,
@@ -14,7 +15,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -26,8 +27,9 @@ import "expo-dev-client";
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import jwt_decode from "jwt-decode";
-
-
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
+const rem = screenWidth / 16;
 
 
 
@@ -36,73 +38,74 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [Merror, setMError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
- 
+
   GoogleSignin.configure({
     webClientId: '449355483632-r955r30ejopemhmean1et0leb8dcjh1r.apps.googleusercontent.com',
   });
-const onGoogleButtonPress = async () => {
-  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
- 
-  const { idToken } = await GoogleSignin.signIn();
-  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-  const user_SignIn = auth().signInWithCredential(googleCredential);
+  const onGoogleButtonPress = async () => {
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-  user_SignIn
-    .then((user) => {
-      const displayName = user.user.displayName;
-      const [firstName, lastName] = displayName.split(' ');
+    const { idToken } = await GoogleSignin.signIn();
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    const user_SignIn = auth().signInWithCredential(googleCredential);
 
-      const email = user.user.email;
+    user_SignIn
+      .then((user) => {
+        const displayName = user.user.displayName;
+        const [firstName, lastName] = displayName.split(' ');
 
-      // Retrieve the API server URL from AsyncStorage
-      AsyncStorage.getItem("apiServerUrl")
-        .then((apiServerUrl) => {
-          if (apiServerUrl) {
-            // Make an Axios API call with the retrieved URL
-            const apiEndpoint = `${apiServerUrl}/api/users/signIn/`;
-            const requestData = {
-              email: email,
-              firstName: firstName,
-              lastName: lastName
-            };
+        const email = user.user.email;
 
-            axios.post(apiEndpoint, requestData)
-              .then((response) => {
-                const accessToken = response.data.data;
-                console.log(accessToken);
-                const decodedToken = jwt_decode(accessToken);
-                const userId = decodedToken.sub;
-                console.log("GoogleUSer",userId)
-                AsyncStorage.setItem("userId", userId);
-                AsyncStorage.setItem("accessToken", accessToken);
-                
-                navigation.navigate("SwitchBusiness");
-              })
-              .catch((error) => {
-                console.error('API Error: ', error);
-              });
-          } else {
-            console.error('API server URL not found in AsyncStorage');
-          }
-        })
-        .catch((error) => {
-          console.error('AsyncStorage Error: ', error);
-          
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-      if (error.code === "SIGN_IN_REQUIRED") {
-        console.log("Hello World")
-      }
-    });
-};
+        // Retrieve the API server URL from AsyncStorage
+        AsyncStorage.getItem("apiServerUrl")
+          .then((apiServerUrl) => {
+            if (apiServerUrl) {
+              // Make an Axios API call with the retrieved URL
+              const apiEndpoint = `${apiServerUrl}/api/users/signIn/`;
+              const requestData = {
+                email: email,
+                firstName: firstName,
+                lastName: lastName
+              };
 
-  
+              axios.post(apiEndpoint, requestData)
+                .then((response) => {
+                  const accessToken = response.data.data;
+                  console.log(accessToken);
+                  const decodedToken = jwt_decode(accessToken);
+                  const userId = decodedToken.sub;
+                  console.log("GoogleUSer", userId)
+                  AsyncStorage.setItem("userId", userId);
+                  AsyncStorage.setItem("accessToken", accessToken);
+
+                  navigation.navigate("SwitchBusiness");
+                })
+                .catch((error) => {
+                  console.error('API Error: ', error);
+                });
+            } else {
+              console.error('API server URL not found in AsyncStorage');
+            }
+          })
+          .catch((error) => {
+            console.error('AsyncStorage Error: ', error);
+
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.code === "SIGN_IN_REQUIRED") {
+          console.log("Hello World")
+        }
+      });
+  };
+
+
 
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
@@ -110,12 +113,11 @@ const onGoogleButtonPress = async () => {
   // Handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
-    if(user)
-    {
+    if (user) {
       console.log("User Logged In");
       // navigation.navigate("SwitchBusiness");
     }
-    else{
+    else {
       console.log("No User Logged In")
     }
     if (initializing) setInitializing(false);
@@ -126,10 +128,12 @@ const onGoogleButtonPress = async () => {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (initializing) return null; 
- 
+  if (initializing) return null;
+
 
   const handleLogin = async () => {
+
+    setIsLoading(true);
     setMError(false);
     setEmailError(false);
     setPasswordError(false);
@@ -142,15 +146,16 @@ const onGoogleButtonPress = async () => {
     }
 
     if (email && password) {
-      // Retrieve apiServerUrl from AsyncStorage
+
+
       AsyncStorage.getItem("apiServerUrl")
         .then((apiServerUrl) => {
           if (apiServerUrl) {
-            console.log("Login: ",apiServerUrl);
+            // console.log("Login: ",apiServerUrl);
             const data = new FormData();
             data.append("email", email);
             data.append("password", password);
-    
+
             let config = {
               method: "post",
               maxBodyLength: Infinity,
@@ -160,32 +165,36 @@ const onGoogleButtonPress = async () => {
               },
               data: data,
             };
-    
+
             // Make the login API request
             axios
               .request(config)
               .then((response) => {
                 if (response.data === "Invalid Credentials!") {
                   setError(response.data);
+                  setIsLoading(false);
                   setMError(true);
                 } else {
                   const accessToken = response.data.accessToken;
                   const userId = response.data.userId;
-    
+
                   AsyncStorage.setItem("accessToken", accessToken);
                   AsyncStorage.setItem("userId", userId);
+                  setIsLoading(false);
+                  setEmail('');
+                  setPassword('');
                   navigation.navigate("SwitchBusiness");
+
                 }
               })
               .catch((error) => {
-                // Handle API request errors here
                 console.log(error);
-                // You can also set an error state here if needed
+                setIsLoading(false);
               });
           } else {
-            // Handle the case where apiServerUrl is not found in AsyncStorage
+            setIsLoading(false);
             console.error("apiServerUrl not found in AsyncStorage");
-            // You can also set an error state here if needed
+            setIsLoading(false);
           }
         })
         .catch((error) => {
@@ -195,24 +204,39 @@ const onGoogleButtonPress = async () => {
         });
     }
   };
-    
+
 
   return (
     <ImageBackground
       style={styles.container}
       source={require("../assets/light-texture2234-1.png")}
     >
-      <Pressable
-  onLongPress={() => navigation.navigate("Config")}
-  style={styles.titleContainer}
->
-  <Text style={styles.title}>Login</Text>
-</Pressable>
-
+      <TouchableOpacity
+        onLongPress={() => navigation.navigate("Config")}
+        style={styles.titleContainer}
+      >
+        <Text style={styles.title}>Login</Text>
+      </TouchableOpacity>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          position: "absolute",
+          width: screenWidth,
+          height: screenHeight,
+          alignItems: "center",
+        }}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+        ) : (
+          <View></View>
+        )}
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Email"
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={(text) => setEmail(text.trim())}
         value={email}
       />
       {emailError ? (
@@ -224,7 +248,7 @@ const onGoogleButtonPress = async () => {
           style={styles.passwordInput}
           placeholder="Password"
           secureTextEntry={!showPassword}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword(text.trim())}
           value={password}
         />
         <Pressable onPress={() => setShowPassword(!showPassword)}>
@@ -248,23 +272,23 @@ const onGoogleButtonPress = async () => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleLogin} style={styles.button}>
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Image
             style={styles.buttonImage}
             source={require("../assets/rectangle-73.png")}
           />
           <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.grayBorder}></View>
 
       {/* Sign in with Google Button */}
       <View style={styles.googleButtonContainer}>
-        <Pressable 
-        onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-        style={styles.googleButton}>
-        <AntDesign name="google" size={24} color="white" />
+        <Pressable
+          onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+          style={styles.googleButton}>
+          <AntDesign name="google" size={24} color="white" />
           <Text style={styles.googleButtonText}>Sign in with Google</Text>
         </Pressable>
       </View>
@@ -358,7 +382,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     paddingHorizontal: widthPercentageToDP("3%"),
-    marginTop:widthPercentageToDP("1%"),
+    marginTop: widthPercentageToDP("1%"),
     fontSize: heightPercentageToDP("2%"),
     fontFamily: FontFamily.poppinsMedium,
   },
@@ -387,7 +411,7 @@ const styles = StyleSheet.create({
     color: "white",
     marginLeft: 10,
   },
-  
+
 });
 
 export default Login;

@@ -31,7 +31,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FilterRecordsData from "../components/FilterRecordsData";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -41,9 +40,8 @@ const Home = () => {
   const [invoiceDues, setInvoiceDues] = useState(0);
   const [searchType, setSearchType] = useState([]);
   const [ RecordData,setRecordData] = useState([]);
-  const [searchOrder, setSearchOrder] = useState('');
-  // console.warn(searchOrder);
-  const [filterSearchClicked, setFilterSearchClicked] = useState(false);
+
+
   const invoices = null;
 
   const data = [10, 20, 5, 25, 15, 30, 12];
@@ -79,14 +77,7 @@ const Home = () => {
       });
   };
 
-  const functionFilterSearch = () => {
-    setFilterSearchClicked(true);
-  };
-  const addFilterInState = (attribute = ["default"], sort = "default") => {
-    setFilterSearchClicked(false);
-    setSearchType(attribute);
-    setSearchOrder(sort);
-  };
+
 
   const getInvoiceDue = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
@@ -175,22 +166,7 @@ const Home = () => {
       </View>
       <View style={styles.blueBox}>
         <Text style={styles.vehiclesText}>Vehicles Maintained</Text>
-        <TouchableOpacity onPress={functionFilterSearch}>
-          <Text style={{position:'absolute',fontWeight:700,top:-45,left:screenWidth*0.33,width:50}}>Filter</Text>
-            
-          <Icon style={{position:'absolute',fontWeight:700,top:-41,left:screenWidth*0.42,transform: 'rotate(90deg)'}} name="exchange" />
-
-        </TouchableOpacity>
-        <View style={{ left: screenWidth * 0.5, top: -screenHeight * 0.04 }}>
-          {filterSearchClicked && (
-            <FilterRecordsData
-              onFilterSelect={(attribute, sort) =>
-                addFilterInState(attribute, sort)
-              }
-            />
-          )}
-        </View>
-        <DashboardGraph  searchOrder={searchOrder}/>
+        <DashboardGraph/>
 
 
         <TouchableOpacity

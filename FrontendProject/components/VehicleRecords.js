@@ -9,7 +9,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   Dimensions,
   ActivityIndicator,
   ScrollView,
@@ -27,16 +26,14 @@ const rem = screenWidth / 16;
 function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [VehicleType, setVehicleType] = useState([]);
   const [SearchType, setSearchType] = useState("");
   const [SearchOrder, setSearchOrder] = useState("");
-  const [asyncVehicleId, setAsyncvehicleId] = useState("");
   const [data, setData] = useState([]);
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
   const [vehicles, setVehicles] = useState([]);
-
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [tempVehicleid, setTempVehicleId] = useState("");
   const [imageApi,SetImageApi] = useState("");
@@ -208,7 +205,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       .request(config)
       .then((response) => {
         setVehicles(response.data.data);
-        console.log(response.data.data);
+        setIsLoading(false);
         AsyncStorage.setItem(
           "VehicleId",
           JSON.stringify(response.data.data[0].id)
@@ -220,7 +217,7 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
       })
       .catch((error) => {
         if (error.response.status === 401) {
-            
+          setIsLoading(false);
           navigation.navigate("Login");
         }
         console.log(error);
@@ -243,6 +240,22 @@ function VehicleRecords({ dsearch, type, added, searchType, searchOrder }) {
 
   return (
     <View>
+          <View
+    style={{
+      flex: 1,
+      justifyContent: "center",
+      position: "absolute",
+      width: screenWidth,
+      height: screenHeight,
+      alignItems: "center",
+    }}
+  >
+    {isLoading ? (
+      <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+    ) : (
+      <View></View>
+    )}
+  </View>
       <View>
         <ScrollView style={styles.scroll}>
           {displayedVehicles.map((vehicle, index) => (

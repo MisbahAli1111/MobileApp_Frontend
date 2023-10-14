@@ -5,7 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 import {
   StyleSheet,
   TouchableOpacity,
-  TextInput,
+  ActivityIndicator,
   TouchableWithoutFeedback,
   ScrollView,
   View,
@@ -35,21 +35,12 @@ const RecordList = ({
   const isFocused = useIsFocused();
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [records, setRecords] = useState([]);
-  const [InvoiceScreen, setInvoiceScreen] = useState(false);
-  const [CreateInvoice, setCreateInvoice] = useState(false);
   const [currentPressedIndex, setCurrentPressedIndex] = useState(-1);
-  const [InvoiceIndex, setInvoiceIndex] = useState("");
-  const [InvoiceRecord, setInvoiceRecord] = useState("");
 
-  // const displayedRecords = search ? data : records;
 
   const handlePress = (index, recordId) => {
-    // if (InvoiceScreen) {
-    //   setCurrentPressedIndex(index);
-    //   setInvoiceIndex(index);
-    //   setInvoiceRecord(recordId);
-    // } 
       setCurrentPressedIndex(index);
       navigation.navigate("MaintenanceDetailView", { recordId: recordId });
     
@@ -57,12 +48,9 @@ const RecordList = ({
 
   getData = async () => {
     const Business_id = await AsyncStorage.getItem("Business_id");
-
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
     const apiServerUrl = await AsyncStorage.getItem("apiServerUrl");
-    // 192.168.100.71
-
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -76,12 +64,13 @@ const RecordList = ({
       .request(config)
       .then((response) => {
         setRecords(response.data);
+        setIsLoading(false);
         return response.data;
       })
       .catch((error) => {
         console.log(error);
         if (error.response.status === 401) {
-            
+          setIsLoading(false);
           navigation.navigate("Login");
         }
       });
@@ -169,6 +158,23 @@ const RecordList = ({
     return `${month}/${day}/${year}`;
   };
   return (
+    <View>
+    <View
+    style={{
+      flex: 1,
+      justifyContent: "center",
+      position: "absolute",
+      width: screenWidth,
+      height: screenHeight/2,
+      alignItems: "center",
+    }}
+  >
+    {isLoading ? (
+      <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+    ) : (
+      <View></View>
+    )}
+  </View>
     <ScrollView style={styles.wrap}>
       {displayedRecords.map((record, index) => {
         return (
@@ -181,6 +187,7 @@ const RecordList = ({
             ]}
           >
             <View>
+
               <Pressable
                 onPress={() => handlePress(index, record.id)}
               >
@@ -366,6 +373,7 @@ const RecordList = ({
         );
       })}
     </ScrollView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

@@ -243,10 +243,10 @@ const styles = StyleSheet.create({
     left: 98,
   },
   carCitroenTopVehicleSvgrepIcon: {
-    left: 6,
+    left: (rem * 1.78)/2-16.5,
     flex: 1,
-    alignSelf: "center",
-    top: 5,
+    // alignSelf: "center",
+    top: (rem * 1.78)/2-18,
     width: 36,
     height: 36,
     position: "absolute",

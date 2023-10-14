@@ -9,6 +9,7 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from "react-native-responsive-screen";
+import { TouchableOpacity } from "react-native";
 
 const SwitchBusiness = () => {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ const SwitchBusiness = () => {
         </View>
       </ScrollView>
 
-      <Pressable
+      <TouchableOpacity
         style={[styles.createNewBusinessButton]}
         onPress={() => navigation.navigate("BusinessInfo")}
       >
@@ -36,7 +37,7 @@ const SwitchBusiness = () => {
           source={require("../assets/rectangle-731.png")}
         />
         <Text style={styles.createNewBusinessText}>Create New Business</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
