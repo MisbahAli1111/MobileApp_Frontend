@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   View,
+  ActivityIndicator,
   Text,
   Pressable,
 } from "react-native";
@@ -26,6 +27,7 @@ const MaintenanceRecord = ({ route }) => {
   const { fromPreviousScreen } = route.params;
   const navigation = useNavigation();
   const [searchType, setSearchType] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchOrder, setSearchOrder] = useState("");
   const [search, setSearch] = useState("");
   const [filterSearchClicked, setFilterSearchClicked] = useState(false);
@@ -60,11 +62,13 @@ const MaintenanceRecord = ({ route }) => {
     axios
       .request(config)
       .then((response) => {
+        setIsLoading(false);
         setRecords(response.data);
         return response.data;
+
       })
       .catch((error) => {
-        console.log(error);
+        setIsLoading(false);
         if (error.response.status === 401) {
 
           navigation.navigate("Login");
@@ -74,11 +78,10 @@ const MaintenanceRecord = ({ route }) => {
   const handlePress = (index, recordId) => {
     setCurrentPressedIndex(index);
     invoiceR = recordId;
-    // console.warn(invoiceR);
   };
   const formatDateTime = (isoDateTime) => {
     const date = new Date(isoDateTime);
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
     const day = date.getDate().toString().padStart(2, "0");
     const year = date.getFullYear().toString();
     return `${month}/${day}/${year}`;
@@ -92,6 +95,22 @@ const MaintenanceRecord = ({ route }) => {
 
   return (
     <View style={styles.maintenanceRecord}>
+            <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          position: "absolute",
+          width: screenWidth,
+          height: screenHeight,
+          alignItems: "center",
+        }}
+      >
+        {isLoading ? (
+          <ActivityIndicator size="2" color="#031d44" style={styles.loader} />
+        ) : (
+          <View></View>
+        )}
+      </View>
       <Image
         style={styles.lightTexture22341Icon}
         contentFit="cover"

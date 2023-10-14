@@ -546,7 +546,7 @@ const OwnerInfo = () => {
               style={styles.input}
               placeholder="Name"
               value={name}
-              onChangeText={setName}
+              onChangeText={(text) => setName(text.trim())}
             />
             {NameEror && (
               <Text style={styles.errorText}>Name is required.</Text>
@@ -558,7 +558,7 @@ const OwnerInfo = () => {
               style={styles.input}
               placeholder="CNIC Number"
               value={cnic}
-              onChangeText={setcnic}
+              onChangeText={(text) => setcnic(text.trim())}
               keyboardType="numeric"
               maxLength={15}
             />
@@ -572,7 +572,7 @@ const OwnerInfo = () => {
               style={styles.input}
               placeholder="Email"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => setEmail(text.trim())}
             />
             {EmailErorr && (
               <Text style={styles.errorText}>Invalid email format.</Text>
@@ -585,7 +585,7 @@ const OwnerInfo = () => {
               placeholder="Password"
               value={Password}
               secureTextEntry={!showPassword}
-              onChangeText={setPassword}
+              onChangeText={(text) => setPassword(text.trim())}
             />
             {PasswordError && (
               <Text style={styles.errorText}>Password is required.</Text>
@@ -608,7 +608,7 @@ const OwnerInfo = () => {
               style={styles.input}
               placeholder="Confirm Password"
               value={ConfirmPassword}
-              onChangeText={setConfirmPassword}
+              onChangeText={(text) => setConfirmPassword(text.trim())}
               secureTextEntry={!showConfirmPassword}
             />
             {CPasswordError && (
@@ -660,7 +660,7 @@ const OwnerInfo = () => {
               value={phoneNumber}
               keyboardType="numeric"
               maxLength={15}
-              onChangeText={setPhonenumber}
+              onChangeText={(text) => setPhonenumber(text.trim())}
             />
           </View>
           {PLEror && <Text style={styles.errorText}>{PLEror}</Text>}
