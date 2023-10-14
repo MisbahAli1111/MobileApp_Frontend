@@ -755,13 +755,19 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "rgba(3, 29, 68, 1)",
-    paddingVertical: 15,
-    paddingHorizontal: 167,
+    // paddingVertical: 12,
+    // paddingHorizontal: 147,
+    // height:heightPercentageToDP('6'),
+    width:widthPercentageToDP('90'),
     borderRadius: 10,
   },
   buttonText: {
     color: "white",
     fontSize: widthPercentageToDP("3%"),
+    alignSelf:'center',
+    // paddingTop:heightPercentageToDP('6')/2,
+    paddingVertical:heightPercentageToDP('2'),
+    // fontSize:20,
   },
   pickerContainer: {
     width: 30,
