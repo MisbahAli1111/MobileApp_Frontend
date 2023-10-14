@@ -601,7 +601,7 @@ function InvoiceDetailView() {
             <View></View>
           )}
         </View>
-        <View style={styles.foot}>
+        <View style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}>
           <Footer prop={"Invoices"} />
         </View>
       </View>
@@ -1611,11 +1611,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   invoiceDetailView: {
-    // backgroundColor: Color.aliceblue_100,
-    flex: 1,
-    overflow: "hidden",
-    height: screenHeight,
-    width: screenWidth,
+    flex: 0.901,
   },
 });
 

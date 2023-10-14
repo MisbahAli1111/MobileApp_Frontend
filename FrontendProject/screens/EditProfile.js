@@ -500,7 +500,7 @@ const EditProfile = () => {
             placeholder="Name"
             value={name}
             onChangeText={(text) => {
-              setName(text);
+              setName(text.trim());
               setNameError("");
             }}
             onBlur={validateName}
@@ -512,7 +512,7 @@ const EditProfile = () => {
             keyboardType="numeric"
             value={cnic}
             onChangeText={(text) => {
-              setCnic(text);
+              setCnic(text.trim());
               setCnicError("");
             }}
             // onBlur={validateCNIC}
@@ -524,7 +524,7 @@ const EditProfile = () => {
             placeholder="Email"
             value={email}
             onChangeText={(text) => {
-              setEmail(text);
+              setEmail(text.trim());
               setEmailError("");
             }}
             onBlur={validateEmail}
@@ -543,7 +543,7 @@ const EditProfile = () => {
               <Picker
                 selectedValue={countryCode}
                 onValueChange={(itemValue) => {
-                  setCountryCode(itemValue);
+                  setCountryCode(itemValue.trim());
                 }}
                 itemStyle={styles.pickerItem}
               >

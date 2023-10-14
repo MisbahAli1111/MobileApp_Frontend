@@ -166,8 +166,6 @@ const Vehicles = () => {
           <Footer prop={"Vehicles"} />
         </View>
       )}
-      {/* Footer */}
-
       <View contentContainerStyle={styles.contView}>
         <VehicleRecords
           dsearch={search}
@@ -176,10 +174,6 @@ const Vehicles = () => {
           searchOrder={searchOrder}
         />
       </View>
-
-      {/* filter  */}
-
-      {/* search gli  */}
     </View>
   );
 };
