@@ -695,7 +695,10 @@ const AddRecord = () => {
             setUserId(createdUserId);
 
             if (createdUserId) {
+              if(profileImage || profileImageLink)
+              {
               uploadImage(createdUserId);
+            }
             }
             navigation.navigate("MaintenanceRecord");
           }
