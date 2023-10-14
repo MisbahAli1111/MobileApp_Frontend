@@ -30,9 +30,11 @@ import {
   heightPercentageToDP,
 } from "react-native-responsive-screen";
 import { AntDesign } from "@expo/vector-icons";
+import { ActivityIndicator } from 'react-native';
 
 const BusinessInfo = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [error,setErrorText] = useState("Enter this field");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -54,6 +56,7 @@ const BusinessInfo = () => {
   };
 
   const handleSignUp = async () => {
+    setLoading(true);
     let token = await AsyncStorage.getItem("accessToken");
     const accessToken = "Bearer " + token;
 
@@ -154,9 +157,12 @@ const BusinessInfo = () => {
 
             // Perform logic using the updated userId here
             if (createdUserId) {
+              if(profileImage)
+              {
               uploadImage(createdUserId);
             }
-            {console.log("Valid2: ",isValid)}
+            }
+            setLoading(false);
             navigation.navigate(SwitchBusiness);
           }
         })
@@ -165,6 +171,7 @@ const BusinessInfo = () => {
             
             navigation.navigate("Login");
           }
+          setLoading(false);
           console.log(error);
         });
     }
@@ -889,7 +896,10 @@ const BusinessInfo = () => {
               style={styles.input}
               placeholder="Email"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => {
+              setEmail(text.trim());
+              setEmailError("");
+            }}
             />
           </View>
           {EmailEror ? <Text style={styles.errorText}>{EMessage}</Text> : null}
@@ -968,6 +978,11 @@ const BusinessInfo = () => {
             
           </View>
           {phoneErorr || codeErorr ? <Text style={styles.errorText}>{error}</Text> : null}
+          {loading && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#031d44" />
+        </View>
+      )}
           <View style={styles.registerButtonContainer}>
             <TouchableOpacity
               onPress={handleSignUp}

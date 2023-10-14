@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ImageBackground,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
 import { Dimensions } from "react-native";
@@ -26,6 +27,7 @@ import {
 
 const EditProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
+  const navigation = useNavigation();
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [cnic, setCnic] = useState("");
@@ -339,6 +341,7 @@ const EditProfile = () => {
     axios
       .request(config)
       .then((response) => {
+        console.log(response.status);
         if (userId) {
           uploadImage(userId);
           navigation.navigate("Home");

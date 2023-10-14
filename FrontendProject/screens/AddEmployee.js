@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import { Image } from "expo-image";
 import { Picker } from "@react-native-picker/picker";
+import { ActivityIndicator } from 'react-native';
 import {
   TouchableOpacity,
   Modal,
@@ -28,6 +29,7 @@ import Config from "./Config";
 
 const AddEmployee = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [cnic, setcnic] = useState("");
   const [email, setEmail] = useState("");
@@ -387,6 +389,7 @@ const AddEmployee = () => {
   };
 
   const handleSignUp = async () => {
+    setLoading(true);
     let hasErrors = false;
     setErrorM(false);
     if (!name) {
@@ -484,9 +487,11 @@ const AddEmployee = () => {
             setUserId(createdUserId);
 
             if (createdUserId) {
+              if(profileImage)
+              {
               uploadImage(createdUserId);
             }
-
+          }
             setName("");
             setCountryCode("");
             setEmail("");
@@ -496,14 +501,15 @@ const AddEmployee = () => {
             setProfileImage("");
             setcnic("");
             clearError();
-
+            setLoading(false);
             navigation.navigate("Home");
           }
         })
         .catch((error) => {
           if (error.response && error.response.status === 400) {
             setErrorM(true);
-            setErrorMessage("Email Already Exists!"); // Update the error message here
+            setErrorMessage("Email Already Exists!"); 
+            setLoading(false);// Update the error message here
           }
           else if (error.response.status === 401) {
             setErrorM(true);
@@ -513,7 +519,8 @@ const AddEmployee = () => {
           } else {
             console.error("An error occurred:", error);
             setErrorM(true);
-            setErrorMessage("An error occurred. Please try again."); // Default error message
+            setErrorMessage("An error occurred. Please try again.");
+            setLoading(false);// Default error message
           }
         });
     }
@@ -580,7 +587,10 @@ const AddEmployee = () => {
               style={styles.input}
               placeholder="Email"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => {
+              setEmail(text.trim());
+              setEmailError("");
+            }}
             />
            
           </View>
@@ -682,6 +692,11 @@ const AddEmployee = () => {
             <Text style={styles.errorText}>Email Already Exists!</Text>
           )}
         </View>
+        {loading && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#031d44" />
+        </View>
+      )}
         <View style={styles.registerButtonContainer}>
           <TouchableOpacity
             onPress={handleSignUp}
