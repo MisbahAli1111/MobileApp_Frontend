@@ -8,6 +8,7 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
+  KeyboardAvoidingView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -343,8 +344,11 @@ const EditProfile = () => {
       .then((response) => {
         console.log(response.status);
         if (userId) {
+          if(profileImage||profileImageLink)
+          {
           uploadImage(userId);
-          navigation.navigate("Home");
+          }
+          navigation.navigate("SwitchBusiness");
         }
       })
       .catch((error) => {
@@ -479,6 +483,10 @@ const EditProfile = () => {
       style={styles.backgroundImage}
       source={require("../assets/light-texture2234-1.png")}
     >
+    <KeyboardAvoidingView
+  style={{ flex: 1 }}
+  behavior={'padding'} // or 'height'
+>
       <View style={styles.container}>
         <View style={styles.profileImageContainer}>
           <TouchableOpacity onPress={handleShowProfile}>
@@ -665,6 +673,7 @@ const EditProfile = () => {
           </View>
         </View>
       </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
